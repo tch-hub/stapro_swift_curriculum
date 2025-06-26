@@ -1,0 +1,314 @@
+<SYSTEM>This is the developer documentation for the Svelte CLI.</SYSTEM>
+
+
+# Overview
+
+コマンドラインインターフェイス（CLI）である`sv`は、Svelteアプリケーションの作成と管理のためのツールキットです。
+
+## 使用方法 <!--Usage-->
+
+`sv`を実行する最も簡単な方法は、[`npx`](https://docs.npmjs.com/cli/v8/commands/npx)（または他のパッケージマネージャを使用している場合は同等のコマンド - 例えば、[pnpm](https://pnpm.io/)を使用している場合は`pnpx`）を使うことです：
+
+```bash
+npx sv <command> <args>
+```
+
+既に`sv`がインストールされているプロジェクトの内部にいる場合は、ローカルインストールを使用します。それ以外の場合は最新バージョンをダウンロードしてインストール無しで実行します。これは特に[`sv create`](sv-create)に便利です。
+
+## 謝辞 <!--Acknowledgements-->
+
+npmで元々`sv`という名前を所有していた[Christopher Brown](https://github.com/chbrown)に感謝いたします。彼のおかげで、この名前がSvelte CLIのために使えるようになりました。元の`sv`パッケージは[`@chbrown/sv`](https://www.npmjs.com/package/@chbrown/sv)で見つけることができます。
+
+# sv create
+
+`sv create`は、[追加機能の設定](sv-add#Official-add-ons)オプションを含む新しいSvelteKitプロジェクトをセットアップします。
+
+## 使用方法 <!--Usage-->
+
+```bash
+npx sv create [options] [path]
+```
+
+## オプション <!--Options-->
+
+### `--template <name>`
+
+使用するプロジェクトテンプレート：
+
+- `minimal` — 新しいアプリのための最小限のスキャフォールディング
+- `demo` — JavaScript無しで動作するワードパズルゲームを備えたデモアプリ
+- `library` — Svelteライブラリのためのテンプレートで、`svelte-package`でセットアップされています
+
+### `--types <option>`
+
+プロジェクトに型チェックを追加するかどうか、またその方法：
+
+- `ts` — `.ts`ファイルをデフォルトとし、`.svelte`コンポーネントに対して`lang="ts"`を使用
+- `jsdoc` — [JSDoc構文](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html)を使用して型を記述
+
+### `--no-types`
+
+型チェックの追加を防ぎます。推奨されません！
+
+### `--no-add-ons`
+
+対話型のアドオンプロンプト無しでコマンドを実行
+
+### `--no-install`
+
+依存関係のインストールをスキップ
+
+<!-- ## Programmatic interface
+
+```js
+// TODO: this gives type checking errors in the docs site when not commented out. Need to release sv, install it in the site, and uncomment this.
+// import { create } from 'sv';
+
+// // todo: check if this is right
+// create(cwd, {
+// 	// add your options here
+// 	// todo: list available option
+// });
+```
+-->
+
+# sv add
+
+`sv add`は、既存のプロジェクトに新しい機能を追加するコマンドです。
+
+## 使用方法 <!--Usage-->
+
+```bash
+npx sv add
+```
+
+```bash
+npx sv add [add-ons]
+```
+
+スペースで区切った複数のアドオンを[以下のリスト](#Official-add-ons)から選択するか、対話型プロンプトを使用することができます。
+
+## オプション <!--Options-->
+
+- `-C`, `--cwd` — Svelte(Kit)プロジェクトのルートへのパス
+- `--no-preconditions` — 前提条件の確認をスキップ <!-- TODO what does this mean? -->
+- `--no-install` — 依存関係のインストールをスキップ
+
+## 公式アドオン <!--Official-add-ons-->
+
+<!-- TODO this should be a separate section, each of these should have their own page -->
+
+- `drizzle`
+- `eslint`
+- `sveltekit-adapter`
+- `lucia`
+- `mdsvex`
+- `paraglide`
+- `playwright`
+- `prettier`
+- `storybook`
+- `tailwindcss`
+- `vitest`
+
+# sv check
+
+`sv check`は、プロジェクト内の次のようなエラーや警告を見つけます：
+
+- 未使用のCSS
+- アクセシビリティのヒント
+- JavaScript/TypeScriptコンパイラエラー
+
+Node 16以降が必要です。
+
+## インストール <!--Installation-->
+
+プロジェクトに`svelte-check`パッケージをインストールする必要があります：
+
+```bash
+npm i -D svelte-check
+```
+
+## 使用方法 <!--Usage-->
+
+```bash
+npx sv check
+```
+
+## オプション <!--Options-->
+
+### `--workspace <path>`
+
+ワークスペースへのパス。`node_modules`と`--ignore`で指定したディレクトリ以外のすべてのサブディレクトリがチェックされます。
+
+### `--output <format>`
+
+エラーや警告の表示方法。詳細は[機械可読出力](#Machine-readable-output)を参照してください。
+
+- `human`
+- `human-verbose`
+- `machine`
+- `machine-verbose`
+
+### `--watch`
+
+プロセスを生存させ、変更を監視します。
+
+### `--preserveWatchOutput`
+
+ウォッチモードで画面がクリアされるのを防ぎます。
+
+### `--tsconfig <path>`
+
+`tsconfig`または`jsconfig`ファイルへのパスを指定します。パスはワークスペースパスからの相対パスまたは絶対パスにすることができます。これを行うことで、設定ファイルの`files`/`include`/`exclude`パターンに一致したファイルのみに診断が適用されます。また、TypeScript および JavaScript ファイルからのエラーが報告されます。指定されていない場合は、プロジェクトディレクトリから上方に`jsconfig`/`tsconfig.json`ファイルを探します。
+
+### `--no-tsconfig`
+
+現在のディレクトリとその下にあるSvelteファイルのみをチェックし、`.js`/`.ts`ファイルを無視したい場合に使用します（型チェックされません）。
+
+### `--ignore <paths>`
+
+ワークスペースのルートから相対的に無視するファイルやフォルダ。パスはカンマで区切り、引用符で囲む必要があります。例：
+
+```bash
+npx sv check --ignore "dist,build"
+```
+
+<!-- TODO what the hell does this mean? is it possible to use --tsconfig AND --no-tsconfig? if so what would THAT mean? -->
+
+`--no-tsconfig`と併用した場合にのみ効果があります。`--tsconfig`と併用した場合、診断されるファイルではなくウォッチされたファイルにのみ影響します。その診断は`tsconfig.json`によって決定されます。
+
+### `--fail-on-warnings`
+
+指定された場合、警告があると`sv check`はエラーコードで終了します。
+
+### `--compiler-warnings <warnings>`
+
+`code`が[コンパイラ警告コード](../svelte/compiler-warnings)で、`behaviour`が`ignore`または`error`である`code:behaviour`ペアのリスト。例：
+
+```bash
+npx sv check --compiler-warnings "css_unused_selector:ignore,a11y_missing_attribute:error"
+```
+
+### `--diagnostic-sources <sources>`
+
+コード診断を実行するソースのリストをカンマで区切って引用符で囲みます。デフォルトではすべてアクティブです：
+
+<!-- TODO would be nice to have a clearer definition of what these are -->
+- `js` (TypeScriptを含む)
+- `svelte`
+- `css`
+
+例：
+
+```bash
+npx sv check --diagnostic-sources "js,svelte"
+```
+
+### `--threshold <level>`
+
+診断をフィルタリングします：
+
+- `warning` (デフォルト) — エラーと警告の両方が表示されます
+- `error` — エラーのみが表示されます
+
+## トラブルシューティング <!--Troubleshooting-->
+
+プリプロセッサのセットアップやその他のトラブルシューティングについては、[言語ツールのドキュメント](https://github.com/sveltejs/language-tools/blob/master/docs/README.md)を参照してください。
+
+## マシンリーダブル向け出力 <!--Machine-readable-output-->
+
+`--output`を`machine`または`machine-verbose`に設定すると、CIパイプライン内やコード品質チェックなどで機械によって読みやすい形式で出力がフォーマットされます。
+
+各行は新しいレコードに対応しています。行は一つのスペース文字で区切られた列で構成されます。各行の最初の列はミリ秒のタイムスタンプを含み、モニタリング目的で使用できます。第二列は"行タイプ"を示し、それに基づいて後続の列の数とタイプが異なる場合があります。
+
+最初の行は`START`タイプで、ワークスペースフォルダを含みます（引用符で囲まれています）。例：
+
+```
+1590680325583 START "/home/user/language-tools/packages/language-server/test/plugins/typescript/testfiles"
+```
+
+`ERROR`または`WARNING`レコードが続く場合があります。それらの構造は出力の引数によって異なります。
+
+引数が`machine`の場合、ファイル名、開始行および列番号、エラーメッセージが示されます。ファイル名はワークスペースディレクトリ相対です。ファイル名とメッセージはどちらも引用符で囲まれています。例：
+
+```
+1590680326283 ERROR "codeactions.svelte" 1:16 "Cannot find module 'blubb' or its corresponding type declarations."
+1590680326778 WARNING "imported-file.svelte" 0:37 "Component has unused export property 'prop'. If it is for external reference only, please consider using `export const prop`"
+```
+
+引数が`machine-verbose`の場合、ファイル名、開始行と列番号、終了行と列番号、エラーメッセージ、診断コード、コードの人間が読みやすい説明、診断の人間が読みやすいソース（例：svelte/typescript）が示されます。ファイル名はワークスペースディレクトリ相対です。各診断はタイムスタンプでプレフィックスされた[ndjson](https://en.wikipedia.org/wiki/JSON_streaming#Newline-Delimited_JSON)行として表されます。例：
+
+```
+1590680326283 {"type":"ERROR","fn":"codeaction.svelte","start":{"line":1,"character":16},"end":{"line":1,"character":23},"message":"Cannot find module 'blubb' or its corresponding type declarations.","code":2307,"source":"js"}
+1590680326778 {"type":"WARNING","filename":"imported-file.svelte","start":{"line":0,"character":37},"end":{"line":0,"character":51},"message":"Component has unused export property 'prop'. If it is for external reference only, please consider using `export
+const prop`","code":"unused-export-let","source":"svelte"}
+```
+
+出力は、チェック中に遭遇したファイル、エラー、および警告の合計数を要約する`COMPLETED`メッセージで終了します。例：
+
+```
+1590680326807 COMPLETED 20 FILES 21 ERRORS 1 WARNINGS 3 FILES_WITH_PROBLEMS
+```
+
+ランタイムエラーが発生した場合、このエラーは`FAILURE`レコードとして表示されます。例：
+
+```
+1590680328921 FAILURE "Connection closed"
+```
+
+## クレジット <!--Credits-->
+
+- `svelte-check`の基礎を築いたVueの[VTI](https://github.com/vuejs/vetur/tree/master/vti)
+
+## よくある質問 (FAQ) <!--FAQ-->
+
+### なぜ特定のファイル（たとえばステージングされたファイルのみ）をチェックするオプションがないのですか？ <!--FAQ-Why-is-there-no-option-to-only-check-specific-files-(for-example-only-staged-files)-->
+
+`svelte-check`は、チェックが有効になるためにプロジェクト全体を「見る」必要があります。例えば、コンポーネントプロパティの名前を変更しましたが、そのプロパティが使用されている場所の更新を忘れた場合、使用サイトはすべてエラーになりますが、変更されたファイルのみをチェックするとこれらを見逃すことになります。
+
+# sv migrate
+
+`sv migrate`は、Svelte(Kit)のコードベースを移行します。このコマンドは[`svelte-migrate`](https://www.npmjs.com/package/svelte-migrate)パッケージに委譲されています。
+
+一部のマイグレーションでは、完了するべきタスクをコードベースに注釈として付け加えることがあります。`@migration`で検索することでそれらを見つけることができます。
+
+## 使用方法 <!--Usage-->
+
+```bash
+npx sv migrate
+```
+
+You can also specify a migration directly via the CLI:
+```bash
+npx sv migrate [migration]
+```
+
+## マイグレーション <!--Migrations-->
+
+### `app-state`
+
+`.svelte`ファイル内で使用されている`$app/stores`を`$app/state`に移行します。詳細は[マイグレーションガイド](/docs/kit/migrating-to-sveltekit-2#SvelteKit-2.12:-$app-stores-deprecated)を参照してください。
+
+### `svelte-5`
+
+Svelte 4アプリをSvelte 5にアップグレードし、個々のコンポーネントを[runes](../svelte/what-are-runes)やその他のSvelte 5の構文に更新します（[マイグレーションガイドを参照](../svelte/v5-migration-guide)）。
+
+### `self-closing-tags`
+
+`.svelte`ファイル内のすべての自己終了要素以外の要素を置換します。詳細は[プルリクエスト](https://github.com/sveltejs/kit/pull/12128)を参照してください。
+
+### `svelte-4`
+
+Svelte 3アプリをSvelte 4にアップグレードします（[マイグレーションガイドを参照](../svelte/v4-migration-guide)）。
+
+### `sveltekit-2`
+
+SvelteKit 1アプリをSvelteKit 2にアップグレードします（[マイグレーションガイドを参照](../kit/migrating-to-sveltekit-2)）。
+
+### `package`
+
+`@sveltejs/package`バージョン1を使用しているライブラリをバージョン2にアップグレードします。詳細は[プルリクエスト](https://github.com/sveltejs/kit/pull/8922)を参照してください。
+
+### `routes`
+
+プレリリースのSvelteKitアプリをSvelteKit 1のファイルシステムルーティング規則を使用するようにアップグレードします。詳細は[プルリクエスト](https://github.com/sveltejs/kit/discussions/5774)を参照してください。

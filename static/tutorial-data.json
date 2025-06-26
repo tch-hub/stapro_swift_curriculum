@@ -1,0 +1,431 @@
+{
+    "tutorialCategories": [
+        {
+            "id": "text-basics",
+            "title": "テキスト表示",
+            "icon": "text_fields",
+            "description": "文字を表示する方法を学ぼう",
+            "lessons": [
+                {
+                    "id": "simple-text",
+                    "title": "基本的なテキスト",
+                    "description": "画面に文字を表示する",
+                    "difficulty": "初級",
+                    "duration": "5分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        Text(\"Hello, World!\")\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`Text(\"文字\")`を使って画面に文字を表示できます。これがSwiftUIの最も基本的な表示方法です。",
+                    "steps": [
+                        "Xcodeで新しいプロジェクトを作成",
+                        "ContentView.swiftを開く",
+                        "Text(\"Hello, World!\")を記述",
+                        "プレビューで確認"
+                    ]
+                },
+                {
+                    "id": "text-styling",
+                    "title": "テキストのスタイル",
+                    "description": "文字の大きさや色を変える",
+                    "difficulty": "初級",
+                    "duration": "8分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"大きなタイトル\")\n                .font(.largeTitle)\n            \n            Text(\"青い文字\")\n                .foregroundColor(.blue)\n            \n            Text(\"太字のテキスト\")\n                .fontWeight(.bold)\n            \n            Text(\"赤くて太い文字\")\n                .foregroundColor(.red)\n                .fontWeight(.bold)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`.font()`で文字サイズ、`.foregroundColor()`で色、`.fontWeight()`で太さを変更できます。",
+                    "steps": [
+                        "VStackで複数のTextを縦に配置",
+                        ".font(.largeTitle)で大きなフォントを設定",
+                        ".foregroundColor()で文字色を変更",
+                        ".fontWeight()で文字の太さを調整"
+                    ]
+                },
+                {
+                    "id": "text-multiline",
+                    "title": "複数行のテキスト",
+                    "description": "長い文章を表示する",
+                    "difficulty": "初級",
+                    "duration": "6分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"これは長いテキストです。SwiftUIでは自動的に折り返されて複数行で表示されます。\")\n                .multilineTextAlignment(.center)\n                .padding()\n            \n            Text(\"改行を\\n明示的に\\n入れることも\\nできます\")\n                .multilineTextAlignment(.leading)\n                .padding()\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "長いテキストは自動的に折り返されます。`\\n`で改行、`.multilineTextAlignment()`で行揃えを設定できます。",
+                    "steps": [
+                        "長いテキストを記述",
+                        ".multilineTextAlignment()で行揃えを設定",
+                        "\\nで明示的な改行を追加",
+                        ".padding()で余白を追加"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "button-basics",
+            "title": "ボタン操作",
+            "icon": "smart_button",
+            "description": "ボタンの作り方と動作を学ぼう",
+            "lessons": [
+                {
+                    "id": "simple-button",
+                    "title": "基本的なボタン",
+                    "description": "ボタンを作って押してみる",
+                    "difficulty": "初級",
+                    "duration": "6分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Button(\"押してみよう\") {\n                print(\"ボタンが押されました！\")\n            }\n            \n            Button(\"別のボタン\") {\n                print(\"別のボタンが押されました！\")\n            }\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`Button(\"ラベル\") { }`でボタンを作成できます。{ }の中に押した時の動作を書きます。",
+                    "steps": [
+                        "Button(\"文字\") { }でボタンを作成",
+                        "{ }の中にprint文を記述",
+                        "VStackで複数のボタンを配置",
+                        "デバッグエリアでprint結果を確認"
+                    ]
+                },
+                {
+                    "id": "button-styling",
+                    "title": "ボタンのスタイル",
+                    "description": "ボタンの見た目を変える",
+                    "difficulty": "初級",
+                    "duration": "10分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Button(\"青いボタン\") {\n                print(\"青いボタンが押されました\")\n            }\n            .foregroundColor(.white)\n            .padding()\n            .background(Color.blue)\n            .cornerRadius(8)\n            \n            Button(\"赤い丸ボタン\") {\n                print(\"赤いボタンが押されました\")\n            }\n            .foregroundColor(.white)\n            .padding()\n            .background(Color.red)\n            .cornerRadius(20)\n            \n            Button(\"大きなボタン\") {\n                print(\"大きなボタンが押されました\")\n            }\n            .font(.title)\n            .foregroundColor(.white)\n            .padding(.horizontal, 30)\n            .padding(.vertical, 15)\n            .background(Color.green)\n            .cornerRadius(12)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`.background()`で背景色、`.cornerRadius()`で角の丸み、`.padding()`で余白を設定してボタンをスタイリングできます。",
+                    "steps": [
+                        ".foregroundColor()で文字色を設定",
+                        ".background()で背景色を追加",
+                        ".cornerRadius()で角を丸くする",
+                        ".padding()でボタンサイズを調整"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "state-basics",
+            "title": "状態管理",
+            "icon": "memory",
+            "description": "値の変化を管理する方法を学ぼう",
+            "lessons": [
+                {
+                    "id": "simple-state",
+                    "title": "基本的な@State",
+                    "description": "値が変わる変数を作る",
+                    "difficulty": "初級",
+                    "duration": "8分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    @State private var message = \"初期メッセージ\"\n    \n    var body: some View {\n        VStack(spacing: 20) {\n            Text(message)\n                .font(.title)\n            \n            Button(\"メッセージを変更\") {\n                message = \"ボタンが押されました！\"\n            }\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`@State`をつけると、値が変わった時に画面が自動的に更新されます。ボタンを押すとTextの内容が変わります。",
+                    "steps": [
+                        "@State private var で変数を宣言",
+                        "Textで@State変数を表示",
+                        "Buttonで@State変数の値を変更",
+                        "値の変化で画面が自動更新されることを確認"
+                    ]
+                },
+                {
+                    "id": "number-state",
+                    "title": "数値の@State",
+                    "description": "数字を増減させる",
+                    "difficulty": "初級",
+                    "duration": "10分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    @State private var count = 0\n    \n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"カウント: \\(count)\")\n                .font(.largeTitle)\n            \n            HStack(spacing: 20) {\n                Button(\"-1\") {\n                    count = count - 1\n                }\n                .padding()\n                .background(Color.red)\n                .foregroundColor(.white)\n                .cornerRadius(8)\n                \n                Button(\"+1\") {\n                    count = count + 1\n                }\n                .padding()\n                .background(Color.blue)\n                .foregroundColor(.white)\n                .cornerRadius(8)\n            }\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "数値の@State変数を作って、ボタンで増減できます。`\\(count)`で変数の値をテキストに埋め込めます。",
+                    "steps": [
+                        "@State private var count = 0で数値変数を作成",
+                        "\\(count)でテキストに数値を表示",
+                        "+1ボタンでcount値を1増やす",
+                        "-1ボタンでcount値を1減らす"
+                    ]
+                },
+                {
+                    "id": "boolean-state",
+                    "title": "ON/OFFの@State",
+                    "description": "true/falseを切り替える",
+                    "difficulty": "初級",
+                    "duration": "8分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    @State private var isOn = false\n    \n    var body: some View {\n        VStack(spacing: 20) {\n            Text(isOn ? \"ON\" : \"OFF\")\n                .font(.largeTitle)\n                .foregroundColor(isOn ? .green : .red)\n            \n            Button(\"切り替え\") {\n                isOn = !isOn\n            }\n            .padding()\n            .background(isOn ? Color.green : Color.gray)\n            .foregroundColor(.white)\n            .cornerRadius(8)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "bool型の@State変数でON/OFFを管理できます。`isOn ? \"ON\" : \"OFF\"`で条件によって表示を変えられます。",
+                    "steps": [
+                        "@State private var isOn = falseでbool変数を作成",
+                        "三項演算子（?:）で条件分岐",
+                        "!isOnでtrue/falseを反転",
+                        "状態によって色や表示を変更"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "layout-basics",
+            "title": "レイアウト基礎",
+            "icon": "view_agenda",
+            "description": "要素の配置方法を学ぼう",
+            "lessons": [
+                {
+                    "id": "vstack-only",
+                    "title": "VStack - 縦に並べる",
+                    "description": "要素を縦に並べる方法",
+                    "difficulty": "初級",
+                    "duration": "8分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack {\n            Text(\"1番目\")\n            Text(\"2番目\")\n            Text(\"3番目\")\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`VStack`は要素を縦（vertical）に並べるレイアウトです。中に入れた要素が上から順番に配置されます。",
+                    "steps": [
+                        "VStack { }を作成",
+                        "中に複数のTextを配置",
+                        "要素が縦に並ぶことを確認",
+                        "プレビューで配置を確認"
+                    ]
+                },
+                {
+                    "id": "hstack-only",
+                    "title": "HStack - 横に並べる",
+                    "description": "要素を横に並べる方法",
+                    "difficulty": "初級",
+                    "duration": "8分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        HStack {\n            Text(\"左\")\n            Text(\"中央\")\n            Text(\"右\")\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`HStack`は要素を横（horizontal）に並べるレイアウトです。中に入れた要素が左から順番に配置されます。",
+                    "steps": [
+                        "HStack { }を作成",
+                        "中に複数のTextを配置",
+                        "要素が横に並ぶことを確認",
+                        "プレビューで配置を確認"
+                    ]
+                },
+                {
+                    "id": "spacing-basics",
+                    "title": "間隔の調整",
+                    "description": "要素の間に空間を作る",
+                    "difficulty": "初級",
+                    "duration": "10分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack {\n            Text(\"間隔なし\")\n            \n            VStack(spacing: 20) {\n                Text(\"間隔あり\")\n                Text(\"20ポイント\")\n                Text(\"空いてます\")\n            }\n            \n            VStack(spacing: 50) {\n                Text(\"大きな間隔\")\n                Text(\"50ポイント\")\n            }\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`spacing`パラメーターで要素間の間隔を指定できます。数字が大きいほど間隔が広くなります。",
+                    "steps": [
+                        "通常のVStackで間隔なしを確認",
+                        "VStack(spacing: 20)で間隔を設定",
+                        "spacing値を変えて違いを確認",
+                        "HStackでも同様に使用可能"
+                    ]
+                },
+                {
+                    "id": "nested-stacks",
+                    "title": "StackとStackの組み合わせ",
+                    "description": "VStackとHStackを組み合わせる",
+                    "difficulty": "初級",
+                    "duration": "12分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack(spacing: 30) {\n            Text(\"上のテキスト\")\n                .font(.title)\n            \n            HStack(spacing: 20) {\n                Text(\"左\")\n                    .padding()\n                    .background(Color.red)\n                    .foregroundColor(.white)\n                \n                Text(\"右\")\n                    .padding()\n                    .background(Color.blue)\n                    .foregroundColor(.white)\n            }\n            \n            Text(\"下のテキスト\")\n                .font(.caption)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "VStackの中にHStackを入れたり、その逆もできます。これでより複雑なレイアウトを作れます。",
+                    "steps": [
+                        "外側にVStackを配置",
+                        "中にHStackを挟み込む",
+                        "各要素にスタイルを適用",
+                        "入れ子構造を理解する"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "shapes-basics",
+            "title": "図形の基礎",
+            "icon": "category",
+            "description": "四角や円などの図形を描こう",
+            "lessons": [
+                {
+                    "id": "rectangle-basic",
+                    "title": "四角形を描く",
+                    "description": "Rectangleで四角を作る",
+                    "difficulty": "初級",
+                    "duration": "8分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Rectangle()\n                .fill(Color.blue)\n                .frame(width: 100, height: 100)\n            \n            Rectangle()\n                .fill(Color.red)\n                .frame(width: 150, height: 80)\n            \n            Rectangle()\n                .fill(Color.green)\n                .frame(width: 200, height: 50)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`Rectangle()`で四角形を作り、`.fill()`で色を塗り、`.frame()`でサイズを指定します。",
+                    "steps": [
+                        "Rectangle()で四角形を作成",
+                        ".fill(Color.blue)で色を指定",
+                        ".frame(width:, height:)でサイズ設定",
+                        "複数の四角形で違いを確認"
+                    ]
+                },
+                {
+                    "id": "circle-basic",
+                    "title": "円を描く",
+                    "description": "Circleで丸い図形を作る",
+                    "difficulty": "初級",
+                    "duration": "8分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Circle()\n                .fill(Color.blue)\n                .frame(width: 100, height: 100)\n            \n            Circle()\n                .fill(Color.red)\n                .frame(width: 80, height: 80)\n            \n            Circle()\n                .fill(Color.green)\n                .frame(width: 60, height: 60)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`Circle()`で円形を作ります。幅と高さを同じにすると正円、違うとオーバル（楕円）になります。",
+                    "steps": [
+                        "Circle()で円形を作成",
+                        ".fill()で色を塗る",
+                        ".frame()で大きさを調整",
+                        "サイズの違いで大小を確認"
+                    ]
+                },
+                {
+                    "id": "rounded-rectangle",
+                    "title": "角の丸い四角形",
+                    "description": "RoundedRectangleで角丸を作る",
+                    "difficulty": "初級",
+                    "duration": "10分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            RoundedRectangle(cornerRadius: 10)\n                .fill(Color.blue)\n                .frame(width: 120, height: 80)\n            \n            RoundedRectangle(cornerRadius: 20)\n                .fill(Color.red)\n                .frame(width: 120, height: 80)\n            \n            RoundedRectangle(cornerRadius: 40)\n                .fill(Color.green)\n                .frame(width: 120, height: 80)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`RoundedRectangle(cornerRadius:)`で角の丸い四角形を作れます。cornerRadiusの値が大きいほど角が丸くなります。",
+                    "steps": [
+                        "RoundedRectangle(cornerRadius: 値)を作成",
+                        "cornerRadiusで角の丸さを調整",
+                        "異なる値で違いを比較",
+                        "40以上にすると円に近くなることを確認"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "styling-basics",
+            "title": "スタイル調整",
+            "icon": "palette",
+            "description": "色や余白などの見た目を整えよう",
+            "lessons": [
+                {
+                    "id": "padding-basics",
+                    "title": "余白をつける",
+                    "description": "paddingで要素の周りに空間を作る",
+                    "difficulty": "初級",
+                    "duration": "10分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"余白なし\")\n                .background(Color.yellow)\n            \n            Text(\"小さな余白\")\n                .padding(5)\n                .background(Color.blue)\n                .foregroundColor(.white)\n            \n            Text(\"普通の余白\")\n                .padding()\n                .background(Color.red)\n                .foregroundColor(.white)\n            \n            Text(\"大きな余白\")\n                .padding(30)\n                .background(Color.green)\n                .foregroundColor(.white)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`.padding()`で要素の周りに余白を作れます。数値を指定すると余白の大きさを調整できます。",
+                    "steps": [
+                        "背景色をつけて余白を見やすくする",
+                        ".padding()で標準の余白を追加",
+                        ".padding(数値)で余白サイズを指定",
+                        "背景色で余白の範囲を確認"
+                    ]
+                },
+                {
+                    "id": "frame-basics",
+                    "title": "サイズを指定する",
+                    "description": "frameで要素の大きさを決める",
+                    "difficulty": "初級",
+                    "duration": "10分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"幅100\")\n                .frame(width: 100)\n                .background(Color.blue)\n                .foregroundColor(.white)\n            \n            Text(\"高さ60\")\n                .frame(height: 60)\n                .background(Color.red)\n                .foregroundColor(.white)\n            \n            Text(\"幅150 高さ80\")\n                .frame(width: 150, height: 80)\n                .background(Color.green)\n                .foregroundColor(.white)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`.frame(width:, height:)`で要素のサイズを指定できます。片方だけ指定することも可能です。",
+                    "steps": [
+                        ".frame(width: 値)で幅のみ指定",
+                        ".frame(height: 値)で高さのみ指定",
+                        ".frame(width:, height:)で両方指定",
+                        "背景色でサイズの違いを確認"
+                    ]
+                },
+                {
+                    "id": "corner-radius",
+                    "title": "角を丸くする",
+                    "description": "cornerRadiusで角に丸みをつける",
+                    "difficulty": "初級",
+                    "duration": "8分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"角なし\")\n                .padding()\n                .background(Color.blue)\n                .foregroundColor(.white)\n            \n            Text(\"少し丸い\")\n                .padding()\n                .background(Color.red)\n                .foregroundColor(.white)\n                .cornerRadius(5)\n            \n            Text(\"とても丸い\")\n                .padding()\n                .background(Color.green)\n                .foregroundColor(.white)\n                .cornerRadius(15)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`.cornerRadius(値)`で要素の角を丸くできます。値が大きいほど丸くなります。",
+                    "steps": [
+                        "背景色をつけてから角丸を適用",
+                        ".cornerRadius(5)で軽い角丸",
+                        ".cornerRadius(15)で大きな角丸",
+                        "値による見た目の変化を確認"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "interactive-basics",
+            "title": "入力操作",
+            "icon": "touch_app",
+            "description": "ユーザーの入力を受け取ろう",
+            "lessons": [
+                {
+                    "id": "textfield-basic",
+                    "title": "文字入力フィールド",
+                    "description": "TextFieldで文字を入力する",
+                    "difficulty": "初級",
+                    "duration": "10分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    @State private var name = \"\"\n    \n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"あなたの名前を入力してください\")\n                .font(.headline)\n            \n            TextField(\"名前を入力\", text: $name)\n                .textFieldStyle(RoundedBorderTextFieldStyle())\n                .padding(.horizontal)\n            \n            Text(\"こんにちは、\\(name)さん！\")\n                .font(.title)\n                .foregroundColor(.blue)\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`TextField`でユーザーが文字を入力できます。`$name`で入力された文字を@State変数に保存します。",
+                    "steps": [
+                        "@State private var nameで文字列変数を作成",
+                        "TextField(\"プレースホルダー\", text: $name)で入力欄を作成",
+                        "$nameでバインディング（双方向接続）",
+                        "入力した文字がリアルタイムで表示されることを確認"
+                    ]
+                },
+                {
+                    "id": "toggle-basic",
+                    "title": "スイッチ切り替え",
+                    "description": "ToggleでON/OFFを切り替える",
+                    "difficulty": "初級",
+                    "duration": "8分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    @State private var isNotificationOn = false\n    \n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"設定\")\n                .font(.largeTitle)\n                .fontWeight(.bold)\n            \n            HStack {\n                Text(\"通知\")\n                    .font(.headline)\n                Spacer()\n                Toggle(\"\", isOn: $isNotificationOn)\n            }\n            .padding()\n            .background(Color.gray.opacity(0.1))\n            .cornerRadius(10)\n            \n            Text(\"通知は現在\\(isNotificationOn ? \"ON\" : \"OFF\")です\")\n                .font(.body)\n                .foregroundColor(isNotificationOn ? .green : .red)\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`Toggle`でON/OFFスイッチを作れます。`$isNotificationOn`で状態を管理し、画面の表示も自動で変わります。",
+                    "steps": [
+                        "@State private var でbool変数を作成",
+                        "Toggle(\"\", isOn: $変数名)でスイッチを作成",
+                        "HStackとSpacerでレイアウト調整",
+                        "三項演算子で状態による表示変更"
+                    ]
+                },
+                {
+                    "id": "slider-basic",
+                    "title": "スライダーで値調整",
+                    "description": "Sliderで数値を調整する",
+                    "difficulty": "初級",
+                    "duration": "12分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    @State private var volume: Double = 50\n    \n    var body: some View {\n        VStack(spacing: 30) {\n            Text(\"音量調整\")\n                .font(.largeTitle)\n                .fontWeight(.bold)\n            \n            VStack(spacing: 10) {\n                Text(\"音量: \\(Int(volume))\")\n                    .font(.title2)\n                \n                Slider(value: $volume, in: 0...100, step: 1)\n                    .padding(.horizontal)\n                \n                HStack {\n                    Text(\"0\")\n                    Spacer()\n                    Text(\"100\")\n                }\n                .font(.caption)\n                .foregroundColor(.gray)\n                .padding(.horizontal)\n            }\n            \n            Circle()\n                .fill(Color.blue)\n                .frame(width: volume * 2, height: volume * 2)\n                .animation(.easeInOut(duration: 0.3), value: volume)\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "`Slider`で数値を調整できます。`in: 0...100`で範囲、`step: 1`で刻み幅を設定します。",
+                    "steps": [
+                        "@State private var volume: Doubleで数値変数を作成",
+                        "Slider(value: $volume, in: 範囲)でスライダー作成",
+                        "step: 1で1刻みの調整に設定",
+                        "値の変化で円のサイズが変わることを確認"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "simple-apps",
+            "title": "簡単なアプリ",
+            "icon": "apps",
+            "description": "学んだことを組み合わせて小さなアプリを作ろう",
+            "lessons": [
+                {
+                    "id": "counter-app",
+                    "title": "カウンターアプリ",
+                    "description": "数字を数えるアプリを作る",
+                    "difficulty": "初級",
+                    "duration": "15分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    @State private var count = 0\n    \n    var body: some View {\n        VStack(spacing: 30) {\n            Text(\"カウンター\")\n                .font(.largeTitle)\n                .fontWeight(.bold)\n            \n            Text(\"\\(count)\")\n                .font(.system(size: 80, weight: .bold))\n                .foregroundColor(.blue)\n            \n            HStack(spacing: 30) {\n                Button(\"-\") {\n                    count -= 1\n                }\n                .font(.title)\n                .frame(width: 60, height: 60)\n                .background(Color.red)\n                .foregroundColor(.white)\n                .cornerRadius(30)\n                \n                Button(\"+\") {\n                    count += 1\n                }\n                .font(.title)\n                .frame(width: 60, height: 60)\n                .background(Color.green)\n                .foregroundColor(.white)\n                .cornerRadius(30)\n            }\n            \n            Button(\"リセット\") {\n                count = 0\n            }\n            .font(.headline)\n            .padding(.horizontal, 20)\n            .padding(.vertical, 10)\n            .background(Color.gray)\n            .foregroundColor(.white)\n            .cornerRadius(8)\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "これまで学んだ@State、Button、VStack、HStackを組み合わせて、数を数えるアプリを作りました。",
+                    "steps": [
+                        "@State private var countで数値を管理",
+                        "大きなフォントで現在の数値を表示",
+                        "+ボタンでcount += 1で数値を増やす",
+                        "-ボタンでcount -= 1で数値を減らす",
+                        "リセットボタンでcount = 0で初期化"
+                    ]
+                },
+                {
+                    "id": "greeting-app",
+                    "title": "挨拶アプリ",
+                    "description": "名前を入力して挨拶するアプリ",
+                    "difficulty": "初級",
+                    "duration": "12分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    @State private var name = \"\"\n    @State private var showGreeting = false\n    \n    var body: some View {\n        VStack(spacing: 30) {\n            Text(\"挨拶アプリ\")\n                .font(.largeTitle)\n                .fontWeight(.bold)\n            \n            VStack(spacing: 15) {\n                Text(\"あなたの名前は？\")\n                    .font(.headline)\n                \n                TextField(\"名前を入力してください\", text: $name)\n                    .textFieldStyle(RoundedBorderTextFieldStyle())\n                    .padding(.horizontal)\n            }\n            \n            Button(\"挨拶する\") {\n                showGreeting = true\n            }\n            .font(.headline)\n            .padding()\n            .background(name.isEmpty ? Color.gray : Color.blue)\n            .foregroundColor(.white)\n            .cornerRadius(10)\n            .disabled(name.isEmpty)\n            \n            if showGreeting && !name.isEmpty {\n                VStack(spacing: 10) {\n                    Text(\"🎉\")\n                        .font(.system(size: 50))\n                    Text(\"こんにちは、\\(name)さん！\")\n                        .font(.title)\n                        .foregroundColor(.green)\n                        .fontWeight(.bold)\n                }\n                .padding()\n                .background(Color.green.opacity(0.1))\n                .cornerRadius(15)\n            }\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "TextField、Button、条件分岐(if文)を組み合わせて、入力された名前で挨拶するアプリを作りました。",
+                    "steps": [
+                        "@State private varで名前と表示状態を管理",
+                        "TextFieldで名前入力",
+                        "名前が空の時はボタンを無効化(.disabled)",
+                        "if文で条件に合った時だけ挨拶を表示",
+                        "絵文字やスタイルで見た目を楽しく"
+                    ]
+                },
+                {
+                    "id": "color-changer",
+                    "title": "色変更アプリ",
+                    "description": "ボタンで背景色を変えるアプリ",
+                    "difficulty": "初級",
+                    "duration": "15分",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    @State private var backgroundColor = Color.white\n    @State private var currentColorName = \"白\"\n    \n    var body: some View {\n        ZStack {\n            backgroundColor\n                .ignoresSafeArea()\n            \n            VStack(spacing: 30) {\n                Text(\"色変更アプリ\")\n                    .font(.largeTitle)\n                    .fontWeight(.bold)\n                    .foregroundColor(.black)\n                \n                Text(\"現在の色: \\(currentColorName)\")\n                    .font(.headline)\n                    .foregroundColor(.black)\n                    .padding()\n                    .background(Color.white.opacity(0.8))\n                    .cornerRadius(10)\n                \n                VStack(spacing: 15) {\n                    HStack(spacing: 15) {\n                        Button(\"赤\") {\n                            backgroundColor = Color.red\n                            currentColorName = \"赤\"\n                        }\n                        .buttonStyle(ColorButtonStyle(color: .red))\n                        \n                        Button(\"青\") {\n                            backgroundColor = Color.blue\n                            currentColorName = \"青\"\n                        }\n                        .buttonStyle(ColorButtonStyle(color: .blue))\n                        \n                        Button(\"緑\") {\n                            backgroundColor = Color.green\n                            currentColorName = \"緑\"\n                        }\n                        .buttonStyle(ColorButtonStyle(color: .green))\n                    }\n                    \n                    HStack(spacing: 15) {\n                        Button(\"黄\") {\n                            backgroundColor = Color.yellow\n                            currentColorName = \"黄\"\n                        }\n                        .buttonStyle(ColorButtonStyle(color: .yellow))\n                        \n                        Button(\"紫\") {\n                            backgroundColor = Color.purple\n                            currentColorName = \"紫\"\n                        }\n                        .buttonStyle(ColorButtonStyle(color: .purple))\n                        \n                        Button(\"白\") {\n                            backgroundColor = Color.white\n                            currentColorName = \"白\"\n                        }\n                        .buttonStyle(ColorButtonStyle(color: .white))\n                    }\n                }\n            }\n        }\n        .animation(.easeInOut(duration: 0.5), value: backgroundColor)\n    }\n}\n\nstruct ColorButtonStyle: ButtonStyle {\n    let color: Color\n    \n    func makeBody(configuration: Configuration) -> some View {\n        configuration.label\n            .font(.headline)\n            .foregroundColor(.white)\n            .frame(width: 80, height: 40)\n            .background(color)\n            .cornerRadius(8)\n            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "explanation": "ZStack、@State、Buttonを組み合わせて背景色を変更するアプリです。カスタムButtonStyleで統一感のあるデザインにしました。",
+                    "steps": [
+                        "@Stateで背景色と色名を管理",
+                        "ZStackで背景色と前面のUIを重ねる",
+                        "各ボタンで背景色と表示名を変更",
+                        ".animation()で色の変化にアニメーション追加",
+                        "カスタムButtonStyleで見た目を統一"
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,303 @@
+{
+    "sections": [
+        {
+            "id": "variables",
+            "title": "変数・定数",
+            "icon": "code",
+            "items": [
+                {
+                    "label": "変更可能な変数",
+                    "description": "varで宣言した変数は、後から何度でも値を変更できます。ゲームのスコアや名前の入力など、変わる可能性のある値に使います。",
+                    "swiftCode": "var name = \"太郎\"\nname = \"花子\" // 変更可能"
+                },
+                {
+                    "label": "変更不可能な定数",
+                    "description": "letで宣言した定数は、一度値を設定すると二度と変更できません。年齢や円周率など、変わらない値に使います。",
+                    "swiftCode": "let age = 15\n// age = 16 // エラー！変更不可"
+                },
+                {
+                    "label": "型を明示",
+                    "description": "変数や定数に : Int や : String を付けることで、どんな種類の値を入れるかを明確に指定できます。",
+                    "swiftCode": "var score: Int = 100\nlet pi: Double = 3.14159"
+                },
+                {
+                    "label": "文字列補間",
+                    "description": "\\() を使うと、文字列の中に変数の値を埋め込むことができます。挨拶メッセージを作る時などに便利です。",
+                    "swiftCode": "let name = \"太郎\"\nlet message = \"こんにちは、\\(name)さん\""
+                }
+            ]
+        },
+        {
+            "id": "types",
+            "title": "基本的な型",
+            "icon": "category",
+            "items": [
+                {
+                    "label": "整数",
+                    "description": "Int型は整数（1, 42, -10など）を扱います。年齢、スコア、カウンターなど、小数点のない数値に使います。",
+                    "swiftCode": "let number: Int = 42\nlet negativeNumber: Int = -10"
+                },
+                {
+                    "label": "小数",
+                    "description": "Double型は小数点を含む数値（3.14, 0.85など）を扱います。価格、パーセンテージ、科学計算などに使います。",
+                    "swiftCode": "let price: Double = 3.14\nlet percentage: Float = 0.85"
+                },
+                {
+                    "label": "文字列",
+                    "description": "String型は文字や文章（\"Hello\", \"こんにちは\"など）を扱います。名前、メッセージ、絵文字などに使います。",
+                    "swiftCode": "let message: String = \"Hello\"\nlet emoji = \"😊\""
+                },
+                {
+                    "label": "真偽値",
+                    "description": "Bool型はtrue（真）またはfalse（偽）の2つの値だけを扱います。フラグやチェックボックスの状態などに使います。",
+                    "swiftCode": "let isValid: Bool = true\nlet isFinished = false"
+                }
+            ]
+        },
+        {
+            "id": "conditionals",
+            "title": "条件分岐",
+            "icon": "fork_right",
+            "items": [
+                {
+                    "label": "if文",
+                    "description": "指定した条件が満たされた時だけ処理を実行します。「もし〜なら」という判断をプログラムに組み込めます。",
+                    "swiftCode": "let age = 20\nif age >= 18 {\n    print(\"成人です\")\n}"
+                },
+                {
+                    "label": "if-else",
+                    "description": "条件が満たされた場合とそうでない場合で、異なる処理を実行します。「もし〜なら○○、そうでなければ××」の判断ができます。",
+                    "swiftCode": "let score = 85\nif score >= 80 {\n    print(\"合格\")\n} else {\n    print(\"不合格\")\n}"
+                },
+                {
+                    "label": "switch文",
+                    "description": "ひとつの値に対して、複数の選択肢から適切な処理を選んで実行します。成績評価やメニュー選択などに便利です。",
+                    "swiftCode": "let grade = \"A\"\nswitch grade {\ncase \"A\":\n    print(\"優秀\")\ncase \"B\":\n    print(\"良好\")\ndefault:\n    print(\"がんばろう\")\n}"
+                }
+            ]
+        },
+        {
+            "id": "loops",
+            "title": "繰り返し",
+            "icon": "repeat",
+            "items": [
+                {
+                    "label": "範囲のループ",
+                    "description": "for文で数値の範囲（1...5など）を指定すると、その範囲の数値を順番に使って処理を繰り返せます。カウントダウンやナンバリングに便利です。",
+                    "swiftCode": "for i in 1...5 {\n    print(i)\n}\n// 出力: 1, 2, 3, 4, 5"
+                },
+                {
+                    "label": "配列のループ",
+                    "description": "配列に入っている全ての要素に対して、同じ処理を一つずつ実行できます。リストの全項目を表示する時などに使います。",
+                    "swiftCode": "let items = [\"りんご\", \"バナナ\", \"オレンジ\"]\nfor item in items {\n    print(item)\n}"
+                },
+                {
+                    "label": "while文",
+                    "description": "指定した条件が満たされている間、ずっと処理を繰り返します。条件が満たされなくなったら自動的に停止します。",
+                    "swiftCode": "var count = 0\nwhile count < 5 {\n    print(count)\n    count += 1\n}"
+                }
+            ]
+        },
+        {
+            "id": "arrays",
+            "title": "配列・辞書",
+            "icon": "list",
+            "items": [
+                {
+                    "label": "配列の作成",
+                    "description": "[ ]を使って複数の値をひとまとめにして管理できます。買い物リストや成績一覧など、同じ種類のデータをまとめて扱う時に便利です。",
+                    "swiftCode": "var fruits = [\"りんご\", \"バナナ\"]\nlet numbers: [Int] = [1, 2, 3]"
+                },
+                {
+                    "label": "要素の追加と取得",
+                    "description": "appendで配列に新しい要素を追加でき、[番号]で特定の位置の要素を取り出せます。番号は0から始まります。",
+                    "swiftCode": "fruits.append(\"オレンジ\")\nlet firstFruit = fruits[0] // \"りんご\""
+                },
+                {
+                    "label": "辞書の作成",
+                    "description": "辞書は「キー: 値」のペアでデータを管理します。名前と点数、商品と価格など、関連する2つの情報をセットで扱えます。",
+                    "swiftCode": "var scores = [\"math\": 85, \"english\": 92]\nlet mathScore = scores[\"math\"] // Optional(85)"
+                },
+                {
+                    "label": "辞書の値の更新",
+                    "description": "辞書の既存の値を変更したり、新しいキーと値のペアを追加したりできます。成績の更新や新科目の追加などに使えます。",
+                    "swiftCode": "scores[\"math\"] = 90\nscores[\"science\"] = 88"
+                }
+            ]
+        },
+        {
+            "id": "functions",
+            "title": "関数",
+            "icon": "functions",
+            "items": [
+                {
+                    "label": "基本的な関数",
+                    "description": "funcを使って処理をひとまとめにして名前を付けると、同じ処理を何度でも呼び出せます。挨拶や計算など、繰り返し使う処理に便利です。",
+                    "swiftCode": "func greet() {\n    print(\"こんにちは\")\n}\ngreet() // 関数の呼び出し"
+                },
+                {
+                    "label": "引数ありの関数",
+                    "description": "関数に値を渡すことで、その値を使った処理を実行できます。名前を渡して個別の挨拶をするなど、柔軟な処理が可能です。",
+                    "swiftCode": "func greet(name: String) {\n    print(\"こんにちは、\\(name)さん\")\n}\ngreet(name: \"太郎\")"
+                },
+                {
+                    "label": "戻り値ありの関数",
+                    "description": "-> を使って関数の処理結果を返すことができます。計算の結果や加工したデータを他の場所で使いたい時に使います。",
+                    "swiftCode": "func add(a: Int, b: Int) -> Int {\n    return a + b\n}\nlet result = add(a: 5, b: 3) // 8"
+                }
+            ]
+        },
+        {
+            "id": "optionals",
+            "title": "オプショナル型",
+            "icon": "help",
+            "items": [
+                {
+                    "label": "オプショナル型の宣言",
+                    "description": "?を付けることで「値があるかもしれないし、ないかもしれない」という状態を表現できます。ユーザーが入力をスキップした場合などに使います。",
+                    "swiftCode": "var name: String? = nil\nname = \"太郎\""
+                },
+                {
+                    "label": "値の存在確認",
+                    "description": "if letを使ってオプショナル型の値が存在するかチェックしてから安全に使うことができます。エラーを防ぐ重要な技術です。",
+                    "swiftCode": "if let unwrappedName = name {\n    print(\"名前は\\(unwrappedName)です\")\n} else {\n    print(\"名前がありません\")\n}"
+                },
+                {
+                    "label": "デフォルト値",
+                    "description": "??を使って、値がnil（空）の場合に使用する代わりの値を指定できます。名前が入力されていない時に「名無し」と表示するなどに使えます。",
+                    "swiftCode": "let displayName = name ?? \"名無し\"\nprint(displayName)"
+                }
+            ]
+        },
+        {
+            "id": "classes",
+            "title": "クラス・構造体",
+            "icon": "schema",
+            "items": [
+                {
+                    "label": "クラス定義",
+                    "description": "classを使ってオブジェクトの設計図を作ります。生徒の情報を管理するStudentクラスなど、現実の「もの」をプログラムで表現する時に使います。",
+                    "swiftCode": "class Student {\n    var name: String\n    var age: Int\n    \n    init(name: String, age: Int) {\n        self.name = name\n        self.age = age\n    }\n}"
+                },
+                {
+                    "label": "構造体定義",
+                    "description": "structを使ってシンプルなデータの組み合わせを作ります。座標のPointなど、関連するデータをまとめて扱いたい時に便利です。",
+                    "swiftCode": "struct Point {\n    var x: Double\n    var y: Double\n    \n    func distance() -> Double {\n        return sqrt(x * x + y * y)\n    }\n}"
+                },
+                {
+                    "label": "インスタンス作成",
+                    "description": "クラスや構造体の設計図から、実際に使えるオブジェクト（インスタンス）を作ります。同じ設計図から複数のオブジェクトを作ることができます。",
+                    "swiftCode": "let student = Student(name: \"太郎\", age: 15)\nlet point = Point(x: 3.0, y: 4.0)"
+                }
+            ]
+        },
+        {
+            "id": "swiftui-basics",
+            "title": "SwiftUI 基本",
+            "icon": "widgets",
+            "items": [
+                {
+                    "label": "基本的なView",
+                    "description": "SwiftUIでアプリの画面を作る基本的な構造です。Viewプロトコルに準拠した構造体で、bodyの中に表示したい内容を書きます。",
+                    "swiftCode": "struct ContentView: View {\n    var body: some View {\n        Text(\"Hello World\")\n    }\n}"
+                },
+                {
+                    "label": "VStack（縦並び）",
+                    "description": "複数の要素を縦方向に順番に並べて表示します。タイトルの下に説明文を置くなど、上下にレイアウトしたい時に使います。",
+                    "swiftCode": "VStack {\n    Text(\"タイトル\")\n    Text(\"説明文\")\n    Text(\"詳細\")\n}"
+                },
+                {
+                    "label": "HStack（横並び）",
+                    "description": "複数の要素を横方向に並べて表示します。アイコンと文字を横に並べるなど、左右にレイアウトしたい時に使います。",
+                    "swiftCode": "HStack {\n    Image(systemName: \"star\")\n    Text(\"アイコン付きテキスト\")\n    Spacer()\n}"
+                },
+                {
+                    "label": "ボタン",
+                    "description": "ユーザーがタップできるボタンを作ります。タップされた時に実行したい処理を{ }の中に書きます。アイコンと文字を組み合わせることもできます。",
+                    "swiftCode": "Button(\"押してください\") {\n    print(\"押されました!\")\n}\n\n// アイコン付きボタン\nButton(action: {\n    // アクション\n}) {\n    HStack {\n        Image(systemName: \"heart\")\n        Text(\"いいね\")\n    }\n}"
+                }
+            ]
+        },
+        {
+            "id": "swiftui-state",
+            "title": "SwiftUI 状態管理",
+            "icon": "settings",
+            "items": [
+                {
+                    "label": "状態変数（@State）",
+                    "description": "@Stateを付けた変数は、値が変わった時に自動的に画面が更新されます。カウンターやスイッチの状態など、ユーザーの操作で変わる値を管理できます。",
+                    "swiftCode": "@State private var counter = 0\n\nVStack {\n    Text(\"カウント: \\(counter)\")\n    Button(\"+1\") {\n        counter += 1\n    }\n    Button(\"リセット\") {\n        counter = 0\n    }\n}"
+                },
+                {
+                    "label": "テキスト入力（@State）",
+                    "description": "TextFieldを使ってユーザーからの文字入力を受け取ります。$を付けることで、入力された内容が変数に自動的に反映されます。",
+                    "swiftCode": "@State private var text = \"\"\n\nVStack {\n    TextField(\"テキストを入力\", text: $text)\n    Text(\"入力内容: \\(text)\")\n}"
+                },
+                {
+                    "label": "条件付き表示",
+                    "description": "if文を使って、特定の条件が満たされた時だけ要素を表示できます。設定のON/OFFに応じて機能を表示・非表示にするなどに使えます。",
+                    "swiftCode": "@State private var showText = true\n\nVStack {\n    Toggle(\"表示切替\", isOn: $showText)\n    if showText {\n        Text(\"表示されます\")\n    }\n}"
+                },
+                {
+                    "label": "リスト表示",
+                    "description": "配列の内容を縦に並んだリストとして表示します。買い物リストやメニューなど、同じ形式の項目を複数表示したい時に便利です。",
+                    "swiftCode": "let items = [\"りんご\", \"バナナ\", \"オレンジ\"]\n\nList(items, id: \\.self) { item in\n    HStack {\n        Image(systemName: \"leaf\")\n        Text(item)\n    }\n}"
+                }
+            ]
+        },
+        {
+            "id": "swiftui-styling",
+            "title": "SwiftUI スタイリング",
+            "icon": "palette",
+            "items": [
+                {
+                    "label": "文字スタイル",
+                    "description": "フォントサイズ、太さ、色などを変更して、テキストの見た目を美しくカスタマイズできます。タイトルを目立たせたり、説明文を控えめにしたりできます。",
+                    "swiftCode": "Text(\"タイトル\")\n    .font(.title)\n    .fontWeight(.bold)\n    .foregroundColor(.blue)\n\nText(\"小さいテキスト\")\n    .font(.caption)\n    .foregroundColor(.gray)"
+                },
+                {
+                    "label": "背景色と角丸",
+                    "description": "要素に背景色を付けたり、角を丸くしたりできます。グラデーションを使うとより美しい見た目になります。",
+                    "swiftCode": "Text(\"コンテンツ\")\n    .padding()\n    .background(Color.blue.opacity(0.3))\n    .cornerRadius(10)\n\n// グラデーション背景\nText(\"グラデーション\")\n    .padding()\n    .background(\n        LinearGradient(\n            colors: [.blue, .purple],\n            startPoint: .leading,\n            endPoint: .trailing\n        )\n    )\n    .cornerRadius(15)"
+                },
+                {
+                    "label": "パディングとマージン",
+                    "description": "paddingで要素の内側に余白を作り、spacingで要素同士の間隔を調整できます。適切な余白でアプリが見やすくなります。",
+                    "swiftCode": "Text(\"パディング\")\n    .padding(16)\n    .padding(.horizontal, 8)\n\nVStack(spacing: 20) {\n    Text(\"間隔1\")\n    Text(\"間隔2\")\n}"
+                },
+                {
+                    "label": "影の追加",
+                    "description": "shadowを使って要素に影を付けることで、立体感や深みを演出できます。ボタンやカードなどを目立たせる効果があります。",
+                    "swiftCode": "Text(\"影付きボックス\")\n    .padding()\n    .background(Color.white)\n    .shadow(radius: 5)\n\n// より詳細な影設定\nRectangle()\n    .fill(Color.blue)\n    .frame(width: 100, height: 100)\n    .shadow(color: .gray, radius: 3, x: 2, y: 2)"
+                }
+            ]
+        },
+        {
+            "id": "swiftui-navigation",
+            "title": "SwiftUI ナビゲーション",
+            "icon": "navigation",
+            "items": [
+                {
+                    "label": "ナビゲーション",
+                    "description": "NavigationViewとNavigationLinkを使って、複数の画面間を行き来できるようになります。アプリの基本的な画面遷移機能です。",
+                    "swiftCode": "NavigationView {\n    VStack {\n        NavigationLink(\"詳細ページへ\", \n                      destination: DetailView())\n        NavigationLink(\"設定\", \n                      destination: SettingsView())\n    }\n    .navigationTitle(\"ホーム\")\n    .navigationBarTitleDisplayMode(.large)\n}"
+                },
+                {
+                    "label": "シート（モーダル）",
+                    "description": "sheetを使って新しい画面を上から表示できます。設定画面や詳細情報など、一時的に表示したい画面に使います。",
+                    "swiftCode": "@State private var showSheet = false\n\nVStack {\n    Button(\"シートを開く\") {\n        showSheet = true\n    }\n}\n.sheet(isPresented: $showSheet) {\n    DetailView()\n}\n\n// フルスクリーンカバー\n.fullScreenCover(isPresented: $showSheet) {\n    DetailView()\n}"
+                },
+                {
+                    "label": "アラート",
+                    "description": "alertを使ってユーザーに重要な情報を通知したり、確認を求めたりできます。削除の確認やエラーメッセージなどに使います。",
+                    "swiftCode": "@State private var showAlert = false\n\nButton(\"アラート表示\") {\n    showAlert = true\n}\n.alert(\"お知らせ\", isPresented: $showAlert) {\n    Button(\"OK\") { }\n    Button(\"キャンセル\", role: .cancel) { }\n}"
+                },
+                {
+                    "label": "タブビュー",
+                    "description": "TabViewを使って画面下部にタブを表示し、複数の主要画面を切り替えられます。ホーム、検索、設定など、メイン機能へのアクセスに使います。",
+                    "swiftCode": "TabView {\n    HomeView()\n        .tabItem {\n            Image(systemName: \"house\")\n            Text(\"ホーム\")\n        }\n    SearchView()\n        .tabItem {\n            Image(systemName: \"magnifyingglass\")\n            Text(\"検索\")\n        }\n    SettingsView()\n        .tabItem {\n            Image(systemName: \"gear\")\n            Text(\"設定\")\n        }\n}"
+                }
+            ]
+        }
+    ]
+}
