@@ -8,6 +8,8 @@ node_modules
 /.svelte-kit
 /build
 
+/documents
+copilot-instructions.md
 # OS
 .DS_Store
 Thumbs.db
