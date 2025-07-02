@@ -6,34 +6,16 @@ const config = {
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',
-			fallback: undefined,
+			fallback: null,
 			precompress: false,
-			strict: true
+			strict: false
 		}),
 		paths: {
 			base: process.argv.includes('dev') ? '' : '/stapro_swift_curriculum'
 		},
 		prerender: {
-			entries: [
-				'*',
-				'/tutorial/1',
-				'/tutorial/2',
-				'/tutorial/3',
-				'/tutorial/4',
-				'/tutorial/5',
-				'/practice/1',
-				'/practice/2',
-				'/practice/3',
-				'/practice/4',
-				'/practice/5'
-			],
+			entries: ['*'],
 			handleHttpError: ({ path, referrer, message }) => {
-				// 動的ルートはプリレンダリングしない
-				if (path.includes('[id]')) {
-					console.warn(`Skipping prerender for dynamic route: ${path}`);
-					return;
-				}
-
 				// 404エラーなど、一部のエラーは無視する
 				if (message.includes('404') || message.includes('Not found')) {
 					console.warn(`Skipping 404 error for path: ${path}`);

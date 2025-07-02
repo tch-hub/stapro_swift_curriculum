@@ -1,3 +1,3 @@
-// SPAモードのため、ルートレベルではプリレンダリングを無効化
-export const prerender = false;
-export const ssr = false;
+// GitHub Pagesでは事前レンダリング（prerender）が必要
+export const prerender = true;
+export const ssr = true;
