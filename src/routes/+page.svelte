@@ -1,6 +1,10 @@
 <script>
   import { base } from "$app/paths";
 
+  // デバッグ用：ベースパスをコンソールに出力
+  console.log("Base path:", base);
+  console.log("Current location:", typeof window !== 'undefined' ? window.location.href : 'SSR');
+
   // メインナビゲーションのカードデータ（メインの学習コース）
   const mainCourseCards = [
     {

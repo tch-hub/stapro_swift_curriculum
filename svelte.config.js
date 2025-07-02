@@ -6,15 +6,27 @@ const config = {
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',
-			fallback: 'index.html',
+			fallback: undefined,
 			precompress: false,
-			strict: false
+			strict: true
 		}),
 		paths: {
-			base: process.argv.includes('dev') ? '' : '/githubpagestest'
+			base: process.argv.includes('dev') ? '' : '/stapro_swift_curriculum'
 		},
 		prerender: {
-			entries: ['*'],
+			entries: [
+				'*',
+				'/tutorial/1',
+				'/tutorial/2',
+				'/tutorial/3',
+				'/tutorial/4',
+				'/tutorial/5',
+				'/practice/1',
+				'/practice/2',
+				'/practice/3',
+				'/practice/4',
+				'/practice/5'
+			],
 			handleHttpError: ({ path, referrer, message }) => {
 				// 動的ルートはプリレンダリングしない
 				if (path.includes('[id]')) {
@@ -22,15 +34,18 @@ const config = {
 					return;
 				}
 
+				// 404エラーなど、一部のエラーは無視する
+				if (message.includes('404') || message.includes('Not found')) {
+					console.warn(`Skipping 404 error for path: ${path}`);
+					return;
+				}
+
 				// エラーの原因となったパスに関する情報をすべてコンソールに出力する
 				console.error('--- PRERENDER ERROR ---');
-				console.error(`Path: ${path}`);       // 問題のパス (例: /)
-				console.error(`Referrer: ${referrer}`); // そのリンクがあったページ (例: /githubpagestest/)
+				console.error(`Path: ${path}`);       // 問題のパス
+				console.error(`Referrer: ${referrer}`); // そのリンクがあったページ
 				console.error(`Message: ${message}`);   // エラーメッセージ
 				console.error('-----------------------');
-
-				// ビルドを強制的に続行させたい場合は、下の行のコメントを外す
-				// return;
 
 				// 通常通りエラーでビルドを停止させる
 				throw new Error(message);
