@@ -2,17 +2,17 @@ import adapter from '@sveltejs/adapter-static';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-    kit: {
-        adapter: adapter({
-            pages: 'build',
-            assets: 'build',
-            fallback: undefined,
-            precompress: false,
-            strict: true
-        }),
-        paths: {
-            base: process.argv.includes('dev') ? '' : '/githubpagestest'
-        },
+	kit: {
+		adapter: adapter({
+			pages: 'build',
+			assets: 'build',
+			fallback: undefined,
+			precompress: false,
+			strict: true
+		}),
+		paths: {
+			base: process.argv.includes('dev') ? '' : '/githubpagestest'
+		},
 		prerender: {
 			handleHttpError: ({ path, referrer, message }) => {
 				// エラーの原因となったパスに関する情報をすべてコンソールに出力する
@@ -29,7 +29,7 @@ const config = {
 				throw new Error(message);
 			}
 		}
-    }
+	}
 };
 
 export default config;
