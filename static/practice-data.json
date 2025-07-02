@@ -1,0 +1,398 @@
+{
+    "practiceProblems": [
+        {
+            "id": "variable-declaration",
+            "title": "変数の宣言練習",
+            "description": "適切なキーワードを使って変数を宣言してみよう",
+            "difficulty": "初級",
+            "category": "変数",
+            "icon": "code",
+            "estimatedTime": "10分",
+            "completed": false,
+            "steps": [
+                {
+                    "id": 1,
+                    "title": "問題1: let vs var",
+                    "instruction": "値が変更されない場合、どちらのキーワードを使うべきですか？\n\n例: ユーザーの名前を保存する変数",
+                    "hint": "値が変更されない場合は不変性を保つキーワードを選びましょう。",
+                    "options": [
+                        "var",
+                        "let",
+                        "const",
+                        "final"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "値が変更されない場合は `let` を使用します。不変性を保つことでより安全なコードになります。"
+                },
+                {
+                    "id": 2,
+                    "title": "問題2: 変数名の規則",
+                    "instruction": "Swiftの変数名として正しいものはどれですか？",
+                    "hint": "Swiftの変数名は文字、数字、アンダースコアを使用でき、数字で始まることはできません。",
+                    "options": [
+                        "123count",
+                        "user_name",
+                        "class",
+                        "userName"
+                    ],
+                    "correctAnswer": 3,
+                    "explanation": "`userName` がSwiftの命名規則（キャメルケース）に従った正しい変数名です。`class` は予約語なので使用できません。"
+                },
+                {
+                    "id": 3,
+                    "title": "問題3: 値の変更",
+                    "instruction": "次のコードで何が起こりますか？\n\nlet score = 100\nscore = 200",
+                    "hint": "`let` で宣言された変数の特性を考えてください。",
+                    "options": [
+                        "正常に実行される",
+                        "コンパイルエラーが発生",
+                        "実行時エラーが発生",
+                        "警告が表示される"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "`let` で宣言された変数は不変なので、値を変更しようとするとコンパイルエラーが発生します。"
+                }
+            ]
+        },
+        {
+            "id": "type-inference",
+            "title": "型推論チャレンジ",
+            "description": "Swiftの型推論システムを理解して、適切なコードを選択しよう",
+            "difficulty": "中級",
+            "category": "データ型",
+            "icon": "psychology",
+            "estimatedTime": "15分",
+            "completed": false,
+            "steps": [
+                {
+                    "id": 1,
+                    "title": "問題1: 基本的な型推論",
+                    "instruction": "次のコードで、変数 'message' の型は何になりますか？\n\nvar message = \"Hello, Swift!\"",
+                    "hint": "Swiftは値から自動的に型を推論します。文字列リテラルから推論される型を考えてください。",
+                    "options": [
+                        "String",
+                        "Int",
+                        "Double",
+                        "Any"
+                    ],
+                    "correctAnswer": 0,
+                    "explanation": "文字列リテラル \"Hello, Swift!\" から、Swiftは自動的に String 型と推論します。"
+                },
+                {
+                    "id": 2,
+                    "title": "問題2: 数値の型推論",
+                    "instruction": "次のコードで、変数 'count' の型は何になりますか？\n\nvar count = 42",
+                    "hint": "整数リテラルの場合、Swiftはどの整数型を選択するでしょうか？",
+                    "options": [
+                        "Int8",
+                        "Int16",
+                        "Int",
+                        "Double"
+                    ],
+                    "correctAnswer": 2,
+                    "explanation": "整数リテラルの場合、Swiftは標準的に Int 型を推論します。"
+                },
+                {
+                    "id": 3,
+                    "title": "問題3: 小数点数の型推論",
+                    "instruction": "次のコードで、変数 'price' の型は何になりますか？\n\nvar price = 99.99",
+                    "hint": "小数点を含む数値リテラルから推論される型を考えてください。",
+                    "options": [
+                        "Float",
+                        "Double",
+                        "Int",
+                        "Decimal"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "小数点を含む数値リテラルの場合、Swiftは自動的に Double 型を推論します。"
+                },
+                {
+                    "id": 4,
+                    "title": "問題4: 配列の型推論",
+                    "instruction": "次のコードで、変数 'numbers' の型は何になりますか？\n\nvar numbers = [1, 2, 3, 4, 5]",
+                    "hint": "配列リテラルの要素から推論される型を考えてください。",
+                    "options": [
+                        "[Any]",
+                        "[Int]",
+                        "Array",
+                        "[Double]"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "整数要素を持つ配列リテラルから、Swiftは [Int] 型（Int型の配列）を推論します。"
+                },
+                {
+                    "id": 5,
+                    "title": "問題5: 辞書の型推論",
+                    "instruction": "次のコードで、変数 'scores' の型は何になりますか？\n\nvar scores = [\"Alice\": 95, \"Bob\": 87]",
+                    "hint": "辞書リテラルのキーと値の型から推論される型を考えてください。",
+                    "options": [
+                        "[String: Any]",
+                        "[Any: Int]",
+                        "[String: Int]",
+                        "Dictionary"
+                    ],
+                    "correctAnswer": 2,
+                    "explanation": "文字列キーと整数値を持つ辞書リテラルから、Swiftは [String: Int] 型を推論します。"
+                },
+                {
+                    "id": 6,
+                    "title": "問題6: ブール値の型推論",
+                    "instruction": "次のコードで、変数 'isActive' の型は何になりますか？\n\nvar isActive = true",
+                    "hint": "ブール値リテラルから推論される型を考えてください。",
+                    "options": [
+                        "Int",
+                        "String",
+                        "Bool",
+                        "Any"
+                    ],
+                    "correctAnswer": 2,
+                    "explanation": "ブール値リテラル true から、Swiftは Bool 型を推論します。"
+                },
+                {
+                    "id": 7,
+                    "title": "問題7: 複雑な型推論",
+                    "instruction": "次のコードで、変数 'result' の型は何になりますか？\n\nvar result = 10 + 3.5",
+                    "hint": "異なる数値型の演算結果について考えてください。",
+                    "options": [
+                        "Int",
+                        "Float",
+                        "Double",
+                        "String"
+                    ],
+                    "correctAnswer": 2,
+                    "explanation": "Int と Double の演算では、より精度の高い Double 型に統一されるため、result は Double 型になります。"
+                },
+                {
+                    "id": 8,
+                    "title": "問題8: 型注釈との比較",
+                    "instruction": "型推論を使わずに明示的に型を指定する場合、正しいコードはどれですか？\n\n元のコード: var name = \"Swift\"",
+                    "hint": "型注釈（Type Annotation）を使用して型を明示的に指定してください。",
+                    "options": [
+                        "var name: String = \"Swift\"",
+                        "var name = String(\"Swift\")",
+                        "var name as String = \"Swift\"",
+                        "var name -> String = \"Swift\""
+                    ],
+                    "correctAnswer": 0,
+                    "explanation": "型注釈を使用する場合は、変数名の後にコロン（:）と型名を記述します。var name: String = \"Swift\" が正しい書き方です。"
+                }
+            ]
+        },
+        {
+            "id": "conditional-statements",
+            "title": "条件分岐の実装",
+            "description": "if文を使って条件による処理分岐を作ってみよう",
+            "difficulty": "中級",
+            "category": "制御構造",
+            "icon": "account_tree",
+            "estimatedTime": "12分",
+            "completed": false,
+            "steps": [
+                {
+                    "id": 1,
+                    "title": "問題1: 基本的なif文",
+                    "instruction": "次のコードの実行結果は何ですか？\n\nlet age = 20\nif age >= 18 {\n    print(\"成人です\")\n} else {\n    print(\"未成年です\")\n}",
+                    "hint": "age の値と条件を比較してください。",
+                    "options": [
+                        "成人です",
+                        "未成年です",
+                        "エラーが発生",
+                        "何も出力されない"
+                    ],
+                    "correctAnswer": 0,
+                    "explanation": "age が 20 で、18 以上なので条件が true となり、「成人です」が出力されます。"
+                },
+                {
+                    "id": 2,
+                    "title": "問題2: else if文",
+                    "instruction": "成績判定プログラムで、score が 85 の場合の出力は？\n\nlet score = 85\nif score >= 90 {\n    print(\"優\")\n} else if score >= 80 {\n    print(\"良\")\n} else if score >= 70 {\n    print(\"可\")\n} else {\n    print(\"不可\")\n}",
+                    "hint": "上から順番に条件をチェックします。",
+                    "options": [
+                        "優",
+                        "良",
+                        "可",
+                        "不可"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "score が 85 なので、最初の条件（90以上）は false、2番目の条件（80以上）が true となり、「良」が出力されます。"
+                },
+                {
+                    "id": 3,
+                    "title": "問題3: 論理演算子",
+                    "instruction": "次の条件式の結果は？\n\nlet temperature = 25\nlet humidity = 60\nif temperature > 20 && humidity < 70 {\n    print(\"快適です\")\n} else {\n    print(\"不快です\")\n}",
+                    "hint": "&& は AND演算子です。両方の条件が true の場合に全体が true になります。",
+                    "options": [
+                        "快適です",
+                        "不快です",
+                        "エラーが発生",
+                        "条件が不正"
+                    ],
+                    "correctAnswer": 0,
+                    "explanation": "temperature > 20 が true（25 > 20）、humidity < 70 も true（60 < 70）なので、&& の結果は true となり「快適です」が出力されます。"
+                }
+            ]
+        },
+        {
+            "id": "array-operations",
+            "title": "配列の操作",
+            "description": "配列の要素を追加・削除・検索してみよう",
+            "difficulty": "中級",
+            "category": "コレクション",
+            "icon": "view_list",
+            "estimatedTime": "15分",
+            "completed": false,
+            "steps": [
+                {
+                    "id": 1,
+                    "title": "問題1: 配列の作成",
+                    "instruction": "空の整数配列を作成する正しい方法はどれですか？",
+                    "hint": "Swiftでは型を明示して空の配列を作成する方法があります。",
+                    "options": [
+                        "var numbers = []",
+                        "var numbers: [Int] = []",
+                        "var numbers = Array()",
+                        "var numbers = [Int]"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "型注釈を使って var numbers: [Int] = [] が正しい空の配列の作成方法です。"
+                },
+                {
+                    "id": 2,
+                    "title": "問題2: 要素の追加",
+                    "instruction": "配列に要素を追加するメソッドはどれですか？\n\nvar fruits = [\"apple\", \"banana\"]\n// ここで \"orange\" を追加したい",
+                    "hint": "配列の末尾に要素を追加するメソッドを考えてください。",
+                    "options": [
+                        "fruits.add(\"orange\")",
+                        "fruits.append(\"orange\")",
+                        "fruits.insert(\"orange\")",
+                        "fruits.push(\"orange\")"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "Swiftでは `append()` メソッドを使って配列の末尾に要素を追加します。"
+                },
+                {
+                    "id": 3,
+                    "title": "問題3: 配列の要素数",
+                    "instruction": "配列の要素数を取得するプロパティはどれですか？\n\nlet colors = [\"red\", \"green\", \"blue\"]",
+                    "hint": "配列のサイズを表すプロパティを考えてください。",
+                    "options": [
+                        "colors.size",
+                        "colors.length",
+                        "colors.count",
+                        "colors.total"
+                    ],
+                    "correctAnswer": 2,
+                    "explanation": "Swiftでは `count` プロパティを使って配列の要素数を取得します。"
+                }
+            ]
+        },
+        {
+            "id": "function-creation",
+            "title": "関数の作成",
+            "description": "引数と戻り値を持つ関数を作ってみよう",
+            "difficulty": "上級",
+            "category": "関数",
+            "icon": "functions",
+            "estimatedTime": "18分",
+            "completed": false,
+            "steps": [
+                {
+                    "id": 1,
+                    "title": "問題1: 基本的な関数",
+                    "instruction": "2つの整数を受け取って合計を返す関数の正しい定義はどれですか？",
+                    "hint": "func キーワードを使用し、引数の型と戻り値の型を指定します。",
+                    "options": [
+                        "func add(a: Int, b: Int) -> Int { return a + b }",
+                        "function add(a: Int, b: Int) -> Int { return a + b }",
+                        "def add(a: Int, b: Int) -> Int { return a + b }",
+                        "func add(Int a, Int b) -> Int { return a + b }"
+                    ],
+                    "correctAnswer": 0,
+                    "explanation": "Swiftでは `func` キーワードを使い、`func 関数名(引数名: 型) -> 戻り値の型` の形式で関数を定義します。"
+                },
+                {
+                    "id": 2,
+                    "title": "問題2: 引数ラベル",
+                    "instruction": "次の関数呼び出しで正しいものはどれですか？\n\nfunc greet(to name: String) -> String {\n    return \"Hello, \\(name)!\"\n}",
+                    "hint": "引数ラベル 'to' と引数名 'name' に注目してください。",
+                    "options": [
+                        "greet(name: \"Swift\")",
+                        "greet(to: \"Swift\")",
+                        "greet(\"Swift\")",
+                        "greet(to name: \"Swift\")"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "引数ラベルが 'to' なので、関数呼び出し時は `greet(to: \"Swift\")` となります。"
+                },
+                {
+                    "id": 3,
+                    "title": "問題3: デフォルト引数",
+                    "instruction": "次の関数で `multiply(5)` を呼び出した場合の結果は？\n\nfunc multiply(_ number: Int, by factor: Int = 2) -> Int {\n    return number * factor\n}",
+                    "hint": "デフォルト引数の値に注目してください。",
+                    "options": [
+                        "5",
+                        "10",
+                        "エラーが発生",
+                        "0"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "by パラメータのデフォルト値は 2 なので、5 * 2 = 10 が返されます。"
+                }
+            ]
+        },
+        {
+            "id": "optional-types",
+            "title": "オプショナル型の使用",
+            "description": "オプショナル型を使った安全なコードを書いてみよう",
+            "difficulty": "上級",
+            "category": "オプショナル",
+            "icon": "help",
+            "estimatedTime": "20分",
+            "completed": false,
+            "steps": [
+                {
+                    "id": 1,
+                    "title": "問題1: オプショナル型の宣言",
+                    "instruction": "nil を代入できる文字列変数を宣言する正しい方法はどれですか？",
+                    "hint": "オプショナル型を表す記号を考えてください。",
+                    "options": [
+                        "var name: String = nil",
+                        "var name: String? = nil",
+                        "var name: String! = nil",
+                        "var name: Optional<String> = nil"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "オプショナル型は型名の後に `?` を付けて宣言します。`String?` が正しい書き方です。"
+                },
+                {
+                    "id": 2,
+                    "title": "問題2: オプショナルバインディング",
+                    "instruction": "オプショナル値を安全に取り出す if let 文の正しい使い方はどれですか？\n\nlet optionalName: String? = \"Swift\"",
+                    "hint": "if let を使ってオプショナル値を安全に取り出します。",
+                    "options": [
+                        "if let name = optionalName { print(name) }",
+                        "if optionalName != nil { print(optionalName) }",
+                        "if let optionalName { print(optionalName) }",
+                        "let name = optionalName ?? \"default\""
+                    ],
+                    "correctAnswer": 0,
+                    "explanation": "`if let name = optionalName` でオプショナル値を安全に取り出し、nilでない場合のみ処理を実行できます。"
+                },
+                {
+                    "id": 3,
+                    "title": "問題3: Nil合体演算子",
+                    "instruction": "次のコードの結果は何ですか？\n\nlet optionalAge: Int? = nil\nlet age = optionalAge ?? 18\nprint(age)",
+                    "hint": "?? 演算子（nil合体演算子）の動作を考えてください。",
+                    "options": [
+                        "nil",
+                        "18",
+                        "エラーが発生",
+                        "0"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "optionalAge が nil なので、?? 演算子により右側の値 18 が使用されます。"
+                }
+            ]
+        }
+    ]
+}

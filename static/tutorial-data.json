@@ -19,7 +19,8 @@
                         "ContentView.swiftを開く",
                         "Text(\"Hello, World!\")を記述",
                         "プレビューで確認"
-                    ]
+                    ],
+                    "previewImage": "https://placehold.jp/250x500/3f51b5/ffffff?text=Hello%2C+World%21"
                 },
                 {
                     "id": "text-styling",
@@ -34,7 +35,8 @@
                         ".font(.largeTitle)で大きなフォントを設定",
                         ".foregroundColor()で文字色を変更",
                         ".fontWeight()で文字の太さを調整"
-                    ]
+                    ],
+                    "previewImage": "https://placehold.jp/250x500/e8eaf6/3f51b5?text=%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%B9%E3%82%BF%E3%82%A4%E3%83%AB"
                 },
                 {
                     "id": "text-multiline",
@@ -72,7 +74,8 @@
                         "{ }の中にprint文を記述",
                         "VStackで複数のボタンを配置",
                         "デバッグエリアでprint結果を確認"
-                    ]
+                    ],
+                    "previewImage": "https://placehold.jp/250x500/f3e5f5/7b1fa2?text=%E3%83%9C%E3%82%BF%E3%83%B3%E5%9F%BA%E7%A4%8E"
                 },
                 {
                     "id": "button-styling",
@@ -110,7 +113,8 @@
                         "Textで@State変数を表示",
                         "Buttonで@State変数の値を変更",
                         "値の変化で画面が自動更新されることを確認"
-                    ]
+                    ],
+                    "previewImage": "https://placehold.jp/250x500/fff3e0/ff6f00?text=State%E7%AE%A1%E7%90%86"
                 },
                 {
                     "id": "number-state",
@@ -125,7 +129,8 @@
                         "\\(count)でテキストに数値を表示",
                         "+1ボタンでcount値を1増やす",
                         "-1ボタンでcount値を1減らす"
-                    ]
+                    ],
+                    "previewImage": "https://placehold.jp/250x500/f1f8e9/689f38?text=%E6%95%B0%E5%80%A4%E3%82%AB%E3%82%A6%E3%83%B3%E3%82%BF%E3%83%BC"
                 },
                 {
                     "id": "boolean-state",
@@ -163,7 +168,8 @@
                         "中に複数のTextを配置",
                         "要素が縦に並ぶことを確認",
                         "プレビューで配置を確認"
-                    ]
+                    ],
+                    "previewImage": "https://placehold.jp/250x500/fce4ec/c2185b?text=VStack%E7%B8%A6%E4%B8%A6%E3%81%B3"
                 },
                 {
                     "id": "hstack-only",
@@ -231,7 +237,8 @@
                         ".fill(Color.blue)で色を指定",
                         ".frame(width:, height:)でサイズ設定",
                         "複数の四角形で違いを確認"
-                    ]
+                    ],
+                    "previewImage": "https://placehold.jp/250x500/e0f2f1/00695c?text=%E5%9B%9B%E8%A7%92%E5%BD%A2%E6%8F%8F%E7%94%BB"
                 },
                 {
                     "id": "circle-basic",
@@ -391,7 +398,8 @@
                         "+ボタンでcount += 1で数値を増やす",
                         "-ボタンでcount -= 1で数値を減らす",
                         "リセットボタンでcount = 0で初期化"
-                    ]
+                    ],
+                    "previewImage": "https://placehold.jp/250x500/e3f2fd/1976d2?text=%E3%82%AB%E3%82%A6%E3%83%B3%E3%82%BF%E3%83%BC%E3%82%A2%E3%83%97%E3%83%AA"
                 },
                 {
                     "id": "greeting-app",
@@ -407,7 +415,8 @@
                         "名前が空の時はボタンを無効化(.disabled)",
                         "if文で条件に合った時だけ挨拶を表示",
                         "絵文字やスタイルで見た目を楽しく"
-                    ]
+                    ],
+                    "previewImage": "https://placehold.jp/250x500/f9fbe7/827717?text=%E6%8C%A8%E6%8B%B6%E3%82%A2%E3%83%97%E3%83%AA"
                 },
                 {
                     "id": "color-changer",
