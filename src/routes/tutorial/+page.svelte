@@ -1,6 +1,7 @@
 <script>
   import { base } from "$app/paths";
   import { onMount } from "svelte";
+  import CodeBlock from "$lib/CodeBlock.svelte";
 
   // チュートリアルデータ
   let tutorialCategories = [];
@@ -132,8 +133,8 @@
   <!-- カテゴリ選択タブ -->
   <section>
     <div class="tabs center-align scroll">
-      {#each tutorialCategories as category} 
-             <a
+      {#each tutorialCategories as category}
+        <a
           type="button"
           class={`tab-button ${selectedCategory === category.id ? "active" : ""}`}
           onclick={() => selectCategory(category.id)}
@@ -203,17 +204,37 @@
 
     <div class="space"></div>
 
-    <!-- コード表示 -->
+    <!-- コード表示とプレビュー -->
     <section>
       <h4>💻 サンプルコード</h4>
       <article class="card round border">
         <div class="padding">
-          <div class="code-header">
-            <i class="small">code</i>
-            <span>ContentView.swift</span>
+          <div class="grid">
+            <div class="s12 l8">
+              <div class="code-header">
+                <i class="small">code</i>
+                <span>ContentView.swift</span>
+              </div>
+              <div class="space"></div>
+              <CodeBlock code={selectedLesson.code} language="swift" />
+            </div>
+            <div class="s12 l4">
+              <div class="preview-section">
+                <h6 class="preview-title">
+                  <i class="small">smartphone</i>
+                  <span>プレビュー</span>
+                </h6>
+                <div class="iphone-preview">
+                  <img
+                    src={selectedLesson.previewImage ||
+                      `https://placehold.jp/250x500/3f51b5/ffffff?text=${encodeURIComponent(selectedLesson.title)}`}
+                    alt="{selectedLesson.title}の完成イメージ"
+                    class="iphone-image"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="space"></div>
-          <pre class="code-block"><code>{selectedLesson.code}</code></pre>
         </div>
       </article>
     </section>
@@ -280,28 +301,33 @@
         <div class="grid">
           {#each getSelectedCategory().lessons as lesson}
             <div class="s12 m6 l4">
-              <article
-                class="card round lesson-card"
+              <button
+                type="button"
+                class="lesson-card-button"
                 onclick={() => selectLesson(lesson)}
               >
-                <div class="padding">
-                  <div class="space"></div>
-                  <h5>{lesson.title}</h5>
-                  <p>{lesson.description}</p>
-                  <div class="space"></div>
-                  <div class="row">
-                    <div
-                      class="chip {getDifficultyColor(lesson.difficulty)} small"
-                    >
-                      <span>{lesson.difficulty}</span>
-                    </div>
-                    <div class="max"></div>
-                    <div class="chip secondary small">
-                      <span><i>schedule</i> {lesson.duration}</span>
+                <div class="card round lesson-card-content">
+                  <div class="padding">
+                    <div class="space"></div>
+                    <h5>{lesson.title}</h5>
+                    <p>{lesson.description}</p>
+                    <div class="space"></div>
+                    <div class="row">
+                      <div
+                        class="chip {getDifficultyColor(
+                          lesson.difficulty
+                        )} small"
+                      >
+                        <span>{lesson.difficulty}</span>
+                      </div>
+                      <div class="max"></div>
+                      <div class="chip secondary small">
+                        <span><i>schedule</i> {lesson.duration}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </article>
+              </button>
             </div>
           {/each}
         </div>
@@ -322,8 +348,8 @@
       </a>
     </div>
     <div class="min">
-      <a href="{base}/practice" class="button primary">
-        <span>練習問題に挑戦</span>
+      <a href="{base}/tutorial" class="button primary">
+        <span>次のチュートリアルに進む</span>
         <i>arrow_forward</i>
       </a>
     </div>
@@ -347,15 +373,25 @@
     line-height: 1.6;
   }
 
-  .lesson-card {
+  .lesson-card-button {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 100%;
+    text-align: left;
     cursor: pointer;
+    display: block;
+    height: 100%;
+  }
+
+  .lesson-card-content {
     transition:
       transform 0.2s ease,
       box-shadow 0.2s ease;
     height: 100%;
   }
 
-  .lesson-card:hover {
+  .lesson-card-button:hover .lesson-card-content {
     transform: translateY(-4px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   }
@@ -367,19 +403,6 @@
     font-size: 0.9rem;
     color: var(--on-surface-variant);
     margin-bottom: 1rem;
-  }
-
-  .code-block {
-    background: var(--surface-variant);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    overflow-x: auto;
-    white-space: pre;
-    color: var(--on-surface-variant);
-    border: 1px solid var(--outline);
   }
 
   .tabs {
@@ -401,5 +424,74 @@
   .tabs a.active {
     background-color: var(--primary);
     color: var(--on-primary);
+  }
+
+  .preview-section {
+    padding-left: 1rem;
+    border-left: 1px solid var(--outline);
+  }
+
+  .preview-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--on-surface-variant);
+    font-weight: 500;
+  }
+
+  .iphone-preview {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .iphone-image {
+    max-width: 100%;
+    width: 250px;
+    height: auto;
+    aspect-ratio: 9/19.5; /* iPhone 14 Pro の比率 */
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--outline);
+    object-fit: cover;
+  }
+
+  @media (max-width: 768px) {
+    .preview-section {
+      padding-left: 0;
+      border-left: none;
+      border-top: 1px solid var(--outline);
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+
+    .iphone-image {
+      width: 200px;
+    }
+  }
+
+  .image-preview {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .responsive-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--outline);
+  }
+
+  .image-caption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--on-surface-variant);
   }
 </style>

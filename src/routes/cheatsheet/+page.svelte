@@ -17,8 +17,11 @@
       const data = await response.json();
       sections = data.sections;
 
-      // 最初のセクションを選択状態にする
-      if (sections.length > 0) {
+      // URLのハッシュを確認して対応するセクションを選択
+      const hash = window.location.hash.substring(1);
+      if (hash && sections.some((section) => section.id === hash)) {
+        selectedSection = hash;
+      } else if (sections.length > 0) {
         selectedSection = sections[0].id;
       }
     } catch (error) {
@@ -234,7 +237,6 @@
     font-size: 0.9rem;
     line-height: 1.4;
   }
-
 
   .swift-code-section {
     padding: 0.75rem;

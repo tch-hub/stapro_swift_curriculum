@@ -16,7 +16,7 @@ jobs:
   build-and-deploy:
     # 実行環境を指定
     runs-on: ubuntu-latest
-    
+
     # このジョブが必要とする権限を設定
     permissions:
       contents: read
@@ -33,14 +33,14 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.7.1 # あなたが使っているpnpmのバージョンに合わせてください
+          version: 10.12.4 # あなたが使っているpnpmのバージョンに合わせてください
 
       # ステップ3: Node.jsの環境をセットアップする
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22.14.0' # あなたが使っているNode.jsのバージョン
-          cache: 'pnpm' # pnpmのキャッシュを有効にする
+          node-version: "22.14.0" # あなたが使っているNode.jsのバージョン
+          cache: "pnpm" # pnpmのキャッシュを有効にする
 
       # ステップ4: 依存関係をインストールする
       - name: Install dependencies
@@ -49,6 +49,8 @@ jobs:
       # ステップ5: SvelteKitアプリケーションをビルドする
       - name: Build application
         run: pnpm build
+        env:
+          NODE_ENV: production
 
       # ステップ6: GitHub Pagesがアンダースコアで始まるフォルダを無視しないように設定
       - name: Add .nojekyll file
