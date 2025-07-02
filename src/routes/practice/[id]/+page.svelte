@@ -18,10 +18,14 @@
   let isCorrect = $state(false);
   let feedback = $state("");
   let showHint = $state(false);
+  let showStepNavigation = $state(false);
 
   // シャッフルされた選択肢と正解インデックス
   let shuffledOptions = $state([]);
   let shuffledCorrectAnswer = $state(0);
+
+  // 各ステップの完了状態を管理
+  let stepCompletionStatus = $state([]);
 
   // JSONファイルから問題データを読み込む
   async function loadProblemData() {
@@ -40,6 +44,9 @@
 
       problemData = problem;
       loading = false;
+
+      // 各ステップの完了状態を初期化
+      stepCompletionStatus = Array(problem.steps?.length || 0).fill(false);
 
       // 最初の問題の選択肢をシャッフル
       if (problem.steps && problem.steps.length > 0) {
@@ -98,6 +105,9 @@
 
     isCorrect = optionIndex === shuffledCorrectAnswer;
 
+    // 完了状態を更新
+    stepCompletionStatus[currentStep] = true;
+
     if (isCorrect) {
       feedback = "正解です！ " + problemData.steps[currentStep].explanation;
     } else {
@@ -108,6 +118,13 @@
         correctOption +
         "」です。" +
         problemData.steps[currentStep].explanation;
+    }
+  }
+
+  // ラジオボタンの変更をハンドル
+  function handleOptionChange() {
+    if (!isAnswered) {
+      selectOption(selectedOption);
     }
   }
 
@@ -148,6 +165,24 @@
   // ヒントの表示切り替え
   function toggleHint() {
     showHint = !showHint;
+  }
+
+  // ステップナビゲーションの表示切り替え
+  function toggleStepNavigation() {
+    showStepNavigation = !showStepNavigation;
+  }
+
+  // 特定のステップに移動する関数
+  function goToStep(stepIndex) {
+    if (stepIndex < 0 || stepIndex >= problemData.steps.length) return;
+
+    currentStep = stepIndex;
+    selectedOption = null;
+    isAnswered = false;
+    isCorrect = false;
+    feedback = "";
+    showHint = false;
+    showStepNavigation = false;
   }
 
   // 難易度に応じた色を取得
@@ -194,7 +229,7 @@
   <section>
     <div class="grid">
       <div class="s12 center-align">
-        <div class="loader"></div>
+        <progress class="circle large"></progress>
         <p>問題を読み込み中...</p>
       </div>
     </div>
@@ -204,55 +239,49 @@
   <section>
     <div class="grid">
       <div class="s12">
-        <div class="card error-container">
-          <div class="padding">
-            <h6><i>error</i> エラーが発生しました</h6>
-            <p>{error}</p>
-            <div class="row">
-              <button class="button primary" onclick={() => loadProblemData()}>
-                <i>refresh</i>
-                <span>再読み込み</span>
-              </button>
-              <a href="{base}/practice" class="button transparent">
-                <i>arrow_back</i>
-                <span>練習問題一覧に戻る</span>
-              </a>
-            </div>
+        <article class="error-container round padding">
+          <h6><i>error</i> エラーが発生しました</h6>
+          <p>{error}</p>
+          <div class="row">
+            <button class="button primary" onclick={() => loadProblemData()}>
+              <i>refresh</i>
+              <span>再読み込み</span>
+            </button>
+            <a href="{base}/practice" class="button transparent">
+              <i>arrow_back</i>
+              <span>練習問題一覧に戻る</span>
+            </a>
           </div>
-        </div>
+        </article>
       </div>
     </div>
   </section>
 {:else if problemData}
   <!-- ヘッダーセクション -->
-  <section class="hero-section">
-    <div class="grid">
-      <div class="s12 center-align">
-        <h1 class="primary-text">
-          <i class="large">{problemData.icon || "quiz"}</i>
-        </h1>
-        <h2>{problemData.title}</h2>
-        <p class="large-text">
-          {problemData.description}
-        </p>
-        <div class="row">
-          <div class="chip {getDifficultyColor(problemData.difficulty)}">
-            <span>{problemData.difficulty}</span>
-          </div>
-          <div class="chip secondary">
-            <span>{problemData.category}</span>
-          </div>
-          {#if problemData.estimatedTime}
-            <div class="chip outline">
-              <i class="small">schedule</i>
-              <span>{problemData.estimatedTime}</span>
-            </div>
-          {/if}
-        </div>
-        <div class="space"></div>
+  <article class="secondary-container center-align round large-padding">
+    <h1 class="primary-text">
+      <i class="large">{problemData.icon || "quiz"}</i>
+    </h1>
+    <h2>{problemData.title}</h2>
+    <p class="large">
+      {problemData.description}
+    </p>
+    <div class="row">
+      <div class="chip {getDifficultyColor(problemData.difficulty)}">
+        <span>{problemData.difficulty}</span>
       </div>
+      <div class="chip secondary">
+        <span>{problemData.category}</span>
+      </div>
+      {#if problemData.estimatedTime}
+        <div class="chip outline">
+          <i class="small">schedule</i>
+          <span>{problemData.estimatedTime}</span>
+        </div>
+      {/if}
     </div>
-  </section>
+    <div class="space"></div>
+  </article>
 
   <div class="space"></div>
 
@@ -261,20 +290,111 @@
     <section>
       <div class="grid">
         <div class="s12">
-          <div class="progress-container">
-            <div class="progress-info">
-              <span class="medium-text"
-                >進捗: {currentStep + 1} / {problemData.steps.length}</span
-              >
-              <span class="medium-text">{Math.round(progress)}%</span>
+          <article class="surface round padding">
+            <div class="row">
+              <div class="max">
+                <span class="medium"
+                  >進捗: {currentStep + 1} / {problemData.steps.length}</span
+                >
+              </div>
+              <div class="min">
+                <span class="medium">{Math.round(progress)}%</span>
+              </div>
             </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: {progress}%"></div>
+            <div class="space"></div>
+            <progress
+              class="max secondary"
+              value={progress}
+              max="100"
+              title="学習進捗: {Math.round(progress)}%"
+            ></progress>
+
+            <!-- 問題ナビゲーションボタン -->
+            <div class="center-align">
+              <div class="space"></div>
+              <button class="button transparent" onclick={toggleStepNavigation}>
+                <i>list</i>
+                <span>問題を選択</span>
+              </button>
             </div>
-          </div>
+          </article>
         </div>
       </div>
     </section>
+
+    <!-- 問題ナビゲーションメニュー -->
+    {#if showStepNavigation}
+      <section>
+        <div class="grid">
+          <div class="s12">
+            <article class="surface-variant border round padding">
+              <h6><i>list</i> 問題を選択</h6>
+              <div class="grid">
+                {#each problemData.steps as step, index}
+                  <div class="s12 m6 l4">
+                    <button
+                      class="button fill {currentStep === index
+                        ? 'secondary'
+                        : stepCompletionStatus[index]
+                          ? 'primary'
+                          : 'surface'} {currentStep === index ||
+                      stepCompletionStatus[index]
+                        ? 'elevate'
+                        : ''}"
+                      onclick={() => goToStep(index)}
+                    >
+                      <div class="row no-space">
+                        <div class="min">
+                          {#if stepCompletionStatus[index]}
+                            <progress
+                              class="circle small primary"
+                              value="100"
+                              max="100"
+                            ></progress>
+                          {:else if currentStep === index}
+                            <progress
+                              class="circle small secondary"
+                              value="50"
+                              max="100"
+                            ></progress>
+                          {:else}
+                            <div class="chip round secondary small-padding">
+                              <span class="small-text">{index + 1}</span>
+                            </div>
+                          {/if}
+                        </div>
+                        <div class="max padding">
+                          <div class="small left-align">{step.title}</div>
+                        </div>
+                        <div class="min">
+                          {#if stepCompletionStatus[index]}
+                            <i class="primary-text">check_circle</i>
+                          {:else if currentStep === index}
+                            <i class="secondary-text">radio_button_checked</i>
+                          {:else}
+                            <i class="outline-text">radio_button_unchecked</i>
+                          {/if}
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                {/each}
+              </div>
+              <div class="center-align">
+                <div class="space"></div>
+                <button
+                  class="button transparent"
+                  onclick={toggleStepNavigation}
+                >
+                  <i>close</i>
+                  <span>閉じる</span>
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    {/if}
 
     <div class="space"></div>
   {/if}
@@ -283,94 +403,91 @@
   {#if problemData.steps && problemData.steps.length > 0}
     <section>
       <!-- 問題エリア -->
-      <article>
-        <div class="padding">
-          <h5 class="primary-text">{problemData.steps[currentStep].title}</h5>
-          <div class="instruction-container">
-            <pre class="instruction-text">{problemData.steps[currentStep]
-                .instruction}</pre>
-          </div>
-        </div>
-        <div class="padding">
-          <h6><i>quiz</i> 選択肢</h6>
-          <div class="space"></div>
-          <!-- 選択肢 -->
-          <ul class="list border">
-            {#each shuffledOptions as option, index}
-              <li
-                class="option-item {selectedOption === index
-                  ? 'selected'
-                  : ''} {isAnswered && index === shuffledCorrectAnswer
-                  ? 'correct'
-                  : ''} {selectedOption === index && !isCorrect && isAnswered
-                  ? 'incorrect'
-                  : ''}"
-                onclick={() => selectOption(index)}
-                style="cursor: {isAnswered ? 'default' : 'pointer'};"
-              >
-                <span class="option-label"
-                  >{String.fromCharCode(65 + index)}.</span
-                >
-                <div class="max">
-                  <code class="option-code">{option}</code>
+      <article class="padding">
+        <h5 class="primary-text">{problemData.steps[currentStep].title}</h5>
+        <article class="surface-variant round padding border-left secondary">
+          <pre class="small left-align wrap">{problemData.steps[currentStep]
+              .instruction}</pre>
+        </article>
+
+        <h6><i>quiz</i> 選択肢</h6>
+        <div class="space"></div>
+        <!-- 選択肢 -->
+        <div class="field border">
+          {#each shuffledOptions as option, index}
+            <label class="radio">
+              <input
+                type="radio"
+                name="option"
+                bind:group={selectedOption}
+                value={index}
+                disabled={isAnswered}
+                onchange={handleOptionChange}
+              />
+              <span class="row no-space">
+                <div class="chip secondary small-padding">
+                  <span class="small-text"
+                    >{String.fromCharCode(65 + index)}</span
+                  >
+                </div>
+                <div class="max padding">
+                  <code class="small">{option}</code>
                 </div>
                 {#if isAnswered && index === shuffledCorrectAnswer}
-                  <i class="option-icon correct-icon">check_circle</i>
+                  <i class="primary-text">check_circle</i>
                 {:else if selectedOption === index && !isCorrect && isAnswered}
-                  <i class="option-icon incorrect-icon">cancel</i>
+                  <i class="error-text">cancel</i>
                 {/if}
-              </li>
-            {/each}
-          </ul>
+              </span>
+            </label>
+          {/each}
+        </div>
+        <div class="space"></div>
+
+        <!-- ヒント表示 -->
+        {#if showHint}
+          <article class="secondary-container round padding">
+            <h6>
+              <i>lightbulb</i> ヒント
+            </h6>
+            <p>{problemData.steps[currentStep].hint}</p>
+          </article>
           <div class="space"></div>
+        {/if}
 
-          <!-- ヒント表示 -->
-          {#if showHint}
-            <div class="card secondary-container">
-              <div class="padding">
-                <h6>
-                  <i>lightbulb</i> ヒント
-                </h6>
-                <p>{problemData.steps[currentStep].hint}</p>
-              </div>
-            </div>
-            <div class="space"></div>
-          {/if}
+        <!-- フィードバック -->
+        {#if feedback}
+          <article
+            class="{isCorrect
+              ? 'primary-container'
+              : 'error-container'} round padding"
+          >
+            <h6>
+              <i>{isCorrect ? "check_circle" : "info"}</i> フィードバック
+            </h6>
+            <p>{feedback}</p>
+          </article>
+          <div class="space"></div>
+        {/if}
 
-          <!-- フィードバック -->
-          {#if feedback}
-            <div
-              class="card {isCorrect ? 'primary-container' : 'error-container'}"
-            >
-              <div class="padding">
-                <h6>
-                  <i>{isCorrect ? "check_circle" : "info"}</i> フィードバック
-                </h6>
-                <p>{feedback}</p>
-              </div>
-            </div>
-            <div class="space"></div>
-          {/if}
-
-          <!-- アクションボタン -->
-          <div class="row">
-            <button
-              class="button transparent"
-              onclick={toggleHint}
-              disabled={isAnswered}
-            >
-              <i>lightbulb</i>
-              <span>{showHint ? "ヒントを隠す" : "ヒントを見る"}</span>
-            </button>
-            <button
-              class="button transparent"
-              onclick={resetSelection}
-              disabled={!isAnswered}
-            >
-              <i>refresh</i>
-              <span>選択をリセット</span>
-            </button>
-          </div>
+        <!-- アクションボタン -->
+        <div class="row">
+          <button
+            class="button transparent"
+            onclick={toggleHint}
+            disabled={isAnswered}
+          >
+            <i>lightbulb</i>
+            <span>{showHint ? "ヒントを隠す" : "ヒントを見る"}</span>
+          </button>
+          <button
+            class="button transparent"
+            onclick={resetSelection}
+            disabled={!isAnswered || selectedOption === null}
+          >
+            <i>refresh</i>
+            <span>選択をリセット</span>
+          </button>
         </div>
       </article>
     </section>
@@ -429,170 +546,37 @@
 </section>
 
 <style>
-  .hero-section {
-    padding: 3rem 0;
-    background: linear-gradient(
-      135deg,
-      var(--secondary-container) 0%,
-      var(--tertiary-container) 100%
-    );
-    border-radius: 1rem;
-    margin-bottom: 2rem;
-  }
+  /* BeerCSS標準クラスを活用しているため、カスタムCSSは最小限に */
 
-  .large-text {
-    font-size: 1.2rem;
-    line-height: 1.6;
-  }
-
-  .medium-text {
-    font-size: 1.1rem;
-    line-height: 1.5;
-  }
-
-  .instruction-container {
-    background: var(--surface-variant);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin: 1rem 0;
-    border-left: 4px solid var(--secondary);
-  }
-
-  .instruction-text {
+  /* コードブロックのフォント設定 */
+  pre {
     font-family: "Courier New", monospace;
-    font-size: 1rem;
-    line-height: 1.5;
-    margin: 0;
     white-space: pre-wrap;
-    color: var(--on-surface-variant);
+    margin: 0;
   }
 
-  .progress-container {
-    background: var(--surface);
-    border-radius: 0.5rem;
-    padding: 1rem;
-  }
-
-  .progress-info {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-  }
-
-  .progress-bar {
-    width: 100%;
-    height: 8px;
-    background: var(--outline);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--secondary);
-    transition: width 0.3s ease;
-    border-radius: 4px;
-  }
-
-  .card {
-    height: 100%;
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-
-  .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  .option-label {
-    background: var(--secondary);
-    color: var(--on-secondary);
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1rem;
-    flex-shrink: 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .option-item {
-    transition: all 0.2s ease;
-    border-radius: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .option-item:hover:not(.selected) {
-    background: var(--surface-variant);
-    transform: translateX(4px);
-  }
-
-  .option-item.selected {
-    background: var(--secondary-container);
-    border: 2px solid var(--secondary);
-  }
-
-  .option-item.correct {
-    background: var(--primary-container);
-    border: 2px solid var(--primary);
-  }
-
-  .option-item.incorrect {
-    background: var(--error-container);
-    border: 2px solid var(--error);
-  }
-
-  .option-code {
-    flex: 1;
+  code {
     font-family: "Courier New", monospace;
-    font-size: 1rem;
-    background: transparent;
-    padding: 0;
-    font-weight: 500;
   }
 
-  .option-icon {
-    flex-shrink: 0;
-    font-size: 1.5rem;
+  /* ラジオボタンのカスタマイズ */
+  .field .radio span {
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
   }
 
-  .correct-icon {
-    color: var(--primary);
+  .field .radio:hover span {
+    background: var(--surface-variant);
   }
 
-  .incorrect-icon {
-    color: var(--error);
+  .field .radio input:checked + span {
+    background: var(--secondary-container);
+    border: 1px solid var(--secondary);
   }
 
-  .error-container {
-    background: var(--error-container);
-    color: var(--on-error-container);
-  }
-
-  .loader {
-    width: 3rem;
-    height: 3rem;
-    border: 4px solid var(--outline);
-    border-top: 4px solid var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
+  /* 無効化されたボタンのスタイル */
   button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
