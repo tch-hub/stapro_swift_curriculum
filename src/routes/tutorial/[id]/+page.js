@@ -4,13 +4,13 @@ import { base } from "$app/paths";
 export const prerender = false;
 
 export async function load({ params }) {
-    const problemId = params.id;
+    const tutorialId = params.id;
 
-    if (!problemId) {
-        throw new Error("問題IDが指定されていません");
+    if (!tutorialId) {
+        throw new Error("チュートリアルIDが指定されていません");
     }
 
     return {
-        problemId
+        tutorialId
     };
 }
