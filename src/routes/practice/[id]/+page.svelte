@@ -1,6 +1,7 @@
 <script>
   import { base } from "$app/paths";
   import { onMount } from "svelte";
+  import QuizQuestion from "$lib/QuizQuestion.svelte";
 
   // ページロード時に渡される問題ID
   const { data } = $props();
@@ -17,10 +18,6 @@
 
   // 問題の状態管理
   let currentStep = $state(0);
-  let selectedOption = $state(null);
-  let isAnswered = $state(false);
-  let isCorrect = $state(false);
-  let feedback = $state("");
   let showHint = $state(false);
   let showStepNavigation = $state(false);
 
@@ -28,12 +25,14 @@
   let showSampleAnswer = $state(false);
   let showExpectedOutput = $state(false);
 
-  // シャッフルされた選択肢と正解インデックス
-  let shuffledOptions = $state([]);
-  let shuffledCorrectAnswer = $state(0);
-
   // 各ステップの完了状態を管理
   let stepCompletionStatus = $state([]);
+
+  // 練習問題完了状態
+  let isAllCompleted = $state(false);
+
+  // 完了ボタンのローディング状態
+  let isCompletingProblem = $state(false);
 
   // JSONファイルから問題データを読み込む
   async function loadProblemData() {
@@ -59,11 +58,6 @@
 
       // 各ステップの完了状態を初期化
       stepCompletionStatus = Array(problem.steps?.length || 0).fill(false);
-
-      // 最初の問題の選択肢をシャッフル
-      if (problem.steps && problem.steps.length > 0) {
-        shuffleCurrentProblem();
-      }
     } catch (err) {
       error = err.message;
       loading = false;
@@ -145,118 +139,63 @@
     window.open(cheatsheetUrl, "_blank");
   }
 
-  // 配列をシャッフルする関数
-  function shuffleArray(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  }
-
-  // 問題の選択肢をシャッフルする関数
-  function shuffleCurrentProblem() {
-    if (!problemData || !problemData.steps || !problemData.steps[currentStep]) {
-      return;
-    }
-
-    const currentProblem = problemData.steps[currentStep];
-    const optionsWithIndex = currentProblem.options.map((option, index) => ({
-      option,
-      originalIndex: index,
-    }));
-
-    const shuffledOptionsWithIndex = shuffleArray(optionsWithIndex);
-    shuffledOptions = shuffledOptionsWithIndex.map((item) => item.option);
-
-    // 元の正解インデックスが新しい配列のどの位置にあるかを見つける
-    shuffledCorrectAnswer = shuffledOptionsWithIndex.findIndex(
-      (item) => item.originalIndex === currentProblem.correctAnswer
-    );
-  }
-
-  // 問題が変わったときに選択肢をシャッフル
-  $effect(() => {
-    if (problemData && problemData.steps && problemData.steps[currentStep]) {
-      shuffleCurrentProblem();
-    }
-  });
-
-  // 選択肢を選択する関数
-  function selectOption(optionIndex) {
-    if (isAnswered || !problemData) return;
-
-    selectedOption = optionIndex;
-    isAnswered = true;
-
-    isCorrect = optionIndex === shuffledCorrectAnswer;
-
+  // QuizQuestion用のコールバック関数
+  function handleQuizAnswer(result) {
     // 完了状態を更新
     stepCompletionStatus[currentStep] = true;
 
-    if (isCorrect) {
-      feedback = "正解です！ " + problemData.steps[currentStep].explanation;
-    } else {
-      // 正解の選択肢を取得（シャッフル後の）
-      const correctOption = shuffledOptions[shuffledCorrectAnswer];
-      feedback =
-        "不正解です。正解は「" +
-        correctOption +
-        "」です。" +
-        problemData.steps[currentStep].explanation;
-    }
+    // 全ての問題が完了したかチェック
+    checkAllCompleted();
   }
 
-  // ラジオボタンの変更をハンドル
-  function handleOptionChange() {
-    if (!isAnswered) {
-      selectOption(selectedOption);
-    }
+  // ヒント表示切り替え
+  function toggleHint() {
+    showHint = !showHint;
+  }
+
+  // QuizQuestionリセット時のコールバック
+  function handleQuizReset() {
+    // 完了状態をリセット
+    stepCompletionStatus[currentStep] = false;
   }
 
   function nextStep() {
     if (!problemData || currentStep >= problemData.steps.length - 1) return;
 
+    // コーディング問題の場合は次に進む際に完了済みとしてマークする
+    if (isCurrentStepCoding && !stepCompletionStatus[currentStep]) {
+      stepCompletionStatus[currentStep] = true;
+    }
+
     currentStep++;
-    selectedOption = null;
-    isAnswered = false;
-    isCorrect = false;
-    feedback = "";
     showHint = false;
     showSampleAnswer = false;
     showExpectedOutput = false;
+
+    // 完了状態をチェック
+    checkAllCompleted();
   }
 
   // 前の問題に戻る
   function previousStep() {
     if (currentStep <= 0) return;
 
+    // 現在のステップがコーディング問題で未完了の場合は完了済みとしてマークする
+    if (isCurrentStepCoding && !stepCompletionStatus[currentStep]) {
+      stepCompletionStatus[currentStep] = true;
+    }
+
     currentStep--;
-    selectedOption = null;
-    isAnswered = false;
-    isCorrect = false;
-    feedback = "";
     showHint = false;
     showSampleAnswer = false;
     showExpectedOutput = false;
+
+    // 完了状態をチェック
+    checkAllCompleted();
   }
 
-  // 選択をリセット
-  function resetSelection() {
-    selectedOption = null;
-    isAnswered = false;
-    isCorrect = false;
-    feedback = "";
-    showHint = false;
-    showSampleAnswer = false;
-    showExpectedOutput = false;
-    // 選択肢を再シャッフル
-    shuffleCurrentProblem();
-  }
-
-  // ヒントの表示切り替え
-  function toggleHint() {
+  // ヒントの表示切り替え（コーディング問題用）
+  function toggleCodingHint() {
     showHint = !showHint;
   }
 
@@ -279,15 +218,19 @@
   function goToStep(stepIndex) {
     if (stepIndex < 0 || stepIndex >= problemData.steps.length) return;
 
+    // 現在のステップがコーディング問題で未完了の場合は完了済みとしてマークする
+    if (isCurrentStepCoding && !stepCompletionStatus[currentStep]) {
+      stepCompletionStatus[currentStep] = true;
+    }
+
     currentStep = stepIndex;
-    selectedOption = null;
-    isAnswered = false;
-    isCorrect = false;
-    feedback = "";
     showHint = false;
     showStepNavigation = false;
     showSampleAnswer = false;
     showExpectedOutput = false;
+
+    // 完了状態をチェック
+    checkAllCompleted();
   }
 
   // 難易度に応じた色を取得
@@ -301,6 +244,27 @@
         return "tertiary";
       default:
         return "primary";
+    }
+  }
+
+  // 完了状態をチェックする関数
+  function checkAllCompleted() {
+    if (problemData && problemData.steps) {
+      const allCompleted = stepCompletionStatus.every(
+        (status) => status === true
+      );
+      if (allCompleted && !isAllCompleted) {
+        isAllCompleted = true;
+        // 少し遅延させて表示
+        setTimeout(() => {
+          // スクロールして完了メッセージを表示
+          const completionSection =
+            document.getElementById("completion-message");
+          if (completionSection) {
+            completionSection.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 500);
+      }
     }
   }
 
@@ -591,14 +555,14 @@
     <section>
       <!-- 問題エリア -->
       <article class="padding">
-        <h5 class="primary-text">{problemData.steps[currentStep].title}</h5>
-        <article class="surface-variant round padding border-left secondary">
-          <pre class="small left-align wrap">{problemData.steps[currentStep]
-              .instruction}</pre>
-        </article>
-
         {#if isCurrentStepCoding}
           <!-- コーディング問題の場合 -->
+          <h5 class="primary-text">{problemData.steps[currentStep].title}</h5>
+          <article class="surface-variant round padding border-left secondary">
+            <pre class="small left-align wrap">{problemData.steps[currentStep]
+                .instruction}</pre>
+          </article>
+
           <h6><i>code</i> コーディング課題</h6>
           <div class="space"></div>
 
@@ -655,7 +619,7 @@
 
           <!-- コーディング問題用のアクションボタン -->
           <div class="row">
-            <button class="button transparent" onclick={toggleHint}>
+            <button class="button transparent" onclick={toggleCodingHint}>
               <i>lightbulb</i>
               <span>{showHint ? "ヒントを隠す" : "ヒントを見る"}</span>
             </button>
@@ -698,111 +662,92 @@
           </div>
         {:else}
           <!-- 選択式問題の場合 -->
-          <h6><i>quiz</i> 選択肢</h6>
-          <div class="space"></div>
-          <!-- 選択肢 -->
-          <div class="field border">
-            {#each shuffledOptions as option, index}
-              <label class="radio">
-                <input
-                  type="radio"
-                  name="option"
-                  bind:group={selectedOption}
-                  value={index}
-                  disabled={isAnswered}
-                  onchange={handleOptionChange}
-                />
-                <span class="row no-space">
-                  <div class="chip secondary small-padding">
-                    <span class="small-text"
-                      >{String.fromCharCode(65 + index)}</span
-                    >
-                  </div>
-                  <div class="max padding">
-                    <code class="small">{option}</code>
-                  </div>
-                  {#if isAnswered && index === shuffledCorrectAnswer}
-                    <i class="primary-text">check_circle</i>
-                  {:else if selectedOption === index && !isCorrect && isAnswered}
-                    <i class="error-text">cancel</i>
-                  {/if}
-                </span>
-              </label>
-            {/each}
-          </div>
-          <div class="space"></div>
+          <QuizQuestion
+            question={{
+              title: problemData.steps[currentStep].title,
+              instruction: problemData.steps[currentStep].instruction,
+              options: problemData.steps[currentStep].options,
+              correctAnswer: problemData.steps[currentStep].correctAnswer,
+              explanation: problemData.steps[currentStep].explanation,
+              hint: problemData.steps[currentStep].hint,
+            }}
+            onAnswer={handleQuizAnswer}
+            {showHint}
+            onToggleHint={toggleHint}
+            onReset={handleQuizReset}
+          />
 
-          <!-- ヒント表示 -->
-          {#if showHint}
-            <article class="secondary-container round padding">
-              <h6>
-                <i>lightbulb</i> ヒント
-              </h6>
-              <p>{problemData.steps[currentStep].hint}</p>
-            </article>
-            <div class="space"></div>
-          {/if}
-
-          <!-- フィードバック -->
-          {#if feedback}
-            <article
-              class="{isCorrect
-                ? 'primary-container'
-                : 'error-container'} round padding"
-            >
-              <h6>
-                <i>{isCorrect ? "check_circle" : "info"}</i> フィードバック
-              </h6>
-              <p>{feedback}</p>
-            </article>
-            <div class="space"></div>
-          {/if}
-
-          <!-- 選択式問題用のアクションボタン -->
-          <div class="row">
-            <button
-              class="button transparent"
-              onclick={toggleHint}
-              disabled={isAnswered}
-            >
-              <i>lightbulb</i>
-              <span>{showHint ? "ヒントを隠す" : "ヒントを見る"}</span>
-            </button>
-            <button
-              class="button transparent"
-              onclick={resetSelection}
-              disabled={!isAnswered || selectedOption === null}
-            >
-              <i>refresh</i>
-              <span>選択をリセット</span>
-            </button>
-            {#if relatedCheatsheets && relatedCheatsheets.length > 0}
-              <button
-                class="button transparent tertiary-text"
-                onclick={() => openCheatsheet(relatedCheatsheets[0].id)}
-                title="関連するチートシートを確認"
-              >
-                <i>book</i>
-                <span>チートシート</span>
-                <i class="small">open_in_new</i>
-              </button>
-            {:else if cheatsheetData}
-              <button
-                class="button transparent tertiary-text"
-                onclick={() => openCheatsheet()}
-                title="チートシート一覧を確認"
-              >
-                <i>library_books</i>
-                <span>チートシート</span>
-                <i class="small">open_in_new</i>
-              </button>
-            {/if}
+          <!-- チートシートボタン -->
+          <div class="padding">
+            <div class="row">
+              {#if relatedCheatsheets && relatedCheatsheets.length > 0}
+                <button
+                  class="button transparent tertiary-text"
+                  onclick={() => openCheatsheet(relatedCheatsheets[0].id)}
+                  title="関連するチートシートを確認"
+                >
+                  <i>book</i>
+                  <span>チートシート</span>
+                  <i class="small">open_in_new</i>
+                </button>
+              {:else if cheatsheetData}
+                <button
+                  class="button transparent tertiary-text"
+                  onclick={() => openCheatsheet()}
+                  title="チートシート一覧を確認"
+                >
+                  <i>library_books</i>
+                  <span>チートシート</span>
+                  <i class="small">open_in_new</i>
+                </button>
+              {/if}
+            </div>
           </div>
         {/if}
       </article>
     </section>
 
     <div class="space"></div>
+
+    <!-- 全ての問題完了メッセージ -->
+    {#if isAllCompleted}
+      <section id="completion-message">
+        <div class="grid">
+          <div class="s12">
+            <article class="primary-container center-align round large-padding">
+              <div class="row">
+                <div class="max">
+                  <h4 class="primary-text">
+                    <i class="large">celebration</i>
+                  </h4>
+                  <h5>お疲れ様でした！</h5>
+                  <p class="medium">
+                    「{problemData.title}」の全ての問題を完了しました。<br />
+                    素晴らしい頑張りです！🎉
+                  </p>
+                  <div class="space"></div>
+                  <div class="row">
+                    <a href="{base}/practice" class="button primary large">
+                      <i>check_circle</i>
+                      <span>練習問題一覧に戻る</span>
+                    </a>
+                    <a
+                      href="{base}/projects"
+                      class="button secondary large margin"
+                    >
+                      <i>build</i>
+                      <span>プロジェクトに挑戦</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <div class="space"></div>
+    {/if}
 
     <!-- ナビゲーション -->
     <section>
@@ -820,16 +765,55 @@
               </button>
             </div>
             <div class="min">
-              {#if currentStep === problemData.steps.length - 1}
-                <a href="{base}/practice" class="button primary">
-                  <i>check</i>
-                  <span>完了</span>
-                </a>
+              {#if isAllCompleted}
+                <!-- 全完了時は完了メッセージエリアへのスクロールボタン -->
+                <button
+                  class="button primary"
+                  onclick={() => {
+                    const completionSection =
+                      document.getElementById("completion-message");
+                    if (completionSection) {
+                      completionSection.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                >
+                  <i>celebration</i>
+                  <span>完了メッセージを見る</span>
+                </button>
+              {:else if currentStep === problemData.steps.length - 1}
+                <button
+                  class="button primary"
+                  onclick={() => {
+                    // 最後の問題でコーディング問題の場合は完了扱いにする
+                    if (
+                      isCurrentStepCoding &&
+                      !stepCompletionStatus[currentStep]
+                    ) {
+                      isCompletingProblem = true;
+                      stepCompletionStatus[currentStep] = true;
+                      checkAllCompleted();
+                      // 完了後、問題一覧ページに戻る
+                      setTimeout(() => {
+                        window.location.href = `${base}/practice`;
+                      }, 500);
+                    }
+                  }}
+                  disabled={isCompletingProblem}
+                >
+                  {#if isCompletingProblem}
+                    <progress class="circle small"></progress>
+                    <span>完了中...</span>
+                  {:else}
+                    <i>check</i>
+                    <span>完了</span>
+                  {/if}
+                </button>
               {:else}
                 <button
                   class="button primary"
                   onclick={nextStep}
-                  disabled={!isAnswered && !isCurrentStepCoding}
+                  disabled={!stepCompletionStatus[currentStep] &&
+                    !isCurrentStepCoding}
                 >
                   <span>次の問題</span>
                   <i>arrow_forward</i>
@@ -863,27 +847,6 @@
     font-family: "Courier New", monospace;
     white-space: pre-wrap;
     margin: 0;
-  }
-
-  code {
-    font-family: "Courier New", monospace;
-  }
-
-  /* ラジオボタンのカスタマイズ */
-  .field .radio span {
-    align-items: center;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
-  }
-
-  .field .radio:hover span {
-    background: var(--surface-variant);
-  }
-
-  .field .radio input:checked + span {
-    background: var(--secondary-container);
-    border: 1px solid var(--secondary);
   }
 
   /* 無効化されたボタンのスタイル */

@@ -18,8 +18,8 @@
                     "options": [
                         "var",
                         "let",
-                        "const",
-                        "final"
+                        "mutable",
+                        "immutable"
                     ],
                     "correctAnswer": 1,
                     "explanation": "値が変更されない場合は `let` を使用します。不変性を保つことでより安全なコードになります。"
@@ -31,12 +31,12 @@
                     "hint": "Swiftの変数名は文字、数字、アンダースコアを使用でき、数字で始まることはできません。",
                     "options": [
                         "123count",
-                        "user_name",
+                        "break",
                         "class",
                         "userName"
                     ],
                     "correctAnswer": 3,
-                    "explanation": "`userName` がSwiftの命名規則（キャメルケース）に従った正しい変数名です。`class` は予約語なので使用できません。"
+                    "explanation": "`userName` がSwiftの命名規則（キャメルケース）に従った正しい変数名です。`class` や `break` は予約語なので使用できません。"
                 },
                 {
                     "id": 3,
@@ -57,7 +57,7 @@
                     "title": "コーディング課題: 変数宣言の実践",
                     "type": "coding",
                     "instruction": "以下の要件に従ってSwiftコードを書いてください：\n\n1. 変更可能な整数変数 `age` を宣言し、25で初期化してください\n2. 不変の文字列変数 `name` を宣言し、\"太郎\"で初期化してください\n3. `age` を30に変更してください\n4. `name` と `age` を使って \"太郎は30歳です\" という文字列を作成し、`message` 変数に格納してください\n5. `message` をコンソールに出力してください",
-                    "hint": "変更可能な変数には `var`、不変の変数には `let` を使用します。文字列補間には \\(変数名) を使用します。",
+                    "hint": "変更可能な変数には `var`、不変の変数には `let` を使用します。文字列補間には \\(変数名) を使用します。このパターンは実際のアプリ開発でよく使われます。",
                     "sampleAnswer": "var age = 25\nlet name = \"太郎\"\nage = 30\nlet message = \"\\(name)は\\(age)歳です\"\nprint(message)",
                     "expectedOutput": "太郎は30歳です",
                     "explanation": "このコードでは、変更可能な変数 `var age`、不変の変数 `let name` を適切に使い分けています。文字列補間 \\(name) と \\(age) を使用して文字列を作成し、print文で出力しています。"
@@ -161,8 +161,8 @@
                 {
                     "id": 7,
                     "title": "問題7: 複雑な型推論",
-                    "instruction": "次のコードで、変数 'result' の型は何になりますか？\n\nvar result = 10 + 3.5",
-                    "hint": "異なる数値型の演算結果について考えてください。",
+                    "instruction": "次のコードで、変数 'result' の型は何になりますか？\n\nvar result = 10.0 + 3.5",
+                    "hint": "同じ数値型同士の演算結果について考えてください。",
                     "options": [
                         "Int",
                         "Float",
@@ -170,7 +170,7 @@
                         "String"
                     ],
                     "correctAnswer": 2,
-                    "explanation": "Int と Double の演算では、より精度の高い Double 型に統一されるため、result は Double 型になります。"
+                    "explanation": "Double型の10.0とDouble型の3.5の演算結果は、Double型になります。Swiftでは異なる数値型同士の直接演算はできないため、両方をDouble型で統一しています。"
                 },
                 {
                     "id": 8,
@@ -181,20 +181,20 @@
                         "var name: String = \"Swift\"",
                         "var name = String(\"Swift\")",
                         "var name as String = \"Swift\"",
-                        "var name -> String = \"Swift\""
+                        "String name = \"Swift\""
                     ],
                     "correctAnswer": 0,
-                    "explanation": "型注釈を使用する場合は、変数名の後にコロン（:）と型名を記述します。var name: String = \"Swift\" が正しい書き方です。"
+                    "explanation": "型注釈を使用する場合は、変数名の後にコロン（:）と型名を記述します。var name: String = \"Swift\" が正しい書き方です。選択肢Dは他の言語（Java、C++など）の構文です。"
                 },
                 {
                     "id": 9,
                     "title": "コーディング課題: 型推論と型注釈の実践",
                     "type": "coding",
-                    "instruction": "以下の要件に従ってSwiftコードを書いてください：\n\n1. 型推論を使って整数変数 `score` を100で初期化してください\n2. 型推論を使って小数変数 `average` を85.5で初期化してください\n3. 型注釈を使って文字列変数 `grade` を宣言し、\"A\"で初期化してください\n4. 型注釈を使ってブール変数 `passed` を宣言し、trueで初期化してください\n5. 各変数の型を確認するため、type(of:) 関数を使って型を出力してください",
+                    "instruction": "以下の要件に従ってSwiftコードを書いてください：\n\n1. 型推論を使って整数変数 `score` を100で初期化してください（letまたはvarを適切に選択）\n2. 型推論を使って小数変数 `average` を85.5で初期化してください（letまたはvarを適切に選択）\n3. 型注釈を使って文字列変数 `grade` を宣言し、\"A\"で初期化してください（letまたはvarを適切に選択）\n4. 型注釈を使ってブール変数 `passed` を宣言し、trueで初期化してください（letまたはvarを適切に選択）\n5. 各変数の型を確認するため、type(of:) 関数を使って型を出力してください",
                     "hint": "型推論では型を省略し、型注釈では変数名: 型名 = 値 の形式で書きます。type(of: 変数) で型を確認できます。",
                     "sampleAnswer": "let score = 100\nlet average = 85.5\nlet grade: String = \"A\"\nlet passed: Bool = true\nprint(type(of: score))\nprint(type(of: average))\nprint(type(of: grade))\nprint(type(of: passed))",
                     "expectedOutput": "Int\nDouble\nString\nBool",
-                    "explanation": "型推論により `score` は Int型、`average` は Double型と自動的に推論されます。型注釈を使って `grade` をString型、`passed` をBool型として明示的に宣言しています。type(of:) 関数で各変数の型を確認できます。"
+                    "explanation": "型推論により `score` は Int型、`average` は Double型と自動的に推論されます。型注釈を使って `grade` をString型、`passed` をBool型として明示的に宣言しています。type(of:) 関数で各変数の型を確認できます。値が変更されないため、すべて `let` を使用しています。"
                 }
             ]
         },
@@ -254,11 +254,11 @@
                     "id": 4,
                     "title": "コーディング課題: 条件分岐の実装",
                     "type": "coding",
-                    "instruction": "以下の要件に従って天気判定プログラムを作成してください：\n\n1. 整数変数 `temperature` を22で初期化してください\n2. 整数変数 `humidity` を65で初期化してください\n3. 以下の条件で判定してください：\n   - 気温が20度以上30度未満かつ湿度が70%未満の場合：\"快適な天気です\"\n   - 気温が30度以上の場合：\"暑い日です\"\n   - 湿度が70%以上の場合：\"湿度が高いです\"\n   - その他の場合：\"肌寒い天気です\"\n4. 判定結果をコンソールに出力してください",
+                    "instruction": "以下の要件に従って天気判定プログラムを作成してください：\n\n1. 整数変数 `temperature` を22で初期化してください（letまたはvarを適切に選択）\n2. 整数変数 `humidity` を65で初期化してください（letまたはvarを適切に選択）\n3. 以下の条件で判定してください：\n   - 気温が20度以上30度未満かつ湿度が70%未満の場合：\"快適な天気です\"\n   - 気温が30度以上の場合：\"暑い日です\"\n   - 湿度が70%以上の場合：\"湿度が高いです\"\n   - その他の場合：\"肌寒い天気です\"\n4. 判定結果をコンソールに出力してください",
                     "hint": "複数の条件を組み合わせる場合は && (AND) や || (OR) を使用します。条件の優先順位に注意してください。",
                     "sampleAnswer": "let temperature = 22\nlet humidity = 65\n\nif temperature >= 20 && temperature < 30 && humidity < 70 {\n    print(\"快適な天気です\")\n} else if temperature >= 30 {\n    print(\"暑い日です\")\n} else if humidity >= 70 {\n    print(\"湿度が高いです\")\n} else {\n    print(\"肌寒い天気です\")\n}",
                     "expectedOutput": "快適な天気です",
-                    "explanation": "temperature = 22（20以上30未満）、humidity = 65（70未満）なので、最初の条件 `temperature >= 20 && temperature < 30 && humidity < 70` が true となり、\"快適な天気です\" が出力されます。"
+                    "explanation": "temperature = 22（20以上30未満）、humidity = 65（70未満）なので、最初の条件 `temperature >= 20 && temperature < 30 && humidity < 70` が true となり、\"快適な天気です\" が出力されます。値が変更されないため `let` を使用しています。"
                 }
             ]
         },
@@ -280,8 +280,8 @@
                     "options": [
                         "var numbers = []",
                         "var numbers: [Int] = []",
-                        "var numbers = Array()",
-                        "var numbers = [Int]"
+                        "var numbers = new Array()",
+                        "var numbers = Array<>"
                     ],
                     "correctAnswer": 1,
                     "explanation": "型注釈を使って var numbers: [Int] = [] が正しい空の配列の作成方法です。"
@@ -294,7 +294,7 @@
                     "options": [
                         "fruits.add(\"orange\")",
                         "fruits.append(\"orange\")",
-                        "fruits.insert(\"orange\")",
+                        "fruits.put(\"orange\")",
                         "fruits.push(\"orange\")"
                     ],
                     "correctAnswer": 1,
@@ -318,11 +318,11 @@
                     "id": 4,
                     "title": "コーディング課題: 配列操作の実践",
                     "type": "coding",
-                    "instruction": "以下の要件に従って買い物リストアプリを作成してください：\n\n1. 空の文字列配列 `shoppingList` を作成してください\n2. \"りんご\"、\"バナナ\"、\"オレンジ\" を順番に配列に追加してください\n3. 配列の最初に \"牛乳\" を挿入してください（insert メソッドを使用）\n4. 配列の要素数を出力してください\n5. 配列の全ての要素を順番に出力してください（for-in ループを使用）\n6. \"バナナ\" を配列から削除してください（firstIndex と remove メソッドを使用）\n7. 削除後の配列を再度出力してください",
-                    "hint": "insert(_, at:) で指定位置に挿入、firstIndex(of:) で要素のインデックスを取得、remove(at:) で削除できます。",
+                    "instruction": "以下の要件に従って買い物リストアプリを作成してください：\n\n1. 空の文字列配列 `shoppingList` を作成してください（varを使用）\n2. \"りんご\"、\"バナナ\"、\"オレンジ\" を順番に配列に追加してください\n3. 配列の最初に \"牛乳\" を挿入してください（insert メソッドを使用）\n4. 配列の要素数を出力してください\n5. 配列の全ての要素を順番に出力してください（for-in ループを使用）\n6. \"バナナ\" を配列から削除してください（firstIndex と remove メソッドを使用）\n7. 削除後の配列を再度出力してください",
+                    "hint": "insert(_, at:) で指定位置に挿入、firstIndex(of:) で要素のインデックスを取得、remove(at:) で削除できます。firstIndex(of:)はオプショナル型を返すため、安全に取り出す必要があります。",
                     "sampleAnswer": "var shoppingList: [String] = []\nshoppingList.append(\"りんご\")\nshoppingList.append(\"バナナ\")\nshoppingList.append(\"オレンジ\")\nshoppingList.insert(\"牛乳\", at: 0)\nprint(shoppingList.count)\nfor item in shoppingList {\n    print(item)\n}\nif let index = shoppingList.firstIndex(of: \"バナナ\") {\n    shoppingList.remove(at: index)\n}\nfor item in shoppingList {\n    print(item)\n}",
                     "expectedOutput": "4\n牛乳\nりんご\nバナナ\nオレンジ\n牛乳\nりんご\nオレンジ",
-                    "explanation": "配列の基本操作（追加、挿入、削除、要素数取得、要素アクセス）を実践しています。insert で先頭に挿入、firstIndex で要素を検索してから remove で削除しています。"
+                    "explanation": "配列の基本操作（追加、挿入、削除、要素数取得、要素アクセス）を実践しています。insert で先頭に挿入、firstIndex で要素を検索してから remove で削除しています。firstIndex(of:)がオプショナル型を返すため、if letでオプショナルバインディングを使用して安全に削除処理を行っています。"
                 }
             ]
         },
@@ -382,11 +382,11 @@
                     "id": 4,
                     "title": "コーディング課題: 関数作成の実践",
                     "type": "coding",
-                    "instruction": "以下の要件に従って計算機能を持つ関数を作成してください：\n\n1. 2つの整数を受け取り、その合計を返す関数 `add` を作成してください\n2. 3つの整数を受け取り、その平均値（Double型）を返す関数 `average` を作成してください\n3. 文字列と回数を受け取り、その文字列を指定回数繰り返した文字列を返す関数 `repeat` を作成してください（引数ラベルは `string` と `times` を使用）\n4. 各関数をテストするためのコードを書いてください：\n   - add(10, 20) の結果を出力\n   - average(10, 20, 30) の結果を出力\n   - repeat(string: \"Hello\", times: 3) の結果を出力",
+                    "instruction": "以下の要件に従って計算機能を持つ関数を作成してください：\n\n1. 2つの整数を受け取り、その合計を返す関数 `add` を作成してください（引数ラベルは省略）\n2. 3つの整数を受け取り、その平均値（Double型）を返す関数 `average` を作成してください（引数ラベルは省略）\n3. 文字列と回数を受け取り、その文字列を指定回数繰り返した文字列を返す関数 `repeatString` を作成してください（引数ラベルは `string` と `times` を使用）\n4. 各関数をテストするためのコードを書いてください：\n   - add(10, 20) の結果を出力\n   - average(10, 20, 30) の結果を出力\n   - repeatString(string: \"Hello\", times: 3) の結果を出力",
                     "hint": "引数ラベルは `func 関数名(ラベル 引数名: 型)` の形式で指定します。型変換には Double() を使用できます。",
-                    "sampleAnswer": "func add(_ a: Int, _ b: Int) -> Int {\n    return a + b\n}\n\nfunc average(_ a: Int, _ b: Int, _ c: Int) -> Double {\n    return Double(a + b + c) / 3.0\n}\n\nfunc repeat(string text: String, times count: Int) -> String {\n    var result = \"\"\n    for _ in 0..<count {\n        result += text\n    }\n    return result\n}\n\nprint(add(10, 20))\nprint(average(10, 20, 30))\nprint(repeat(string: \"Hello\", times: 3))",
+                    "sampleAnswer": "func add(_ a: Int, _ b: Int) -> Int {\n    return a + b\n}\n\nfunc average(_ a: Int, _ b: Int, _ c: Int) -> Double {\n    return Double(a + b + c) / 3.0\n}\n\nfunc repeatString(string text: String, times count: Int) -> String {\n    var result = \"\"\n    for _ in 0..<count {\n        result += text\n    }\n    return result\n}\n\nprint(add(10, 20))\nprint(average(10, 20, 30))\nprint(repeatString(string: \"Hello\", times: 3))",
                     "expectedOutput": "30\n20.0\nHelloHelloHello",
-                    "explanation": "add関数は単純な加算、average関数は整数を Double に変換して平均値を計算、repeat関数は for-in ループを使って文字列を繰り返しています。引数ラベルにより関数呼び出し時の可読性が向上しています。"
+                    "explanation": "add関数は単純な加算、average関数は整数を Double に変換して平均値を計算（整数除算ではなく小数点を含む正確な平均値）、repeatString関数は for-in ループを使って文字列を繰り返しています。引数ラベルにより関数呼び出し時の可読性が向上しています。関数名を `repeat` から `repeatString` に変更したのは、`repeat` がSwiftの制御構文として予約されているためです。"
                 }
             ]
         },
@@ -408,11 +408,11 @@
                     "options": [
                         "var name: String = nil",
                         "var name: String? = nil",
-                        "var name: String! = nil",
-                        "var name: Optional<String> = nil"
+                        "var name = nil as String",
+                        "var name: String* = nil"
                     ],
                     "correctAnswer": 1,
-                    "explanation": "オプショナル型は型名の後に `?` を付けて宣言します。`String?` が正しい書き方です。"
+                    "explanation": "オプショナル型は型名の後に `?` を付けて宣言します。`String?` が正しい書き方です。通常のString型にはnilを代入できません。"
                 },
                 {
                     "id": 2,
@@ -421,12 +421,12 @@
                     "hint": "if let を使ってオプショナル値を安全に取り出します。",
                     "options": [
                         "if let name = optionalName { print(name) }",
-                        "if optionalName != nil { print(optionalName) }",
-                        "if let optionalName { print(optionalName) }",
+                        "if optionalName != nil { print(optionalName!) }",
+                        "if optionalName.hasValue { print(optionalName) }",
                         "let name = optionalName ?? \"default\""
                     ],
                     "correctAnswer": 0,
-                    "explanation": "`if let name = optionalName` でオプショナル値を安全に取り出し、nilでない場合のみ処理を実行できます。"
+                    "explanation": "`if let name = optionalName` でオプショナル値を安全に取り出し、nilでない場合のみ処理を実行できます。選択肢Bは強制アンラップ（!）が必要で、選択肢Cの `hasValue` はSwiftには存在しないプロパティで、どちらも安全ではありません。"
                 },
                 {
                     "id": 3,
@@ -447,7 +447,7 @@
                     "title": "コーディング課題: オプショナル型の実践",
                     "type": "coding",
                     "instruction": "以下の要件に従ってユーザー情報管理システムを作成してください：\n\n1. オプショナル文字列変数 `optionalName` を宣言し、\"山田太郎\" で初期化してください\n2. オプショナル整数変数 `optionalAge` を宣言し、nil で初期化してください\n3. if let を使って `optionalName` を安全に取り出し、値がある場合は \"名前: [名前]\" を出力してください\n4. guard let を使って `optionalAge` を安全に取り出そうとし、値がない場合は \"年齢が設定されていません\" を出力して処理を終了してください\n5. nil合体演算子を使って、`optionalAge` が nil の場合は 20 をデフォルト値として使用し、\"年齢: [年齢]\" を出力してください\n6. `optionalAge` に 25 を代入してから、再度 guard let で安全に取り出して \"更新された年齢: [年齢]\" を出力してください",
-                    "hint": "if let は値がある場合のみ処理、guard let は値がない場合に早期リターン、?? は nil の場合のデフォルト値を指定します。",
+                    "hint": "if let は値がある場合のみ処理、guard let は値がない場合に早期リターン、?? は nil の場合のデフォルト値を指定します。これらのパターンは実際のiOSアプリ開発で頻繁に使用されます。",
                     "sampleAnswer": "var optionalName: String? = \"山田太郎\"\nvar optionalAge: Int? = nil\n\nif let name = optionalName {\n    print(\"名前: \\(name)\")\n}\n\nfunc checkAge() {\n    guard let age = optionalAge else {\n        print(\"年齢が設定されていません\")\n        return\n    }\n    print(\"年齢: \\(age)\")\n}\n\ncheckAge()\n\nlet defaultAge = optionalAge ?? 20\nprint(\"年齢: \\(defaultAge)\")\n\noptionalAge = 25\nif let updatedAge = optionalAge {\n    print(\"更新された年齢: \\(updatedAge)\")\n}",
                     "expectedOutput": "名前: 山田太郎\n年齢が設定されていません\n年齢: 20\n更新された年齢: 25",
                     "explanation": "オプショナル値の安全な取り扱い方法を実践しています。if let でオプショナル値を安全に取り出し、guard let で早期リターン、nil合体演算子でデフォルト値を提供しています。"

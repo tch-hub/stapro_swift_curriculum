@@ -1,0 +1,238 @@
+{
+    "fullCurriculum": [
+        {
+            "lesson": 1,
+            "category": "環境構築",
+            "title": "Xcodeのインストールとセットアップ",
+            "icon": "download",
+            "color": "primary",
+            "description": "Mac App StoreからXcodeをダウンロードし、開発環境をセットアップします。"
+        },
+        {
+            "lesson": 2,
+            "category": "チュートリアル",
+            "title": "SwiftUIの基本概念",
+            "icon": "build",
+            "color": "primary",
+            "description": "新しいiOSプロジェクトを作成し、SwiftUIの基本的な概念を学びます。"
+        },
+        {
+            "lesson": 3,
+            "category": "タイマーアプリ制作",
+            "title": "タイマーアプリ：プロジェクト作成と基本設計",
+            "icon": "timer",
+            "color": "secondary",
+            "description": "タイマーアプリの新規プロジェクトを作成し、基本的な画面設計を行います。"
+        },
+        {
+            "lesson": 4,
+            "category": "タイマーアプリ制作",
+            "title": "タイマーアプリ：時間選択とカウントダウン機能",
+            "icon": "schedule",
+            "color": "secondary",
+            "description": "時間選択UIとカウントダウン機能を実装してタイマーアプリを完成させます。"
+        },
+        {
+            "lesson": 5,
+            "category": "ToDoアプリ制作",
+            "title": "ToDoアプリ：プロジェクト作成と基本設計",
+            "icon": "add_task",
+            "color": "tertiary",
+            "description": "ToDoアプリの新規プロジェクトを作成し、基本的な画面設計を行います。"
+        },
+        {
+            "lesson": 6,
+            "category": "ToDoアプリ制作",
+            "title": "ToDoアプリ：タスク一覧表示",
+            "icon": "list",
+            "color": "tertiary",
+            "description": "Listビューを使ってタスク一覧を表示する機能を実装します。"
+        },
+        {
+            "lesson": 7,
+            "category": "ToDoアプリ制作",
+            "title": "ToDoアプリ：タスク追加機能",
+            "icon": "add_circle",
+            "color": "tertiary",
+            "description": "新しいタスクを追加する機能とフォームを実装します。"
+        },
+        {
+            "lesson": 8,
+            "category": "ToDoアプリ制作",
+            "title": "ToDoアプリ：タスク編集・削除機能",
+            "icon": "edit",
+            "color": "tertiary",
+            "description": "既存タスクの編集と削除機能を実装します。"
+        },
+        {
+            "lesson": 9,
+            "category": "ToDoアプリ制作",
+            "title": "ToDoアプリ：完了状態の管理",
+            "icon": "check_box",
+            "color": "tertiary",
+            "description": "タスクの完了状態をチェックボックスで管理する機能を追加します。"
+        },
+        {
+            "lesson": 10,
+            "category": "ToDoアプリ制作",
+            "title": "ToDoアプリ：データの永続化",
+            "icon": "save",
+            "color": "tertiary",
+            "description": "UserDefaultsやCore Dataを使ってタスクデータを保存します。"
+        },
+        {
+            "lesson": 11,
+            "category": "ToDoアプリ制作",
+            "title": "ToDoアプリ：UIの改善と完成",
+            "icon": "check_circle",
+            "color": "tertiary",
+            "description": "アニメーション、色彩、アイコンなどでUIを改善し、アプリを完成させます。"
+        },
+        {
+            "lesson": 12,
+            "category": "チャットアプリ制作",
+            "title": "チャットアプリ：プロジェクト作成と基本設計",
+            "icon": "chat",
+            "color": "primary",
+            "description": "チャットアプリの新規プロジェクトを作成し、基本的な画面設計を行います。"
+        },
+        {
+            "lesson": 13,
+            "category": "チャットアプリ制作",
+            "title": "チャットアプリ：メッセージ表示画面",
+            "icon": "message",
+            "color": "primary",
+            "description": "メッセージ一覧を表示する画面とレイアウトを実装します。"
+        },
+        {
+            "lesson": 14,
+            "category": "チャットアプリ制作",
+            "title": "チャットアプリ：メッセージ入力機能",
+            "icon": "keyboard",
+            "color": "primary",
+            "description": "テキスト入力フィールドと送信ボタンを使ったメッセージ入力機能を実装します。"
+        },
+        {
+            "lesson": 15,
+            "category": "チャットアプリ制作",
+            "title": "チャットアプリ：メッセージ送信機能",
+            "icon": "send",
+            "color": "primary",
+            "description": "メッセージ送信機能とリアルタイム表示を実装します。"
+        },
+        {
+            "lesson": 16,
+            "category": "チャットアプリ制作",
+            "title": "チャットアプリ：メッセージ履歴管理",
+            "icon": "history",
+            "color": "primary",
+            "description": "メッセージ履歴の保存と管理機能を実装します。"
+        },
+        {
+            "lesson": 17,
+            "category": "チャットアプリ制作",
+            "title": "チャットアプリ：ユーザー名設定",
+            "icon": "person",
+            "color": "primary",
+            "description": "ユーザー名の設定と表示機能を追加します。"
+        },
+        {
+            "lesson": 18,
+            "category": "チャットアプリ制作",
+            "title": "チャットアプリ：メッセージのスタイリング",
+            "icon": "format_paint",
+            "color": "primary",
+            "description": "メッセージの見た目をカスタマイズし、吹き出し風デザインを実装します。"
+        },
+        {
+            "lesson": 19,
+            "category": "チャットアプリ制作",
+            "title": "チャットアプリ：タイムスタンプ表示",
+            "icon": "access_time",
+            "color": "primary",
+            "description": "メッセージにタイムスタンプを追加し、日時を表示する機能を実装します。"
+        },
+        {
+            "lesson": 20,
+            "category": "チャットアプリ制作",
+            "title": "チャットアプリ：絵文字・スタンプ機能",
+            "icon": "emoji_emotions",
+            "color": "primary",
+            "description": "絵文字やスタンプを送信できる機能を追加します。"
+        },
+        {
+            "lesson": 21,
+            "category": "チャットアプリ制作",
+            "title": "チャットアプリ：通知機能",
+            "icon": "notifications",
+            "color": "primary",
+            "description": "新しいメッセージの通知機能を実装します。"
+        },
+        {
+            "lesson": 22,
+            "category": "チャットアプリ制作",
+            "title": "チャットアプリ：最終調整とテスト",
+            "icon": "check_circle",
+            "color": "primary",
+            "description": "バグ修正、パフォーマンス改善、実機テストを行います。"
+        },
+        {
+            "lesson": 23,
+            "category": "チャットアプリ制作",
+            "title": "アプリの配布準備",
+            "icon": "publish",
+            "color": "primary",
+            "description": "App Store Connectでのアプリ登録と配布準備を学びます。"
+        },
+        {
+            "lesson": 24,
+            "category": "チャットアプリ制作",
+            "title": "総復習と今後の学習方針",
+            "icon": "school",
+            "color": "primary",
+            "description": "これまでの学習内容を振り返り、今後の学習方針を検討します。"
+        }
+    ],
+    "categoryInfo": [
+        {
+            "name": "環境構築",
+            "lessons": "第1回",
+            "count": 1,
+            "color": "primary",
+            "icon": "build",
+            "description": "Swift開発に必要なXcode環境の構築とプロジェクト作成方法を学習します。"
+        },
+        {
+            "name": "チュートリアル",
+            "lessons": "第2回",
+            "count": 1,
+            "color": "primary",
+            "icon": "school",
+            "description": "SwiftUIの基本概念を理解し、最初のプロジェクトを作成します。"
+        },
+        {
+            "name": "タイマーアプリ制作",
+            "lessons": "第3-4回",
+            "count": 2,
+            "color": "secondary",
+            "icon": "timer",
+            "description": "タイマーアプリを通してSwiftの基本的な文法を学習します。"
+        },
+        {
+            "name": "ToDoアプリ制作",
+            "lessons": "第5-11回",
+            "count": 7,
+            "color": "tertiary",
+            "icon": "checklist",
+            "description": "ToDoアプリの制作を通して関数やデータ管理を学びます。"
+        },
+        {
+            "name": "チャットアプリ制作",
+            "lessons": "第12-24回",
+            "count": 13,
+            "color": "warning",
+            "icon": "chat",
+            "description": "チャットアプリの制作を通してSwiftUIと実践的な開発スキルを習得します。"
+        }
+    ]
+}

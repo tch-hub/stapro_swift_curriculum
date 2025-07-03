@@ -5,8 +5,8 @@
   <script>
     import QuizQuestion from '$lib/QuizQuestion.svelte';
 
-    // 問題データの形式
-    const questionData = {
+    // 問題データの形式（コード問題の例）
+    const codeQuestionData = {
       title: "問題1: 変数の宣言",
       instruction: "正しい変数の宣言方法はどれですか？",
       options: [
@@ -18,6 +18,21 @@
       correctAnswer: 1, // 正解のインデックス（0から始まる）
       explanation: "letは可変な変数を宣言するキーワードです。",
       hint: "Swiftではletとvarが使用できます。"
+    };
+
+    // 問題データの形式（通常のテキスト問題の例）
+    const textQuestionData = {
+      title: "問題2: Swiftについて",
+      instruction: "Swiftについて正しい説明はどれですか？",
+      options: [
+        "Googleが開発したプログラミング言語",
+        "Appleが開発したプログラミング言語",
+        "Microsoftが開発したプログラミング言語",
+        "Metaが開発したプログラミング言語"
+      ],
+      correctAnswer: 1,
+      explanation: "SwiftはAppleが開発したプログラミング言語です。",
+      hint: "iOSアプリ開発で主に使用されています。"
     };
 
     let showHint = false;
@@ -41,12 +56,21 @@
   </script>
 
   <QuizQuestion 
-    question={questionData}
+    question={codeQuestionData}
     onAnswer={handleAnswer}
     showHint={showHint}
     onToggleHint={toggleHint}
     onReset={handleReset}
   />
+
+  <QuizQuestion 
+    question={textQuestionData}
+    onAnswer={handleAnswer}
+    showHint={showHint}
+    onToggleHint={toggleHint}
+    onReset={handleReset}
+  />
+
   プロパティ:
   - question: 問題データオブジェクト（必須）
     - title: 問題のタイトル
@@ -62,11 +86,13 @@
 
   機能:
   - 2択〜多択問題に対応（選択肢数は自動調整）
+  - コード・テキスト選択肢の自動判定と適切な表示
   - 選択肢の自動シャッフル（毎回異なる順序で表示）
   - 正解・不正解の判定とフィードバック表示
   - ヒント機能
   - 選択リセット機能
   - 外部からのリセット（reset()メソッド）
+  - アクセシビリティ対応（キーボード操作可能）
 -->
 
 <script>
@@ -98,6 +124,57 @@
     }
     return shuffled;
   }
+
+  // 選択肢がコードかどうかを判定する関数
+  function isCodeOption(option) {
+    // コードの特徴を判定
+    return (
+      option.includes("(") ||
+      option.includes(")") ||
+      option.includes("{") ||
+      option.includes("}") ||
+      option.includes("[") ||
+      option.includes("]") ||
+      option.includes("=") ||
+      option.includes(";") ||
+      option.includes("let ") ||
+      option.includes("var ") ||
+      option.includes("func ") ||
+      option.includes("class ") ||
+      option.includes("struct ") ||
+      option.includes("import ") ||
+      option.includes("print(") ||
+      option.includes("if ") ||
+      option.includes("for ") ||
+      option.includes("while ")
+    );
+  }
+
+  // 問題文がコードを含むかどうかを判定する関数
+  function isCodeInstruction(instruction) {
+    // 問題文にコードが含まれている特徴を判定
+    return (
+      instruction.includes("```") ||
+      instruction.includes("`") ||
+      instruction.includes("let ") ||
+      instruction.includes("var ") ||
+      instruction.includes("func ") ||
+      instruction.includes("class ") ||
+      instruction.includes("struct ") ||
+      instruction.includes("import ") ||
+      instruction.includes("print(") ||
+      instruction.includes("() ->") ||
+      instruction.includes("{") ||
+      instruction.includes("}") ||
+      instruction.includes("=") ||
+      instruction.includes(";") ||
+      (instruction.includes("\n") &&
+        (instruction.includes("if ") ||
+          instruction.includes("for ") ||
+          instruction.includes("while ")))
+    );
+  }
+
   // 問題の選択肢をシャッフルする関数
   function shuffleCurrentProblem() {
     if (!question.options || question.options.length < 2) return;
@@ -177,9 +254,17 @@
 <article>
   <div class="padding">
     <h5 class="primary-text">{question.title || "問題"}</h5>
-    <div class="instruction-container">
-      <p class="instruction-text">{question.instruction || ""}</p>
-    </div>
+    {#if isCodeInstruction(question.instruction || "")}
+      <!-- コードを含む問題文の場合 -->
+      <div class="instruction-code-container">
+        <pre class="instruction-code">{question.instruction || ""}</pre>
+      </div>
+    {:else}
+      <!-- 通常のテキスト問題文の場合 -->
+      <div class="instruction-container">
+        <p class="instruction-text">{question.instruction || ""}</p>
+      </div>
+    {/if}
   </div>
   <div class="padding">
     <h6><i>quiz</i> 選択肢</h6>
@@ -188,26 +273,36 @@
     {#if shuffledOptions.length > 0}
       <ul class="list border">
         {#each shuffledOptions as option, index}
-          <li
-            class="option-item {selectedOption === index
-              ? 'selected'
-              : ''} {isAnswered && index === shuffledCorrectAnswer
-              ? 'correct'
-              : ''} {selectedOption === index && !isCorrect && isAnswered
-              ? 'incorrect'
-              : ''}"
-            onclick={() => selectOption(index)}
-            style="cursor: {isAnswered ? 'default' : 'pointer'};"
-          >
-            <span class="option-label">{String.fromCharCode(65 + index)}.</span>
-            <div class="max code-container">
-              <pre class="option-code">{option}</pre>
-            </div>
-            {#if isAnswered && index === shuffledCorrectAnswer}
-              <i class="option-icon correct-icon">check_circle</i>
-            {:else if selectedOption === index && !isCorrect && isAnswered}
-              <i class="option-icon incorrect-icon">cancel</i>
-            {/if}
+          <li>
+            <button
+              class="option-button {selectedOption === index
+                ? 'selected'
+                : ''} {isAnswered && index === shuffledCorrectAnswer
+                ? 'correct'
+                : ''} {selectedOption === index && !isCorrect && isAnswered
+                ? 'incorrect'
+                : ''}"
+              onclick={() => selectOption(index)}
+              disabled={isAnswered}
+            >
+              <span class="option-label"
+                >{String.fromCharCode(65 + index)}.</span
+              >
+              <div class="max option-content">
+                {#if isCodeOption(option)}
+                  <!-- コード選択肢の場合 -->
+                  <pre class="option-code">{option}</pre>
+                {:else}
+                  <!-- 通常のテキスト選択肢の場合 -->
+                  <p class="option-text">{option}</p>
+                {/if}
+              </div>
+              {#if isAnswered && index === shuffledCorrectAnswer}
+                <i class="option-icon correct-icon">check_circle</i>
+              {:else if selectedOption === index && !isCorrect && isAnswered}
+                <i class="option-icon incorrect-icon">cancel</i>
+              {/if}
+            </button>
           </li>
         {/each}
       </ul>
@@ -271,11 +366,33 @@
     border-left: 4px solid var(--secondary);
   }
 
+  .instruction-code-container {
+    background: var(--surface-variant);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-left: 4px solid var(--primary);
+    border: 1px solid var(--outline-variant);
+  }
+
   .instruction-text {
     font-size: 1rem;
     line-height: 1.5;
     margin: 0;
     color: var(--on-surface-variant);
+  }
+
+  .instruction-code {
+    font-family: "Courier New", monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--on-surface-variant);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
   }
 
   .card {
@@ -307,36 +424,48 @@
     padding: 0 0.25rem;
   }
 
-  .option-item {
-    transition: all 0.2s ease;
+  .option-button {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    padding: 0.5rem;
+    background: transparent;
+    border: 2px solid transparent;
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
-    align-items: flex-start;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-align: left;
   }
 
-  .option-item:hover:not(.selected) {
+  .option-button:hover:not(.selected):not(:disabled) {
     background: var(--surface-variant);
     transform: translateX(4px);
   }
 
-  .option-item.selected {
+  .option-button.selected {
     background: var(--secondary-container);
     border: 2px solid var(--secondary);
   }
 
-  .option-item.correct {
+  .option-button.correct {
     background: var(--primary-container);
     border: 2px solid var(--primary);
   }
 
-  .option-item.incorrect {
+  .option-button.incorrect {
     background: var(--error-container);
     border: 2px solid var(--error);
   }
 
-  .code-container {
+  .option-button:disabled {
+    cursor: default;
+  }
+
+  .option-content {
     flex: 1;
     min-width: 0;
+    margin: 0 1rem;
   }
 
   .option-code {
@@ -349,6 +478,15 @@
     white-space: pre-wrap;
     word-wrap: break-word;
     color: var(--on-surface);
+  }
+
+  .option-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0.5rem 0;
+    color: var(--on-surface);
+    font-weight: 400;
   }
 
   .option-icon {
