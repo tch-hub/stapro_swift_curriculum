@@ -1,0 +1,21 @@
+{
+    "id": 5,
+    "title": "円形プログレスバーの実装",
+    "description": "残り時間を視覚的に表示する円形プログレスバーを作成しよう",
+    "duration": "30分",
+    "icon": "donut_large",
+    "content": {
+        "overview": "Circleとtrimを使って美しい円形プログレスバーを実装し、タイマーの進行状況を視覚化します。",
+        "tasks": [
+            "新しいSwiftファイル「TimerDisplayView.swift」を作成",
+            "Circleを使ってプログレスバーを描画",
+            "アニメーションを追加して滑らかな表示を実現"
+        ],
+        "code": "// TimerDisplayView.swift\nimport SwiftUI\n\nstruct TimerDisplayView: View {\n    var remainingTime: Int\n    var totalTime: Int\n    \n    var completionPercentage: Double {\n        return (totalTime > 0) ? (Double(remainingTime) / Double(totalTime)) : 1\n    }\n    \n    var body: some View {\n        ZStack {\n            Circle()\n                .trim(from: 0.0, to: CGFloat(completionPercentage))\n                .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round))\n                .foregroundColor(.orange)\n                .rotationEffect(Angle(degrees: 270))\n                .animation(.linear, value: completionPercentage)\n                .padding(10)\n            \n            Text(formatTime(seconds: remainingTime))\n                .font(.system(size: 70))\n        }\n    }\n    \n    func formatTime(seconds: Int) -> String {\n        let hours = seconds / 3600\n        let minutes = (seconds % 3600) / 60\n        let seconds = seconds % 60\n        return String(format: \"%02d:%02d:%02d\", hours, minutes, seconds)\n    }\n}",
+        "tips": [
+            "ZStackで要素を重ねて配置",
+            "trimで円の一部分だけを表示",
+            "String.formatで時間表示を整形"
+        ]
+    }
+}

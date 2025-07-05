@@ -1,0 +1,21 @@
+{
+    "id": 4,
+    "title": "ViewModelでビジネスロジック管理",
+    "description": "ObservableObjectを使ってタイマーのロジックを管理しよう",
+    "duration": "25分",
+    "icon": "psychology",
+    "content": {
+        "overview": "MVVMパターンを使ってViewとロジックを分離し、保守性の高いコードを作成します。",
+        "tasks": [
+            "新しいSwiftファイル「TimerViewModel.swift」を作成",
+            "ObservableObjectプロトコルを実装",
+            "@Publishedでプロパティを監視可能にする"
+        ],
+        "code": "// TimerViewModel.swift\nimport SwiftUI\n\nclass TimerViewModel: ObservableObject {\n    @Published var remainingTime = 0\n    @Published var timerState: TimerState = .idle\n    @Published var isShowingAlert = false\n    var timer: Timer?\n    var totalTime: Int = 0\n    \n    func startTimer(hours: Int, minutes: Int, seconds: Int) {\n        remainingTime = hours * 3600 + minutes * 60 + seconds\n        totalTime = remainingTime\n        timerState = .running\n        countDown()\n    }\n    \n    func stopTimer() {\n        timerState = .idle\n        timer?.invalidate()\n    }\n    \n    func pauseTimer() {\n        timerState = .paused\n        timer?.invalidate()\n    }\n    \n    func restartTimer() {\n        timerState = .running\n        countDown()\n    }\n    \n    private func countDown() {\n        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in\n            if self.remainingTime > 0 {\n                self.remainingTime -= 1\n            } else {\n                timer.invalidate()\n                self.isShowingAlert = true\n            }\n        }\n    }\n}\n\n// ContentViewで使用\nstruct ContentView: View {\n    @StateObject var viewModel = TimerViewModel()\n    \n    var body: some View {\n        // ViewModelを使用したUI\n    }\n}",
+        "tips": [
+            "ObservableObjectはSwiftUIでの状態管理の基本",
+            "@Publishedは値の変更を自動的にUIに反映",
+            "ビジネスロジックはViewModelに分離する"
+        ]
+    }
+}

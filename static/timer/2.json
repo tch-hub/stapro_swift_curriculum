@@ -1,0 +1,21 @@
+{
+    "id": 2,
+    "title": "タイマーの状態を管理するEnum",
+    "description": "タイマーの3つの状態（待機、実行中、一時停止）を定義しよう",
+    "duration": "15分",
+    "icon": "category",
+    "content": {
+        "overview": "タイマーの状態を管理するためのEnumを作成し、基本的な構造を理解します。",
+        "tasks": [
+            "ContentView.swiftにTimerStateを追加",
+            "3つの状態を定義する",
+            "基本的なViewの構造を作成"
+        ],
+        "code": "// TimerStateを定義\nenum TimerState {\n    case idle      // 待機中\n    case running   // 実行中\n    case paused    // 一時停止中\n}\n\nstruct ContentView: View {\n    @State var timerState: TimerState = .idle\n    \n    var body: some View {\n        VStack {\n            Text(\"タイマーアプリ\")\n                .font(.largeTitle)\n            \n            Text(\"現在の状態: \\(timerState)\")\n        }\n    }\n}",
+        "tips": [
+            "Enumは関連する値をグループ化するのに便利",
+            "@Stateは値の変更をViewに反映させる",
+            "スネークケースではなくキャメルケースを使う"
+        ]
+    }
+}

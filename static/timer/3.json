@@ -1,0 +1,21 @@
+{
+    "id": 3,
+    "title": "時間設定用のPicker作成",
+    "description": "時、分、秒を選択できるカスタムPickerコンポーネントを作成しよう",
+    "duration": "20分",
+    "icon": "schedule",
+    "content": {
+        "overview": "再利用可能なTimePickerコンポーネントを作成し、時間選択機能を実装します。",
+        "tasks": [
+            "新しいSwiftファイル「TimePicker.swift」を作成",
+            "Bindingを使って値を親に返す機能を実装",
+            "Pickerのスタイルを設定"
+        ],
+        "code": "// TimePicker.swift\nimport SwiftUI\n\nstruct TimePicker: View {\n    var title: String\n    var range: ClosedRange<Int>\n    @Binding var selection: Int\n    \n    var body: some View {\n        Picker(selection: $selection, label: Text(title)) {\n            ForEach(range, id: \\.self) { value in\n                Text(\"\\(value) \\(title)\").tag(value)\n            }\n        }\n        .pickerStyle(.wheel)\n    }\n}\n\n// ContentView.swiftに追加\nstruct ContentView: View {\n    @State var hours = 0\n    @State var minutes = 0\n    @State var seconds = 0\n    \n    var body: some View {\n        VStack {\n            HStack {\n                TimePicker(title: \"時間\", range: 0...23, selection: $hours)\n                TimePicker(title: \"分\", range: 0...59, selection: $minutes)\n                TimePicker(title: \"秒\", range: 0...59, selection: $seconds)\n            }\n        }\n    }\n}",
+        "tips": [
+            "@Bindingは親子間でのデータ共有に使用",
+            "$マークでBinding型として渡す",
+            "ForEachを使って配列やRangeをループ"
+        ]
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "id": 6,
+    "title": "カスタムボタンコンポーネント",
+    "description": "統一感のあるカスタムボタンを作成しよう",
+    "duration": "20分",
+    "icon": "smart_button",
+    "content": {
+        "overview": "再利用可能なカスタムボタンコンポーネントを作成し、一貫したデザインを実現します。",
+        "tasks": [
+            "新しいSwiftファイル「ColorButton.swift」を作成",
+            "色とアクションをカスタマイズ可能にする",
+            "円形のデザインを実装"
+        ],
+        "code": "// ColorButton.swift\nimport SwiftUI\n\nstruct ColorButton: View {\n    let text: String\n    let color: Color\n    let action: () -> Void\n    \n    var body: some View {\n        Button(action: action) {\n            Text(text)\n                .foregroundStyle(color)\n                .font(.subheadline)\n        }\n        .frame(width: 90, height: 90)\n        .background(color.opacity(0.2))\n        .clipShape(Circle())\n    }\n}\n\n// 使用例\nColorButton(text: \"開始\", color: .green) {\n    // ボタンが押された時の処理\n    print(\"開始ボタンが押されました\")\n}",
+        "tips": [
+            "クロージャで外部から処理を渡せるように設計",
+            "opacityで半透明効果を追加",
+            "clipShapeで形を変更"
+        ]
+    }
+}
