@@ -275,35 +275,7 @@
   <meta name="description" content="Stapro Swift Curriculum" />
 </svelte:head>
 
-<!-- ヒーローセクション -->
-<section class="hero-section">
-  <div class="grid">
-    <div class="s12 center-align">
-      <h1 class="">
-        <i class="extra primary-text">code</i>
-        Swift学習カリキュラム
-      </h1>
-      <p class="hero-description">
-        基本構文から実践的なアプリ開発まで、<br />
-        段階的に学習できるカリキュラムです。<br />
-        プログラミング未経験でも安心して始められます。
-      </p>
-      <div class="space"></div>
-      <div class="hero-buttons">
-        <a href="{base}/setup" class="button large primary">
-          <i>play_arrow</i>
-          <span>学習を始める</span>
-        </a>
-        <a href="{base}/tutorial" class="button large transparent primary-text">
-          <i>school</i>
-          <span>チュートリアル</span>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
 
-<div class="space"></div>
 
 <!-- メイン学習コース -->
 <section>
@@ -574,6 +546,36 @@
     </div>
   </section>
 {/if}
+
+<div class="space"></div>
+<!-- ヒーローセクション -->
+<section class="hero-section">
+  <div class="grid">
+    <div class="s12 center-align">
+      <h1 class="">
+        <i class="extra primary-text">code</i>
+        Swift学習カリキュラム
+      </h1>
+      <p class="hero-description">
+        基本構文から実践的なアプリ開発まで、<br />
+        段階的に学習できるカリキュラムです。<br />
+        プログラミング未経験でも安心して始められます。
+      </p>
+      <div class="space"></div>
+      <div class="hero-buttons">
+        <a href="{base}/setup" class="button large primary">
+          <i>play_arrow</i>
+          <span>学習を始める</span>
+        </a>
+        <a href="{base}/tutorial" class="button large transparent primary-text">
+          <i>school</i>
+          <span>チュートリアル</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <div class="space"></div>
 <section>

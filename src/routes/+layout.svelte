@@ -4,6 +4,7 @@
   import { base } from "$app/paths";
   import Header from "$lib/Header.svelte";
   import SideBar from "$lib/SideBar.svelte";
+  import FullCurriculumDialog from "$lib/FullCurriculumDialog.svelte";
 
   //   BeerCSSインポート
   import "beercss/dist/cdn/beer.min.css";
@@ -13,13 +14,18 @@
 </script>
 
 <Header />
-<!-- <SideBar /> -->
 
 <main class="responsive">{@render children()}</main>
+
+<!-- 右下に絶対位置で表示されるボタン -->
+<FullCurriculumDialog />
 
 <style>
   :global(article:hover) {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   }
+
+
+
 </style>

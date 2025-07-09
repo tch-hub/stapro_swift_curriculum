@@ -498,45 +498,37 @@ struct ContentView: View {
   <div class="space"></div>
 
   <div class="grid">
-    <div class="s12 m6 l3">
-      <article class="round border padding">
-        <div class="center-align">
-          <i class="large primary-text">architecture</i>
-          <h6>MVVMパターン</h6>
-          <p class="small-text">ViewとViewModelを分離した設計パターン</p>
-        </div>
-      </article>
-    </div>
+    <article class="round border padding s12 m6 l3">
+      <div class="center-align">
+        <i class="large primary-text">architecture</i>
+        <h6>MVVMパターン</h6>
+        <p class="small-text">ViewとViewModelを分離した設計パターン</p>
+      </div>
+    </article>
 
-    <div class="s12 m6 l3">
-      <article class="round border padding">
-        <div class="center-align">
-          <i class="large secondary-text">widgets</i>
-          <h6>SwiftUI基礎</h6>
-          <p class="small-text">@State、@Binding、@ObservableObjectの使い方</p>
-        </div>
-      </article>
-    </div>
+    <article class="round border padding s12 m6 l3">
+      <div class="center-align">
+        <i class="large secondary-text">widgets</i>
+        <h6>SwiftUI基礎</h6>
+        <p class="small-text">@State、@Binding、@ObservableObjectの使い方</p>
+      </div>
+    </article>
 
-    <div class="s12 m6 l3">
-      <article class="round border padding">
-        <div class="center-align">
-          <i class="large tertiary-text">palette</i>
-          <h6>カスタムUI</h6>
-          <p class="small-text">円形プログレスバーやカスタムボタンの作成</p>
-        </div>
-      </article>
-    </div>
+    <article class="round border padding s12 m6 l3">
+      <div class="center-align">
+        <i class="large tertiary-text">palette</i>
+        <h6>カスタムUI</h6>
+        <p class="small-text">円形プログレスバーやカスタムボタンの作成</p>
+      </div>
+    </article>
 
-    <div class="s12 m6 l3">
-      <article class="round border padding">
-        <div class="center-align">
-          <i class="large inverse-text">volume_up</i>
-          <h6>音声処理</h6>
-          <p class="small-text">AVFoundationを使った音声再生</p>
-        </div>
-      </article>
-    </div>
+    <article class="round border padding s12 m6 l3">
+      <div class="center-align">
+        <i class="large inverse-text">volume_up</i>
+        <h6>音声処理</h6>
+        <p class="small-text">AVFoundationを使った音声再生</p>
+      </div>
+    </article>
   </div>
 </section>
 
@@ -561,13 +553,11 @@ struct ContentView: View {
                 <h6>ステップ {step.id}: {step.title}</h6>
                 <p class="small-text">{step.description}</p>
               </div>
-
             </div>
 
             <div class="space"></div>
 
             <div class="row">
-
               <div class="chip small outline">
                 <i class="small">schedule</i>
                 <span>{step.duration}</span>
@@ -769,5 +759,4 @@ struct ContentView: View {
     display: flex;
     flex-direction: column;
   }
-
 </style>

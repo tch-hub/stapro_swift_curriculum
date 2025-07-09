@@ -428,13 +428,6 @@ struct ContentView: View {
     line-height: 1.4;
   }
 
-  .card {
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
-    margin-bottom: 1rem;
-  }
-
 
   ol,
   ul {
