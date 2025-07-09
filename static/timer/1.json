@@ -4,18 +4,16 @@
     "description": "Xcodeで新しいSwiftUIプロジェクトを作成しよう",
     "duration": "10分",
     "icon": "settings",
+    "cheatsheetAnchor": "project-setup",
     "content": {
         "overview": "Xcodeで新しいプロジェクトを作成し、基本的な設定を行います。",
         "tasks": [
             "Xcodeを起動する",
-            "新しいプロジェクトを作成（iOS App、SwiftUI）",
-            "プロジェクト名を「Timer」にする",
-            "Bundle Identifierを設定する"
+            "チートシートを参考に新しいプロジェクトを作成（iOS App、SwiftUI）",
+            "プロジェクト名を「Timer」にする"
         ],
-        "code": "// 最初に自動生成される TimerApp.swift\nimport SwiftUI\n\n@main\nstruct TimerApp: App {\n    var body: some Scene {\n        WindowGroup {\n            ContentView()\n        }\n    }\n}",
         "tips": [
             "プロジェクト名は半角英数字で設定しよう",
-            "Bundle Identifierは一意である必要があります",
             "SwiftUIを選択することを忘れずに"
         ]
     }

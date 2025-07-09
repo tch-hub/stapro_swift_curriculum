@@ -149,18 +149,45 @@
                 <h6 class="center-align">{item.label}</h6>
                 {#if item.description}
                   <p class="center-align small-text secondary-text">
-                    {item.description}
+                    {@html item.description.replace(/\n/g, "<br>")}
                   </p>
                 {/if}
                 <div class="space"></div>
 
-                <div class="swift-code-section">
-                  <div class="code-header">
-                    <i class="small">code</i>
-                    <span>Swift</span>
+                <!-- テーブルがある場合はテーブルを表示 -->
+                {#if item.table}
+                  <!-- BeerCSSのテーブルデザインを使用 -->
+                  <div class="table-section">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          {#each item.table[0] as header}
+                            <th>{header}</th>
+                          {/each}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {#each item.table.slice(1) as row}
+                          <tr>
+                            {#each row as cell}
+                              <td>{cell}</td>
+                            {/each}
+                          </tr>
+                        {/each}
+                      </tbody>
+                    </table>
                   </div>
-                  <CodeBlock code={item.swiftCode} language="swift" />
-                </div>
+                {/if}
+                <!-- Swiftコードがある場合はコードブロックを表示 -->
+                {#if item.swiftCode}
+                  <div class="swift-code-section">
+                    <div class="code-header">
+                      <i class="small">code</i>
+                      <span>Swift</span>
+                    </div>
+                    <CodeBlock code={item.swiftCode} language="swift" />
+                  </div>
+                {/if}
               </div>
             </article>
           </div>
@@ -238,6 +265,33 @@
     line-height: 1.4;
   }
 
+  /* テーブルセクションのスタイル */
+  .table-section {
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface-container, #fff);
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    margin-bottom: 0.5rem;
+  }
+  .table th,
+  .table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+  }
+  .table th {
+    background: var(--primary-container, #f5f5f5);
+    color: var(--primary, #333);
+    font-weight: bold;
+  }
+  .table tr:last-child td {
+    border-bottom: none;
+  }
   .swift-code-section {
     padding: 0.75rem;
     border-radius: 8px;

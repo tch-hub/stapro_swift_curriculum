@@ -138,6 +138,7 @@
   <div class="space"></div>
 
   <!-- コードセクション -->
+   {#if stepData.content.code}
   <section>
     <h4>
       <i>code</i>
@@ -154,11 +155,29 @@
           </div>
         </div>
       </div>
-      <CodeBlock code={stepData.content.code} language="swift" />
-    </div>
-  </section>
+      
+        <CodeBlock code={stepData.content.code} language="swift" />
+    </section>
+    {/if}
 
   <div class="space"></div>
+
+  <!-- 関連チートシートへのリンク（ステップごと） -->
+  {#if stepData.cheatsheetAnchor || stepData.content?.cheatsheetAnchor}
+    <div class="center-align">
+      <a
+        href="{base}/cheatsheet#{stepData.cheatsheetAnchor
+          ? stepData.cheatsheetAnchor
+          : stepData.content.cheatsheetAnchor}"
+        class="button secondary"
+        target="_blank"
+      >
+        <i>quick_reference</i>
+        <span>このステップのチートシートを見る</span>
+      </a>
+    </div>
+    <div class="space"></div>
+  {/if}
 
   <!-- ヒントセクション -->
   <section class="tertiary-container round padding">

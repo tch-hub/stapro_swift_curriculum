@@ -298,6 +298,51 @@
                     "swiftCode": "TabView {\n    HomeView()\n        .tabItem {\n            Image(systemName: \"house\")\n            Text(\"ホーム\")\n        }\n    SearchView()\n        .tabItem {\n            Image(systemName: \"magnifyingglass\")\n            Text(\"検索\")\n        }\n    SettingsView()\n        .tabItem {\n            Image(systemName: \"gear\")\n            Text(\"設定\")\n        }\n}"
                 }
             ]
+        },
+        {
+            "id": "project-setup",
+            "title": "プロジェクトセットアップ",
+            "icon": "settings",
+            "items": [
+                {
+                    "label": "Xcodeで新しいプロジェクトを作成",
+                    "description": "Xcodeを起動し、Create New Priject... を選択 \n iOS > App を選択 \n 以下のプロジェクト設定を行い Next をクリック \n 保存先を選択し、プロジェクトを作成",
+                    "table": [
+                        [
+                            "設定項目",
+                            "設定値"
+                        ],
+                        [
+                            "Product Name",
+                            "<<プロジェクト名>>"
+                        ],
+                        [
+                            "Team",
+                            "None"
+                        ],
+                        [
+                            "Organization Identifier",
+                            "com"
+                        ],
+                        [
+                            "Interface",
+                            "SwiftUI"
+                        ],
+                        [
+                            "Language",
+                            "Swift"
+                        ],
+                        [
+                            "Testing System",
+                            "None"
+                        ],
+                        [
+                            "Storage",
+                            "SwiftData"
+                        ]
+                    ]
+                }
+            ]
         }
     ]
 }
