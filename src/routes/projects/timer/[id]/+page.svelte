@@ -145,16 +145,6 @@
       <span>実装コード</span>
     </h4>
     <div class="space"></div>
-    <div class="round border">
-      <div class="padding">
-        <div class="row">
-          <div class="max">
-            <p class="small-text">
-              コードをコピーしてXcodeに貼り付けてください
-            </p>
-          </div>
-        </div>
-      </div>
       
         <CodeBlock code={stepData.content.code} language="swift" />
     </section>
