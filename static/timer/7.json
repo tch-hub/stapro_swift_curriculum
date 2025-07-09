@@ -1,0 +1,21 @@
+{
+    "id": 7,
+    "title": "音声アラーム機能の実装",
+    "description": "AVFoundationを使ってタイマー終了時に音を鳴らそう",
+    "duration": "25分",
+    "icon": "volume_up",
+    "content": {
+        "overview": "AVFoundationフレームワークを使って、タイマー終了時に音声アラームを再生する機能を実装します。",
+        "tasks": [
+            "AVFoundationフレームワークをインポート",
+            "音声ファイルをプロジェクトに追加",
+            "AVAudioPlayerで音声再生機能を実装"
+        ],
+        "code": "// TimerViewModel.swift に追加\nimport AVFoundation\n\nclass TimerViewModel: ObservableObject {\n    // ...既存のコード...\n    var audioPlayer: AVAudioPlayer?\n    \n    func playSound() {\n        guard let url = Bundle.main.url(forResource: \"Alarm\", withExtension: \"mp3\") else {\n            print(\"音声ファイルが見つかりません\")\n            return\n        }\n        \n        do {\n            audioPlayer = try AVAudioPlayer(contentsOf: url)\n            audioPlayer?.play()\n        } catch {\n            print(\"音声ファイルが再生できませんでした: \\(error)\")\n        }\n    }\n    \n    private func countDown() {\n        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in\n            if self.remainingTime > 0 {\n                self.remainingTime -= 1\n            } else {\n                timer.invalidate()\n                self.isShowingAlert = true\n                self.playSound() // 音声再生\n            }\n        }\n    }\n}",
+        "tips": [
+            "音声ファイルは.mp3や.wavを使用",
+            "Bundle.mainでアプリ内のリソースにアクセス",
+            "do-catchでエラーハンドリングを実装"
+        ]
+    }
+}

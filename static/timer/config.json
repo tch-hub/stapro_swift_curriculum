@@ -1,0 +1,138 @@
+{
+    "project": {
+        "name": "タイマーアプリ",
+        "description": "SwiftUIを使って本格的なタイマーアプリを作成するプロジェクト",
+        "totalSteps": 8,
+        "estimatedTotalTime": "165分",
+        "difficulty": "中級",
+        "technologies": [
+            "SwiftUI",
+            "ObservableObject",
+            "Timer",
+            "AVFoundation",
+            "Custom Components"
+        ]
+    },
+    "steps": [
+        {
+            "id": 1,
+            "title": "プロジェクトの準備",
+            "description": "Xcodeで新しいSwiftUIプロジェクトを作成しよう",
+            "duration": "10分",
+            "icon": "settings",
+            "concepts": [
+                "Xcodeプロジェクト作成",
+                "SwiftUI基本構造",
+                "Bundle Identifier"
+            ],
+            "difficulty": "初級"
+        },
+        {
+            "id": 2,
+            "title": "タイマーの状態を管理するEnum",
+            "description": "タイマーの3つの状態（待機、実行中、一時停止）を定義しよう",
+            "duration": "15分",
+            "icon": "category",
+            "concepts": [
+                "Enum",
+                "状態管理",
+                "SwiftUI State"
+            ],
+            "difficulty": "初級"
+        },
+        {
+            "id": 3,
+            "title": "時間設定用のPicker作成",
+            "description": "時、分、秒を選択できるカスタムPickerコンポーネントを作成しよう",
+            "duration": "20分",
+            "icon": "schedule",
+            "concepts": [
+                "Picker",
+                "カスタムコンポーネント",
+                "時間管理"
+            ],
+            "difficulty": "中級"
+        },
+        {
+            "id": 4,
+            "title": "ViewModelでビジネスロジック管理",
+            "description": "ObservableObjectを使ってタイマーのロジックを管理しよう",
+            "duration": "25分",
+            "icon": "psychology",
+            "concepts": [
+                "ObservableObject",
+                "MVVM設計",
+                "Timer",
+                "@Published"
+            ],
+            "difficulty": "中級"
+        },
+        {
+            "id": 5,
+            "title": "円形プログレスバーの実装",
+            "description": "残り時間を視覚的に表示する円形プログレスバーを作成しよう",
+            "duration": "30分",
+            "icon": "donut_large",
+            "concepts": [
+                "カスタム描画",
+                "Path",
+                "Shape",
+                "アニメーション"
+            ],
+            "difficulty": "上級"
+        },
+        {
+            "id": 6,
+            "title": "カスタムボタンコンポーネント",
+            "description": "統一感のあるカスタムボタンを作成しよう",
+            "duration": "20分",
+            "icon": "smart_button",
+            "concepts": [
+                "カスタムボタン",
+                "ViewModifier",
+                "デザインシステム"
+            ],
+            "difficulty": "中級"
+        },
+        {
+            "id": 7,
+            "title": "音声アラーム機能の実装",
+            "description": "AVFoundationを使ってタイマー終了時に音を鳴らそう",
+            "duration": "25分",
+            "icon": "volume_up",
+            "concepts": [
+                "AVFoundation",
+                "音声再生",
+                "バックグラウンド処理"
+            ],
+            "difficulty": "上級"
+        },
+        {
+            "id": 8,
+            "title": "UI統合とアラート機能",
+            "description": "全ての機能を統合し、アラート表示を実装しよう",
+            "duration": "20分",
+            "icon": "integration_instructions",
+            "concepts": [
+                "UI統合",
+                "Alert",
+                "完成検証"
+            ],
+            "difficulty": "中級"
+        }
+    ],
+    "learningObjectives": [
+        "SwiftUIの基本的なコンポーネントの使い方を理解する",
+        "ObservableObjectを使った状態管理を学ぶ",
+        "カスタムコンポーネントの作成方法を習得する",
+        "MVVMアーキテクチャの基本を理解する",
+        "タイマー機能の実装を通じて非同期処理を学ぶ",
+        "AVFoundationを使った音声機能の実装を学ぶ",
+        "実用的なアプリケーションの完成を目指す"
+    ],
+    "prerequisites": [
+        "Swift基本文法の理解",
+        "Xcodeの基本操作",
+        "SwiftUIの基本概念（View、State、Binding）"
+    ]
+}

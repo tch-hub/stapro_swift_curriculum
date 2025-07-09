@@ -1,0 +1,21 @@
+{
+    "id": 8,
+    "title": "UI統合とアラート機能",
+    "description": "全ての機能を統合し、アラート表示を実装しよう",
+    "duration": "20分",
+    "icon": "integration_instructions",
+    "content": {
+        "overview": "作成した全てのコンポーネントを統合し、完全に動作するタイマーアプリを完成させます。",
+        "tasks": [
+            "TimeSelectionViewを作成して時間選択UIを分離",
+            "状態に応じてボタンの表示を切り替え",
+            "アラート機能を実装"
+        ],
+        "code": "// TimeSelectionView.swift\nstruct TimeSelectionView: View {\n    @Binding var hours: Int\n    @Binding var minutes: Int\n    @Binding var seconds: Int\n    \n    var body: some View {\n        HStack {\n            TimePicker(title: \"時間\", range: 0...23, selection: $hours)\n            TimePicker(title: \"分\", range: 0...59, selection: $minutes)\n            TimePicker(title: \"秒\", range: 0...59, selection: $seconds)\n        }\n    }\n}\n\n// ContentView.swift - 最終版\nstruct ContentView: View {\n    @StateObject var viewModel = TimerViewModel()\n    @State var hours = 0\n    @State var minutes = 0\n    @State var seconds = 0\n    \n    var body: some View {\n        VStack {\n            if viewModel.timerState == .idle {\n                TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)\n            } else {\n                TimerDisplayView(remainingTime: viewModel.remainingTime, totalTime: viewModel.totalTime)\n            }\n            \n            HStack(spacing: 130) {\n                ColorButton(text: \"キャンセル\", color: .white, action: viewModel.stopTimer)\n                    .opacity(viewModel.timerState == .idle ? 0.3 : 1)\n                    .disabled(viewModel.timerState == .idle)\n                \n                switch viewModel.timerState {\n                case .idle:\n                    ColorButton(text: \"開始\", color: .green, action: {\n                        viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)\n                    })\n                case .running:\n                    ColorButton(text: \"一時停止\", color: .orange, action: viewModel.pauseTimer)\n                case .paused:\n                    ColorButton(text: \"再開\", color: .green, action: viewModel.restartTimer)\n                }\n            }\n        }\n        .alert(\"時間です\", isPresented: $viewModel.isShowingAlert) {\n            Button(\"完了\") {\n                viewModel.isShowingAlert = false\n                viewModel.timerState = .idle\n                viewModel.audioPlayer?.stop()\n            }\n        }\n    }\n}",
+        "tips": [
+            "switchで状態に応じたUIを実装",
+            "opacityとdisabledで無効状態を表現",
+            "alertモディファイアでアラート表示"
+        ]
+    }
+}
