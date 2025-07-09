@@ -33,12 +33,7 @@
     loadStepData(stepId);
   }
 
-  // コードをクリップボードにコピー
-  function copyCode(code) {
-    navigator.clipboard.writeText(code).then(() => {
-      console.log("コードをコピーしました");
-    });
-  }
+  // コードブロック側でコピー機能を実装しているため、ここでは不要
 
   // 前のステップへ
   function goToPrevStep() {
@@ -156,15 +151,6 @@
             <p class="small-text">
               コードをコピーしてXcodeに貼り付けてください
             </p>
-          </div>
-          <div class="min">
-            <button
-              class="button small secondary"
-              onclick={() => copyCode(stepData.content.code)}
-            >
-              <i>content_copy</i>
-              <span>コピー</span>
-            </button>
           </div>
         </div>
       </div>
