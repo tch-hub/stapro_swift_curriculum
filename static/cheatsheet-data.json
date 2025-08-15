@@ -131,14 +131,14 @@
                 {
                     "label": "辞書の作成",
                     "description": "辞書は「キー: 値」のペアでデータを管理します。名前と点数、商品と価格など、関連する2つの情報をセットで扱えます。",
-                    "swiftCode": "var scores = [\"math\": 85, \"english\": 92]\nlet mathScore = scores[\"math\"]\nprint(scores)\nprint(mathScore!)",
-                    "output": "[\"english\": 92, \"math\": 85]\n85"
+                    "swiftCode": "var scores = [\"math\": 85, \"english\": 92]\nif let mathScore = scores[\"math\"] {\n    print(\"Math score: \\(mathScore)\")\n}",
+                    "output": "Math score: 85"
                 },
                 {
                     "label": "辞書の値の更新",
                     "description": "辞書の既存の値を変更したり、新しいキーと値のペアを追加したりできます。成績の更新や新科目の追加などに使えます。",
-                    "swiftCode": "var scores = [\"math\": 85, \"english\": 92]\nscores[\"math\"] = 90\nscores[\"science\"] = 88\nprint(scores)",
-                    "output": "[\"science\": 88, \"english\": 92, \"math\": 90]"
+                    "swiftCode": "var scores = [\"math\": 85, \"english\": 92]\nscores[\"math\"] = 90\nscores[\"science\"] = 88\nif let scienceScore = scores[\"science\"] {\n    print(\"Science score: \\(scienceScore)\")\n}",
+                    "output": "Science score: 88"
                 }
             ]
         },
@@ -175,7 +175,7 @@
                 {
                     "label": "オプショナル型の宣言",
                     "description": "?を付けることで「値があるかもしれないし、ないかもしれない」という状態を表現できます。ユーザーが入力をスキップした場合などに使います。",
-                    "swiftCode": "var name: String? = nil\nname = \"太郎\"\nprint(name!)",
+                    "swiftCode": "var name: String? = nil\nname = \"太郎\"\nif let unwrappedName = name {\n    print(unwrappedName)\n}",
                     "output": "太郎"
                 },
                 {
