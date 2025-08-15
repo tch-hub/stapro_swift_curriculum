@@ -133,8 +133,6 @@
       option.includes(")") ||
       option.includes("{") ||
       option.includes("}") ||
-      option.includes("[") ||
-      option.includes("]") ||
       option.includes("=") ||
       option.includes(";") ||
       option.includes("let ") ||
