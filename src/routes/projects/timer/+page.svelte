@@ -175,60 +175,58 @@
 
     <div class="grid">
       {#each steps as step}
-        <div class="s12 m6 l4">
-          <article class="card round">
-            <div class="padding">
-              <div class="row">
-                <div class="min">
-                  <i class="large primary-text">{step.icon}</i>
-                </div>
-                <div class="max">
-                  <h6>ステップ {step.id}: {step.title}</h6>
-                  <p class="small-text">{step.description}</p>
-                </div>
+        <article class="card round s12 m6">
+         <ul class="list">
+            <li>
+              <i class="large primary-text">{step.icon}</i>
+              <div class="max">
+                <h6 class="small">
+                  ステップ {step.id}: {step.title}
+                </h6>
+                <div>{step.description}</div>
               </div>
-
-              <div class="space"></div>
-
-              <div class="row">
-                <div class="chip small outline">
-                  <i class="small">schedule</i>
-                  <span>{step.duration}</span>
-                </div>
-                <div
-                  class="chip small {step.difficulty === '初級'
-                    ? 'primary'
-                    : step.difficulty === '中級'
-                      ? 'secondary'
-                      : 'tertiary'}"
-                >
-                  <span>{step.difficulty}</span>
-                </div>
+    
+            </li>
+            <div class="space"></div>
+  
+            <div class="row">
+              <div class="chip small outline">
+                <i class="small">schedule</i>
+                <span>{step.duration}</span>
               </div>
-
-              <div class="space"></div>
-
-              <!-- 学習概念の表示 -->
-              <div class="row wrap">
-                {#each step.concepts as concept}
-                  <span class="chip tiny outline margin-right margin-bottom"
-                    >{concept}</span
-                  >
-                {/each}
-              </div>
-
-              <div class="space"></div>
-
-              <a
-                href="{base}/projects/timer/{step.id}"
-                class="button primary block"
+              <div
+                class="chip small {step.difficulty === '初級'
+                  ? 'primary'
+                  : step.difficulty === '中級'
+                    ? 'secondary'
+                    : 'tertiary'}"
               >
-                <i>play_arrow</i>
-                <span>ステップを始める</span>
-              </a>
+                <span>{step.difficulty}</span>
+              </div>
             </div>
-          </article>
-        </div>
+  
+            <div class="space"></div>
+  
+            <!-- 学習概念の表示 -->
+            <div class="row wrap">
+              {#each step.concepts as concept}
+                <span class="chip tiny outline margin-right margin-bottom"
+                  >{concept}</span
+                >
+              {/each}
+            </div>
+  
+            <div class="space"></div>
+  
+            <a
+              href="{base}/projects/timer/{step.id}"
+              class="button primary block"
+            >
+              <i>play_arrow</i>
+              <span>ステップを始める</span>
+            </a>
+         </ul>
+        </article>
       {/each}
     </div>
   </section>
@@ -418,48 +416,5 @@
     );
     border-radius: 1rem;
     margin-bottom: 2rem;
-  }
-
-  .large-text {
-    font-size: 1.2rem;
-    line-height: 1.6;
-  }
-
-  .medium-text {
-    font-size: 1.1rem;
-    line-height: 1.5;
-  }
-
-  .small-text {
-    font-size: 0.9rem;
-    line-height: 1.4;
-  }
-
-  .card {
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .card .padding {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .margin-right {
-    margin-right: 0.5rem;
-  }
-
-  .margin-bottom {
-    margin-bottom: 0.5rem;
-  }
-
-  .chip.tiny {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.5rem;
   }
 </style>
