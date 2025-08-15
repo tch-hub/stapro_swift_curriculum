@@ -19,12 +19,14 @@
                 {
                     "label": "型を明示",
                     "description": "変数や定数に : Int や : String を付けることで、どんな種類の値を入れるかを明確に指定できます。",
-                    "swiftCode": "var score: Int = 100\nlet pi: Double = 3.14159"
+                    "swiftCode": "var score: Int = 100\nlet pi: Double = 3.14159\nprint(score)\nprint(pi)",
+                    "output": "100\n3.14159"
                 },
                 {
                     "label": "文字列補間",
                     "description": "\\() を使うと、文字列の中に変数の値を埋め込むことができます。挨拶メッセージを作る時などに便利です。",
-                    "swiftCode": "let name = \"太郎\"\nlet message = \"こんにちは、\\(name)さん\""
+                    "swiftCode": "let name = \"太郎\"\nlet message = \"こんにちは、\\(name)さん\"\nprint(message)",
+                    "output": "こんにちは、太郎さん"
                 }
             ]
         },
@@ -36,22 +38,26 @@
                 {
                     "label": "整数",
                     "description": "Int型は整数（1, 42, -10など）を扱います。年齢、スコア、カウンターなど、小数点のない数値に使います。",
-                    "swiftCode": "let number: Int = 42\nlet negativeNumber: Int = -10"
+                    "swiftCode": "let number: Int = 42\nlet negativeNumber: Int = -10\nprint(number)\nprint(negativeNumber)",
+                    "output": "42\n-10"
                 },
                 {
                     "label": "小数",
                     "description": "Double型は小数点を含む数値（3.14, 0.85など）を扱います。価格、パーセンテージ、科学計算などに使います。",
-                    "swiftCode": "let price: Double = 3.14\nlet percentage: Float = 0.85"
+                    "swiftCode": "let price: Double = 3.14\nlet percentage: Float = 0.85\nprint(price)\nprint(percentage)",
+                    "output": "3.14\n0.85"
                 },
                 {
                     "label": "文字列",
                     "description": "String型は文字や文章（\"Hello\", \"こんにちは\"など）を扱います。名前、メッセージ、絵文字などに使います。",
-                    "swiftCode": "let message: String = \"Hello\"\nlet emoji = \"😊\""
+                    "swiftCode": "let message: String = \"Hello\"\nlet emoji = \"😊\"\nprint(message)\nprint(emoji)",
+                    "output": "Hello\n😊"
                 },
                 {
                     "label": "真偽値",
                     "description": "Bool型はtrue（真）またはfalse（偽）の2つの値だけを扱います。フラグやチェックボックスの状態などに使います。",
-                    "swiftCode": "let isValid: Bool = true\nlet isFinished = false"
+                    "swiftCode": "let isValid: Bool = true\nlet isFinished = false\nprint(isValid)\nprint(isFinished)",
+                    "output": "true\nfalse"
                 }
             ]
         },
@@ -63,17 +69,20 @@
                 {
                     "label": "if文",
                     "description": "指定した条件が満たされた時だけ処理を実行します。「もし〜なら」という判断をプログラムに組み込めます。",
-                    "swiftCode": "let age = 20\nif age >= 18 {\n    print(\"成人です\")\n}"
+                    "swiftCode": "let age = 20\nif age >= 18 {\n    print(\"成人です\")\n}",
+                    "output": "成人です"
                 },
                 {
                     "label": "if-else",
                     "description": "条件が満たされた場合とそうでない場合で、異なる処理を実行します。「もし〜なら○○、そうでなければ××」の判断ができます。",
-                    "swiftCode": "let score = 85\nif score >= 80 {\n    print(\"合格\")\n} else {\n    print(\"不合格\")\n}"
+                    "swiftCode": "let score = 85\nif score >= 80 {\n    print(\"合格\")\n} else {\n    print(\"不合格\")\n}",
+                    "output": "合格"
                 },
                 {
                     "label": "switch文",
                     "description": "ひとつの値に対して、複数の選択肢から適切な処理を選んで実行します。成績評価やメニュー選択などに便利です。",
-                    "swiftCode": "let grade = \"A\"\nswitch grade {\ncase \"A\":\n    print(\"優秀\")\ncase \"B\":\n    print(\"良好\")\ndefault:\n    print(\"がんばろう\")\n}"
+                    "swiftCode": "let grade = \"A\"\nswitch grade {\ncase \"A\":\n    print(\"優秀\")\ncase \"B\":\n    print(\"良好\")\ndefault:\n    print(\"がんばろう\")\n}",
+                    "output": "優秀"
                 }
             ]
         },
@@ -85,17 +94,20 @@
                 {
                     "label": "範囲のループ",
                     "description": "for文で数値の範囲（1...5など）を指定すると、その範囲の数値を順番に使って処理を繰り返せます。カウントダウンやナンバリングに便利です。",
-                    "swiftCode": "for i in 1...5 {\n    print(i)\n}\n// 出力: 1, 2, 3, 4, 5"
+                    "swiftCode": "for i in 1...5 {\n    print(i)\n}",
+                    "output": "1\n2\n3\n4\n5"
                 },
                 {
                     "label": "配列のループ",
                     "description": "配列に入っている全ての要素に対して、同じ処理を一つずつ実行できます。リストの全項目を表示する時などに使います。",
-                    "swiftCode": "let items = [\"りんご\", \"バナナ\", \"オレンジ\"]\nfor item in items {\n    print(item)\n}"
+                    "swiftCode": "let items = [\"りんご\", \"バナナ\", \"オレンジ\"]\nfor item in items {\n    print(item)\n}",
+                    "output": "りんご\nバナナ\nオレンジ"
                 },
                 {
                     "label": "while文",
                     "description": "指定した条件が満たされている間、ずっと処理を繰り返します。条件が満たされなくなったら自動的に停止します。",
-                    "swiftCode": "var count = 0\nwhile count < 5 {\n    print(count)\n    count += 1\n}"
+                    "swiftCode": "var count = 0\nwhile count < 5 {\n    print(count)\n    count += 1\n}",
+                    "output": "0\n1\n2\n3\n4"
                 }
             ]
         },
@@ -107,22 +119,26 @@
                 {
                     "label": "配列の作成",
                     "description": "[ ]を使って複数の値をひとまとめにして管理できます。買い物リストや成績一覧など、同じ種類のデータをまとめて扱う時に便利です。",
-                    "swiftCode": "var fruits = [\"りんご\", \"バナナ\"]\nlet numbers: [Int] = [1, 2, 3]"
+                    "swiftCode": "var fruits = [\"りんご\", \"バナナ\"]\nlet numbers: [Int] = [1, 2, 3]\nprint(fruits)\nprint(numbers)",
+                    "output": "[\"りんご\", \"バナナ\"]\n[1, 2, 3]"
                 },
                 {
                     "label": "要素の追加と取得",
                     "description": "appendで配列に新しい要素を追加でき、[番号]で特定の位置の要素を取り出せます。番号は0から始まります。",
-                    "swiftCode": "fruits.append(\"オレンジ\")\nlet firstFruit = fruits[0] // \"りんご\""
+                    "swiftCode": "var fruits = [\"りんご\", \"バナナ\"]\nfruits.append(\"オレンジ\")\nlet firstFruit = fruits[0]\nprint(fruits)\nprint(firstFruit)",
+                    "output": "[\"りんご\", \"バナナ\", \"オレンジ\"]\nりんご"
                 },
                 {
                     "label": "辞書の作成",
                     "description": "辞書は「キー: 値」のペアでデータを管理します。名前と点数、商品と価格など、関連する2つの情報をセットで扱えます。",
-                    "swiftCode": "var scores = [\"math\": 85, \"english\": 92]\nlet mathScore = scores[\"math\"] // Optional(85)"
+                    "swiftCode": "var scores = [\"math\": 85, \"english\": 92]\nlet mathScore = scores[\"math\"]\nprint(scores)\nprint(mathScore!)",
+                    "output": "[\"english\": 92, \"math\": 85]\n85"
                 },
                 {
                     "label": "辞書の値の更新",
                     "description": "辞書の既存の値を変更したり、新しいキーと値のペアを追加したりできます。成績の更新や新科目の追加などに使えます。",
-                    "swiftCode": "scores[\"math\"] = 90\nscores[\"science\"] = 88"
+                    "swiftCode": "var scores = [\"math\": 85, \"english\": 92]\nscores[\"math\"] = 90\nscores[\"science\"] = 88\nprint(scores)",
+                    "output": "[\"science\": 88, \"english\": 92, \"math\": 90]"
                 }
             ]
         },
@@ -134,17 +150,20 @@
                 {
                     "label": "基本的な関数",
                     "description": "funcを使って処理をひとまとめにして名前を付けると、同じ処理を何度でも呼び出せます。挨拶や計算など、繰り返し使う処理に便利です。",
-                    "swiftCode": "func greet() {\n    print(\"こんにちは\")\n}\ngreet() // 関数の呼び出し"
+                    "swiftCode": "func greet() {\n    print(\"こんにちは\")\n}\ngreet()",
+                    "output": "こんにちは"
                 },
                 {
                     "label": "引数ありの関数",
                     "description": "関数に値を渡すことで、その値を使った処理を実行できます。名前を渡して個別の挨拶をするなど、柔軟な処理が可能です。",
-                    "swiftCode": "func greet(name: String) {\n    print(\"こんにちは、\\(name)さん\")\n}\ngreet(name: \"太郎\")"
+                    "swiftCode": "func greet(name: String) {\n    print(\"こんにちは、\\(name)さん\")\n}\ngreet(name: \"太郎\")",
+                    "output": "こんにちは、太郎さん"
                 },
                 {
                     "label": "戻り値ありの関数",
                     "description": "-> を使って関数の処理結果を返すことができます。計算の結果や加工したデータを他の場所で使いたい時に使います。",
-                    "swiftCode": "func add(a: Int, b: Int) -> Int {\n    return a + b\n}\nlet result = add(a: 5, b: 3) // 8"
+                    "swiftCode": "func add(a: Int, b: Int) -> Int {\n    return a + b\n}\nlet result = add(a: 5, b: 3)\nprint(result)",
+                    "output": "8"
                 }
             ]
         },
@@ -156,17 +175,20 @@
                 {
                     "label": "オプショナル型の宣言",
                     "description": "?を付けることで「値があるかもしれないし、ないかもしれない」という状態を表現できます。ユーザーが入力をスキップした場合などに使います。",
-                    "swiftCode": "var name: String? = nil\nname = \"太郎\""
+                    "swiftCode": "var name: String? = nil\nname = \"太郎\"\nprint(name!)",
+                    "output": "太郎"
                 },
                 {
                     "label": "値の存在確認",
                     "description": "if letを使ってオプショナル型の値が存在するかチェックしてから安全に使うことができます。エラーを防ぐ重要な技術です。",
-                    "swiftCode": "if let unwrappedName = name {\n    print(\"名前は\\(unwrappedName)です\")\n} else {\n    print(\"名前がありません\")\n}"
+                    "swiftCode": "var name: String? = \"太郎\"\nif let unwrappedName = name {\n    print(\"名前は\\(unwrappedName)です\")\n} else {\n    print(\"名前がありません\")\n}",
+                    "output": "名前は太郎です"
                 },
                 {
                     "label": "デフォルト値",
                     "description": "??を使って、値がnil（空）の場合に使用する代わりの値を指定できます。名前が入力されていない時に「名無し」と表示するなどに使えます。",
-                    "swiftCode": "let displayName = name ?? \"名無し\"\nprint(displayName)"
+                    "swiftCode": "var name: String? = nil\nlet displayName = name ?? \"名無し\"\nprint(displayName)",
+                    "output": "名無し"
                 }
             ]
         },
@@ -183,12 +205,13 @@
                 {
                     "label": "構造体定義",
                     "description": "structを使ってシンプルなデータの組み合わせを作ります。座標のPointなど、関連するデータをまとめて扱いたい時に便利です。",
-                    "swiftCode": "struct Point {\n    var x: Double\n    var y: Double\n    \n    func distance() -> Double {\n        return sqrt(x * x + y * y)\n    }\n}"
+                    "swiftCode": "struct Point {\n    var x: Double\n    var y: Double\n    \n    func distance() -> Double {\n        return (x * x + y * y).squareRoot()\n    }\n}"
                 },
                 {
                     "label": "インスタンス作成",
                     "description": "クラスや構造体の設計図から、実際に使えるオブジェクト（インスタンス）を作ります。同じ設計図から複数のオブジェクトを作ることができます。",
-                    "swiftCode": "let student = Student(name: \"太郎\", age: 15)\nlet point = Point(x: 3.0, y: 4.0)"
+                    "swiftCode": "class Student {\n    var name: String\n    var age: Int\n    init(name: String, age: Int) {\n        self.name = name\n        self.age = age\n    }\n}\nstruct Point {\n    var x: Double, y: Double\n    func distance() -> Double {\n        return (x * x + y * y).squareRoot()\n    }\n}\n\nlet student = Student(name: \"太郎\", age: 15)\nlet point = Point(x: 3.0, y: 4.0)\n\nprint(student.name)\nprint(point.distance())",
+                    "output": "太郎\n5.0"
                 }
             ]
         },
