@@ -8,7 +8,8 @@
                 {
                     "label": "変更可能な変数",
                     "description": "varで宣言した変数は、後から何度でも値を変更できます。ゲームのスコアや名前の入力など、変わる可能性のある値に使います。",
-                    "swiftCode": "var name = \"太郎\"\nname = \"花子\" // 変更可能"
+                    "swiftCode": "var name = \"太郎\"\\nname = \"花子\" // 変更可能\\nprint(name)",
+                    "output": "花子"
                 },
                 {
                     "label": "変更不可能な定数",

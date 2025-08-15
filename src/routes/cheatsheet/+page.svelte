@@ -185,7 +185,11 @@
                       <i class="small">code</i>
                       <span>Swift</span>
                     </div>
-                    <CodeBlock code={item.swiftCode} language="swift" />
+                    <CodeBlock
+                      code={item.swiftCode}
+                      language="swift"
+                      output={item.output}
+                    />
                   </div>
                 {/if}
               </div>
