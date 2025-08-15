@@ -33,19 +33,12 @@
     loadTutorialData();
   });
 
-  // 選択されたカテゴリとレッスン
-  let selectedCategory = "basics";
-  let selectedLesson = null;
+  // 選択されたカテゴリ
+  let selectedCategory = "text-basics";
 
   // カテゴリ選択
   function selectCategory(categoryId) {
     selectedCategory = categoryId;
-    selectedLesson = null;
-  }
-
-  // レッスン選択
-  function selectLesson(lesson) {
-    selectedLesson = lesson;
   }
 
   // 選択されたカテゴリを取得
@@ -148,191 +141,54 @@
 
   <div class="space"></div>
 
-  <!-- メインコンテンツ -->
-  {#if selectedLesson}
-    <!-- レッスン詳細表示 -->
+  <!-- レッスン一覧表示 -->
+  {#if getSelectedCategory()}
     <section>
-      <div class="row">
-        <button
-          class="button transparent primary-text"
-          onclick={() => (selectedLesson = null)}
-        >
-          <i>arrow_back</i>
-          <span>レッスン一覧に戻る</span>
-        </button>
+      <div class="center-align">
+        <h3>
+          <i class="large primary-text">{getSelectedCategory().icon}</i>
+          {getSelectedCategory().title}
+        </h3>
+        <p class="large-text">{getSelectedCategory().description}</p>
       </div>
     </section>
 
     <div class="space"></div>
 
     <section>
-      <article class="card round border">
-        <div class="padding">
-          <div class="grid">
-            <div class="s12 m8">
-              <h3>{selectedLesson.title}</h3>
-              <p class="large-text">{selectedLesson.description}</p>
-            </div>
-            <div class="s12 m4 right-align">
-              <div class="chip {getDifficultyColor(selectedLesson.difficulty)}">
-                <span>{selectedLesson.difficulty}</span>
-              </div>
-              <div class="chip secondary">
-                <span><i>schedule</i> {selectedLesson.duration}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <div class="space"></div>
-
-    <!-- 手順説明 -->
-    <section>
-      <h4>📋 実装手順</h4>
-      <article class="card round border secondary-container">
-        <div class="padding">
-          <ol class="large-text">
-            {#each selectedLesson.steps as step}
-              <li>{step}</li>
-            {/each}
-          </ol>
-        </div>
-      </article>
-    </section>
-
-    <div class="space"></div>
-
-    <!-- コード表示とプレビュー -->
-    <section>
-      <h4>💻 サンプルコード</h4>
-      <article class="card round border">
-        <div class="padding">
-          <div class="grid">
-            <div class="s12 l8">
-              <div class="code-header">
-                <i class="small">code</i>
-                <span>ContentView.swift</span>
-              </div>
-              <div class="space"></div>
-              <CodeBlock code={selectedLesson.code} language="swift" />
-            </div>
-            <div class="s12 l4">
-              <div class="preview-section">
-                <h6 class="preview-title">
-                  <i class="small">smartphone</i>
-                  <span>プレビュー</span>
-                </h6>
-                <div class="iphone-preview">
-                  <img
-                    src={selectedLesson.previewImage ||
-                      `https://placehold.jp/250x500/3f51b5/ffffff?text=${encodeURIComponent(selectedLesson.title)}`}
-                    alt="{selectedLesson.title}の完成イメージ"
-                    class="iphone-image"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <div class="space"></div>
-
-    <!-- 解説 -->
-    <section>
-      <h4>📚 解説</h4>
-      <article class="card round border tertiary-container">
-        <div class="padding">
-          <p class="large-text">{selectedLesson.explanation}</p>
-        </div>
-      </article>
-    </section>
-
-    <div class="space"></div>
-
-    <!-- Xcodeでの確認方法 -->
-    <section>
-      <h4>🔍 Xcodeで確認してみよう</h4>
-      <article class="card round border">
-        <div class="padding">
-          <div class="grid">
-            <div class="s12 m6">
-              <h6><i class="primary-text">laptop_mac</i> 動作確認手順</h6>
-              <ol>
-                <li>Xcodeで新しいプロジェクトを作成</li>
-                <li>ContentView.swiftを開く</li>
-                <li>上記のコードをコピー&ペースト</li>
-                <li>Canvas（プレビュー）で確認</li>
-                <li>シミュレーターで実際に動作させる</li>
-              </ol>
-            </div>
-            <div class="s12 m6">
-              <h6><i class="secondary-text">tips_and_updates</i> ポイント</h6>
-              <ul>
-                <li>プレビューが表示されない場合は、Canvasボタンを押す</li>
-                <li>エラーが出た場合は、コードを再度確認</li>
-                <li>シミュレーターでタップして動作を確認</li>
-                <li>コードを少し変更して実験してみよう</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </article>
-    </section>
-  {:else}
-    <!-- レッスン一覧表示 -->
-    {#if getSelectedCategory()}
-      <section>
-        <div class="center-align">
-          <h3>
-            <i class="large primary-text">{getSelectedCategory().icon}</i>
-            {getSelectedCategory().title}
-          </h3>
-          <p class="large-text">{getSelectedCategory().description}</p>
-        </div>
-      </section>
-
-      <div class="space"></div>
-
-      <section>
-        <div class="grid">
-          {#each getSelectedCategory().lessons as lesson}
-            <div class="s12 m6 l4">
-              <button
-                type="button"
-                class="lesson-card-button"
-                onclick={() => selectLesson(lesson)}
-              >
-                <div class="card round lesson-card-content">
-                  <div class="padding">
-                    <div class="space"></div>
-                    <h5>{lesson.title}</h5>
-                    <p>{lesson.description}</p>
-                    <div class="space"></div>
-                    <div class="row">
-                      <div
-                        class="chip {getDifficultyColor(
-                          lesson.difficulty
-                        )} small"
-                      >
-                        <span>{lesson.difficulty}</span>
-                      </div>
-                      <div class="max"></div>
-                      <div class="chip secondary small">
-                        <span><i>schedule</i> {lesson.duration}</span>
-                      </div>
+      <div class="grid">
+        {#each getSelectedCategory().lessons as lesson}
+          <div class="s12 m6 l4">
+            <a
+              href="{base}/tutorial/{lesson.id}"
+              class="lesson-card-button"
+            >
+              <div class="card round lesson-card-content">
+                <div class="padding">
+                  <div class="space"></div>
+                  <h5>{lesson.title}</h5>
+                  <p>{lesson.description}</p>
+                  <div class="space"></div>
+                  <div class="row">
+                    <div
+                      class="chip {getDifficultyColor(
+                        lesson.difficulty
+                      )} small"
+                    >
+                      <span>{lesson.difficulty}</span>
+                    </div>
+                    <div class="max"></div>
+                    <div class="chip secondary small">
+                      <span><i>schedule</i> {lesson.duration}</span>
                     </div>
                   </div>
                 </div>
-              </button>
-            </div>
-          {/each}
-        </div>
-      </section>
-    {/if}
+              </div>
+            </a>
+          </div>
+        {/each}
+      </div>
+    </section>
   {/if}
 {/if}
 

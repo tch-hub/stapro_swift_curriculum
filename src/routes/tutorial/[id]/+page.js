@@ -1,16 +1,19 @@
 import { base } from "$app/paths";
+import fs from 'fs';
 
 // 事前レンダリングを有効化し、利用可能なエントリを指定
 export const prerender = true;
 
 export function entries() {
-    return [
-        { id: '1' },
-        { id: '2' },
-        { id: '3' },
-        { id: '4' },
-        { id: '5' }
-    ];
+    // tutorial-data.jsonからデータを同期的に読み込む
+    const data = JSON.parse(fs.readFileSync('static/tutorial-data.json', 'utf8'));
+
+    // 全てのレッスンのIDを抽出して、SvelteKitが期待する形式の配列を作成
+    const ids = data.tutorialCategories.flatMap(category =>
+        category.lessons.map(lesson => ({ id: lesson.id }))
+    );
+
+    return ids;
 }
 
 export async function load({ params }) {
@@ -20,6 +23,7 @@ export async function load({ params }) {
         throw new Error("チュートリアルIDが指定されていません");
     }
 
+    // tutorialIdをコンポーネントに渡す
     return {
         tutorialId
     };
