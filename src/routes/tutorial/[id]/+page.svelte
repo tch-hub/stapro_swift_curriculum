@@ -66,10 +66,14 @@
 </script>
 
 <svelte:head>
-  <title>{lessonData ? lessonData.title : "チュートリアル"} - Swift学習カリキュラム</title>
+  <title
+    >{lessonData ? lessonData.title : "チュートリアル"} - Swift学習カリキュラム</title
+  >
   <meta
     name="description"
-    content={lessonData ? lessonData.description : "Swift学習のためのチュートリアル"}
+    content={lessonData
+      ? lessonData.description
+      : "Swift学習のためのチュートリアル"}
   />
 </svelte:head>
 
@@ -158,29 +162,13 @@
     <article class="card round border">
       <div class="padding">
         <div class="grid">
-          <div class="s12 l8">
+          <div class="s12">
             <div class="code-header">
               <i class="small">code</i>
               <span>ContentView.swift</span>
             </div>
             <div class="space"></div>
             <CodeBlock code={lessonData.code} language="swift" />
-          </div>
-          <div class="s12 l4">
-            <div class="preview-section">
-              <h6 class="preview-title">
-                <i class="small">smartphone</i>
-                <span>プレビュー</span>
-              </h6>
-              <div class="iphone-preview">
-                <img
-                  src={lessonData.previewImage ||
-                    `https://placehold.jp/250x500/3f51b5/ffffff?text=${encodeURIComponent(lessonData.title)}`}
-                  alt="{lessonData.title}の完成イメージ"
-                  class="iphone-image"
-                />
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -191,14 +179,14 @@
 
   <!-- 解説 -->
   {#if lessonData.explanation}
-  <section>
-    <h4>📚 解説</h4>
-    <article class="card round border tertiary-container">
-      <div class="padding">
-        <p class="large-text">{lessonData.explanation}</p>
-      </div>
-    </article>
-  </section>
+    <section>
+      <h4>📚 解説</h4>
+      <article class="card round border tertiary-container">
+        <div class="padding">
+          <p class="large-text">{lessonData.explanation}</p>
+        </div>
+      </article>
+    </section>
   {/if}
 
   <div class="space"></div>
@@ -258,45 +246,5 @@
     font-size: 0.9rem;
     color: var(--on-surface-variant);
     margin-bottom: 1rem;
-  }
-  .preview-section {
-    padding-left: 1rem;
-    border-left: 1px solid var(--outline);
-  }
-  .preview-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    color: var(--on-surface-variant);
-    font-weight: 500;
-  }
-  .iphone-preview {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
-  .iphone-image {
-    max-width: 100%;
-    width: 250px;
-    height: auto;
-    aspect-ratio: 9 / 19.5;
-    border-radius: 1.5rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    border: 2px solid var(--outline);
-    object-fit: cover;
-  }
-  @media (max-width: 768px) {
-    .preview-section {
-      padding-left: 0;
-      border-left: none;
-      border-top: 1px solid var(--outline);
-      padding-top: 1rem;
-      margin-top: 1rem;
-    }
-    .iphone-image {
-      width: 200px;
-    }
   }
 </style>

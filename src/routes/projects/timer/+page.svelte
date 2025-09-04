@@ -176,7 +176,7 @@
     <div class="grid">
       {#each steps as step}
         <article class="card round s12 m6">
-         <ul class="list">
+          <ul class="list">
             <li>
               <i class="large primary-text">{step.icon}</i>
               <div class="max">
@@ -185,10 +185,9 @@
                 </h6>
                 <div>{step.description}</div>
               </div>
-    
             </li>
             <div class="space"></div>
-  
+
             <div class="row">
               <div class="chip small outline">
                 <i class="small">schedule</i>
@@ -204,20 +203,21 @@
                 <span>{step.difficulty}</span>
               </div>
             </div>
-  
+
             <div class="space"></div>
-  
+
             <!-- 学習概念の表示 -->
             <div class="row wrap">
               {#each step.concepts as concept}
-                <span class="chip tiny outline margin-right margin-bottom"
+                <span
+                  class="chip tiny outline right-margin small-margin bottom-margin small-margin"
                   >{concept}</span
                 >
               {/each}
             </div>
-  
+
             <div class="space"></div>
-  
+
             <a
               href="{base}/projects/timer/{step.id}"
               class="button primary block"
@@ -225,7 +225,7 @@
               <i>play_arrow</i>
               <span>ステップを始める</span>
             </a>
-         </ul>
+          </ul>
         </article>
       {/each}
     </div>
@@ -416,5 +416,13 @@
     );
     border-radius: 1rem;
     margin-bottom: 2rem;
+  }
+
+  /* articleの高さを揃える */
+  article.round.border.padding {
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 </style>
