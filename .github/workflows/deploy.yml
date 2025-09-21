@@ -1,0 +1,68 @@
+# GitHub Actionsワークフローの名前
+name: Deploy to GitHub Pages
+
+# ワークフローが実行されるタイミングを定義
+on:
+  # mainブランチにプッシュされた時に実行
+  push:
+    branches:
+      - main
+  # GitHubのActionsタブから手動で実行することも可能にする
+  workflow_dispatch:
+
+# 実行するジョブを定義
+jobs:
+  # ジョブの名前（任意）
+  build-and-deploy:
+    # 実行環境を指定
+    runs-on: ubuntu-latest
+
+    # このジョブが必要とする権限を設定
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    # ジョブのステップを定義
+    steps:
+      # ステップ1: リポジトリのコードをチェックアウトする
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ステップ2: pnpmをセットアップする
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.4 # あなたが使っているpnpmのバージョンに合わせてください
+
+      # ステップ3: Node.jsの環境をセットアップする
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.14.0" # あなたが使っているNode.jsのバージョン
+          cache: "pnpm" # pnpmのキャッシュを有効にする
+
+      # ステップ4: 依存関係をインストールする
+      - name: Install dependencies
+        run: pnpm install
+
+      # ステップ5: SvelteKitアプリケーションをビルドする
+      - name: Build application
+        run: pnpm build
+        env:
+          NODE_ENV: production
+
+      # ステップ6: GitHub Pagesがアンダースコアで始まるフォルダを無視しないように設定
+      - name: Add .nojekyll file
+        run: touch build/.nojekyll
+
+      # ステップ7: ビルド成果物をアーティファクトとしてアップロードする
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./build
+
+      # ステップ8: アーティファクトをGitHub Pagesにデプロイする
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

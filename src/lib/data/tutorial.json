@@ -1,0 +1,172 @@
+{
+    "sections": [
+        {
+            "id": "0",
+            "title": "デフォルトのコード解説",
+            "description": "新しいSwiftUIプロジェクトで自動生成されるコードについて学びます。",
+            "codeBlocks": [
+                {
+                    "title": "自動生成される基本構造",
+                    "code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        Text(\"Hello, World!\")\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-0-1.png",
+                    "scale": 1.0,
+                    "description": "新しいSwiftUIプロジェクトを作ると、このコードが自動で作られます。これがSwiftUIアプリの基本の形です。\n\nまず、import SwiftUIでSwiftUIというツールを読み込みます。これで、TextやButtonなどの便利な機能を使えるようになります。\n\n次に、ContentViewという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。\n\nbodyという部分は、画面に何を表示するかを書くところです。\n\nsome Viewは、戻り値の型を指定する特別な書き方です。これでSwiftUIがうまく動きます。\n\n#Previewは、コードを書くたびに画面をすぐに見られる機能です。これで、アプリの見た目をすぐに確認できます。"
+                }
+            ]
+        },
+        {
+            "id": "1",
+            "title": "テキスト表示",
+            "description": "SwiftUIでテキストを表示する方法を学びます。",
+            "codeBlocks": [
+                {
+                    "title": "Textビューの基本",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        Text(\"Hello, World!\")\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-1-1.png",
+                    "scale": 1.5,
+                    "description": "Textビューは最も基本的なビューです。文字列を引数に渡すだけでテキストを表示できます。#Previewを使ってXcodeで即座にプレビューを確認できます。"
+                },
+                {
+                    "title": "テキストの装飾",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        Text(\"SwiftUIの装飾\") // 基本のテキストを作成\n            .font(.largeTitle) // 大きなタイトル用のフォントサイズ\n            .foregroundColor(.blue) // 青色に設定\n            .fontWeight(.bold) // 太字に設定\n            .multilineTextAlignment(.center) // 複数行の場合中央揃え\n            .padding() // 周囲に余白を追加\n    }\n}\n\n#Preview {\n    ContentView() // プレビューを表示\n}",
+                    "previewImage": "/previews/tutorial-1-2.png",
+                    "scale": 1.0,
+                    "description": "1つのTextビューに複数の装飾をチェーンして適用できます。font()でフォントサイズを、foregroundColor()で文字色を、fontWeight()で太さを指定できます。複数の修飾子を組み合わせてリッチなテキストを作成できます。"
+                },
+                {
+                    "title": "複数行のテキスト",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"これは長いテキストです。SwiftUIでは自動的に折り返されて複数行で表示されます。\")\n                .multilineTextAlignment(.center)\n                .padding()\n            \n            Text(\"改行を\\n明示的に\\n入れることも\\nできます\")\n                .multilineTextAlignment(.leading)\n                .padding()\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-1-3.png",
+                    "scale": 0.9,
+                    "description": "長いテキストは自動的に折り返されます。multilineTextAlignment()で複数行の配置を指定できます。\\nで明示的な改行を入れることも可能です。padding()で余白を追加できます。"
+                }
+            ]
+        },
+        {
+            "id": "2",
+            "title": "ボタン操作",
+            "description": "SwiftUIでボタンを作成し、操作を扱う方法を学びます。",
+            "codeBlocks": [
+                {
+                    "title": "Buttonの基本",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        Button(\"押してみよう\") {\n            print(\"ボタンが押されました！\")\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-2-1.png",
+                    "description": "Buttonは最もシンプルな形で作成できます。文字列とactionクロージャーを渡すだけで動作します。ボタンがタップされるとaction内のコードが実行されます。"
+                },
+                {
+                    "title": "ボタンのスタイル",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Button(\"デフォルトボタン\") {\n                print(\"デフォルト\")\n            }\n            \n            Button(action: {\n                print(\"スタイル付き\")\n            }) {\n                Text(\"スタイル付きボタン\")\n                    .padding()\n                    .background(Color.green)\n                    .foregroundColor(.white)\n                    .cornerRadius(15)\n                    .shadow(radius: 5)\n            }\n            \n            Button(action: {\n                print(\"画像ボタン\")\n            }) {\n                Image(systemName: \"star.fill\")\n                    .font(.largeTitle)\n                    .foregroundColor(.yellow)\n            }\n        }\n        .padding()\n    }\n}",
+                    "previewImage": "/previews/tutorial-2-2.png",
+                    "description": "Buttonには様々なスタイルがあります。シンプルな文字列ラベル、装飾されたTextビュー、またはImageビューを使用できます。shadow()で影を付けて立体感を出せます。"
+                },
+                {
+                    "title": "ボタンで状態を変更",
+                    "code": "struct ContentView: View {\n    @State private var isOn = false\n    \n    var body: some View {\n        VStack {\n            Text(isOn ? \"オン\" : \"オフ\")\n                .font(.largeTitle)\n                .foregroundColor(isOn ? .green : .red)\n            \n            Button(action: {\n                isOn.toggle()\n            }) {\n                Text(isOn ? \"オフにする\" : \"オンにする\")\n                    .font(.title)\n                    .padding()\n                    .background(isOn ? Color.red : Color.green)\n                    .foregroundColor(.white)\n                    .cornerRadius(10)\n            }\n        }\n    }\n}",
+                    "previewImage": "/previews/tutorial-2-3.png",
+                    "description": "@Stateを使ってビューの状態を管理できます。ボタンのactionで状態を変更し、それに応じてUIが自動的に更新されます。toggle()メソッドでtrue/falseを切り替えられます。"
+                }
+            ]
+        },
+        {
+            "id": "3",
+            "title": "レイアウト",
+            "description": "ビューをどのように配置するかを学びます。",
+            "codeBlocks": [
+                {
+                    "title": "VStack - 縦方向のレイアウト",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"上\")\n                .font(.title)\n                .foregroundColor(.red)\n            \n            Text(\"中央\")\n                .font(.title)\n                .foregroundColor(.green)\n            \n            Text(\"下\")\n                .font(.title)\n                .foregroundColor(.blue)\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-3-1.png",
+                    "description": "VStackはビューを縦方向に並べます。spacingパラメータで要素間の間隔を指定できます。上から下へ順番にビューが配置されます。"
+                },
+                {
+                    "title": "HStack - 横方向のレイアウト",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        HStack(spacing: 15) {\n            Text(\"左\")\n                .font(.title)\n                .foregroundColor(.red)\n            \n            Text(\"中央\")\n                .font(.title)\n                .foregroundColor(.green)\n            \n            Text(\"右\")\n                .font(.title)\n                .foregroundColor(.blue)\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-3-2.png",
+                    "description": "HStackはビューを横方向に並べます。spacingパラメータで要素間の間隔を指定できます。左から右へ順番にビューが配置されます。"
+                },
+                {
+                    "title": "ZStack - 重ね合わせレイアウト",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        ZStack {\n            Color.blue.opacity(0.3)\n                .frame(width: 200, height: 200)\n            \n            Color.red.opacity(0.5)\n                .frame(width: 150, height: 150)\n            \n            Text(\"重ねる\")\n                .foregroundColor(.white)\n                .font(.largeTitle)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-3-3.png",
+                    "description": "ZStackはビューを重ねて配置します。後から追加したビューが前面に表示されます。背景色の上に他のビューを重ねるのに適しています。"
+                },
+                {
+                    "title": "Spacing - 要素間の間隔",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"間隔なし\")\n                .font(.headline)\n            \n            VStack(spacing: 0) {\n                Text(\"間隔0\")\n                Text(\"ぎゅっと\")\n                Text(\"くっつく\")\n            }\n            .background(Color.yellow.opacity(0.3))\n            \n            VStack(spacing: 10) {\n                Text(\"間隔10\")\n                Text(\"少し\")\n                Text(\"離れる\")\n            }\n            .background(Color.green.opacity(0.3))\n            \n            VStack(spacing: 30) {\n                Text(\"間隔30\")\n                Text(\"かなり\")\n                Text(\"離れる\")\n            }\n            .background(Color.blue.opacity(0.3))\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-3-4.png",
+                    "description": "spacingパラメータでVStackやHStack内の要素間の間隔を指定できます。0を指定すると要素が密着し、数値を大きくすると間隔が広がります。適切な間隔で読みやすいレイアウトを作成できます。"
+                }
+            ]
+        },
+        {
+            "id": "4",
+            "title": "状態管理",
+            "description": "ビューの状態を管理してインタラクティブなUIを作成します。",
+            "codeBlocks": [
+                {
+                    "title": "@Stateを使った状態管理",
+                    "code": "struct ContentView: View {\n    @State private var count = 0\n    \n    var body: some View {\n        VStack {\n            Text(\"カウント: \\(count)\")\n                .font(.largeTitle)\n            \n            HStack {\n                Button(action: {\n                    count -= 1\n                }) {\n                    Text(\"-\")\n                        .font(.title)\n                        .frame(width: 50, height: 50)\n                        .background(Color.red)\n                        .foregroundColor(.white)\n                        .cornerRadius(25)\n                }\n                \n                Button(action: {\n                    count += 1\n                }) {\n                    Text(\"+\")\n                        .font(.title)\n                        .frame(width: 50, height: 50)\n                        .background(Color.green)\n                        .foregroundColor(.white)\n                        .cornerRadius(25)\n                }\n            }\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-4-1.png",
+                    "description": "@Stateプロパティラッパーを使ってビューの状態を管理します。状態が変更されるとビューが自動的に再描画されます。private varでカプセル化し、外部からの直接変更を防ぎます。"
+                }
+            ]
+        },
+        {
+            "id": "5",
+            "title": "図形",
+            "description": "SwiftUIで図形を描画する方法を学びます。",
+            "codeBlocks": [
+                {
+                    "title": "Circle - 円",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        VStack(spacing: 30) {\n            // 青い塗りつぶしの円\n            Circle()\n                .fill(Color.blue)\n                .frame(width: 100, height: 100)\n            \n            // 赤い枠線の円\n            Circle()\n                .stroke(Color.red, lineWidth: 5)\n                .frame(width: 80, height: 80)\n            \n            // 緑の塗りつぶしに白い枠線の円\n            Circle()\n                .fill(Color.green)\n                .overlay(\n                    Circle()\n                        .stroke(Color.white, lineWidth: 4)\n                )\n                .frame(width: 120, height: 120)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-5-1.png",
+                    "description": "Circle()で円を描画できます。fill()で塗りつぶし、stroke()で枠線を指定できます。overlay()を使って枠線付きの円を作成することも可能です。"
+                },
+                {
+                    "title": "Rectangle - 四角形",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            // 角丸なしの四角形\n            Rectangle()\n                .fill(Color.orange)\n                .frame(width: 150, height: 80)\n            \n            // 少し角丸の四角形\n            Rectangle()\n                .fill(Color.blue)\n                .frame(width: 150, height: 80)\n                .cornerRadius(10)\n            \n            // かなり角丸の四角形\n            Rectangle()\n                .fill(Color.green)\n                .frame(width: 150, height: 80)\n                .cornerRadius(25)\n            \n            // RoundedRectangleで角丸四角形\n            RoundedRectangle(cornerRadius: 20)\n                .fill(Color.pink)\n                .frame(width: 150, height: 80)\n            \n            // Capsule（完全な角丸）\n            RoundedRectangle(cornerRadius: 40)\n                .fill(Color.purple)\n                .frame(width: 150, height: 80)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-5-2.png",
+                    "description": "Rectangle()で四角形を描画できます。cornerRadius()で角の丸みを調整できます。RoundedRectangle()で最初から角丸の四角形を作成できます。Capsuleのような完全な角丸を作ることも可能です。"
+                }
+            ]
+        },
+        {
+            "id": "6",
+            "title": "入力",
+            "description": "ユーザーからの入力を扱う方法を学びます。",
+            "codeBlocks": [
+                {
+                    "title": "TextField - テキスト入力",
+                    "code": "struct ContentView: View {\n    @State private var name = \"\"\n    \n    var body: some View {\n        VStack(spacing: 20) {\n            // 名前を入力するテキストフィールド\n            TextField(\"名前を入力してください\", text: $name)\n                .textFieldStyle(RoundedBorderTextFieldStyle())\n                .padding(.horizontal)\n            \n            // 名前が入力されている場合のみ挨拶を表示\n            if !name.isEmpty {\n                Text(\"こんにちは、\\(name)さん！\")\n                    .font(.title)\n                    .foregroundColor(.blue)\n            }\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-6-1.png",
+                    "description": "TextFieldでテキスト入力を扱えます。$記号を使って@State変数とバインディングします。textFieldStyle()で外観をカスタマイズできます。"
+                },
+                {
+                    "title": "Toggle - スイッチ",
+                    "code": "struct ContentView: View {\n    @State private var isOn = false\n    \n    var body: some View {\n        VStack(spacing: 20) {\n            Toggle(\"通知をオンにする\", isOn: $isOn)\n                .padding(.horizontal)\n            \n            Text(isOn ? \"通知オン\" : \"通知オフ\")\n                .font(.title)\n                .foregroundColor(isOn ? .green : .red)\n                .padding()\n                .background(\n                    RoundedRectangle(cornerRadius: 10)\n                        .fill(isOn ? Color.green.opacity(0.2) : Color.red.opacity(0.2))\n                )\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-6-2.png",
+                    "description": "Toggleでオン/オフのスイッチを作成できます。$記号で@State変数とバインディングし、状態に応じてUIを変更できます。"
+                },
+                {
+                    "title": "Slider - スライダー",
+                    "code": "struct ContentView: View {\n    @State private var volume = 0.5\n    \n    var body: some View {\n        VStack(spacing: 30) {\n            Text(\"音量: \\(Int(volume * 100))%\")\n                .font(.title)\n            \n            Slider(value: $volume, in: 0...1, step: 0.1)\n                .padding(.horizontal)\n                .accentColor(.blue)\n            \n            HStack {\n                Image(systemName: \"speaker.wave.1\")\n                    .foregroundColor(volume < 0.3 ? .gray : .blue)\n                \n                Spacer()\n                \n                Image(systemName: \"speaker.wave.3\")\n                    .foregroundColor(volume > 0.7 ? .blue : .gray)\n            }\n            .padding(.horizontal)\n            .font(.title)\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-6-3.png",
+                    "description": "Sliderで数値をスライドして入力できます。valueパラメータに$記号でバインドし、inパラメータで範囲、stepでステップを指定できます。accentColor()でスライダーの色を変更できます。"
+                }
+            ]
+        },
+        {
+            "id": "7",
+            "title": "簡単なアプリ",
+            "description": "学んだことを使って簡単なアプリを作成します。",
+            "codeBlocks": [
+                {
+                    "title": "カウンターアプリ",
+                    "code": "struct ContentView: View {\n    @State private var count = 0\n    \n    var body: some View {\n        VStack(spacing: 30) {\n            Text(\"\\(count)\")\n                .font(.system(size: 80, weight: .bold))\n                .foregroundColor(countColor())\n            \n            HStack(spacing: 40) {\n                Button(action: {\n                    if count > 0 {\n                        count -= 1\n                    }\n                }) {\n                    Image(systemName: \"minus.circle.fill\")\n                        .font(.system(size: 60))\n                        .foregroundColor(.red)\n                }\n                \n                Button(action: {\n                    count += 1\n                }) {\n                    Image(systemName: \"plus.circle.fill\")\n                        .font(.system(size: 60))\n                        .foregroundColor(.green)\n                }\n            }\n            \n            Button(\"リセット\") {\n                count = 0\n            }\n            .padding()\n            .background(Color.blue)\n            .foregroundColor(.white)\n            .cornerRadius(10)\n        }\n    }\n    \n    private func countColor() -> Color {\n        if count > 0 {\n            return .green\n        } else if count < 0 {\n            return .red\n        } else {\n            return .gray\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "previewImage": "/previews/tutorial-7-1.png",
+                    "description": "カウンターアプリでは@Stateで状態管理、VStackとHStackでレイアウト、Buttonで操作、条件に応じた色の変更を実装しています。簡単なアプリでも多くのSwiftUIの概念が使われています。"
+                }
+            ]
+        }
+    ]
+}
