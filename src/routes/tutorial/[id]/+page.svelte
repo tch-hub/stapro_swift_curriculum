@@ -50,7 +50,7 @@
 			{:else}
 				<div></div>
 			{/if}
-			{#if parseInt(id) < tutorialData.sections.length}
+			{#if parseInt(id) < tutorialData.sections.length - 1}
 				<a href="{base}/tutorial/{parseInt(id) + 1}" class="btn btn-primary">次の項目</a>
 			{:else}
 				<div></div>

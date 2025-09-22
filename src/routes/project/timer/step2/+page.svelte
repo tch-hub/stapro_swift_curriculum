@@ -28,8 +28,25 @@
 	<!-- 手順 -->
 	<div class="space-y-6">
 		<div>
-			<h2 class="mb-4 text-3xl font-bold">1. TimerState enumの追加</h2>
-			<p class="mb-4">タイマーの状態を表すenumを定義します：</p>
+			<h2 class="mb-4 text-3xl font-bold">1. TimerState enumとは？</h2>
+			<p class="mb-4">
+				まず、タイマーの状態を表すための「enum」というものを学びましょう。enumは、プログラムで「選択肢」を表すのに便利なものです。
+			</p>
+			<CodeBlock
+				title="enumの例"
+				code={`// 例: 果物の種類を表すenum
+enum Fruit {
+    case apple    // りんご
+    case banana   // バナナ
+    case orange   // オレンジ
+}`}
+			/>
+			<p class="mb-4">タイマーアプリでは、タイマーの状態を3つに分けます：</p>
+			<ul class="mb-4 list-inside list-disc">
+				<li><strong>idle</strong>: 待機中（まだ何もしていない状態）</li>
+				<li><strong>running</strong>: 実行中（タイマーが動いている状態）</li>
+				<li><strong>paused</strong>: 一時停止中（タイマーが止まっている状態）</li>
+			</ul>
 			<CodeBlock
 				title="TimerState enum"
 				code={`enum TimerState {
@@ -41,65 +58,107 @@
 		</div>
 
 		<div>
-			<h2 class="mb-4 text-3xl font-bold">2. ContentViewの基本構造</h2>
-			<p class="mb-4">ContentViewをタイマーアプリの基本構造に変更します：</p>
+			<h2 class="mb-4 text-3xl font-bold">2. @Stateとは？</h2>
+			<p class="mb-4">
+				SwiftUIでは、画面に表示する情報を「状態」として管理します。@Stateは、その状態を保存しておくための特別なキーワードです。
+			</p>
+			<p class="mb-4">例えば、タイマーの時間を保存したり、現在の状態を保存したりします。</p>
+			<CodeBlock
+				title="@Stateの例"
+				code={`@State var hours = 0     // 時間を保存
+@State var minutes = 0   // 分を保存
+@State var seconds = 0   // 秒を保存
+@State var timerState: TimerState = .idle  // タイマーの状態を保存`}
+			/>
+		</div>
+
+		<div>
+			<h2 class="mb-4 text-3xl font-bold">3. VStackとHStackとは？</h2>
+			<p class="mb-4">SwiftUIでは、画面のレイアウトを「スタック」と呼ばれるもので作ります。</p>
+			<ul class="mb-4 list-inside list-disc">
+				<li><strong>VStack</strong>: 縦（Vertical）に並べるスタック</li>
+				<li><strong>HStack</strong>: 横（Horizontal）に並べるスタック</li>
+			</ul>
+			<CodeBlock
+				title="VStackとHStackの例"
+				code={`VStack {        // 縦に並べる
+    Text("上")     // 上に表示
+    Text("下")     // 下に表示
+}
+
+HStack {        // 横に並べる
+    Text("左")     // 左に表示
+    Text("右")     // 右に表示
+}`}
+			/>
+		</div>
+
+		<div>
+			<h2 class="mb-4 text-3xl font-bold">4. ContentViewの基本構造を作る</h2>
+			<p class="mb-4">今まで学んだことを使って、ContentViewの基本構造を作りましょう。</p>
 			<div class="card mb-6 bg-base-100 shadow-xl">
 				<div class="card-body">
 					<div class="flex flex-col gap-6 lg:flex-row">
 						<div class="flex-1">
 							<CodeBlock
 								title="ContentView.swift"
-								code={`import SwiftUI
+								code={`import SwiftUI  // SwiftUIというライブラリを読み込む。これでiOSアプリの画面を作れるようになる
 
-enum TimerState {
-    case idle
-    case running
-    case paused
+enum TimerState {  // タイマーの状態を表すための選択肢を定義する
+    case idle      // 待機中（何もしていない状態）
+    case running   // 実行中（タイマーが動いている状態）
+    case paused    // 一時停止中（タイマーが止まっている状態）
 }
 
-struct ContentView: View {
-    @State var timerState: TimerState = .idle
-    @State var hours = 0
-    @State var minutes = 0
-    @State var seconds = 0
+struct ContentView: View {  // アプリのメイン画面を定義する構造体
+    @State var timerState: TimerState = .idle  // タイマーの現在の状態を保存する変数。最初は待機中
+    @State var hours = 0     // タイマーの時間を保存する変数
+    @State var minutes = 0   // タイマーの分を保存する変数
+    @State var seconds = 0   // タイマーの秒を保存する変数
     
-    var body: some View {
-        VStack {
+    var body: some View {  // 画面に表示する内容を定義する部分
+        VStack {  // 縦に並べるレイアウトを使う
             // ここに時間設定ビューまたはタイマー表示ビューが入る
-            Text("タイマーアプリ")
-                .font(.largeTitle)
-                .padding()
+            Text("タイマーアプリ")  // 画面に「タイマーアプリ」という文字を表示
+                .font(.largeTitle)  // 文字を大きくする
+                .padding()  // 文字の周りに余白を追加
             
             // ここにボタンが入る
-            HStack {
-                Button("開始") {
-                    // タイマーを開始する処理
+            HStack {  // 横に並べるレイアウトを使う
+                Button("開始") {  // 「開始」というボタンを作る
+                    // タイマーを開始する処理（後で実装）
                 }
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+                .padding()  // ボタンの周りに余白を追加
+                .background(Color.green)  // ボタンの背景を緑色にする
+                .foregroundColor(.white)  // 文字を白くする
+                .cornerRadius(10)  // ボタンの角を丸くする
                 
-                Button("キャンセル") {
-                    // タイマーをキャンセルする処理
+                Button("キャンセル") {  // 「キャンセル」というボタンを作る
+                    // タイマーをキャンセルする処理（後で実装）
                 }
-                .padding()
-                .background(Color.gray)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+                .padding()  // ボタンの周りに余白を追加
+                .background(Color.gray)  // ボタンの背景を灰色にする
+                .foregroundColor(.white)  // 文字を白くする
+                .cornerRadius(10)  // ボタンの角を丸くする
             }
         }
-        .padding()
+        .padding()  // 全体の周りに余白を追加
     }
 }
 
-#Preview {
-    ContentView()
+#Preview {  // Xcodeでプレビューを表示するための設定
+    ContentView()  // ContentViewをプレビューする
 }`}
 							/>
 							<p class="mt-4 text-sm text-base-content opacity-80">
-								TimerState
-								enumを使ってタイマーの状態を管理します。@Stateでビューの状態を保持し、条件付きレンダリングでUIを切り替えます。
+								このコードでは、<strong>TimerState enum</strong
+								>を使ってタイマーの状態を管理しています。例えば、「待機中」「実行中」「一時停止中」の3つの状態を明確に分け、プログラムが今何をしているかをわかりやすくしています。これにより、タイマーが動いているのか止まっているのかを簡単に判断できます。<br
+								/><br />
+								<strong>@State</strong
+								>は、画面に表示する情報を保存しておくためのものです。例えば、タイマーの時間や現在の状態を保存し、情報が変わると自動的に画面が更新されます。これがないと、ボタンを押しても画面が変わりません。<br
+								/><br />
+								<strong>条件付きレンダリング</strong
+								>は、「もし～なら」という条件で画面の表示を変える機能です。例えば、タイマーが待機中の時は時間設定画面を表示し、実行中の時はカウントダウン画面を表示します。これで、アプリが状況に合わせて自然に画面が変わります。
 							</p>
 						</div>
 						<div class="flex flex-1 items-center justify-center">
@@ -124,37 +183,32 @@ struct ContentView: View {
 		</div>
 
 		<div>
-			<h2 class="mb-4 text-3xl font-bold">3. 条件付きレンダリングの準備</h2>
-			<p class="mb-4">タイマーの状態によって表示を切り替える準備をします：</p>
+			<h2 class="mb-4 text-3xl font-bold">5. if文で条件付き表示</h2>
+			<p class="mb-4">
+				プログラムでは、「もし～なら」という条件で表示を変えることができます。これを「条件付きレンダリング」と言います。
+			</p>
+			<p class="mb-4">例えば、タイマーの状態によって違う画面を表示します：</p>
 			<CodeBlock
-				title="条件付きレンダリングの例"
-				code={`var body: some View {
-    VStack {
-        if timerState == .idle {
-            // 時間設定ビューを表示
-            Text("時間を設定してください")
-        } else {
-            // タイマー表示ビューを表示
-            Text("タイマーが実行中です")
-        }
-        
-        // ボタン部分
-        HStack {
-            // ボタンの実装
-        }
-    }
-    .padding()
+				title="if文の例"
+				code={`if timerState == .idle {
+    // 待機中の時は時間設定画面を表示
+    Text("時間を設定してください")
+} else {
+    // 実行中や一時停止中の時はタイマー画面を表示
+    Text("タイマーが動いています")
 }`}
 			/>
+			<p class="mb-4">これで、タイマーの状態が変わると自動的に画面が変わります。</p>
 		</div>
 
 		<div>
-			<h2 class="mb-4 text-3xl font-bold">4. 実装のポイント</h2>
+			<h2 class="mb-4 text-3xl font-bold">6. 実装のポイントまとめ</h2>
 			<ul class="list-inside list-disc space-y-2">
-				<li><code>@State</code>を使ってビューの状態を管理します</li>
-				<li><code>enum</code>でタイマーの状態を明確に表現します</li>
-				<li><code>if</code>文を使って条件付きでビューを表示します</li>
-				<li>ボタンは後で実際の機能を実装します</li>
+				<li><code>@State</code>で画面の情報を保存します</li>
+				<li><code>enum</code>で選択肢をきれいに表します</li>
+				<li><code>VStack</code>と<code>HStack</code>でレイアウトを作ります</li>
+				<li><code>if</code>文で条件によって表示を変えます</li>
+				<li>ボタンは後で実際の機能をつけます</li>
 			</ul>
 		</div>
 	</div>

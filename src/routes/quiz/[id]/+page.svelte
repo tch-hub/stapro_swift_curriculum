@@ -46,6 +46,7 @@
 	function nextQuestion() {
 		selectedAnswer = null;
 		showAnswer = false;
+		showHint = false;
 		if (currentQuestionIndex < data.quizData.length - 1) {
 			currentQuestionIndex++;
 		} else {

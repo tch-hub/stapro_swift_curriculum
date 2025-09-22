@@ -29,6 +29,12 @@
             "title": "関数",
             "description": "Swiftでの関数の定義と使用方法を学びます。",
             "codeBlocks": []
+        },
+        {
+            "id": "6",
+            "title": "enum",
+            "description": "Swiftでの列挙型の宣言と使用方法を学びます。",
+            "codeBlocks": []
         }
     ]
 }
