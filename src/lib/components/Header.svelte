@@ -46,6 +46,10 @@
 
 	// Breadcrumbを生成する関数
 	function generateBreadcrumb(pathname) {
+		// base を pathname から除去
+		if (pathname.startsWith(base)) {
+			pathname = pathname.slice(base.length);
+		}
 		const segments = pathname.split('/').filter(Boolean);
 		const breadcrumbs = [{ label: 'ホーム', href: base + '/' }];
 
