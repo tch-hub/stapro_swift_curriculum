@@ -5,11 +5,14 @@
 		language = 'swift', // プログラミング言語（現在はswiftのみ）
 		title = '', // コードブロックのタイトル
 		executable = false, // 実行可能コードかどうか
-		showLineNumbers = true // 行番号を表示するかどうか
+		showLineNumbers = true, // 行番号を表示するかどうか
+		output = '' // 実行結果
 	} = $props();
 
 	// コピー機能の状態管理
 	let copied = $state(false);
+	// 実行機能の状態管理
+	let runMessage = $state('');
 
 	// クリップボードにコードをコピーする関数
 	async function copyToClipboard() {
@@ -21,6 +24,25 @@
 			}, 2000); // 2秒後にコピー状態をリセット
 		} catch (err) {
 			console.error('コピーに失敗しました:', err);
+		}
+	}
+
+	// Swiftコードを実行（SwiftFiddleで開く）
+	async function runCode() {
+		try {
+			await navigator.clipboard.writeText(code);
+			const confirmed = confirm(
+				'コードをクリップボードにコピーしました。\n\nSwiftFiddleで実行するには：\n1. 開いたページでコードを貼り付ける\n2. 「Run」ボタンをクリック\n\nSwiftFiddleを開きますか？'
+			);
+			if (confirmed) {
+				window.open('https://swiftfiddle.com/', '_blank');
+			}
+		} catch (err) {
+			console.error('コピーに失敗しました:', err);
+			runMessage = 'コピーに失敗しました。手動でコードをコピーしてください。';
+			setTimeout(() => {
+				runMessage = '';
+			}, 3000);
 		}
 	}
 
@@ -67,6 +89,22 @@
 		</div>
 		<div class="flex items-center space-x-2">
 			<span class="text-xs text-base-content opacity-70">Swift</span>
+			{#if executable}
+				<button
+					class="btn btn-ghost btn-xs"
+					onclick={runCode}
+					title="SwiftFiddleで実行"
+					aria-label="SwiftFiddleで実行"
+				>
+					<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+						<path
+							fill-rule="evenodd"
+							d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+							clip-rule="evenodd"
+						></path>
+					</svg>
+				</button>
+			{/if}
 			<button class="btn btn-ghost btn-xs" onclick={copyToClipboard} title="コードをコピー">
 				{#if copied}
 					<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
@@ -96,6 +134,28 @@
 				: ''} m-0 overflow-x-auto bg-transparent p-4"><code class="language-swift">{code}</code
 			></pre>
 	</div>
+
+	<!-- 実行結果表示部分 -->
+	{#if output}
+		<div class="output-content border-t border-base-300">
+			<div class="output-header bg-base-200 px-4 py-2">
+				<h4 class="text-sm font-semibold text-base-content">実行結果</h4>
+			</div>
+			<pre class="m-0 overflow-x-auto bg-base-300 p-4 text-base-content"><code>{output}</code></pre>
+		</div>
+	{/if}
+
+	<!-- 実行メッセージ表示部分 -->
+	{#if runMessage}
+		<div class="run-message-content border-t border-base-300">
+			<div class="run-message-header bg-info px-4 py-2">
+				<h4 class="text-sm font-semibold text-info-content">実行メッセージ</h4>
+			</div>
+			<div class="px-4 py-2 text-info-content">
+				{runMessage}
+			</div>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -146,5 +206,17 @@
 
 	.code-content pre::-webkit-scrollbar-thumb:hover {
 		background: hsl(var(--bc) / 0.5);
+	}
+
+	/* 実行結果のスタイル */
+	.output-content pre {
+		font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+		font-size: 0.875rem;
+		line-height: 1.5;
+	}
+
+	/* 実行メッセージのスタイル */
+	.run-message-content {
+		font-size: 0.875rem;
 	}
 </style>

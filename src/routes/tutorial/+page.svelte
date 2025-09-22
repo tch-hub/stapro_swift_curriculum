@@ -4,12 +4,6 @@
 </script>
 
 <div class="container mx-auto px-4 py-8">
-	<div class="mb-12 text-center">
-		<p class="mx-auto max-w-2xl text-lg text-base-content opacity-70">
-			SwiftUIを使ってiOSアプリを作成する方法を学びましょう。ステップバイステップで基本から応用まで解説します。
-		</p>
-	</div>
-
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 		{#each tutorialData.sections as section, index}
 			<div

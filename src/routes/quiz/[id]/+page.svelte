@@ -42,16 +42,10 @@
 		}
 	}
 
-	// ヒントを表示する関数
-	function toggleHint() {
-		showHint = !showHint;
-	}
-
 	// 次の問題へ進む関数
 	function nextQuestion() {
 		selectedAnswer = null;
 		showAnswer = false;
-		showHint = false;
 		if (currentQuestionIndex < data.quizData.length - 1) {
 			currentQuestionIndex++;
 		} else {
@@ -65,19 +59,13 @@
 </script>
 
 <div class="container mx-auto p-4">
-	<h1 class="mb-4 text-2xl font-bold">Swift 4択問題練習 - 項目 {data.sectionId}</h1>
 	<div class="card bg-base-100 shadow-xl">
 		<div class="card-body">
 			<h2 class="card-title">問題 {currentQuestionIndex + 1} / {data.quizData.length}</h2>
 			<p class="mb-4 text-lg">{currentQuestion.question}</p>
-			<button class="btn mb-4 btn-outline btn-info" onclick={toggleHint}>
-				{showHint ? 'ヒントを隠す' : 'ヒントを表示'}
+			<button class="btn text-left btn-ghost" onclick={() => (showHint = true)}>
+				{showHint ? currentQuestion.hint : 'ヒントを表示'}
 			</button>
-			{#if showHint}
-				<div class="mb-4 alert alert-info">
-					<p>{currentQuestion.hint}</p>
-				</div>
-			{/if}
 			<div class="grid grid-cols-1 gap-2">
 				{#each shuffledOptions as option, index}
 					<button
