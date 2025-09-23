@@ -110,21 +110,6 @@
 							<li>Launchpad（ランチパッド）からXcodeを探す</li>
 							<li>Xcodeアイコンをクリックして起動</li>
 						</ol>
-						<div class="mt-4 alert alert-success">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-6 w-6 shrink-0 stroke-current"
-								fill="none"
-								viewBox="0 0 24 24"
-								><path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-								/></svg
-							>
-							<span>自動でアップデートされるので便利！</span>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -139,7 +124,7 @@
 		<div class="card mb-8 bg-base-100 shadow-xl">
 			<div class="card-body">
 				<h2 class="card-title text-2xl">
-					<span class="mr-2 badge badge-lg badge-primary">STEP 4</span>
+					<span class="mr-2 badge badge-lg badge-primary">STEP 3</span>
 					初期設定
 				</h2>
 				<div class="space-y-6">
@@ -155,7 +140,11 @@
 					</div>
 
 					<div>
-						<h3 class="mb-2 text-xl font-semibold">Apple ID設定（任意）</h3>
+						<h3 class="mb-2 text-xl font-semibold">
+							Apple ID設定（任意）<span class="text-sm"
+								>※実機でのテストや配布には必要ですが、シミュレーターでの学習なら後でも大丈夫です。</span
+							>
+						</h3>
 						<ol class="ml-4 list-inside list-decimal space-y-2">
 							<li>Xcode → Preferences → Accounts を開く</li>
 							<li>「+」ボタンをクリック</li>
@@ -163,23 +152,6 @@
 							<li>Apple IDとパスワードを入力</li>
 							<li>「Sign In」をクリック</li>
 						</ol>
-						<div class="mt-2 alert alert-info">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								class="h-6 w-6 shrink-0 stroke-current"
-								><path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-								></path></svg
-							>
-							<span
-								>実機でのテストや配布には必要ですが、シミュレーターでの学習なら後でも大丈夫です。</span
-							>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -195,7 +167,7 @@
 		<div class="card mb-8 bg-base-100 shadow-xl">
 			<div class="card-body">
 				<h2 class="card-title text-2xl">
-					<span class="mr-2 badge badge-lg badge-success">STEP 4</span>
+					<span class="mr-2 badge badge-lg badge-primary">STEP 4</span>
 					動作確認
 				</h2>
 				<p class="mb-4 text-lg">
@@ -223,7 +195,7 @@
 									<tbody>
 										<tr>
 											<td>Product Name</td>
-											<td>&lt;&lt;名前&gt;&gt;Playground</td>
+											<td>Playground</td>
 											<td>プロジェクトの名前を設定</td>
 										</tr>
 										<tr>
@@ -270,25 +242,6 @@
 						<li>シミュレーターが起動する（初回は時間がかかります）</li>
 						<li>「Hello, world!」と表示されれば成功！</li>
 					</ol>
-
-					<div class="alert alert-success">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="h-6 w-6 shrink-0 stroke-current"
-							fill="none"
-							viewBox="0 0 24 24"
-							><path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-							/></svg
-						>
-						<div>
-							<h3 class="font-bold">おめでとうございます！</h3>
-							<p>Swift開発環境の構築が完了しました。これで本格的な学習を始められます。</p>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -299,6 +252,6 @@
 				<a href="{base}/tutorial" class="btn btn-primary">チュートリアルを始める</a>
 			</div>
 		</div>
-		{/if}
-		<a href="{base}/help" class="btn btn-outline">ヘルプ</a>
+	{/if}
+	<a href="{base}/help" class="btn btn-outline">ヘルプ</a>
 </div>

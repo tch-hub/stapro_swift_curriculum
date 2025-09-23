@@ -2,5 +2,9 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 @plugin "daisyui" {
-  themes: all;
+	themes: all;
+}
+
+html {
+	scrollbar-gutter: stable;
 }

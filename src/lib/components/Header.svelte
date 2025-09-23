@@ -71,7 +71,9 @@
 	let breadcrumbs = $derived(generateBreadcrumb($page.url.pathname));
 </script>
 
-<header class="sticky top-0 z-10 navbar bg-base-100 shadow-lg">
+<header
+	class="sticky top-0 z-10 mx-auto navbar max-w-7xl rounded-b-lg border-b border-base-300/50 bg-base-100/80 shadow-lg backdrop-blur-md"
+>
 	<div class="navbar-start">
 		<div class="dropdown">
 			<div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -100,7 +102,7 @@
 			</ul>
 		</div>
 		<!-- Breadcrumb -->
-		<div class="breadcrumbs">
+		<div class="breadcrumbs ml-4">
 			<ul>
 				{#each breadcrumbs as crumb, index}
 					{#if index < breadcrumbs.length - 1}

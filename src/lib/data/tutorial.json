@@ -21,7 +21,7 @@
             "codeBlocks": [
                 {
                     "title": "Textビューの基本",
-                    "code": "struct ContentView: View {\n    var body: some View {\n        Text(\"Hello, World!\")\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        Text(\"Hello, World!\") // Hello, World!を表示するテキスト\n    }\n}\n\n#Preview {\n    ContentView()\n}",
                     "previewImage": "/previews/tutorial-1-1.png",
                     "scale": 1.5,
                     "description": "Textビューは最も基本的なビューです。文字列を引数に渡すだけでテキストを表示できます。#Previewを使ってXcodeで即座にプレビューを確認できます。"
@@ -35,7 +35,7 @@
                 },
                 {
                     "title": "複数行のテキスト",
-                    "code": "struct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"これは長いテキストです。SwiftUIでは自動的に折り返されて複数行で表示されます。\")\n                .multilineTextAlignment(.center)\n                .padding()\n            \n            Text(\"改行を\\n明示的に\\n入れることも\\nできます\")\n                .multilineTextAlignment(.leading)\n                .padding()\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        Text(\"これは長いテキストです。SwiftUIでは自動的に折り返されて複数行で表示されます。\\n\\n改行を\\n明示的に\\n入れることも\\nできます\")\n            .multilineTextAlignment(.leading)\n            .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
                     "previewImage": "/previews/tutorial-1-3.png",
                     "scale": 0.9,
                     "description": "長いテキストは自動的に折り返されます。multilineTextAlignment()で複数行の配置を指定できます。\\nで明示的な改行を入れることも可能です。padding()で余白を追加できます。"
@@ -51,19 +51,13 @@
                     "title": "Buttonの基本",
                     "code": "struct ContentView: View {\n    var body: some View {\n        Button(\"押してみよう\") {\n            print(\"ボタンが押されました！\")\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
                     "previewImage": "/previews/tutorial-2-1.png",
-                    "description": "Buttonは最もシンプルな形で作成できます。文字列とactionクロージャーを渡すだけで動作します。ボタンがタップされるとaction内のコードが実行されます。"
+                    "description": "ButtonはSwiftUIで最も基本的なインタラクティブなビューです。最もシンプルな形では、Button(\"ラベル\") { action } という構文で作成できます。\n\n最初の引数にはボタンに表示する文字列（ラベル）を渡します。この例では\"押してみよう\"という文字列がボタンのラベルになります。\n\n2番目の引数にはactionクロージャーを渡します。これはボタンがタップされたときに実行されるコードです。クロージャーは { } で囲まれた無名関数のようなもので、この例では print(\"ボタンが押されました！\") が実行されます。\n\nprint()関数はコンソールにメッセージを出力するデバッグ用の関数です。実際のアプリでは、ここに何らかの処理（データの保存、画面遷移、状態の変更など）を書くことになります。\n\nボタンをタップすると、action内のコードが一度だけ実行されます。ボタンは自動的にタップ可能な外観を持ち、ユーザーが押したことを視覚的にフィードバックします。"
                 },
                 {
                     "title": "ボタンのスタイル",
-                    "code": "struct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Button(\"デフォルトボタン\") {\n                print(\"デフォルト\")\n            }\n            \n            Button(action: {\n                print(\"スタイル付き\")\n            }) {\n                Text(\"スタイル付きボタン\")\n                    .padding()\n                    .background(Color.green)\n                    .foregroundColor(.white)\n                    .cornerRadius(15)\n                    .shadow(radius: 5)\n            }\n            \n            Button(action: {\n                print(\"画像ボタン\")\n            }) {\n                Image(systemName: \"star.fill\")\n                    .font(.largeTitle)\n                    .foregroundColor(.yellow)\n            }\n        }\n        .padding()\n    }\n}",
+                    "code": "struct ContentView: View {\n    var body: some View {\n        Button(action: {\n            print(\"スタイル付き\")\n        }) {\n            Text(\"スタイル付きボタン\")\n                .padding() // 内側に余白を追加\n                .background(Color.green) // 背景色を緑に設定\n                .foregroundColor(.white) // 文字色を白に設定\n                .cornerRadius(15) // 角を丸くする\n                .shadow(radius: 5) // 影を付けて立体感を出す\n        }\n    }\n}",
                     "previewImage": "/previews/tutorial-2-2.png",
-                    "description": "Buttonには様々なスタイルがあります。シンプルな文字列ラベル、装飾されたTextビュー、またはImageビューを使用できます。shadow()で影を付けて立体感を出せます。"
-                },
-                {
-                    "title": "ボタンで状態を変更",
-                    "code": "struct ContentView: View {\n    @State private var isOn = false\n    \n    var body: some View {\n        VStack {\n            Text(isOn ? \"オン\" : \"オフ\")\n                .font(.largeTitle)\n                .foregroundColor(isOn ? .green : .red)\n            \n            Button(action: {\n                isOn.toggle()\n            }) {\n                Text(isOn ? \"オフにする\" : \"オンにする\")\n                    .font(.title)\n                    .padding()\n                    .background(isOn ? Color.red : Color.green)\n                    .foregroundColor(.white)\n                    .cornerRadius(10)\n            }\n        }\n    }\n}",
-                    "previewImage": "/previews/tutorial-2-3.png",
-                    "description": "@Stateを使ってビューの状態を管理できます。ボタンのactionで状態を変更し、それに応じてUIが自動的に更新されます。toggle()メソッドでtrue/falseを切り替えられます。"
+                    "description": "Buttonには様々なスタイルがあります。Textビューを使って装飾することで、ボタンの見た目をカスタマイズできます。\n\n- padding() : ボタンの内側に余白を追加し、テキストとボタンの境界の間にスペースを作ります。これによりボタンが押しやすくなります。\n\n- background(Color.green) : ボタンの背景色を緑色に設定します。Color.greenはSwiftUIで用意されている標準色です。\n\n- foregroundColor(.white) : テキストの色を白色に設定します。これにより緑色の背景に白い文字が映えます。\n\n- cornerRadius(15) : ボタンの角を15ポイントの半径で丸くします。数値が大きいほど角が丸くなります。\n\n- shadow(radius: 5) : ボタンに5ポイントの半径の影を付けて、立体感を出します。影の半径が大きいほど影が柔らかくなります。\n\nこれらの修飾子を組み合わせることで、プロフェッショナルな見た目のボタンを作成できます。"
                 }
             ]
         },
@@ -76,25 +70,25 @@
                     "title": "VStack - 縦方向のレイアウト",
                     "code": "struct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"上\")\n                .font(.title)\n                .foregroundColor(.red)\n            \n            Text(\"中央\")\n                .font(.title)\n                .foregroundColor(.green)\n            \n            Text(\"下\")\n                .font(.title)\n                .foregroundColor(.blue)\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
                     "previewImage": "/previews/tutorial-3-1.png",
-                    "description": "VStackはビューを縦方向に並べます。spacingパラメータで要素間の間隔を指定できます。上から下へ順番にビューが配置されます。"
+                    "description": "VStackはSwiftUIでビューを縦方向（垂直方向）に並べて配置するためのコンテナです。複数のビューを上から下へ順番に積み重ねるレイアウトを作成できます。\n\nVStackの基本的な使い方は、VStack { } のように波括弧の中に並べたいビューを記述します。この例では、赤い「上」、緑の「中央」、青い「下」という3つのTextビューを縦に並べています。\n\nspacingパラメータは、ビュー同士の間隔を指定します。この例ではspacing: 20と指定しているので、各Textビューの間に20ポイントのスペースが挿入されます。spacingを指定しない場合は、デフォルトの間隔が適用されます。\n\nビューはVStack内に記述した順番で上から下へ配置されます。最初のビューが一番上になり、最後のビューが一番下になります。\n\nVStackは画面のレイアウトを整理するのに非常に便利です。例えば、タイトル、コンテンツ、ボタンなどを縦に並べて配置するようなUIを作成する際に使用します。padding()をVStackに適用することで、全体に余白を追加できます。"
                 },
                 {
                     "title": "HStack - 横方向のレイアウト",
                     "code": "struct ContentView: View {\n    var body: some View {\n        HStack(spacing: 15) {\n            Text(\"左\")\n                .font(.title)\n                .foregroundColor(.red)\n            \n            Text(\"中央\")\n                .font(.title)\n                .foregroundColor(.green)\n            \n            Text(\"右\")\n                .font(.title)\n                .foregroundColor(.blue)\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
                     "previewImage": "/previews/tutorial-3-2.png",
-                    "description": "HStackはビューを横方向に並べます。spacingパラメータで要素間の間隔を指定できます。左から右へ順番にビューが配置されます。"
+                    "description": "HStackはSwiftUIでビューを横方向（水平方向）に並べて配置するためのコンテナです。複数のビューを左から右へ順番に並べて配置するレイアウトを作成できます。\n\nHStackの基本的な使い方は、HStack { } のように波括弧の中に並べたいビューを記述します。この例では、赤い「左」、緑の「中央」、青い「右」という3つのTextビューを横に並べています。\n\nspacingパラメータは、ビュー同士の間隔を指定します。この例ではspacing: 15と指定しているので、各Textビューの間に15ポイントのスペースが挿入されます。spacingを指定しない場合は、デフォルトの間隔が適用されます。\n\nビューはHStack内に記述した順番で左から右へ配置されます。最初のビューが一番左になり、最後のビューが一番右になります。\n\nHStackは画面のレイアウトを整理するのに非常に便利です。例えば、アイコンとテキストを横に並べたり、複数のボタンを横に配置したりするようなUIを作成する際に使用します。padding()をHStackに適用することで、全体に余白を追加できます。"
                 },
                 {
                     "title": "ZStack - 重ね合わせレイアウト",
                     "code": "struct ContentView: View {\n    var body: some View {\n        ZStack {\n            Color.blue.opacity(0.3)\n                .frame(width: 200, height: 200)\n            \n            Color.red.opacity(0.5)\n                .frame(width: 150, height: 150)\n            \n            Text(\"重ねる\")\n                .foregroundColor(.white)\n                .font(.largeTitle)\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
                     "previewImage": "/previews/tutorial-3-3.png",
-                    "description": "ZStackはビューを重ねて配置します。後から追加したビューが前面に表示されます。背景色の上に他のビューを重ねるのに適しています。"
+                    "description": "ZStackはSwiftUIでビューを奥行き方向（Z軸）に重ねて配置するためのコンテナです。複数のビューを同じ位置に重ねて配置するレイアウトを作成できます。\n\nZStackの基本的な使い方は、ZStack { } のように波括弧の中に重ねたいビューを記述します。この例では、青い背景、赤い背景、白いテキストの順に重ねています。\n\nビューはZStack内に記述した順番で奥から手前に重ねられます。最初のビューが一番奥になり、最後のビューが一番手前に表示されます。この例では、青いColorが一番奥、赤いColorが中央、白いTextが一番手前になります。\n\nopacity()はビューの透明度を指定します。0.0が完全に透明、1.0が完全に不透明です。この例では青を0.3（30%透明）、赤を0.5（50%透明）に設定しています。\n\nframe()はビューのサイズを指定します。widthとheightで幅と高さをポイント単位で設定できます。\n\nZStackは背景の上に他の要素を重ねるのに適しています。例えば、背景画像の上にテキストを配置したり、バッジのような重ね合わせUIを作成したりする際に使用します。奥行きのあるレイアウトを作成することで、よりリッチな視覚効果を実現できます。"
                 },
                 {
                     "title": "Spacing - 要素間の間隔",
                     "code": "struct ContentView: View {\n    var body: some View {\n        VStack(spacing: 20) {\n            Text(\"間隔なし\")\n                .font(.headline)\n            \n            VStack(spacing: 0) {\n                Text(\"間隔0\")\n                Text(\"ぎゅっと\")\n                Text(\"くっつく\")\n            }\n            .background(Color.yellow.opacity(0.3))\n            \n            VStack(spacing: 10) {\n                Text(\"間隔10\")\n                Text(\"少し\")\n                Text(\"離れる\")\n            }\n            .background(Color.green.opacity(0.3))\n            \n            VStack(spacing: 30) {\n                Text(\"間隔30\")\n                Text(\"かなり\")\n                Text(\"離れる\")\n            }\n            .background(Color.blue.opacity(0.3))\n        }\n        .padding()\n    }\n}\n\n#Preview {\n    ContentView()\n}",
                     "previewImage": "/previews/tutorial-3-4.png",
-                    "description": "spacingパラメータでVStackやHStack内の要素間の間隔を指定できます。0を指定すると要素が密着し、数値を大きくすると間隔が広がります。適切な間隔で読みやすいレイアウトを作成できます。"
+                    "description": "spacingパラメータはVStackやHStack内でビュー同士の間隔を指定するための重要な設定です。適切な間隔を設定することで、読みやすく使いやすいレイアウトを作成できます。\n\nspacingパラメータはVStack(spacing: 値) または HStack(spacing: 値) のように指定します。値はポイント単位で、0以上の数値を設定できます。\n\nこの例では、異なるspacing値を持つ3つのVStackを比較しています：\n\n- spacing: 0 : ビュー同士が完全に密着します。ぎゅっとくっついたレイアウトになります。\n\n- spacing: 10 : ビュー同士が少し離れます。適度な間隔で読みやすくなります。\n\n- spacing: 30 : ビュー同士がかなり離れます。ゆったりとしたレイアウトになります。\n\nbackground()は各VStackに半透明の背景色を付けて、間隔の違いを視覚的にわかりやすくしています。opacity(0.3)で30%の透明度を設定しています。\n\nspacingの値はアプリのデザインやコンテンツの種類によって調整します。ボタン同士の場合は少し間隔を空け、関連するテキスト同士の場合は密着させるなど、状況に応じて使い分けます。適切なspacingはUIの使いやすさと美しさを大きく向上させます。"
                 }
             ]
         },
@@ -105,9 +99,9 @@
             "codeBlocks": [
                 {
                     "title": "@Stateを使った状態管理",
-                    "code": "struct ContentView: View {\n    @State private var count = 0\n    \n    var body: some View {\n        VStack {\n            Text(\"カウント: \\(count)\")\n                .font(.largeTitle)\n            \n            HStack {\n                Button(action: {\n                    count -= 1\n                }) {\n                    Text(\"-\")\n                        .font(.title)\n                        .frame(width: 50, height: 50)\n                        .background(Color.red)\n                        .foregroundColor(.white)\n                        .cornerRadius(25)\n                }\n                \n                Button(action: {\n                    count += 1\n                }) {\n                    Text(\"+\")\n                        .font(.title)\n                        .frame(width: 50, height: 50)\n                        .background(Color.green)\n                        .foregroundColor(.white)\n                        .cornerRadius(25)\n                }\n            }\n        }\n    }\n}\n\n#Preview {\n    ContentView()\n}",
+                    "code": "struct ContentView: View {\n    @State private var count = 0 // カウントを保存する状態変数\n    \n    var body: some View {\n        VStack { // 縦方向にビューを並べる\n            Text(\"カウント: \\(count)\") // 現在のカウントを表示\n                .font(.largeTitle) // 大きなフォントサイズ\n            \n            HStack { // 横方向にボタンを並べる\n                Button(action: {\n                    count -= 1 // カウントを1減らす\n                }) {\n                    Text(\"-\") // マイナスボタンのラベル\n                        .font(.title) // タイトルサイズのフォント\n                        .frame(width: 50, height: 50) // ボタンのサイズ\n                        .background(Color.red) // 赤い背景\n                        .foregroundColor(.white) // 白い文字\n                        .cornerRadius(25) // 角を丸くする\n                }\n                \n                Button(action: {\n                    count += 1 // カウントを1増やす\n                }) {\n                    Text(\"+\") // プラスボタンのラベル\n                        .font(.title) // タイトルサイズのフォント\n                        .frame(width: 50, height: 50) // ボタンのサイズ\n                        .background(Color.green) // 緑の背景\n                        .foregroundColor(.white) // 白い文字\n                        .cornerRadius(25) // 角を丸くする\n                }\n            }\n        }\n    }\n}\n\n#Preview {\n    ContentView() // プレビューを表示\n}",
                     "previewImage": "/previews/tutorial-4-1.png",
-                    "description": "@Stateプロパティラッパーを使ってビューの状態を管理します。状態が変更されるとビューが自動的に再描画されます。private varでカプセル化し、外部からの直接変更を防ぎます。"
+                    "description": "@StateはSwiftUIでビューの状態を管理するための特別なプロパティラッパーです。インタラクティブなUIを作成する際に欠かせない重要な概念です。\n\n通常の変数とは異なり、@Stateがついた変数の値が変更されると、その変数を使っているビューが自動的に再描画されます。これにより、ユーザーの操作に応じてUIがリアルタイムに更新されます。\n\n@State変数は必ずprivate varとして宣言します。これにより、変数がそのビュー内でのみ変更可能になり、外部からの意図しない変更を防ぎます。\n\nこの例では、countという@State変数を使ってカウンターの値を管理しています。+ボタンをタップするとcount += 1、-ボタンをタップするとcount -= 1が実行され、countの値が変わるたびにText(\"カウント: \\(count)\")が自動的に更新されて新しい値が表示されます。\n\n@State変数を使う際は、変数名の前に$記号を付けてバインディングします。例えば、Buttonのaction内でcountを変更する場合は直接countを使いますが、TextFieldなどのコントロールにバインドする場合は$countとします。\n\n@StateはSwiftUIのリアクティブプログラミングの基礎となるもので、これを使うことで複雑な状態管理をシンプルに実装できます。カウンターアプリのようなシンプルなものから、複雑なフォームまで、様々なインタラクティブなUIの基礎となります。"
                 }
             ]
         },

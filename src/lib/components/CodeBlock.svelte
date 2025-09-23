@@ -208,6 +208,11 @@
 		background: hsl(var(--bc) / 0.5);
 	}
 
+	/* Prism.jsのデフォルトmarginを削除 */
+	.code-content pre {
+		margin: 0 !important;
+	}
+
 	/* 実行結果のスタイル */
 	.output-content pre {
 		font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;

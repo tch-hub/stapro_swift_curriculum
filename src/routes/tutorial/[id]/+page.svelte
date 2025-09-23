@@ -1,12 +1,22 @@
 <script>
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import Header from '$lib/components/Header.svelte';
+	import PhoneMockup from '$lib/components/PhoneMockup.svelte';
 	import tutorialData from '$lib/data/tutorial.json';
 
 	$: id = $page.params.id;
 	$: section = tutorialData.sections.find((s) => s.id === id);
+
+	let prevPage = async () => {
+		await goto(`${base}/tutorial?prev=${parseInt(id) - 1}`);
+	};
+
+	let nextPage = async () => {
+		await goto(`${base}/tutorial?next=${parseInt(id) + 1}`);
+	};
 </script>
 
 {#if section}
@@ -24,19 +34,11 @@
 							{/if}
 						</div>
 						{#if codeBlock.previewImage}
-							<div class="mockup-phone" style="transform: scale(0.7); transform-origin: top;">
-								<div class="mockup-phone-camera"></div>
-								<div class="mockup-phone-display grid place-content-center bg-white text-black">
-									<img
-										src="{base}{codeBlock.previewImage}"
-										alt="{codeBlock.title} プレビュー"
-										class="h-full w-full rounded-[2rem] object-cover"
-										style="transform: scale({codeBlock.scale || 1.0});"
-										on:error={() =>
-											(event.target.src = `https://placehold.jp/24/ffffff/000000/300x150.png?text=${encodeURIComponent(codeBlock.title + '\n プレビュー画像')}`)}
-									/>
-								</div>
-							</div>
+							<PhoneMockup
+								previewImage={codeBlock.previewImage}
+								title={codeBlock.title}
+								scale={codeBlock.scale || 1.0}
+							/>
 						{/if}
 					</div>
 				</div>
@@ -46,12 +48,12 @@
 		<!-- ナビゲーション -->
 		<div class="fixed right-0 bottom-0 left-0 z-10 flex justify-between bg-base-100 p-4 shadow-lg">
 			{#if parseInt(id) > 1}
-				<a href="{base}/tutorial/{parseInt(id) - 1}" class="btn btn-primary">前の項目</a>
+				<button onclick={prevPage} class="btn btn-primary">前の項目</button>
 			{:else}
 				<div></div>
 			{/if}
 			{#if parseInt(id) < tutorialData.sections.length - 1}
-				<a href="{base}/tutorial/{parseInt(id) + 1}" class="btn btn-primary">次の項目</a>
+				<button onclick={nextPage} class="btn btn-primary">次の項目</button>
 			{:else}
 				<div></div>
 			{/if}

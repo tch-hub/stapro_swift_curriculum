@@ -1,7 +1,19 @@
 <script>
 	import { base } from '$app/paths';
+	import { onMount } from 'svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import Header from '$lib/components/Header.svelte';
+
+	// ローディング状態の管理
+	let isLoading = true;
+
+	// ページマウント時にローディングを開始
+	onMount(() => {
+		// コンテンツの準備をシミュレート（実際のJSON読み込みに合わせて調整）
+		setTimeout(() => {
+			isLoading = false;
+		}, 800); // かわいいアニメーションが見えるように少し遅延
+	});
 
 	// サイドバーのリンククリック時のスクロール関数
 	function scrollToSection(id) {
@@ -33,10 +45,10 @@
 <div class="flex">
 	<!-- サイドバー（デスクトップのみ固定表示） -->
 	<aside
-		class="fixed top-16 left-0 hidden h-[calc(100vh-4rem)] w-80 overflow-y-auto bg-base-200 p-4 shadow-lg lg:block"
+		class="fixed top-0 left-0 hidden h-[calc(100vh)] w-80 overflow-y-auto bg-base-200 p-4 shadow-lg lg:block"
 	>
 		<ul class="menu">
-			<li>
+			<li class="pt-16">
 				<a
 					href="#basic-syntax"
 					onclick={(e) => handleClick(e, 'basic-syntax')}
@@ -113,15 +125,33 @@
 
 	<!-- メインコンテンツ -->
 	<main class="flex-1 p-4 lg:ml-80">
-		<div class="container mx-auto">
-			<!-- 基本構文 -->
-			<div id="basic-syntax" class="card mb-6 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<h2 class="card-title">基本構文</h2>
-					<p>変数、定数、データ型の基本です。</p>
-					<CodeBlock
-						title="変数と定数"
-						code={`// 定数の宣言（値を変更できない）
+		{#if isLoading}
+			<!-- ローディングアニメーション -->
+			<div class="flex min-h-[50vh] flex-col items-center justify-center space-y-4">
+				<div class="loading loading-lg loading-spinner text-primary"></div>
+				<p class="text-lg text-base-content/70">チートシートを読み込み中...</p>
+				<div class="flex space-x-1">
+					<div class="h-2 w-2 animate-bounce rounded-full bg-primary"></div>
+					<div
+						class="h-2 w-2 animate-bounce rounded-full bg-primary"
+						style="animation-delay: 0.1s"
+					></div>
+					<div
+						class="h-2 w-2 animate-bounce rounded-full bg-primary"
+						style="animation-delay: 0.2s"
+					></div>
+				</div>
+			</div>
+		{:else}
+			<div class="container mx-auto">
+				<!-- 基本構文 -->
+				<div id="basic-syntax" class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">基本構文</h2>
+						<p>変数、定数、データ型の基本です。</p>
+						<CodeBlock
+							title="変数と定数"
+							code={`// 定数の宣言（値を変更できない）
 let schoolName = "中央中学校"
 let pi = 3.14159
 
@@ -139,37 +169,37 @@ print("スコア: \\(score)")
 print("勉強中: \\(isStudying)")
 print("身長: \\(height)cm")
 print("体重: \\(weight)kg")`}
-						output={`学校名: 中央中学校
+							output={`学校名: 中央中学校
 スコア: 85
 勉強中: true
 身長: 165.5cm
 体重: 50kg`}
-						executable={true}
-					/>
-					<CodeBlock
-						title="定数への再代入（エラー例）"
-						code={`// 定数の宣言
+							executable={true}
+						/>
+						<CodeBlock
+							title="定数への再代入（エラー例）"
+							code={`// 定数の宣言
 let schoolName = "中央中学校"
 
 // 定数への再代入はエラーになる
 schoolName = "東京中学校"`}
-						output={`error: cannot assign to value: 'schoolName' is a 'let' constant
+							output={`error: cannot assign to value: 'schoolName' is a 'let' constant
 schoolName = "東京中学校"
 ^^^^^^^^^^
 note: change 'let' to 'var' to make it mutable`}
-						executable={true}
-					/>
+							executable={true}
+						/>
+					</div>
 				</div>
-			</div>
 
-			<!-- 演算子 -->
-			<div id="operators" class="card mb-6 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<h2 class="card-title">演算子</h2>
-					<p>計算や比較に使う記号です。</p>
-					<CodeBlock
-						title="算術演算子"
-						code={`// 基本的な計算
+				<!-- 演算子 -->
+				<div id="operators" class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">演算子</h2>
+						<p>計算や比較に使う記号です。</p>
+						<CodeBlock
+							title="算術演算子"
+							code={`// 基本的な計算
 let a = 10
 let b = 3
 
@@ -184,16 +214,16 @@ print("差: \\(difference)")
 print("積: \\(product)")
 print("商: \\(quotient)")
 print("余り: \\(remainder)")`}
-						output={`和: 13
+							output={`和: 13
 差: 7
 積: 30
 商: 3
 余り: 1`}
-						executable={true}
-					/>
-					<CodeBlock
-						title="比較演算子"
-						code={`// 値の比較
+							executable={true}
+						/>
+						<CodeBlock
+							title="比較演算子"
+							code={`// 値の比較
 let x = 5
 let y = 10
 
@@ -203,25 +233,25 @@ print("x < y: \\(x < y)")   // true（より小さい）
 print("x > y: \\(x > y)")   // false（より大きい）
 print("x <= y: \\(x <= y)")  // true（以下）
 print("x >= y: \\(x >= y)")  // false（以上）`}
-						output={`x == y: false
+							output={`x == y: false
 x != y: true
 x < y: true
 x > y: false
 x <= y: true
 x >= y: false`}
-						executable={true}
-					/>
+							executable={true}
+						/>
+					</div>
 				</div>
-			</div>
 
-			<!-- 制御構造 -->
-			<div id="control-structures" class="card mb-6 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<h2 class="card-title">制御構造</h2>
-					<p>プログラムの流れを制御します。</p>
-					<CodeBlock
-						title="if文"
-						code={`// 条件分岐
+				<!-- 制御構造 -->
+				<div id="control-structures" class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">制御構造</h2>
+						<p>プログラムの流れを制御します。</p>
+						<CodeBlock
+							title="if文"
+							code={`// 条件分岐
 let age = 13
 
 if age >= 13 {
@@ -238,13 +268,13 @@ if age >= 18 {
 } else {
     print("小学生")
 }`}
-						output={`中学生です
+							output={`中学生です
 中学生`}
-						executable={true}
-					/>
-					<CodeBlock
-						title="for-inループ"
-						code={`// 配列の要素を順番に処理
+							executable={true}
+						/>
+						<CodeBlock
+							title="for-inループ"
+							code={`// 配列の要素を順番に処理
 let fruits = ["りんご", "バナナ", "オレンジ"]
 
 for fruit in fruits {
@@ -255,7 +285,7 @@ for fruit in fruits {
 for i in 1...5 {
     print("\\(i)回目のループ")
 }`}
-						output={`好きな果物: りんご
+							output={`好きな果物: りんご
 好きな果物: バナナ
 好きな果物: オレンジ
 1回目のループ
@@ -263,19 +293,19 @@ for i in 1...5 {
 3回目のループ
 4回目のループ
 5回目のループ`}
-						executable={true}
-					/>
+							executable={true}
+						/>
+					</div>
 				</div>
-			</div>
 
-			<!-- 関数 -->
-			<div id="functions" class="card mb-6 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<h2 class="card-title">関数</h2>
-					<p>処理をまとめて再利用できるようにします。</p>
-					<CodeBlock
-						title="関数の定義と呼び出し"
-						code={`// 簡単な関数の定義
+				<!-- 関数 -->
+				<div id="functions" class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">関数</h2>
+						<p>処理をまとめて再利用できるようにします。</p>
+						<CodeBlock
+							title="関数の定義と呼び出し"
+							code={`// 簡単な関数の定義
 func greet(name: String) -> String {
     return "こんにちは、\\(name)さん!"
 }
@@ -291,21 +321,21 @@ let result = add(a: 10, b: 5)
 
 print(message)
 print("10 + 5 = \\(result)")`}
-						output={`こんにちは、太郎さん!
+							output={`こんにちは、太郎さん!
 10 + 5 = 15`}
-						executable={true}
-					/>
+							executable={true}
+						/>
+					</div>
 				</div>
-			</div>
 
-			<!-- コレクション -->
-			<div id="collections" class="card mb-6 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<h2 class="card-title">コレクション</h2>
-					<p>複数の値をまとめて扱います。</p>
-					<CodeBlock
-						title="配列（Array）"
-						code={`// 配列の作成
+				<!-- コレクション -->
+				<div id="collections" class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">コレクション</h2>
+						<p>複数の値をまとめて扱います。</p>
+						<CodeBlock
+							title="配列（Array）"
+							code={`// 配列の作成
 var fruits = ["りんご", "バナナ", "オレンジ"]
 let numbers = [1, 2, 3, 4, 5]
 
@@ -320,16 +350,16 @@ print(fruits)  // ["りんご", "バナナ", "オレンジ", "ぶどう"]
 // 要素数の取得
 print(fruits.count)  // 4
 print(numbers.count) // 5`}
-						output={`りんご
+							output={`りんご
 1
 ["りんご", "バナナ", "オレンジ", "ぶどう"]
 4
 5`}
-						executable={true}
-					/>
-					<CodeBlock
-						title="辞書（Dictionary）"
-						code={`// 辞書の作成
+							executable={true}
+						/>
+						<CodeBlock
+							title="辞書（Dictionary）"
+							code={`// 辞書の作成
 var scores = ["数学": 85, "英語": 92, "国語": 78]
 
 // 値の取得
@@ -340,21 +370,21 @@ if let mathScore = scores["数学"] {
 // 値の更新
 scores["理科"] = 88
 print(scores)  // ["数学": 85, "英語": 92, "国語": 78, "理科": 88]`}
-						output={`数学の点数: 85
+							output={`数学の点数: 85
 ["数学": 85, "英語": 92, "国語": 78, "理科": 88]`}
-						executable={true}
-					/>
+							executable={true}
+						/>
+					</div>
 				</div>
-			</div>
 
-			<!-- クラスと構造体 -->
-			<div id="classes-structs" class="card mb-6 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<h2 class="card-title">クラスと構造体</h2>
-					<p>データをまとめて扱うための型です。</p>
-					<CodeBlock
-						title="構造体の定義"
-						code={`// 構造体の定義
+				<!-- クラスと構造体 -->
+				<div id="classes-structs" class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">クラスと構造体</h2>
+						<p>データをまとめて扱うための型です。</p>
+						<CodeBlock
+							title="構造体の定義"
+							code={`// 構造体の定義
 struct Student {
     var name: String
     var age: Int
@@ -366,20 +396,20 @@ var student1 = Student(name: "太郎", age: 13, grade: "中学1年")
 
 // プロパティへのアクセス
 print("\\(student1.name)は\\(student1.age)歳です")`}
-						output="太郎は13歳です"
-						executable={true}
-					/>
+							output="太郎は13歳です"
+							executable={true}
+						/>
+					</div>
 				</div>
-			</div>
 
-			<!-- オプションとエラー処理 -->
-			<div id="optionals-error-handling" class="card mb-6 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<h2 class="card-title">オプションとエラー処理</h2>
-					<p>値が存在しない可能性を扱います。</p>
-					<CodeBlock
-						title="Optional型"
-						code={`// Optional型の変数
+				<!-- オプションとエラー処理 -->
+				<div id="optionals-error-handling" class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">オプションとエラー処理</h2>
+						<p>値が存在しない可能性を扱います。</p>
+						<CodeBlock
+							title="Optional型"
+							code={`// Optional型の変数
 var optionalName: String? = "太郎"
 var optionalAge: Int? = nil
 
@@ -405,21 +435,21 @@ if optionalAge != nil {
 // エラーが発生する例（実行時はコメントアウトを外さないでください）
 // let nilValue: Int? = nil
 // print(nilValue!)  // Fatal error: Unexpectedly found nil while unwrapping an Optional value`}
-						output={`名前: 太郎
+							output={`名前: 太郎
 年齢が設定されていません`}
-						executable={true}
-					/>
+							executable={true}
+						/>
+					</div>
 				</div>
-			</div>
 
-			<!-- 便利な関数 -->
-			<div id="useful-functions" class="card mb-6 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<h2 class="card-title">便利な関数</h2>
-					<p>よく使う組み込み関数です。</p>
-					<CodeBlock
-						title="print関数"
-						code={`// コンソール出力
+				<!-- 便利な関数 -->
+				<div id="useful-functions" class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">便利な関数</h2>
+						<p>よく使う組み込み関数です。</p>
+						<CodeBlock
+							title="print関数"
+							code={`// コンソール出力
 print("Hello, World!")
 print("名前: 太郎, 年齢: 13")
 
@@ -433,18 +463,18 @@ print("こんにちは", terminator: "\\n")
 print("1行目")
 print("2行目", terminator: "\\n\\n")  // 2行改行
 print("4行目")`}
-						output={`Hello, World!
+							output={`Hello, World!
 名前: 太郎, 年齢: 13
 こんにちはこんにちは
 1行目
 2行目
 
 4行目`}
-						executable={true}
-					/>
-					<CodeBlock
-						title="Stringのメソッド"
-						code={`let message = "Hello, Swift!"
+							executable={true}
+						/>
+						<CodeBlock
+							title="Stringのメソッド"
+							code={`let message = "Hello, Swift!"
 
 // 文字数の取得
 print(message.count)  // 13
@@ -457,14 +487,15 @@ print(message.lowercased())  // "hello, swift!"
 if message.contains("Swift") {
     print("Swiftが見つかりました")
 }`}
-						output={`13
+							output={`13
 HELLO, SWIFT!
 hello, swift!
 Swiftが見つかりました`}
-						executable={true}
-					/>
+							executable={true}
+						/>
+					</div>
 				</div>
 			</div>
-		</div>
+		{/if}
 	</main>
 </div>

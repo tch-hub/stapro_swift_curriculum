@@ -9,10 +9,11 @@
 
 	onMount(() => {
 		const next = $page.url.searchParams.get('next');
-		if (next) {
+		const prev = $page.url.searchParams.get('prev');
+		if (next || prev) {
 			loading = true;
 			setTimeout(() => {
-				goto(`${base}/tutorial/${next}`);
+				goto(`${base}/tutorial/${next || prev}`);
 			}, 500);
 		}
 	});
@@ -21,7 +22,7 @@
 {#if loading}
 	<div class="flex h-screen items-center justify-center">
 		<span class="loading loading-lg loading-spinner"></span>
-		<p class="ml-4">次のページに移動中...</p>
+		<p class="ml-4">ページ移動中...</p>
 	</div>
 {:else}
 	<div class="container mx-auto px-4 py-8">
