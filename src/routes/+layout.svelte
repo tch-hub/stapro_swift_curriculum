@@ -1,6 +1,6 @@
 <script>
 	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import favicon from '$lib/assets/favicon.png';
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import Header from '$lib/components/Header.svelte';

@@ -39,7 +39,7 @@
 								{index + 1}
 							</div>
 							<h2 class="card-title text-lg">
-								<a href="{base}/tutorial/{section.id}" class="link link-primary hover:link-accent">
+								<a href="{base}/tutorial/{section.id}" class="  hover:link-accent">
 									{section.title}
 								</a>
 							</h2>
