@@ -12,6 +12,14 @@
 		// コンテンツの準備をシミュレート（実際のJSON読み込みに合わせて調整）
 		setTimeout(() => {
 			isLoading = false;
+			// ローディング完了後にURLのハッシュに基づいてスクロール
+			const hash = window.location.hash.substring(1); // #を除去
+			if (hash) {
+				// 少し遅延を入れてDOMが完全にレンダリングされた後にスクロール
+				setTimeout(() => {
+					scrollToSection(hash);
+				}, 100);
+			}
 		}, 800); // かわいいアニメーションが見えるように少し遅延
 	});
 
@@ -187,6 +195,50 @@ schoolName = "東京中学校"`}
 schoolName = "東京中学校"
 ^^^^^^^^^^
 note: change 'let' to 'var' to make it mutable`}
+							executable={true}
+						/>
+						<CodeBlock
+							title="列挙型（Enum）"
+							code={`// 列挙型の定義
+enum Direction {
+    case north
+    case south
+    case east
+    case west
+}
+
+// 短縮形での定義
+enum Direction {
+    case north, south, east, west
+}
+
+// enumの使用
+let currentDirection = Direction.north
+
+// switch文での使用
+switch currentDirection {
+case .north:
+    print("北へ進む")
+case .south:
+    print("南へ進む")
+case .east:
+    print("東へ進む")
+case .west:
+    print("西へ進む")
+}
+
+// 生の値を持つenum
+enum Planet: Int {
+    case mercury = 1
+    case venus = 2
+    case earth = 3
+    case mars = 4
+}
+
+let earthNumber = Planet.earth.rawValue
+print("地球の番号: \\(earthNumber)")`}
+							output={`北へ進む
+地球の番号: 3`}
 							executable={true}
 						/>
 					</div>

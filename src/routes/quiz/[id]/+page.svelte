@@ -5,6 +5,19 @@
 	/** @type {import('./$types').PageData} */
 	export let data;
 
+	// クイズIDとチートシートセクションの対応関係
+	const quizToCheatsheetMap = {
+		'1': 'basic-syntax',
+		'2': 'basic-syntax',
+		'3': 'control-structures',
+		'4': 'collections',
+		'5': 'functions',
+		'6': 'basic-syntax'
+	};
+
+	// 現在のチートシートセクションを取得
+	$: currentCheatsheetSection = quizToCheatsheetMap[data.sectionId] || 'basic-syntax';
+
 	// 現在の問題インデックス
 	let currentQuestionIndex = 0;
 	// スコア
@@ -99,9 +112,18 @@
 						<p class="text-sm">{currentQuestion.explanation}</p>
 					</div>
 				</div>
-				<button class="btn mt-4 btn-primary" onclick={nextQuestion}>
-					{currentQuestionIndex < data.quizData.length - 1 ? '次の問題' : 'クイズをリセット'}
-				</button>
+				<div class="mt-4 flex gap-2">
+					<a
+						href="{base}/cheatsheet#{currentCheatsheetSection}"
+						class="btn btn-outline btn-info"
+						target="_blank"
+					>
+						チートシートで確認
+					</a>
+					<button class="btn btn-primary" onclick={nextQuestion}>
+						{currentQuestionIndex < data.quizData.length - 1 ? '次の問題' : 'クイズをリセット'}
+					</button>
+				</div>
 			{/if}
 		</div>
 	</div>
