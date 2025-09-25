@@ -17,7 +17,7 @@
 				document.documentElement.setAttribute('data-theme', 'dark');
 			} else {
 				isDark = false;
-				document.documentElement.setAttribute('data-theme', 'retro');
+				document.documentElement.setAttribute('data-theme', 'bumblebee');
 			}
 		}
 	});
@@ -25,7 +25,7 @@
 	// テーマ切り替え関数
 	function toggleTheme() {
 		isDark = !isDark;
-		const theme = isDark ? 'coffee' : 'retro';
+		const theme = isDark ? 'coffee' : 'bumblebee';
 
 		if (browser) {
 			document.documentElement.setAttribute('data-theme', theme);
