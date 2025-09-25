@@ -6,9 +6,63 @@
 	import Header from '$lib/components/Header.svelte';
 	import PhoneMockup from '$lib/components/PhoneMockup.svelte';
 	import tutorialData from '$lib/data/tutorial.json';
+	import { marked } from 'marked';
 
 	$: id = $page.params.id;
 	$: section = tutorialData.sections.find((s) => s.id === id);
+
+	// Markdownをパースしてテキストとコードブロックを分ける関数
+	function parseMarkdown(source) {
+		const tokens = marked.lexer(source);
+		const parts = [];
+		let currentText = '';
+
+		function processTokens(tokens) {
+			for (const token of tokens) {
+				if (token.type === 'code') {
+					// 前のテキストがあれば追加
+					if (currentText) {
+						parts.push({
+							type: 'text',
+							content: marked(currentText)
+						});
+						currentText = '';
+					}
+					// コードブロックを追加
+					parts.push({
+						type: 'code',
+						code: token.text,
+						lang: token.lang || 'swift',
+						meta: token.meta || ''
+					});
+				} else if (
+					token.type === 'text' ||
+					token.type === 'paragraph' ||
+					token.type === 'heading' ||
+					token.type === 'list' ||
+					token.type === 'blockquote'
+				) {
+					// テキストトークンを蓄積
+					currentText += token.raw;
+				} else {
+					// 他のトークンもテキストとして扱う
+					currentText += token.raw;
+				}
+			}
+		}
+
+		processTokens(tokens);
+
+		// 最後のテキストがあれば追加
+		if (currentText) {
+			parts.push({
+				type: 'text',
+				content: marked(currentText)
+			});
+		}
+
+		return parts;
+	}
 
 	let prevPage = async () => {
 		await goto(`${base}/tutorial?prev=${parseInt(id) - 1}`);
@@ -26,11 +80,26 @@
 				<div class="card-body">
 					<div class="flex flex-col gap-6 lg:flex-row">
 						<div class="flex-1">
-							<CodeBlock title={codeBlock.title} code={codeBlock.code} />
+							<CodeBlock
+								title={codeBlock.title}
+								code={codeBlock.code}
+								fileName={codeBlock.fileName}
+							/>
 							{#if codeBlock.description}
-								<p class="mt-4 text-sm text-base-content opacity-80" style="white-space: pre-wrap;">
-									{codeBlock.description}
-								</p>
+								<div class="prose prose-sm mt-4 max-w-none text-sm text-base-content opacity-80">
+									{#each parseMarkdown(codeBlock.description.replace(/\n/g, '  \n')) as part}
+										{#if part.type === 'text'}
+											{@html part.content}
+										{:else if part.type === 'code'}
+											<CodeBlock
+												code={part.code}
+												language={part.lang}
+												title={part.meta}
+												showHeader={false}
+											/>
+										{/if}
+									{/each}
+								</div>
 							{/if}
 						</div>
 						{#if codeBlock.previewImage}

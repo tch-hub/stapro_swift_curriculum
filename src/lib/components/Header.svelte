@@ -1,6 +1,7 @@
 <script>
 	import { base } from '$app/paths';
 	import { browser } from '$app/environment';
+	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
 
 	let { breadcrumbTitle } = $props();
@@ -41,7 +42,8 @@
 		quiz: 'クイズ',
 		project: 'プロジェクト',
 		timer: 'タイマーアプリ',
-		cheatsheet: 'チートシート'
+		cheatsheet: 'チートシート',
+		editor: 'JSONエディタ'
 	};
 
 	// Breadcrumbを生成する関数
@@ -99,6 +101,9 @@
 				<li><a href="{base}/cheatsheet">チートシート</a></li>
 				<li><a href="{base}/quiz">練習</a></li>
 				<li><a href="{base}/project">プロジェクト</a></li>
+				{#if dev}
+					<li><a href="{base}/editor">JSONエディタ</a></li>
+				{/if}
 			</ul>
 		</div>
 		<!-- Breadcrumb -->
@@ -122,6 +127,9 @@
 			<li><a href="{base}/cheatsheet">チートシート</a></li>
 			<li><a href="{base}/quiz">練習</a></li>
 			<li><a href="{base}/project">プロジェクト</a></li>
+			{#if dev}
+				<li><a href="{base}/editor">JSONエディタ</a></li>
+			{/if}
 		</ul>
 		<!-- テーマ切り替えボタン -->
 		<button onclick={toggleTheme} class="btn mr-2 btn-circle btn-ghost" aria-label="テーマ切り替え">
