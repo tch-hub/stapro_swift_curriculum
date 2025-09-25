@@ -13,7 +13,19 @@
 	let selectedTheme = $state(DEFAULT_THEME);
 
 	// 利用可能なテーマ
-	const themes = [ 'light', 'lemonade', 'cupcake', 'retro', 'caramellatte', 'valentine', 'cyberpunk', 'aqua', 'sunset', 'luxury', 'coffee'];
+	const themes = [
+		'light',
+		'lemonade',
+		'cupcake',
+		'retro',
+		'caramellatte',
+		'valentine',
+		'cyberpunk',
+		'aqua',
+		'sunset',
+		'luxury',
+		'coffee'
+	];
 
 	// ブラウザ環境での初期テーマ設定
 	if (browser) {
@@ -144,7 +156,7 @@
 					<path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
 				</svg>
 			</div>
-			<ul tabindex="0" class="dropdown-content z-1 w-52 rounded-box bg-base-300 p-2 shadow-2xl">
+			<ul tabindex="0" class="dropdown-content z-20 w-52 rounded-box bg-base-300 p-2 shadow-2xl">
 				{#each themes as theme}
 					<li>
 						<input
