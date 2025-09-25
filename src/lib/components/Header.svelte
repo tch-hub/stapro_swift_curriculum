@@ -13,7 +13,7 @@
 	let selectedTheme = $state(DEFAULT_THEME);
 
 	// 利用可能なテーマ
-	const themes = [ 'lemonade', 'cupcake', 'retro', 'caramellatte', 'valentine', 'cyberpunk', 'aqua', 'sunset', 'luxury', 'coffee'];
+	const themes = [ 'light', 'lemonade', 'cupcake', 'retro', 'caramellatte', 'valentine', 'cyberpunk', 'aqua', 'sunset', 'luxury', 'coffee'];
 
 	// ブラウザ環境での初期テーマ設定
 	if (browser) {

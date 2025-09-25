@@ -18,7 +18,7 @@
 	>
 		<!-- Dynamic Island -->
 		<div
-			class="absolute top-[27px] left-1/2 z-20 h-[26px] w-[110px] -translate-x-1/2 rounded-full bg-black"
+			class="absolute top-[27px] left-1/2 z-10 h-[26px] w-[110px] -translate-x-1/2 rounded-full bg-black"
 		></div>
 
 		<!-- 画面部分 -->
