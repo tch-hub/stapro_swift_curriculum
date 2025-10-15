@@ -60,7 +60,7 @@
 
 					<div class="p-4">
 						<!-- タブ選択 -->
-						<div class="tabs tabs-boxed mb-4">
+						<div class="tabs-boxed mb-4 tabs">
 							{#each tabs as tab}
 								<a
 									class="tab grow"
@@ -77,7 +77,7 @@
 							<input
 								type="text"
 								placeholder="新しいタスクを入力"
-								class="input input-bordered w-full"
+								class="input-bordered input w-full"
 								bind:value={newTaskText}
 								on:keydown={(e) => e.key === 'Enter' && addTask()}
 							/>
@@ -88,15 +88,13 @@
 						<div class="space-y-2">
 							{#each filteredTasks as task (task.id)}
 								<div class="flex items-center gap-2 rounded-lg bg-base-200 p-2">
-									<input
-										type="checkbox"
-										class="checkbox"
-										bind:checked={task.completed}
-									/>
+									<input type="checkbox" class="checkbox" bind:checked={task.completed} />
 									<span class="grow" class:line-through={task.completed}>
 										{task.text}
 									</span>
-									<button class="btn btn-ghost btn-xs" on:click={() => deleteTask(task.id)}>削除</button>
+									<button class="btn btn-ghost btn-xs" on:click={() => deleteTask(task.id)}
+										>削除</button
+									>
 								</div>
 							{:else}
 								<div class="text-center opacity-50">このタブにはタスクがありません。</div>

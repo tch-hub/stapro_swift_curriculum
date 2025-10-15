@@ -19,7 +19,9 @@
 		<div>
 			<h2 class="mb-4 text-2xl font-semibold">2. 新しいファイルを作成する</h2>
 			<p class="mb-4">
-				Xcodeのファイルナビゲータで、前回作成した`SwiftData`フォルダを右クリックし、「New File...」を選択します。テンプレートは「Swift File」を選び、ファイル名を`ToDoTask.swift`として作成してください。
+				Xcodeのファイルナビゲータで、前回作成した`SwiftData`フォルダを右クリックし、「New
+				File...」を選択します。テンプレートは「Swift
+				File」を選び、ファイル名を`ToDoTask.swift`として作成してください。
 			</p>
 		</div>
 
@@ -52,22 +54,26 @@ class ToDoTask {
 
 		<div>
 			<h2 class="mb-4 text-2xl font-semibold">コードの解説</h2>
-			<ul class="mb-4 list-inside list-disc space-y-2 bg-base-200 p-4 rounded-md">
-				<li><strong>@Model:</strong> このクラスがSwiftDataで管理されるデータモデルであることを示す目印です。</li>
+			<ul class="mb-4 list-inside list-disc space-y-2 rounded-md bg-base-200 p-4">
+				<li>
+					<strong>@Model:</strong> このクラスがSwiftDataで管理されるデータモデルであることを示す目印です。
+				</li>
 				<li><strong>class ToDoTask:</strong> `ToDoTask`という名前の設計図を定義しています。</li>
 				<li><strong>var id: UUID:</strong> タスク一つ一つを区別するための、重複しないIDです。</li>
-				<li><strong>var name: String:</strong> ユーザーが入力するタスクの内容（例：「牛乳を買う」）です。</li>
-				<li><strong>var isCompleted: Bool:</strong> タスクが完了したか（true）、まだか（false）を保存します。</li>
+				<li>
+					<strong>var name: String:</strong> ユーザーが入力するタスクの内容（例：「牛乳を買う」）です。
+				</li>
+				<li>
+					<strong>var isCompleted: Bool:</strong> タスクが完了したか（true）、まだか（false）を保存します。
+				</li>
 				<li><strong>var createdAt: Date:</strong> タスクがいつ作られたかを記録します。</li>
 			</ul>
-			<p>
-				これで、アプリが「タスク」という情報をどのように扱うかが決まりました。
-			</p>
+			<p>これで、アプリが「タスク」という情報をどのように扱うかが決まりました。</p>
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step2" class="btn">前へ</a>
-        <a href="../step4" class="btn btn-primary">次へ: データ設計②</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step2" class="btn">前へ</a>
+		<a href="../step4" class="btn btn-primary">次へ: データ設計②</a>
+	</div>
 </div>

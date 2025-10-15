@@ -39,8 +39,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22.14.0" # あなたが使っているNode.jsのバージョン
-          cache: "pnpm" # pnpmのキャッシュを有効にする
+          node-version: '22.14.0' # あなたが使っているNode.jsのバージョン
+          cache: 'pnpm' # pnpmのキャッシュを有効にする
 
       # ステップ4: 依存関係をインストールする
       - name: Install dependencies

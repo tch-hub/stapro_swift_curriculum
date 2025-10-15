@@ -26,7 +26,9 @@
 				<li>UIコンポーネントの再利用</li>
 			</ul>
 			<div class="card-actions justify-end">
-				<a href="{base}/source/ToDoLitst.zip" download class="btn btn-primary">プロジェクトをダウンロード</a>
+				<a href="{base}/source/ToDoLitst.zip" download class="btn btn-primary"
+					>プロジェクトをダウンロード</a
+				>
 			</div>
 		</div>
 	</div>
@@ -68,90 +70,294 @@
 		</p>
 
 		<div class="space-y-4">
-            <!-- ステップ1 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ1: Xcodeでプロジェクトを新規作成する</h3><p class="text-sm opacity-70">Xcodeでの新規プロジェクト作成と基本設定</p></div><a href="{base}/project/todolist/step1" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ2 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ2: 役割ごとにフォルダを整理する</h3><p class="text-sm opacity-70">ソースコードを整理するためのフォルダ構成</p></div><a href="{base}/project/todolist/step2" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ3 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ3: データ設計：ToDoタスクの情報を決める</h3><p class="text-sm opacity-70">SwiftDataを使ったタスクモデルの作成</p></div><a href="{base}/project/todolist/step3" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ4 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ4: データ設計：タスクを分類する「タブ」を決める</h3><p class="text-sm opacity-70">SwiftDataを使ったタブモデルの作成</p></div><a href="{base}/project/todolist/step4" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ5 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ5: データ操作の準備：ToDoTaskServiceクラスを作る</h3><p class="text-sm opacity-70">タスクデータを操作するサービスクラス</p></div><a href="{base}/project/todolist/step5" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ6 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ6: データ操作の準備：ToDoTabServiceクラスを作る</h3><p class="text-sm opacity-70">タブデータを操作するサービスクラス</p></div><a href="{base}/project/todolist/step6" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ7 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ7: アプリの骨組み：ナビゲーションとHomeViewを用意する</h3><p class="text-sm opacity-70">NavigationStackを使った画面の基本構造</p></div><a href="{base}/project/todolist/step7" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ8 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ8: UI作成：タブを切り替えるためのピッカーを配置する</h3><p class="text-sm opacity-70">Pickerを使ったタブ選択UIの実装</p></div><a href="{base}/project/todolist/step8" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ9 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ9: データ連携：作ったタブをピッカーに表示させる</h3><p class="text-sm opacity-70">Serviceからタブデータを取得して表示</p></div><a href="{base}/project/todolist/step9" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ10 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ10: UI作成：タスク一覧の見た目を仮データで作る</h3><p class="text-sm opacity-70">繰り返し表示するタスク行のUI作成</p></div><a href="{base}/project/todolist/step10" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ11 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ11: データ連携：選択したタブに対応するタスクを一覧表示する</h3><p class="text-sm opacity-70">選択中のタブに応じてタスクを動的に表示</p></div><a href="{base}/project/todolist/step11" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ12 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ12: 機能追加：タスクを追加するための「＋」ボタンと入力画面を作る</h3><p class="text-sm opacity-70">モーダル表示とUIの実装</p></div><a href="{base}/project/todolist/step12" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ13 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ13: 機能追加：入力した新しいタスクを保存する</h3><p class="text-sm opacity-70">Service経由で新規タスクをデータ保存</p></div><a href="{base}/project/todolist/step13" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ14 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ14: 機能追加：タスクの完了状態を切り替えるチェックボックスを作る</h3><p class="text-sm opacity-70">タスクの完了・未完了を切り替えるUI</p></div><a href="{base}/project/todolist/step14" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ15 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ15: 機能追加：チェックボックスの状態をデータに保存する</h3><p class="text-sm opacity-70">タスクの完了状態をデータに反映</p></div><a href="{base}/project/todolist/step15" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ16 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ16: 機能追加：タスクをスワイプして「削除」ボタンを表示する</h3><p class="text-sm opacity-70">ListのonDelete機能を使ったUI実装</p></div><a href="{base}/project/todolist/step16" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ17 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ17: 機能追加：「削除」ボタンでタスクをデータから消す</h3><p class="text-sm opacity-70">Service経由でタスクをデータ削除</p></div><a href="{base}/project/todolist/step17" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ18 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ18: 新画面作成：タブを管理するための画面を作る</h3><p class="text-sm opacity-70">タブの追加・編集・削除を行うUI</p></div><a href="{base}/project/todolist/step18" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ19 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ19: 画面遷移：ホーム画面からタブ管理画面へ移動できるようにする</h3><p class="text-sm opacity-70">NavigationLinkを使った画面遷移</p></div><a href="{base}/project/todolist/step19" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ20 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ20: おもてなし機能：アプリ初回起動時にサンプルデータを登録する</h3><p class="text-sm opacity-70">InitialViewでの初回データ投入処理</p></div><a href="{base}/project/todolist/step20" class="btn btn-primary">開始</a></div></div>
-            </div>
-            <!-- ステップ21 -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body"><div class="flex items-center justify-between"><div><h3 class="card-title text-xl">ステップ21: 仕上げ：コードを部品化してプロジェクトを綺麗にする</h3><p class="text-sm opacity-70">Componentsフォルダを活用したリファクタリング</p></div><a href="{base}/project/todolist/step21" class="btn btn-primary">開始</a></div></div>
-            </div>
+			<!-- ステップ1 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">ステップ1: Xcodeでプロジェクトを新規作成する</h3>
+							<p class="text-sm opacity-70">Xcodeでの新規プロジェクト作成と基本設定</p>
+						</div>
+						<a href="{base}/project/todolist/step1" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ2 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">ステップ2: 役割ごとにフォルダを整理する</h3>
+							<p class="text-sm opacity-70">ソースコードを整理するためのフォルダ構成</p>
+						</div>
+						<a href="{base}/project/todolist/step2" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ3 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">ステップ3: データ設計：ToDoタスクの情報を決める</h3>
+							<p class="text-sm opacity-70">SwiftDataを使ったタスクモデルの作成</p>
+						</div>
+						<a href="{base}/project/todolist/step3" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ4 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ4: データ設計：タスクを分類する「タブ」を決める
+							</h3>
+							<p class="text-sm opacity-70">SwiftDataを使ったタブモデルの作成</p>
+						</div>
+						<a href="{base}/project/todolist/step4" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ5 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ5: データ操作の準備：ToDoTaskServiceクラスを作る
+							</h3>
+							<p class="text-sm opacity-70">タスクデータを操作するサービスクラス</p>
+						</div>
+						<a href="{base}/project/todolist/step5" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ6 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ6: データ操作の準備：ToDoTabServiceクラスを作る
+							</h3>
+							<p class="text-sm opacity-70">タブデータを操作するサービスクラス</p>
+						</div>
+						<a href="{base}/project/todolist/step6" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ7 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ7: アプリの骨組み：ナビゲーションとHomeViewを用意する
+							</h3>
+							<p class="text-sm opacity-70">NavigationStackを使った画面の基本構造</p>
+						</div>
+						<a href="{base}/project/todolist/step7" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ8 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ8: UI作成：タブを切り替えるためのピッカーを配置する
+							</h3>
+							<p class="text-sm opacity-70">Pickerを使ったタブ選択UIの実装</p>
+						</div>
+						<a href="{base}/project/todolist/step8" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ9 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ9: データ連携：作ったタブをピッカーに表示させる
+							</h3>
+							<p class="text-sm opacity-70">Serviceからタブデータを取得して表示</p>
+						</div>
+						<a href="{base}/project/todolist/step9" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ10 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ10: UI作成：タスク一覧の見た目を仮データで作る
+							</h3>
+							<p class="text-sm opacity-70">繰り返し表示するタスク行のUI作成</p>
+						</div>
+						<a href="{base}/project/todolist/step10" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ11 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ11: データ連携：選択したタブに対応するタスクを一覧表示する
+							</h3>
+							<p class="text-sm opacity-70">選択中のタブに応じてタスクを動的に表示</p>
+						</div>
+						<a href="{base}/project/todolist/step11" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ12 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ12: 機能追加：タスクを追加するための「＋」ボタンと入力画面を作る
+							</h3>
+							<p class="text-sm opacity-70">モーダル表示とUIの実装</p>
+						</div>
+						<a href="{base}/project/todolist/step12" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ13 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ13: 機能追加：入力した新しいタスクを保存する
+							</h3>
+							<p class="text-sm opacity-70">Service経由で新規タスクをデータ保存</p>
+						</div>
+						<a href="{base}/project/todolist/step13" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ14 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ14: 機能追加：タスクの完了状態を切り替えるチェックボックスを作る
+							</h3>
+							<p class="text-sm opacity-70">タスクの完了・未完了を切り替えるUI</p>
+						</div>
+						<a href="{base}/project/todolist/step14" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ15 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ15: 機能追加：チェックボックスの状態をデータに保存する
+							</h3>
+							<p class="text-sm opacity-70">タスクの完了状態をデータに反映</p>
+						</div>
+						<a href="{base}/project/todolist/step15" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ16 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ16: 機能追加：タスクをスワイプして「削除」ボタンを表示する
+							</h3>
+							<p class="text-sm opacity-70">ListのonDelete機能を使ったUI実装</p>
+						</div>
+						<a href="{base}/project/todolist/step16" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ17 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ17: 機能追加：「削除」ボタンでタスクをデータから消す
+							</h3>
+							<p class="text-sm opacity-70">Service経由でタスクをデータ削除</p>
+						</div>
+						<a href="{base}/project/todolist/step17" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ18 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ18: 新画面作成：タブを管理するための画面を作る
+							</h3>
+							<p class="text-sm opacity-70">タブの追加・編集・削除を行うUI</p>
+						</div>
+						<a href="{base}/project/todolist/step18" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ19 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ19: 画面遷移：ホーム画面からタブ管理画面へ移動できるようにする
+							</h3>
+							<p class="text-sm opacity-70">NavigationLinkを使った画面遷移</p>
+						</div>
+						<a href="{base}/project/todolist/step19" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ20 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ20: おもてなし機能：アプリ初回起動時にサンプルデータを登録する
+							</h3>
+							<p class="text-sm opacity-70">InitialViewでの初回データ投入処理</p>
+						</div>
+						<a href="{base}/project/todolist/step20" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
+			<!-- ステップ21 -->
+			<div class="card bg-base-100 shadow-lg">
+				<div class="card-body">
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="card-title text-xl">
+								ステップ21: 仕上げ：コードを部品化してプロジェクトを綺麗にする
+							</h3>
+							<p class="text-sm opacity-70">Componentsフォルダを活用したリファクタリング</p>
+						</div>
+						<a href="{base}/project/todolist/step21" class="btn btn-primary">開始</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 

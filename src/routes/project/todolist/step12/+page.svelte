@@ -3,7 +3,9 @@
 </script>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="mb-4 text-3xl font-bold">ステップ12: 機能追加：タスクを追加するための「＋」ボタンと入力画面を作る</h1>
+	<h1 class="mb-4 text-3xl font-bold">
+		ステップ12: 機能追加：タスクを追加するための「＋」ボタンと入力画面を作る
+	</h1>
 	<p class="mb-8 text-lg">
 		ユーザーが新しいタスクを追加できるように、操作の起点となる「＋」ボタンと、タスク名を入力するための専用画面を作ります。
 	</p>
@@ -46,7 +48,8 @@
 		<div>
 			<h2 class="mb-4 text-2xl font-semibold">2. タスク追加用のビューを作成</h2>
 			<p class="mb-4">
-				`Components`フォルダの中に、`AddTaskView.swift`という名前で新しいSwiftUI Viewファイルを作成します。この画面は、タスク名を入力する`TextField`と、「追加」「キャンセル」ボタンで構成されます。
+				`Components`フォルダの中に、`AddTaskView.swift`という名前で新しいSwiftUI
+				Viewファイルを作成します。この画面は、タスク名を入力する`TextField`と、「追加」「キャンセル」ボタンで構成されます。
 			</p>
 			<CodeBlock
 				title="AddTaskView.swift"
@@ -121,8 +124,8 @@ struct HomeView: View {
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step11" class="btn">前へ</a>
-        <a href="../step13" class="btn btn-primary">次へ: タスク保存</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step11" class="btn">前へ</a>
+		<a href="../step13" class="btn btn-primary">次へ: タスク保存</a>
+	</div>
 </div>

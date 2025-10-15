@@ -3,14 +3,18 @@
 </script>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="mb-4 text-3xl font-bold">ステップ15: 機能追加：チェックボックスの状態をデータに保存する</h1>
+	<h1 class="mb-4 text-3xl font-bold">
+		ステップ15: 機能追加：チェックボックスの状態をデータに保存する
+	</h1>
 	<p class="mb-8 text-lg">
 		見た目の変更を、実際のデータに反映させます。チェックボックスタップ時に`ToDoTaskService`を呼び出し、タスクの完了状態（`isCompleted`）を`true`と`false`で切り替える処理を実装します。
 	</p>
 
 	<div class="space-y-8">
 		<div>
-			<h2 class="mb-4 text-2xl font-semibold">1. ToDoTaskServiceに`toggleCompletion`メソッドを実装</h2>
+			<h2 class="mb-4 text-2xl font-semibold">
+				1. ToDoTaskServiceに`toggleCompletion`メソッドを実装
+			</h2>
 			<p class="mb-4">
 				`ToDoTaskService.swift`に、指定されたタスクの`isCompleted`プロパティを反転させる（`true`なら`false`に、`false`なら`true`にする）メソッドを追加します。
 			</p>
@@ -72,8 +76,8 @@
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step14" class="btn">前へ</a>
-        <a href="../step16" class="btn btn-primary">次へ: スワイプ削除UI</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step14" class="btn">前へ</a>
+		<a href="../step16" class="btn btn-primary">次へ: スワイプ削除UI</a>
+	</div>
 </div>

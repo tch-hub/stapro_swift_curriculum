@@ -50,9 +50,7 @@
 
 		<div>
 			<h2 class="mb-4 text-2xl font-semibold">3. HomeViewの完成コード</h2>
-			<p class="mb-4">
-				ステップ9完了時点での`HomeView.swift`全体のコードです。
-			</p>
+			<p class="mb-4">ステップ9完了時点での`HomeView.swift`全体のコードです。</p>
 			<CodeBlock
 				title="HomeView.swift"
 				code={`
@@ -100,8 +98,8 @@ struct HomeView: View {
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step8" class="btn">前へ</a>
-        <a href="../step10" class="btn btn-primary">次へ: タスク行UI</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step8" class="btn">前へ</a>
+		<a href="../step10" class="btn btn-primary">次へ: タスク行UI</a>
+	</div>
 </div>

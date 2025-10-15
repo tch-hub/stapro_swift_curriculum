@@ -3,7 +3,9 @@
 </script>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="mb-4 text-3xl font-bold">ステップ8: UI作成：タブを切り替えるためのピッカーを配置する</h1>
+	<h1 class="mb-4 text-3xl font-bold">
+		ステップ8: UI作成：タブを切り替えるためのピッカーを配置する
+	</h1>
 	<p class="mb-8 text-lg">
 		ホーム画面に、作成したタブを切り替えるための選択肢（ピッカー）を配置します。まずは見た目から作り、データを表示する準備をします。
 	</p>
@@ -73,11 +75,19 @@ struct HomeView: View {
 
 		<div>
 			<h2 class="mb-4 text-2xl font-semibold">コードの解説</h2>
-			<ul class="mb-4 list-inside list-disc space-y-2 bg-base-200 p-4 rounded-md">
-				<li><strong>@State private var selectedTabIndex = 0:</strong> `@State`は、UIの状態（この場合は「どのタブが選ばれているか」）を保存するための目印です。`0`は最初のタブを意味します。</li>
-				<li><strong>Picker(selection: $...):</strong> `$selectedTabIndex`のように`$`を付けることで、Pickerでの選択が`selectedTabIndex`変数に自動的に反映されるようになります。</li>
-				<li><strong>ForEach(...):</strong> `toDoTabs`の配列を元に、繰り返し選択肢(`Text`)を生成します。</li>
-				<li><strong>.tag(index):</strong> 各選択肢にユニークな識別子（ここではインデックス番号）を割り当てます。</li>
+			<ul class="mb-4 list-inside list-disc space-y-2 rounded-md bg-base-200 p-4">
+				<li>
+					<strong>@State private var selectedTabIndex = 0:</strong> `@State`は、UIの状態（この場合は「どのタブが選ばれているか」）を保存するための目印です。`0`は最初のタブを意味します。
+				</li>
+				<li>
+					<strong>Picker(selection: $...):</strong> `$selectedTabIndex`のように`$`を付けることで、Pickerでの選択が`selectedTabIndex`変数に自動的に反映されるようになります。
+				</li>
+				<li>
+					<strong>ForEach(...):</strong> `toDoTabs`の配列を元に、繰り返し選択肢(`Text`)を生成します。
+				</li>
+				<li>
+					<strong>.tag(index):</strong> 各選択肢にユニークな識別子（ここではインデックス番号）を割り当てます。
+				</li>
 			</ul>
 			<p>
 				この時点では、まだタブを作っていないのでプレビューには何も表示されません。次のステップで、実際にデータを表示する処理を実装します。
@@ -85,8 +95,8 @@ struct HomeView: View {
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step7" class="btn">前へ</a>
-        <a href="../step9" class="btn btn-primary">次へ: タブ表示</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step7" class="btn">前へ</a>
+		<a href="../step9" class="btn btn-primary">次へ: タブ表示</a>
+	</div>
 </div>

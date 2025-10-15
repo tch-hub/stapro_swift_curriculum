@@ -85,7 +85,7 @@
 </script>
 
 <header
-	class="sticky top-0 z-10 mx-auto navbar max-w-7xl rounded-b-lg border-b border-base-300/50 bg-base-100/80 shadow-lg backdrop-blur-md"
+	class="navbar sticky top-0 z-10 mx-auto max-w-7xl rounded-b-lg border-b border-base-300/50 bg-base-100/80 shadow-lg backdrop-blur-md"
 >
 	<div class="navbar-start">
 		<div class="dropdown">

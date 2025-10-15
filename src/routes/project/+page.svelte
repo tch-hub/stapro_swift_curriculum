@@ -37,14 +37,14 @@
 			</div>
 		</div>
 
-		<!-- プロジェクト3 -->
+		<!-- オリジナルアプリプロジェクト -->
 		<div class="card bg-base-100 shadow-xl">
 			<div class="card-body">
-				<h2 class="card-title text-2xl">プロジェクト3</h2>
-				<p class="mb-4">準備中です。</p>
+				<h2 class="card-title text-2xl">オリジナルアプリ</h2>
+				<p class="mb-4">学んだ知識を総動員して、自分だけのオリジナルアプリ開発に挑戦しましょう！</p>
 				<div class="card-actions justify-between">
-					<span class="btn-disabled btn btn-primary">詳細を見る</span>
-					<span class="btn-disabled btn btn-outline">ダウンロード</span>
+					<a href="{base}/project/original-app" class="btn btn-primary">詳細を見る</a>
+					<span class="btn btn-disabled btn-outline">ダウンロード</span>
 				</div>
 			</div>
 		</div>

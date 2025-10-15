@@ -51,8 +51,8 @@ class ToDoTabService {
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step5" class="btn">前へ</a>
-        <a href="../step7" class="btn btn-primary">次へ: アプリの骨組み</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step5" class="btn">前へ</a>
+		<a href="../step7" class="btn btn-primary">次へ: アプリの骨組み</a>
+	</div>
 </div>

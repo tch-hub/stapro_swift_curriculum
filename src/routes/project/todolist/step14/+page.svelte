@@ -3,7 +3,9 @@
 </script>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="mb-4 text-3xl font-bold">ステップ14: 機能追加：タスクの完了状態を切り替えるチェックボックスを作る</h1>
+	<h1 class="mb-4 text-3xl font-bold">
+		ステップ14: 機能追加：タスクの完了状態を切り替えるチェックボックスを作る
+	</h1>
 	<p class="mb-8 text-lg">
 		ToDoリストの核となる機能、タスクの完了チェックを実装します。まず、ユーザーがタップできるチェックボックスの「見た目」と「操作」を`TaskRow`ビューに追加します。
 	</p>
@@ -70,11 +72,21 @@ struct TaskRow: View {
 
 		<div>
 			<h2 class="mb-4 text-2xl font-semibold">コードの解説</h2>
-			<ul class="mb-4 list-inside list-disc space-y-2 bg-base-200 p-4 rounded-md">
-				<li><strong>`Button(action: onToggleCompletion)`:</strong> `Image`を`Button`で囲み、タップされたら`onToggleCompletion`という処理を呼び出すようにしています。</li>
-				<li><strong>`Image(systemName: ...)`:</strong> `task.isCompleted`が`true`か`false`かに応じて、表示するSF Symbolsのアイコンを切り替えています。（`checkmark.circle.fill`と`circle`）</li>
-				<li><strong>`.strikethrough(task.isCompleted)`:</strong> こちらも`isCompleted`の状態によって、テキストに取り消し線を引くかどうかを切り替えています。</li>
-				<li><strong>`onToggleCompletion: () -> Void`</strong>: `TaskRow`の外（この場合は`HomeView`）から、タップされた時の処理を渡してもらうための「窓口」です。これにより、`TaskRow`は見た目に集中でき、データ操作の責任を`HomeView`に任せることができます。</li>
+			<ul class="mb-4 list-inside list-disc space-y-2 rounded-md bg-base-200 p-4">
+				<li>
+					<strong>`Button(action: onToggleCompletion)`:</strong> `Image`を`Button`で囲み、タップされたら`onToggleCompletion`という処理を呼び出すようにしています。
+				</li>
+				<li>
+					<strong>`Image(systemName: ...)`:</strong> `task.isCompleted`が`true`か`false`かに応じて、表示するSF
+					Symbolsのアイコンを切り替えています。（`checkmark.circle.fill`と`circle`）
+				</li>
+				<li>
+					<strong>`.strikethrough(task.isCompleted)`:</strong> こちらも`isCompleted`の状態によって、テキストに取り消し線を引くかどうかを切り替えています。
+				</li>
+				<li>
+					<strong>`onToggleCompletion: () -> Void`</strong>:
+					`TaskRow`の外（この場合は`HomeView`）から、タップされた時の処理を渡してもらうための「窓口」です。これにより、`TaskRow`は見た目に集中でき、データ操作の責任を`HomeView`に任せることができます。
+				</li>
 			</ul>
 			<p>
 				これでUIの準備は完了です。プレビューやシミュレータでチェックボックスをタップすると、Xcodeのコンソールにデバッグメッセージが出力されるはずです。
@@ -82,8 +94,8 @@ struct TaskRow: View {
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step13" class="btn">前へ</a>
-        <a href="../step15" class="btn btn-primary">次へ: 完了状態の保存</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step13" class="btn">前へ</a>
+		<a href="../step15" class="btn btn-primary">次へ: 完了状態の保存</a>
+	</div>
 </div>

@@ -3,7 +3,9 @@
 </script>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="mb-4 text-3xl font-bold">ステップ11: データ連携：選択したタブに対応するタスクを一覧表示する</h1>
+	<h1 class="mb-4 text-3xl font-bold">
+		ステップ11: データ連携：選択したタブに対応するタスクを一覧表示する
+	</h1>
 	<p class="mb-8 text-lg">
 		いよいよホーム画面のメイン機能です。UI（`List`と`TaskRow`）とデータ（`ToDoTask`）を結びつけ、選択されたタブに所属するタスクだけを絞り込んで表示します。
 	</p>
@@ -103,8 +105,8 @@ struct HomeView: View {
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step10" class="btn">前へ</a>
-        <a href="../step12" class="btn btn-primary">次へ: タスク追加UI</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step10" class="btn">前へ</a>
+		<a href="../step12" class="btn btn-primary">次へ: タスク追加UI</a>
+	</div>
 </div>

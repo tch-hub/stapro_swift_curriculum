@@ -1,62 +1,47 @@
 [
-    {
-        "question": "Swiftでenumを宣言するキーワードはどれですか？",
-        "options": [
-            "enum",
-            "class",
-            "struct",
-            "func"
-        ],
-        "correct": 0,
-        "hint": "列挙型を宣言するキーワードです。",
-        "explanation": "Swiftでは、enumキーワードを使って列挙型を宣言します。enumは関連する値をグループ化するのに便利です。"
-    },
-    {
-        "question": "enumのケースを定義するキーワードはどれですか？",
-        "options": [
-            "case",
-            "var",
-            "let",
-            "func"
-        ],
-        "correct": 0,
-        "hint": "enum内の各値を定義するキーワードです。",
-        "explanation": "enumでは、caseキーワードを使って各ケースを定義します。例えば、enum Direction { case north, south, east, west } のように使います。"
-    },
-    {
-        "question": "以下のenumの宣言で、正しいものはどれですか？",
-        "options": [
-            "enum Color { case red, blue, green }",
-            "enum Color: case red, blue, green",
-            "enum Color = { red, blue, green }",
-            "enum Color(red, blue, green)"
-        ],
-        "correct": 0,
-        "hint": "enumの基本的な構文を確認してください。",
-        "explanation": "正しいenumの宣言は、enum Color { case red, blue, green } です。caseキーワードを使って各ケースを定義します。"
-    },
-    {
-        "question": "enumの値をswitch文で処理する場合、どのキーワードを使いますか？",
-        "options": [
-            "if",
-            "switch",
-            "for",
-            "while"
-        ],
-        "correct": 1,
-        "hint": "条件分岐で複数のケースを処理するキーワードです。",
-        "explanation": "switch文を使ってenumの各ケースを処理できます。これにより、enumのすべてのケースを網羅的に扱えます。"
-    },
-    {
-        "question": "enumにraw valueを付ける場合、どのような構文になりますか？",
-        "options": [
-            "enum Color: String { case red = \"赤\", blue = \"青\" }",
-            "enum Color { case red(String), blue(String) }",
-            "enum Color(rawValue: String) { case red, blue }",
-            "enum Color { case red: String, blue: String }"
-        ],
-        "correct": 0,
-        "hint": "raw valueはenumの各ケースに固定の値を割り当てるものです。",
-        "explanation": "enum Color: String { case red = \"赤\", blue = \"青\" } のように、enumの型を指定し、各caseに値を割り当てます。"
-    }
+	{
+		"question": "Swiftでenumを宣言するキーワードはどれですか？",
+		"options": ["enum", "class", "struct", "func"],
+		"correct": 0,
+		"hint": "列挙型を宣言するキーワードです。",
+		"explanation": "Swiftでは、enumキーワードを使って列挙型を宣言します。enumは関連する値をグループ化するのに便利です。"
+	},
+	{
+		"question": "enumのケースを定義するキーワードはどれですか？",
+		"options": ["case", "var", "let", "func"],
+		"correct": 0,
+		"hint": "enum内の各値を定義するキーワードです。",
+		"explanation": "enumでは、caseキーワードを使って各ケースを定義します。例えば、enum Direction { case north, south, east, west } のように使います。"
+	},
+	{
+		"question": "以下のenumの宣言で、正しいものはどれですか？",
+		"options": [
+			"enum Color { case red, blue, green }",
+			"enum Color: case red, blue, green",
+			"enum Color = { red, blue, green }",
+			"enum Color(red, blue, green)"
+		],
+		"correct": 0,
+		"hint": "enumの基本的な構文を確認してください。",
+		"explanation": "正しいenumの宣言は、enum Color { case red, blue, green } です。caseキーワードを使って各ケースを定義します。"
+	},
+	{
+		"question": "enumの値をswitch文で処理する場合、どのキーワードを使いますか？",
+		"options": ["if", "switch", "for", "while"],
+		"correct": 1,
+		"hint": "条件分岐で複数のケースを処理するキーワードです。",
+		"explanation": "switch文を使ってenumの各ケースを処理できます。これにより、enumのすべてのケースを網羅的に扱えます。"
+	},
+	{
+		"question": "enumにraw valueを付ける場合、どのような構文になりますか？",
+		"options": [
+			"enum Color: String { case red = \"赤\", blue = \"青\" }",
+			"enum Color { case red(String), blue(String) }",
+			"enum Color(rawValue: String) { case red, blue }",
+			"enum Color { case red: String, blue: String }"
+		],
+		"correct": 0,
+		"hint": "raw valueはenumの各ケースに固定の値を割り当てるものです。",
+		"explanation": "enum Color: String { case red = \"赤\", blue = \"青\" } のように、enumの型を指定し、各caseに値を割り当てます。"
+	}
 ]

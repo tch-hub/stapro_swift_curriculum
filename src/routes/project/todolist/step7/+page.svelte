@@ -3,7 +3,9 @@
 </script>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="mb-4 text-3xl font-bold">ステップ7: アプリの骨組み：ナビゲーションとHomeViewを用意する</h1>
+	<h1 class="mb-4 text-3xl font-bold">
+		ステップ7: アプリの骨組み：ナビゲーションとHomeViewを用意する
+	</h1>
 	<p class="mb-8 text-lg">
 		いよいよ画面作成です！まず、アプリの「骨組み」となる部分を作ります。具体的には、画面遷移を管理する`NavigationStack`と、中心的な画面である`HomeView`です。
 	</p>
@@ -14,10 +16,8 @@
 			<p class="mb-4">
 				`Screens`フォルダの中に、`Views`と`Navigation`という2つのサブフォルダを作成します。さらに`Views`の中には`Main`というサブフォルダも作成してください。
 			</p>
-			<p class="mb-4">
-				そして、以下の3つのSwiftUI Viewファイルを、それぞれの場所に作成します。
-			</p>
-			<ul class="mb-4 list-inside list-disc bg-base-200 p-4 rounded-md">
+			<p class="mb-4">そして、以下の3つのSwiftUI Viewファイルを、それぞれの場所に作成します。</p>
+			<ul class="mb-4 list-inside list-disc rounded-md bg-base-200 p-4">
 				<li>`Screens/Navigation/MainStack.swift`</li>
 				<li>`Screens/Views/Main/HomeView.swift`</li>
 				<li>`Screens/Views/InitialView.swift` (これは後で使います)</li>
@@ -92,8 +92,8 @@ struct MainStack: View {
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step6" class="btn">前へ</a>
-        <a href="../step8" class="btn btn-primary">次へ: タブ選択UI</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step6" class="btn">前へ</a>
+		<a href="../step8" class="btn btn-primary">次へ: タブ選択UI</a>
+	</div>
 </div>

@@ -55,9 +55,7 @@ class SwiftDataService {
 
 		<div>
 			<h2 class="mb-4 text-2xl font-semibold">4. ToDoTaskServiceを実装する</h2>
-			<p class="mb-4">
-				作成した`ToDoTaskService.swift`に、以下のコードを記述します。
-			</p>
+			<p class="mb-4">作成した`ToDoTaskService.swift`に、以下のコードを記述します。</p>
 			<CodeBlock
 				title="ToDoTaskService.swift"
 				code={`
@@ -81,10 +79,16 @@ class ToDoTaskService {
 
 		<div>
 			<h2 class="mb-4 text-2xl font-semibold">コードの解説</h2>
-			<ul class="mb-4 list-inside list-disc space-y-2 bg-base-200 p-4 rounded-md">
-				<li><strong>@MainActor:</strong> UIの更新に関わる可能性のあるコードであることを示します。SwiftUIではおまじないのようなものです。</li>
-				<li><strong>private let modelContext:</strong> SwiftDataでデータを操作するための「作業場」のようなものです。これを通じてデータの読み書きを行います。</li>
-				<li><strong>init():</strong> このクラスが作られた時に最初に呼ばれる部分です。`SwiftDataService`から`modelContext`を受け取り、作業の準備をします。</li>
+			<ul class="mb-4 list-inside list-disc space-y-2 rounded-md bg-base-200 p-4">
+				<li>
+					<strong>@MainActor:</strong> UIの更新に関わる可能性のあるコードであることを示します。SwiftUIではおまじないのようなものです。
+				</li>
+				<li>
+					<strong>private let modelContext:</strong> SwiftDataでデータを操作するための「作業場」のようなものです。これを通じてデータの読み書きを行います。
+				</li>
+				<li>
+					<strong>init():</strong> このクラスが作られた時に最初に呼ばれる部分です。`SwiftDataService`から`modelContext`を受け取り、作業の準備をします。
+				</li>
 			</ul>
 			<p>
 				これでタスクを操作するための準備ができました。次のステップでは、タブを操作する`ToDoTabService`も同様に作成します。
@@ -92,8 +96,8 @@ class ToDoTaskService {
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step4" class="btn">前へ</a>
-        <a href="../step6" class="btn btn-primary">次へ: Serviceクラス作成②</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step4" class="btn">前へ</a>
+		<a href="../step6" class="btn btn-primary">次へ: Serviceクラス作成②</a>
+	</div>
 </div>

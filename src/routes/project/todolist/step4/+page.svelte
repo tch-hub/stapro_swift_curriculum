@@ -18,9 +18,7 @@
 
 		<div>
 			<h2 class="mb-4 text-2xl font-semibold">2. ToDoTabモデルを定義する</h2>
-			<p class="mb-4">
-				作成した`ToDoTab.swift`に、以下のコードを記述します。
-			</p>
+			<p class="mb-4">作成した`ToDoTab.swift`に、以下のコードを記述します。</p>
 			<CodeBlock
 				title="ToDoTab.swift"
 				code={`
@@ -80,19 +78,25 @@ class ToDoTask {
 			<p class="mb-4">
 				`ToDoTab`と`ToDoTask`の間には、「1つのタブにたくさんのタスクが含まれる」という「1対多」の関係があります。SwiftDataでは、これをお互いのプロパティとして定義することで表現します。
 			</p>
-			<ul class="mb-4 list-inside list-disc space-y-2 bg-base-200 p-4 rounded-md">
-				<li><strong>`ToDoTab`の`todoTasks: [ToDoTask]?`</strong>: 1つのタブが、複数のタスク(`ToDoTask`の配列`[]`)を持つことを示します。`?`は「タスクがまだ一つもない場合もある」という意味です。</li>
-				<li><strong>`ToDoTask`の`todoTab: ToDoTab?`</strong>: 1つのタスクが、1つのタブに所属することを示します。</li>
-				<li><strong>@Relationship(inverse: ...):</strong> SwiftDataに「この`todoTasks`は、`ToDoTask`側の`todoTab`プロパティとペアですよ」と教えてあげるための重要な目印です。これがないと、データがうまく繋がりません。</li>
+			<ul class="mb-4 list-inside list-disc space-y-2 rounded-md bg-base-200 p-4">
+				<li>
+					<strong>`ToDoTab`の`todoTasks: [ToDoTask]?`</strong>:
+					1つのタブが、複数のタスク(`ToDoTask`の配列`[]`)を持つことを示します。`?`は「タスクがまだ一つもない場合もある」という意味です。
+				</li>
+				<li>
+					<strong>`ToDoTask`の`todoTab: ToDoTab?`</strong>:
+					1つのタスクが、1つのタブに所属することを示します。
+				</li>
+				<li>
+					<strong>@Relationship(inverse: ...):</strong> SwiftDataに「この`todoTasks`は、`ToDoTask`側の`todoTab`プロパティとペアですよ」と教えてあげるための重要な目印です。これがないと、データがうまく繋がりません。
+				</li>
 			</ul>
-			<p>
-				これで、タスクをタブで分類するためのデータ設計が完了しました。
-			</p>
+			<p>これで、タスクをタブで分類するためのデータ設計が完了しました。</p>
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step3" class="btn">前へ</a>
-        <a href="../step5" class="btn btn-primary">次へ: Serviceクラス作成①</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step3" class="btn">前へ</a>
+		<a href="../step5" class="btn btn-primary">次へ: Serviceクラス作成①</a>
+	</div>
 </div>

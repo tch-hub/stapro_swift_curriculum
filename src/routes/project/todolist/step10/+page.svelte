@@ -12,7 +12,8 @@
 		<div>
 			<h2 class="mb-4 text-2xl font-semibold">1. TaskRowビューを作成する</h2>
 			<p class="mb-4">
-				`Components`フォルダの中に、`TaskRow.swift`という名前で新しいSwiftUI Viewファイルを作成します。
+				`Components`フォルダの中に、`TaskRow.swift`という名前で新しいSwiftUI
+				Viewファイルを作成します。
 			</p>
 		</div>
 
@@ -94,8 +95,8 @@ struct TaskRow: View {
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step9" class="btn">前へ</a>
-        <a href="../step11" class="btn btn-primary">次へ: タスク表示</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step9" class="btn">前へ</a>
+		<a href="../step11" class="btn btn-primary">次へ: タスク表示</a>
+	</div>
 </div>

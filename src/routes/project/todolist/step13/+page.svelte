@@ -99,8 +99,8 @@ struct HomeView: View {
 		</div>
 	</div>
 
-    <div class="mt-12 flex justify-between">
-        <a href="../step12" class="btn">前へ</a>
-        <a href="../step14" class="btn btn-primary">次へ: 完了機能UI</a>
-    </div>
+	<div class="mt-12 flex justify-between">
+		<a href="../step12" class="btn">前へ</a>
+		<a href="../step14" class="btn btn-primary">次へ: 完了機能UI</a>
+	</div>
 </div>
