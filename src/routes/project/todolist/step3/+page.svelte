@@ -1,9 +1,17 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
 <div class="container mx-auto px-4 py-8">
 	<h1 class="mb-4 text-3xl font-bold">ステップ3: データ設計① ToDoタスクの情報を考えよう</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step2" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step4" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		アプリで扱うデータの「設計図」を作ります。まずは、一つ一つのタスクがどんな情報を持つべきかを考え、SwiftDataのモデルとして定義しましょう。
 	</p>

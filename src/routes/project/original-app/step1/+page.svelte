@@ -1,5 +1,15 @@
+<script>
+	import { base } from '$app/paths';
+</script>
+
 <div class="container mx-auto px-4 py-8">
 	<h1 class="mb-8 text-center text-4xl font-bold">ステップ1: アプリのアイデアを考えよう</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/original-app" class="btn btn-outline">← プロジェクト概要に戻る</a>
+		<a href="{base}/project/original-app/step2" class="btn btn-primary">次のステップ →</a>
+	</div>
 
 	<div class="prose max-w-none">
 		<p>

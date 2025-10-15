@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
@@ -6,6 +7,13 @@
 	<h1 class="mb-4 text-3xl font-bold">
 		ステップ16: 機能追加：タスクをスワイプして「削除」ボタンを表示する
 	</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step15" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step17" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		iPhoneアプリでよく見かける、リストの項目をスワイプして削除する機能を実装します。SwiftUIの`List`では、この機能が驚くほど簡単に実装できます。
 	</p>

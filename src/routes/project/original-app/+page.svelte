@@ -1,5 +1,6 @@
 <script>
 	import { base } from '$app/paths';
+	import OriginalAppDemo from '$lib/components/OriginalAppDemo.svelte';
 </script>
 
 <div class="container mx-auto px-4 py-8">
@@ -59,6 +60,9 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- デモアプリ -->
+	<OriginalAppDemo />
 
 	<!-- 制作ステップ -->
 	<div class="mb-8">

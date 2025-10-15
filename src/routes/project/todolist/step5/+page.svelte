@@ -1,9 +1,17 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
 <div class="container mx-auto px-4 py-8">
 	<h1 class="mb-4 text-3xl font-bold">ステップ5: データ操作の準備：ToDoTaskServiceクラスを作る</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step4" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step6" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		データモデル（設計図）を作っただけでは、データはただの箱です。次はその箱にデータを入れたり、出したり、捨てたりする「係員」を作ります。それがサービスクラスです。
 	</p>

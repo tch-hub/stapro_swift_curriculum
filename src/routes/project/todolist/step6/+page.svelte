@@ -1,9 +1,17 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
 <div class="container mx-auto px-4 py-8">
 	<h1 class="mb-4 text-3xl font-bold">ステップ6: データ操作の準備：ToDoTabServiceクラスを作る</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step5" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step7" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		タスクの係員（`ToDoTaskService`）の次は、タブを管理する係員（`ToDoTabService`）を作りましょう。役割ごとに係員を分けることで、プログラムがより分かりやすくなります。
 	</p>

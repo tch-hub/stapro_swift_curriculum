@@ -5,6 +5,12 @@
 <div class="container mx-auto px-4 py-8">
 	<h1 class="mb-8 text-center text-4xl font-bold">ステップ5: 機能を実装してみよう</h1>
 
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/original-app/step4" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/original-app" class="btn btn-primary">プロジェクト完了！</a>
+	</div>
+
 	<div class="prose max-w-none">
 		<p>
 			いよいよ、これまでの計画を形にする時が来ました。ステップ3で作成した「機能リスト」と、ステップ2で描いた「設計図」を手元に準備して、プログラミングを始めましょう！

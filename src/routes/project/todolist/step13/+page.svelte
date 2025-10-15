@@ -1,9 +1,17 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
 <div class="container mx-auto px-4 py-8">
 	<h1 class="mb-4 text-3xl font-bold">ステップ13: 機能追加：入力した新しいタスクを保存する</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step12" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step14" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		UI（見た目）とロジック（機能）を結びつけます。ユーザーが入力したタスク名を、`ToDoTaskService`を使ってデータベースに保存し、リストに新しいタスクが即座に表示されるようにします。
 	</p>

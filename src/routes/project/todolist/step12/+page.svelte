@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
@@ -6,6 +7,13 @@
 	<h1 class="mb-4 text-3xl font-bold">
 		ステップ12: 機能追加：タスクを追加するための「＋」ボタンと入力画面を作る
 	</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step11" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step13" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		ユーザーが新しいタスクを追加できるように、操作の起点となる「＋」ボタンと、タスク名を入力するための専用画面を作ります。
 	</p>

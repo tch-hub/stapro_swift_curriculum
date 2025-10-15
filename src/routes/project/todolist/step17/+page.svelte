@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
@@ -6,6 +7,13 @@
 	<h1 class="mb-4 text-3xl font-bold">
 		ステップ17: 機能追加：「削除」ボタンでタスクをデータから消す
 	</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step16" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step18" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		いよいよ削除機能の完成です。ユーザーがスワイプして「削除」をタップしたタスクを、`ToDoTaskService`を通じてデータベースから完全に消去します。
 	</p>

@@ -1,9 +1,17 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
 <div class="container mx-auto px-4 py-8">
 	<h1 class="mb-4 text-3xl font-bold">ステップ9: データ連携：作ったタブをピッカーに表示させる</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step8" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step10" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		UI（見た目）とデータ（情報）を結びつけます。前のステップで作ったピッカーに、SwiftDataから取得したタブのリストを実際に表示させましょう。
 	</p>

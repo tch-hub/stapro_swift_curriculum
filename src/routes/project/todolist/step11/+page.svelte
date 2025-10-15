@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
@@ -6,6 +7,13 @@
 	<h1 class="mb-4 text-3xl font-bold">
 		ステップ11: データ連携：選択したタブに対応するタスクを一覧表示する
 	</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step10" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step12" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		いよいよホーム画面のメイン機能です。UI（`List`と`TaskRow`）とデータ（`ToDoTask`）を結びつけ、選択されたタブに所属するタスクだけを絞り込んで表示します。
 	</p>

@@ -102,7 +102,7 @@
 {:else}
 	<div class="min-h-screen bg-base-100">
 		<!-- 固定ヘッダー -->
-		<div class="navbar sticky top-0 z-10 border-b border-base-300 bg-base-100 shadow-sm">
+		<div class="sticky top-0 z-10 navbar border-b border-base-300 bg-base-100 shadow-sm">
 			<div class="navbar-start">
 				<h1 class="text-xl font-bold">JSONエディタ</h1>
 			</div>

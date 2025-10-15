@@ -1,9 +1,17 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
 <div class="container mx-auto px-4 py-8">
 	<h1 class="mb-4 text-3xl font-bold">ステップ1: Xcodeでプロジェクトを新規作成する</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist" class="btn btn-outline">← プロジェクト概要に戻る</a>
+		<a href="{base}/project/todolist/step2" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		すべてのアプリ開発は、ここから始まります。Xcodeを起動して、ToDoリストアプリの新しいプロジェクトを作成しましょう。
 	</p>
@@ -68,11 +76,5 @@ struct ContentView: View {
 `}
 			/>
 		</div>
-	</div>
-
-	<div class="mt-12 flex justify-between">
-		<!-- disabled a tag -->
-		<a href="#" class="btn btn-disabled">前へ</a>
-		<a href="../step2" class="btn btn-primary">次へ: フォルダ構成</a>
 	</div>
 </div>

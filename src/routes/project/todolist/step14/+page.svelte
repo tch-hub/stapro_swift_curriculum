@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
@@ -6,6 +7,13 @@
 	<h1 class="mb-4 text-3xl font-bold">
 		ステップ14: 機能追加：タスクの完了状態を切り替えるチェックボックスを作る
 	</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step13" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step15" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		ToDoリストの核となる機能、タスクの完了チェックを実装します。まず、ユーザーがタップできるチェックボックスの「見た目」と「操作」を`TaskRow`ビューに追加します。
 	</p>

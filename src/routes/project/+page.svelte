@@ -44,7 +44,7 @@
 				<p class="mb-4">学んだ知識を総動員して、自分だけのオリジナルアプリ開発に挑戦しましょう！</p>
 				<div class="card-actions justify-between">
 					<a href="{base}/project/original-app" class="btn btn-primary">詳細を見る</a>
-					<span class="btn btn-disabled btn-outline">ダウンロード</span>
+					<span class="btn-disabled btn btn-outline">ダウンロード</span>
 				</div>
 			</div>
 		</div>

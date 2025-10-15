@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
@@ -6,6 +7,13 @@
 	<h1 class="mb-4 text-3xl font-bold">
 		ステップ7: アプリの骨組み：ナビゲーションとHomeViewを用意する
 	</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step6" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step8" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		いよいよ画面作成です！まず、アプリの「骨組み」となる部分を作ります。具体的には、画面遷移を管理する`NavigationStack`と、中心的な画面である`HomeView`です。
 	</p>

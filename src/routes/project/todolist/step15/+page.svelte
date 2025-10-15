@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
@@ -6,6 +7,13 @@
 	<h1 class="mb-4 text-3xl font-bold">
 		ステップ15: 機能追加：チェックボックスの状態をデータに保存する
 	</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step14" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step16" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		見た目の変更を、実際のデータに反映させます。チェックボックスタップ時に`ToDoTaskService`を呼び出し、タスクの完了状態（`isCompleted`）を`true`と`false`で切り替える処理を実装します。
 	</p>

@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
@@ -6,6 +7,13 @@
 	<h1 class="mb-4 text-3xl font-bold">
 		ステップ21: 仕上げ：コードを部品化してプロジェクトを綺麗にする
 	</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step20" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist" class="btn btn-primary">プロジェクト完了！</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		アプリの全機能が完成しました！最後のステップとして、コードをより読みやすく、再利用しやすい形に整える「リファクタリング」を行い、プロジェクトを完成させましょう。
 	</p>
@@ -90,10 +98,5 @@ struct FloatingActionButton: View {
 				この経験を土台に、さらに機能を追加したり、自分だけのオリジナルアプリ開発に挑戦したりしてみてください！
 			</p>
 		</div>
-	</div>
-
-	<div class="mt-12 flex justify-between">
-		<a href="../step20" class="btn">前へ</a>
-		<a href="#" class="btn btn-disabled">完了</a>
 	</div>
 </div>

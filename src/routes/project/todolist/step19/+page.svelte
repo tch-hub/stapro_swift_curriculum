@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 </script>
 
@@ -6,6 +7,13 @@
 	<h1 class="mb-4 text-3xl font-bold">
 		ステップ19: 画面遷移：ホーム画面からタブ管理画面へ移動できるようにする
 	</h1>
+
+	<!-- ナビゲーション -->
+	<div class="mb-8 flex justify-between">
+		<a href="{base}/project/todolist/step18" class="btn btn-outline">← 前のステップ</a>
+		<a href="{base}/project/todolist/step20" class="btn btn-primary">次のステップ →</a>
+	</div>
+
 	<p class="mb-8 text-lg">
 		作成した2つの画面を繋ぎます。ホーム画面のナビゲーションバーにアイコンを設置し、それをタップすることでタブ管理画面へ移動できるようにします。
 	</p>
