@@ -1,96 +1,83 @@
 [
-    {
-        "question": "Swiftで関数を定義するキーワードはどれですか？",
-        "options": [
-            "def",
-            "func",
-            "function",
-            "method"
-        ],
-        "correct": 1,
-        "hint": "関数を定義するキーワードです。",
-        "explanation": "Swiftでは func キーワードを使って関数を定義します。例えば func sayHello() { print(\"Hello\") }"
-    },
-    {
-        "question": "Swiftの関数の基本構文はどれですか？",
-        "options": [
-            "func name() { code }",
-            "function name() { code }",
-            "def name() { code }",
-            "method name() { code }"
-        ],
-        "correct": 0,
-        "hint": "funcキーワードの後に名前と括弧、波括弧で囲みます。",
-        "explanation": "Swiftの関数は func functionName() { code } の形式で定義します。括弧内はパラメータ、波括弧内は実行するコードです。"
-    },
-    {
-        "question": "Swiftでパラメータを持つ関数の構文はどれですか？",
-        "options": [
-            "func name(param) { code }",
-            "func name(param: Type) { code }",
-            "func name(Type param) { code }",
-            "func name(param Type) { code }"
-        ],
-        "correct": 1,
-        "hint": "パラメータ名と型の間にコロンを入れます。",
-        "explanation": "Swiftでは func name(param: Type) { code } のように、パラメータ名と型の間にコロンを入れてパラメータを指定します。"
-    },
-    {
-        "question": "Swiftで戻り値を持つ関数の構文はどれですか？",
-        "options": [
-            "func name() -> Type { code }",
-            "func name() returns Type { code }",
-            "func name(): Type { code }",
-            "func name() Type { code }"
-        ],
-        "correct": 0,
-        "hint": "アロー演算子を使って戻り値の型を指定します。",
-        "explanation": "Swiftでは func name() -> Type { code } のように、アロー演算子(->)を使って戻り値の型を指定します。"
-    },
-    {
-        "question": "Swiftで関数を呼び出す方法はどれですか？",
-        "options": [
-            "call functionName()",
-            "functionName()",
-            "run functionName()",
-            "execute functionName()"
-        ],
-        "correct": 1,
-        "hint": "関数名に括弧を付けて呼び出します。",
-        "explanation": "Swiftでは functionName() のように関数名に括弧を付けて呼び出します。パラメータがある場合は括弧内に引数を渡します。"
-    },
-    {
-        "question": "Swiftのデフォルトパラメータとは何ですか？",
-        "options": [
-            "パラメータの初期値",
-            "必須パラメータ",
-            "オプショナルパラメータ",
-            "可変長パラメータ"
-        ],
-        "correct": 0,
-        "hint": "関数呼び出し時に省略可能なパラメータです。",
-        "explanation": "デフォルトパラメータは関数定義時にパラメータに初期値を設定することで、関数呼び出し時にそのパラメータを省略可能にします。"
-    },
-    {
-        "question": "Swiftで関数内に関数を定義することはできますか？",
-        "options": [
-            "はい",
-            "いいえ"
-        ],
-        "correct": 0,
-        "hint": "関数内で別の関数を定義できます。",
-        "explanation": "はい、Swiftでは関数内で別の関数を定義できます。これをネスト関数または関数内関数と呼びます。"
-    },
-    {
-        "question": "Swiftのクロージャの特徴として正しいものはどれですか？",
-        "options": [
-            "名前を持たない関数",
-            "コードのブロック",
-            "変数に代入可能",
-            "全て正しい"
-        ],
-        "correct": 3,
-        "hint": "クロージャは無名関数です。",
-        "explanation": "Swiftのクロージャは名前を持たない関数で、コードのブロックであり、変数に代入したりパラメータとして渡したりできます。"
-    }
+	{
+		"question": "Swiftで関数を定義するキーワードはどれですか？",
+		"options": ["def", "func", "function", "method"],
+		"correct": 1,
+		"hint": "関数を定義するキーワードです。",
+		"explanation": "Swiftでは func キーワードを使って関数を定義します。例えば func sayHello() { print(\"Hello\") }"
+	},
+	{
+		"question": "Swiftの関数の基本構文はどれですか？",
+		"options": [
+			"func name() { code }",
+			"function name() { code }",
+			"def name() { code }",
+			"method name() { code }"
+		],
+		"correct": 0,
+		"hint": "funcキーワードの後に名前と括弧、波括弧で囲みます。",
+		"explanation": "Swiftの関数は func functionName() { code } の形式で定義します。括弧内はパラメータ、波括弧内は実行するコードです。"
+	},
+	{
+		"question": "Swiftでパラメータを持つ関数の構文はどれですか？",
+		"options": [
+			"func name(param) { code }",
+			"func name(param: Type) { code }",
+			"func name(Type param) { code }",
+			"func name(param Type) { code }"
+		],
+		"correct": 1,
+		"hint": "パラメータ名と型の間にコロンを入れます。",
+		"explanation": "Swiftでは func name(param: Type) { code } のように、パラメータ名と型の間にコロンを入れてパラメータを指定します。"
+	},
+	{
+		"question": "Swiftで戻り値を持つ関数の構文はどれですか？",
+		"options": [
+			"func name() -> Type { code }",
+			"func name() returns Type { code }",
+			"func name(): Type { code }",
+			"func name() Type { code }"
+		],
+		"correct": 0,
+		"hint": "アロー演算子を使って戻り値の型を指定します。",
+		"explanation": "Swiftでは func name() -> Type { code } のように、アロー演算子(->)を使って戻り値の型を指定します。"
+	},
+	{
+		"question": "Swiftで関数を呼び出す方法はどれですか？",
+		"options": [
+			"call functionName()",
+			"functionName()",
+			"run functionName()",
+			"execute functionName()"
+		],
+		"correct": 1,
+		"hint": "関数名に括弧を付けて呼び出します。",
+		"explanation": "Swiftでは functionName() のように関数名に括弧を付けて呼び出します。パラメータがある場合は括弧内に引数を渡します。"
+	},
+	{
+		"question": "Swiftのデフォルトパラメータとは何ですか？",
+		"options": [
+			"パラメータの初期値",
+			"必須パラメータ",
+			"オプショナルパラメータ",
+			"可変長パラメータ"
+		],
+		"correct": 0,
+		"hint": "関数呼び出し時に省略可能なパラメータです。",
+		"explanation": "デフォルトパラメータは関数定義時にパラメータに初期値を設定することで、関数呼び出し時にそのパラメータを省略可能にします。"
+	},
+	{
+		"question": "Swiftで関数内に関数を定義することはできますか？",
+		"options": ["はい", "いいえ"],
+		"correct": 0,
+		"hint": "関数内で別の関数を定義できます。",
+		"explanation": "はい、Swiftでは関数内で別の関数を定義できます。これをネスト関数または関数内関数と呼びます。"
+	},
+	{
+		"question": "Swiftのクロージャの特徴として正しいものはどれですか？",
+		"options": ["名前を持たない関数", "コードのブロック", "変数に代入可能", "全て正しい"],
+		"correct": 3,
+		"hint": "クロージャは無名関数です。",
+		"explanation": "Swiftのクロージャは名前を持たない関数で、コードのブロックであり、変数に代入したりパラメータとして渡したりできます。"
+	}
 ]
