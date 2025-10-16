@@ -26,7 +26,7 @@
 				<li>MVVMアーキテクチャ</li>
 			</ul>
 			<div class="card-actions justify-end">
-				<a href="{base}/docs/Timer/Timer.zip" download class="btn btn-primary"
+				<a href="{base}/source/Timer.zip" download class="btn btn-primary"
 					>プロジェクトをダウンロード</a
 				>
 			</div>

@@ -61,122 +61,190 @@
 		{
 			id: 5,
 			title: '第5回授業',
-			description: '制作中',
-			checked: false
+			description: 'ToDoリストアプリの作成を学びます。',
+			checked: false,
+			projectName: 'ToDoリストアプリ',
+			projectSteps: [
+				'/project/todolist/step1',
+				'/project/todolist/step2',
+				'/project/todolist/step3'
+			]
 		},
 		{
 			id: 6,
 			title: '第6回授業',
-			description: '制作中',
-			checked: false
+			description: 'ToDoリストアプリの作成を学びます。',
+			checked: false,
+			projectName: 'ToDoリストアプリ',
+			projectSteps: [
+				'/project/todolist/step4',
+				'/project/todolist/step5',
+				'/project/todolist/step6'
+			]
 		},
 		{
 			id: 7,
 			title: '第7回授業',
-			description: '制作中',
-			checked: false
+			description: 'ToDoリストアプリの作成を学びます。',
+			checked: false,
+			projectName: 'ToDoリストアプリ',
+			projectSteps: [
+				'/project/todolist/step7',
+				'/project/todolist/step8',
+				'/project/todolist/step9'
+			]
 		},
 		{
 			id: 8,
 			title: '第8回授業',
-			description: '制作中',
-			checked: false
+			description: 'ToDoリストアプリの作成を学びます。',
+			checked: false,
+			projectName: 'ToDoリストアプリ',
+			projectSteps: [
+				'/project/todolist/step10',
+				'/project/todolist/step11',
+				'/project/todolist/step12'
+			]
 		},
 		{
 			id: 9,
 			title: '第9回授業',
-			description: '制作中',
-			checked: false
+			description: 'ToDoリストアプリの作成を学びます。',
+			checked: false,
+			projectName: 'ToDoリストアプリ',
+			projectSteps: [
+				'/project/todolist/step13',
+				'/project/todolist/step14',
+				'/project/todolist/step15'
+			]
 		},
 		{
 			id: 10,
 			title: '第10回授業',
-			description: '制作中',
-			checked: false
+			description: 'ToDoリストアプリの作成を学びます。',
+			checked: false,
+			projectName: 'ToDoリストアプリ',
+			projectSteps: [
+				'/project/todolist/step16',
+				'/project/todolist/step17',
+				'/project/todolist/step18'
+			]
 		},
 		{
 			id: 11,
 			title: '第11回授業',
-			description: '制作中',
-			checked: false
+			description: 'ToDoリストアプリの作成を学びます。',
+			checked: false,
+			projectName: 'ToDoリストアプリ',
+			projectSteps: [
+				'/project/todolist/step19',
+				'/project/todolist/step20',
+				'/project/todolist/step21'
+			]
 		},
 		{
 			id: 12,
 			title: '第12回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step1']
 		},
 		{
 			id: 13,
 			title: '第13回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step2']
 		},
 		{
 			id: 14,
 			title: '第14回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step3']
 		},
 		{
 			id: 15,
 			title: '第15回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step4']
 		},
 		{
 			id: 16,
 			title: '第16回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step5']
 		},
 		{
 			id: 17,
 			title: '第17回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step1']
 		},
 		{
 			id: 18,
 			title: '第18回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step2']
 		},
 		{
 			id: 19,
 			title: '第19回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step3']
 		},
 		{
 			id: 20,
 			title: '第20回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step4']
 		},
 		{
 			id: 21,
 			title: '第21回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step5']
 		},
 		{
 			id: 22,
 			title: '第22回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step1']
 		},
 		{
 			id: 23,
 			title: '第23回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step2']
 		},
 		{
 			id: 24,
 			title: '第24回授業',
-			description: '制作中',
-			checked: false
+			description: 'オリジナルアプリの作成を学びます。',
+			checked: false,
+			projectName: 'オリジナルアプリ',
+			projectSteps: ['/project/original-app/step3']
 		}
 	]);
 
@@ -227,7 +295,7 @@
 		<ul class="steps steps-vertical lg:steps-horizontal">
 			<li class="step">環境構築</li>
 			<li class="step">チュートリアル & クイズ</li>
-			<li class="step">プロジェクト</li>
+			<li class="step">アプリ制作</li>
 		</ul>
 	</div>
 

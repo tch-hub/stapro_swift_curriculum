@@ -18,7 +18,7 @@
 				</p>
 				<div class="card-actions justify-between">
 					<a href="{base}/project/timer" class="btn btn-primary">詳細を見る</a>
-					<a href="{base}/docs/Timer/Timer.zip" download class="btn btn-outline">ダウンロード</a>
+					<a href="{base}/source/Timer.zip" download class="btn btn-outline">ダウンロード</a>
 				</div>
 			</div>
 		</div>
