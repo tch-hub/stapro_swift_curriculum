@@ -107,7 +107,7 @@
 - スタートボタン
 - 設定ボタン"
 							bind:value={screens[0].elements}
-							on:input={() => handleInputChange(0, screens[0].elements)}
+							oninput={() => handleInputChange(0, screens[0].elements)}
 						></textarea>
 					</div>
 					<div>
@@ -119,7 +119,7 @@
 - 音量調整スライダー
 - 戻るボタン"
 							bind:value={screens[1].elements}
-							on:input={() => handleInputChange(1, screens[1].elements)}
+							oninput={() => handleInputChange(1, screens[1].elements)}
 						></textarea>
 					</div>
 					<div>
@@ -128,7 +128,7 @@
 							id="screen3"
 							class="textarea-bordered textarea mt-1 w-full"
 							bind:value={screens[2].elements}
-							on:input={() => handleInputChange(2, screens[2].elements)}
+							oninput={() => handleInputChange(2, screens[2].elements)}
 						></textarea>
 					</div>
 				</div>
