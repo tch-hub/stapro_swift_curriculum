@@ -10,6 +10,7 @@
 	let currentSubject = $state(null);
 	let timerInterval = null;
 	let newSubjectName = $state('');
+	let toastMessage = $state('');
 
 	// タイマーを開始する関数
 	function startTimer(subject) {
@@ -69,7 +70,12 @@
 	function addSubject() {
 		if (newSubjectName.trim() && !subjects.some((s) => s.name === newSubjectName.trim())) {
 			subjects = [...subjects, { name: newSubjectName.trim(), time: 0, isRunning: false }];
+			toastMessage = `"${newSubjectName.trim()}" を追加しました！`;
 			newSubjectName = '';
+			// 3秒後にトーストを消す
+			setTimeout(() => {
+				toastMessage = '';
+			}, 3000);
 		}
 	}
 
@@ -132,7 +138,10 @@
 												</div>
 												<div class="flex space-x-2">
 													{#if subject.isRunning}
-														<button class="ios-btn ios-btn-stop" onclick={() => stopTimer(subject)}>
+														<button
+															class="ios-btn ios-btn-stop animate-pulse"
+															onclick={() => stopTimer(subject)}
+														>
 															<span class="text-xs">停止</span>
 														</button>
 													{:else}
@@ -188,10 +197,10 @@
 
 								<!-- 合計時間表示 -->
 								<div
-									class="rounded-2xl border border-gray-200 bg-white p-6 text-center text-black shadow-md"
+									class="rounded-2xl border border-gray-200 bg-white p-6 text-center text-black shadow-md transition-all duration-300 hover:shadow-lg"
 								>
 									<div class="mb-2 text-sm font-medium text-gray-600">今日の合計勉強時間</div>
-									<div class="mb-4 text-3xl font-bold text-black">
+									<div class="mb-4 text-3xl font-bold text-black transition-all duration-500">
 										{formatTime(subjects.reduce((total, subject) => total + subject.time, 0))}
 									</div>
 									<button class="ios-btn ios-btn-destructive w-full" onclick={resetAllTimers}>
@@ -211,6 +220,15 @@
 		</div>
 	</div>
 </div>
+
+<!-- トースト通知 -->
+{#if toastMessage}
+	<div class="toast-top toast-end toast">
+		<div class="alert alert-success">
+			<span>{toastMessage}</span>
+		</div>
+	</div>
+{/if}
 
 <style lang="postcss">
 	@reference "tailwindcss";

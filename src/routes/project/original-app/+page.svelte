@@ -33,9 +33,9 @@
 		</p>
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 			<!-- 勉強時間トラッカー -->
-			<div class="card bg-base-100 shadow-lg">
+			<div class="card bg-primary text-primary-content shadow-lg">
 				<div class="card-body">
-					<h3 class="card-title">勉強時間トラッカー</h3>
+					<h3 class="card-title">⏱️ 勉強時間トラッカー</h3>
 					<p>教科ごとに勉強した時間を記録するアプリです。</p>
 					<p class="mt-2 font-bold">応用できる知識：</p>
 					<ul class="list-inside list-disc">
@@ -46,15 +46,45 @@
 				</div>
 			</div>
 			<!-- 習慣化アプリ -->
-			<div class="card bg-base-100 shadow-lg">
+			<div class="card bg-secondary text-secondary-content shadow-lg">
 				<div class="card-body">
-					<h3 class="card-title">習慣化アプリ</h3>
+					<h3 class="card-title">🎯 習慣化アプリ</h3>
 					<p>毎日続けたいこと（例：読書、運動）を記録し、達成度を可視化するアプリです。</p>
 					<p class="mt-2 font-bold">応用できる知識：</p>
 					<ul class="list-inside list-disc">
 						<li>タスク管理 (TodoListプロジェクト)</li>
 						<li>達成度の可視化（プログレスバーなど）</li>
 						<li>通知機能</li>
+					</ul>
+				</div>
+			</div>
+			<!-- シンプルな計算機 -->
+			<div class="card bg-accent text-accent-content shadow-lg">
+				<div class="card-body">
+					<h3 class="card-title">🧮 シンプルな計算機</h3>
+					<p>
+						基本的な四則演算ができる計算機アプリです。デザインを工夫してオリジナルに仕上げましょう。
+					</p>
+					<p class="mt-2 font-bold">応用できる知識：</p>
+					<ul class="list-inside list-disc">
+						<li>ボタンのレイアウト配置</li>
+						<li>状態管理（計算結果の保持）</li>
+						<li>UIデザインのセンス</li>
+					</ul>
+				</div>
+			</div>
+			<!-- メモ帳アプリ -->
+			<div class="card bg-info text-info-content shadow-lg">
+				<div class="card-body">
+					<h3 class="card-title">📝 メモ帳アプリ</h3>
+					<p>
+						思いついたことをすぐにメモできるアプリ。カテゴリ分けや検索機能を追加すると便利です。
+					</p>
+					<p class="mt-2 font-bold">応用できる知識：</p>
+					<ul class="list-inside list-disc">
+						<li>テキスト入力と保存</li>
+						<li>リスト表示と編集</li>
+						<li>データの永続化</li>
 					</ul>
 				</div>
 			</div>
@@ -76,9 +106,12 @@
 			<div class="card bg-base-100 shadow-lg">
 				<div class="card-body">
 					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ1: アプリのアイデアを考えよう</h3>
-							<p class="text-sm opacity-70">自分が作りたいアプリのアイデアを出す</p>
+						<div class="flex items-center gap-4">
+							<div class="badge badge-lg badge-primary">1</div>
+							<div>
+								<h3 class="card-title text-xl">ステップ1: アプリのアイデアを考えよう</h3>
+								<p class="text-sm opacity-70">自分が作りたいアプリのアイデアを出す</p>
+							</div>
 						</div>
 						<a href="{base}/project/original-app/step1" class="btn btn-primary">開始</a>
 					</div>
@@ -89,9 +122,12 @@
 			<div class="card bg-base-100 shadow-lg">
 				<div class="card-body">
 					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ2: アプリの設計図を描いてみよう</h3>
-							<p class="text-sm opacity-70">画面のデザインやレイアウトを決める</p>
+						<div class="flex items-center gap-4">
+							<div class="badge badge-lg badge-primary">2</div>
+							<div>
+								<h3 class="card-title text-xl">ステップ2: アプリの設計図を描いてみよう</h3>
+								<p class="text-sm opacity-70">画面のデザインやレイアウトを決める</p>
+							</div>
 						</div>
 						<a href="{base}/project/original-app/step2" class="btn btn-primary">開始</a>
 					</div>
@@ -102,9 +138,12 @@
 			<div class="card bg-base-100 shadow-lg">
 				<div class="card-body">
 					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ3: 必要な機能を洗い出そう</h3>
-							<p class="text-sm opacity-70">アプリに必要な機能をリストアップする</p>
+						<div class="flex items-center gap-4">
+							<div class="badge badge-lg badge-primary">3</div>
+							<div>
+								<h3 class="card-title text-xl">ステップ3: 必要な機能を洗い出そう</h3>
+								<p class="text-sm opacity-70">アプリに必要な機能をリストアップする</p>
+							</div>
 						</div>
 						<a href="{base}/project/original-app/step3" class="btn btn-primary">開始</a>
 					</div>
@@ -115,9 +154,12 @@
 			<div class="card bg-base-100 shadow-lg">
 				<div class="card-body">
 					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ4: プロジェクトをセットアップしよう</h3>
-							<p class="text-sm opacity-70">Xcodeで新規プロジェクトを作成する</p>
+						<div class="flex items-center gap-4">
+							<div class="badge badge-lg badge-primary">4</div>
+							<div>
+								<h3 class="card-title text-xl">ステップ4: プロジェクトをセットアップしよう</h3>
+								<p class="text-sm opacity-70">Xcodeで新規プロジェクトを作成する</p>
+							</div>
 						</div>
 						<a href="{base}/project/original-app/step4" class="btn btn-primary">開始</a>
 					</div>
@@ -128,9 +170,12 @@
 			<div class="card bg-base-100 shadow-lg">
 				<div class="card-body">
 					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ5: 機能を実装してみよう</h3>
-							<p class="text-sm opacity-70">設計図と機能リストをもとに開発を進める</p>
+						<div class="flex items-center gap-4">
+							<div class="badge badge-lg badge-primary">5</div>
+							<div>
+								<h3 class="card-title text-xl">ステップ5: 機能を実装してみよう</h3>
+								<p class="text-sm opacity-70">設計図と機能リストをもとに開発を進める</p>
+							</div>
 						</div>
 						<a href="{base}/project/original-app/step5" class="btn btn-primary">開始</a>
 					</div>

@@ -1,14 +1,53 @@
 <script>
 	import { base } from '$app/paths';
+	import { onMount } from 'svelte';
+
+	// 画面要素データを管理するリアクティブな変数
+	let screens = $state([{ elements: '' }, { elements: '' }, { elements: '' }]);
+
+	// ページ読み込み時にlocalStorageからデータを読み込む
+	onMount(() => {
+		const saved = localStorage.getItem('original-app-step2-screens');
+		if (saved) {
+			try {
+				screens = JSON.parse(saved);
+			} catch (e) {
+				console.error('保存データの読み込みに失敗しました:', e);
+			}
+		}
+	});
+
+	// データをlocalStorageに保存する関数
+	function saveData() {
+		localStorage.setItem('original-app-step2-screens', JSON.stringify(screens));
+	}
+
+	// 入力変更時に自動保存
+	function handleInputChange(index, value) {
+		screens[index].elements = value;
+		saveData();
+	}
 </script>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="mb-8 text-center text-4xl font-bold">ステップ2: アプリの設計図を描いてみよう</h1>
+	<h1 class="mb-8 text-center text-4xl font-bold">
+		<span class="mr-4 badge badge-lg badge-primary">2</span>
+		ステップ2: アプリの設計図を描いてみよう
+	</h1>
 
 	<!-- ナビゲーション -->
 	<div class="mb-8 flex justify-between">
 		<a href="{base}/project/original-app/step1" class="btn btn-outline">← 前のステップ</a>
 		<a href="{base}/project/original-app/step3" class="btn btn-primary">次のステップ →</a>
+	</div>
+
+	<!-- プログレスバー -->
+	<div class="mb-6">
+		<div class="mb-2 flex justify-between text-sm">
+			<span>ステップ2 / 5</span>
+			<span>40%</span>
+		</div>
+		<progress class="progress w-full progress-primary" value="40" max="100"></progress>
 	</div>
 
 	<div class="prose max-w-none">
@@ -48,17 +87,6 @@
 						「このボタンを押したら、どの画面に移動するか？」といった、画面同士のつながりを矢印などでメモしておくと、後の開発が楽になります。
 					</li>
 				</ul>
-
-				<div class="mt-6 text-center">
-					<p class="mb-4">
-						下の画像のような簡単なスケッチで十分です。もし紙が手元になければ、デジタルツール（ペイントソフトやお絵かきアプリなど）を使っても良いでしょう。
-					</p>
-					<img
-						src="https://t3.ftcdn.net/jpg/01/79/76/84/360_F_179768423_3IUEaPa6W2e155oE02unM0Wk3er2gD8v.jpg"
-						alt="ワイヤーフレームのスケッチ例"
-						class="mx-auto max-w-sm rounded-lg shadow-lg"
-					/>
-				</div>
 			</div>
 		</div>
 
@@ -78,6 +106,8 @@
 - タイトルテキスト
 - スタートボタン
 - 設定ボタン"
+							bind:value={screens[0].elements}
+							on:input={() => handleInputChange(0, screens[0].elements)}
 						></textarea>
 					</div>
 					<div>
@@ -88,11 +118,18 @@
 							placeholder="（例）
 - 音量調整スライダー
 - 戻るボタン"
+							bind:value={screens[1].elements}
+							on:input={() => handleInputChange(1, screens[1].elements)}
 						></textarea>
 					</div>
 					<div>
 						<label for="screen3" class="text-lg font-bold">画面3：</label>
-						<textarea id="screen3" class="textarea-bordered textarea mt-1 w-full"></textarea>
+						<textarea
+							id="screen3"
+							class="textarea-bordered textarea mt-1 w-full"
+							bind:value={screens[2].elements}
+							on:input={() => handleInputChange(2, screens[2].elements)}
+						></textarea>
 					</div>
 				</div>
 			</div>

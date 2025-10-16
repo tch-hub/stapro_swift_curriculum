@@ -3,7 +3,10 @@
 </script>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="mb-8 text-center text-4xl font-bold">ステップ5: 機能を実装してみよう</h1>
+	<h1 class="mb-8 text-center text-4xl font-bold">
+		<span class="mr-4 badge badge-lg badge-primary">5</span>
+		ステップ5: 機能を実装してみよう
+	</h1>
 
 	<!-- ナビゲーション -->
 	<div class="mb-8 flex justify-between">
@@ -11,14 +14,18 @@
 		<a href="{base}/project/original-app" class="btn btn-primary">プロジェクト完了！</a>
 	</div>
 
+	<!-- プログレスバー -->
+	<div class="mb-6">
+		<div class="mb-2 flex justify-between text-sm">
+			<span>ステップ5 / 5</span>
+			<span>100%</span>
+		</div>
+		<progress class="progress w-full progress-success" value="100" max="100"></progress>
+	</div>
+
 	<div class="prose max-w-none">
 		<p>
 			いよいよ、これまでの計画を形にする時が来ました。ステップ3で作成した「機能リスト」と、ステップ2で描いた「設計図」を手元に準備して、プログラミングを始めましょう！
-		</p>
-		<p>
-			このステップでは、具体的なコードの書き方は示しません。なぜなら、ここからは<strong
-				>あなた自身がクリエイター</strong
-			>だからです。これまでに学んだ知識を総動員して、試行錯誤しながら自分のアイデアを形にする挑戦を楽しんでください。
 		</p>
 
 		<div class="card my-8 bg-base-100 shadow-xl">

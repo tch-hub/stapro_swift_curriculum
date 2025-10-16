@@ -3,12 +3,24 @@
 </script>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="mb-8 text-center text-4xl font-bold">ステップ4: プロジェクトをセットアップしよう</h1>
+	<h1 class="mb-8 text-center text-4xl font-bold">
+		<span class="mr-4 badge badge-lg badge-primary">4</span>
+		ステップ4: プロジェクトをセットアップしよう
+	</h1>
 
 	<!-- ナビゲーション -->
 	<div class="mb-8 flex justify-between">
 		<a href="{base}/project/original-app/step3" class="btn btn-outline">← 前のステップ</a>
 		<a href="{base}/project/original-app/step5" class="btn btn-primary">次のステップ →</a>
+	</div>
+
+	<!-- プログレスバー -->
+	<div class="mb-6">
+		<div class="mb-2 flex justify-between text-sm">
+			<span>ステップ4 / 5</span>
+			<span>80%</span>
+		</div>
+		<progress class="progress w-full progress-primary" value="80" max="100"></progress>
 	</div>
 
 	<div class="prose max-w-none">
@@ -21,47 +33,7 @@
 
 		<div class="card my-8 bg-base-100 shadow-xl">
 			<div class="card-body">
-				<h2 class="card-title">1. Xcodeを起動する</h2>
-				<p>まずは、Macの中からXcodeを見つけて起動してください。</p>
-				<img
-					src="https://developer.apple.com/assets/images/adc/app-store/xcode-15/xcode-15-icon-256x256.png"
-					alt="Xcodeのアイコン"
-					class="mx-auto h-32 w-32"
-				/>
-			</div>
-		</div>
-
-		<div class="card my-8 bg-base-100 shadow-xl">
-			<div class="card-body">
-				<h2 class="card-title">2. 新しいプロジェクトを作成する</h2>
-				<p>
-					Xcodeを起動すると表示されるウェルカム画面で、「Create a new Xcode project」を選択します。
-				</p>
-				<img
-					src="https://i.ytimg.com/vi/g-z1nOO5en4/maxresdefault.jpg"
-					alt="Xcodeのウェルカム画面"
-					class="mx-auto mt-4 rounded-lg shadow-lg"
-				/>
-			</div>
-		</div>
-
-		<div class="card my-8 bg-base-100 shadow-xl">
-			<div class="card-body">
-				<h2 class="card-title">3. テンプレートを選択する</h2>
-				<p>
-					次に、どのようなアプリを作るかのテンプレートを選択します。「iOS」タブが選ばれていることを確認し、「App」を選択して「Next」をクリックします。
-				</p>
-				<img
-					src="https://tech-unlimited.com/wp-content/uploads/2021/08/swiftui_project-2.jpg"
-					alt="テンプレート選択画面"
-					class="mx-auto mt-4 rounded-lg shadow-lg"
-				/>
-			</div>
-		</div>
-
-		<div class="card my-8 bg-base-100 shadow-xl">
-			<div class="card-body">
-				<h2 class="card-title">4. プロジェクトの情報を入力する</h2>
+				<h2 class="card-title">1. プロジェクトの情報を入力する</h2>
 				<p>
 					最後に、プロジェクトの詳細情報を入力します。下の画像を参考に、自分のアプリに合わせて情報を入力してください。
 				</p>
@@ -89,11 +61,6 @@
 					</li>
 				</ul>
 				<p>入力が終わったら、「Next」をクリックし、プロジェクトを保存する場所を選べば完了です！</p>
-				<img
-					src="https://blog.personal-factory.com/wp-content/uploads/2022/10/スクリーンショット-2022-10-25-15.53.05.png"
-					alt="プロジェクト情報入力画面"
-					class="mx-auto mt-4 rounded-lg shadow-lg"
-				/>
 			</div>
 		</div>
 
