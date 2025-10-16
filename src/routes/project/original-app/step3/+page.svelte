@@ -106,7 +106,7 @@
 										class="input-bordered input w-full"
 										placeholder="（例）タイマーの時間を設定する機能"
 										bind:value={features[0].name}
-										on:input={() => handleInputChange(0, 'name', features[0].name)}
+										oninput={() => handleInputChange(0, 'name', features[0].name)}
 									/>
 								</td>
 								<td>
@@ -115,14 +115,14 @@
 										class="input-bordered input w-full"
 										placeholder="（例）Pickerを使って時・分・秒を選ぶ"
 										bind:value={features[0].description}
-										on:input={() => handleInputChange(0, 'description', features[0].description)}
+										oninput={() => handleInputChange(0, 'description', features[0].description)}
 									/>
 								</td>
 								<td>
 									<select
 										class="select-bordered select w-full max-w-xs"
 										bind:value={features[0].priority}
-										on:change={() => handleInputChange(0, 'priority', features[0].priority)}
+										onchange={() => handleInputChange(0, 'priority', features[0].priority)}
 									>
 										<option>絶対必要</option>
 										<option>あったら嬉しい</option>
@@ -136,7 +136,7 @@
 										class="input-bordered input w-full"
 										placeholder="（例）タスクを追加する機能"
 										bind:value={features[1].name}
-										on:input={() => handleInputChange(1, 'name', features[1].name)}
+										oninput={() => handleInputChange(1, 'name', features[1].name)}
 									/>
 								</td>
 								<td>
@@ -145,14 +145,14 @@
 										class="input-bordered input w-full"
 										placeholder="（例）テキスト入力フィールドと追加ボタンを配置"
 										bind:value={features[1].description}
-										on:input={() => handleInputChange(1, 'description', features[1].description)}
+										oninput={() => handleInputChange(1, 'description', features[1].description)}
 									/>
 								</td>
 								<td>
 									<select
 										class="select-bordered select w-full max-w-xs"
 										bind:value={features[1].priority}
-										on:change={() => handleInputChange(1, 'priority', features[1].priority)}
+										onchange={() => handleInputChange(1, 'priority', features[1].priority)}
 									>
 										<option>絶対必要</option>
 										<option>あったら嬉しい</option>
@@ -165,7 +165,7 @@
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[2].name}
-										on:input={() => handleInputChange(2, 'name', features[2].name)}
+										oninput={() => handleInputChange(2, 'name', features[2].name)}
 									/></td
 								>
 								<td
@@ -173,14 +173,14 @@
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[2].description}
-										on:input={() => handleInputChange(2, 'description', features[2].description)}
+										oninput={() => handleInputChange(2, 'description', features[2].description)}
 									/></td
 								>
 								<td>
 									<select
 										class="select-bordered select w-full max-w-xs"
 										bind:value={features[2].priority}
-										on:change={() => handleInputChange(2, 'priority', features[2].priority)}
+										onchange={() => handleInputChange(2, 'priority', features[2].priority)}
 									>
 										<option>絶対必要</option>
 										<option>あったら嬉しい</option>
@@ -193,7 +193,7 @@
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[3].name}
-										on:input={() => handleInputChange(3, 'name', features[3].name)}
+										oninput={() => handleInputChange(3, 'name', features[3].name)}
 									/></td
 								>
 								<td
@@ -201,14 +201,14 @@
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[3].description}
-										on:input={() => handleInputChange(3, 'description', features[3].description)}
+										oninput={() => handleInputChange(3, 'description', features[3].description)}
 									/></td
 								>
 								<td>
 									<select
 										class="select-bordered select w-full max-w-xs"
 										bind:value={features[3].priority}
-										on:change={() => handleInputChange(3, 'priority', features[3].priority)}
+										onchange={() => handleInputChange(3, 'priority', features[3].priority)}
 									>
 										<option>絶対必要</option>
 										<option>あったら嬉しい</option>
@@ -221,7 +221,7 @@
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[4].name}
-										on:input={() => handleInputChange(4, 'name', features[4].name)}
+										oninput={() => handleInputChange(4, 'name', features[4].name)}
 									/></td
 								>
 								<td
@@ -229,14 +229,14 @@
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[4].description}
-										on:input={() => handleInputChange(4, 'description', features[4].description)}
+										oninput={() => handleInputChange(4, 'description', features[4].description)}
 									/></td
 								>
 								<td>
 									<select
 										class="select-bordered select w-full max-w-xs"
 										bind:value={features[4].priority}
-										on:change={() => handleInputChange(4, 'priority', features[4].priority)}
+										onchange={() => handleInputChange(4, 'priority', features[4].priority)}
 									>
 										<option>絶対必要</option>
 										<option>あったら嬉しい</option>
