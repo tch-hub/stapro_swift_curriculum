@@ -163,8 +163,8 @@ struct ContentView: View {  // アプリのメイン画面を定義する構造�
 						</div>
 						<div class="flex flex-1 items-center justify-center">
 							<div class="relative">
-								<img src="/images/iphone-mock.png" alt="iPhone mockup" class="w-full max-w-xs" />
-								<div
+								<img src="images\timer\timer.png" alt="iPhone mockup" class="w-full max-w-xs" />
+								<!-- <div
 									class="absolute top-[12%] left-[8%] flex h-[76%] w-[84%] items-center justify-center rounded-[2rem] bg-base-100"
 								>
 									<div class="p-4 text-center">
@@ -174,7 +174,7 @@ struct ContentView: View {  // アプリのメイン画面を定義する構造�
 											<div class="text-sm opacity-70">ステップ3で時間設定ビューが追加されます</div>
 										</div>
 									</div>
-								</div>
+								</div> -->
 							</div>
 						</div>
 					</div>
