@@ -205,6 +205,7 @@ struct TimerApp: App {
 //
 
 import SwiftUI
+import AVFAudio
 
 enum TimerState {
     case idle
@@ -227,7 +228,7 @@ struct ContentView: View {
             }
             
             HStack(spacing: 130) {
-                ColorButton(text: "キャンセル", color: .white, action: viewModel.stopTimer)
+                ColorButton(text: "キャンセル", color: .black, action: viewModel.stopTimer)
                     .opacity(viewModel.timerState == .idle ? 0.3 : 1)
                     .disabled(viewModel.timerState == .idle)
                 
@@ -270,6 +271,7 @@ struct ContentView: View {
 //
 
 import SwiftUI
+import Combine
 import AVFoundation
 
 class TimerViewModel: ObservableObject {
@@ -447,7 +449,7 @@ struct TimePicker: View {
     
     var body: some View {
         Picker(selection: $selection, label: Text(title)) {
-            ForEach(range, id: \.self) { value in
+            ForEach(Array(range), id: \.self) { value in
                 Text("\\(value) \\(title)").tag(value)
             }
         }

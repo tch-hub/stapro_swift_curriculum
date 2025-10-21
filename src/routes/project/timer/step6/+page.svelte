@@ -33,6 +33,7 @@
 			<CodeBlock
 				title="TimerViewModel.swift (countDownメソッド追加)"
 				code={`import SwiftUI
+import Combine
 
 class TimerViewModel: ObservableObject {
     @Published var remainingTime = 0
@@ -44,7 +45,7 @@ class TimerViewModel: ObservableObject {
         remainingTime = hours * 3600 + minutes * 60 + seconds
         totalTime = remainingTime
         timerState = .running
-        countDown()
+        countDown() // コメントを消して、countDown()を呼び出す
     }
     
     func stopTimer() {
@@ -59,7 +60,7 @@ class TimerViewModel: ObservableObject {
     
     func restartTimer() {
         timerState = .running
-        countDown()
+        countDown() // コメントを消して、countDown()を呼び出す
     }
     
     // 新しく追加: カウントダウン処理

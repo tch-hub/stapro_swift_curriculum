@@ -34,6 +34,7 @@
 			<CodeBlock
 				title="TimerViewModel.swift"
 				code={`import SwiftUI
+import Combine
 
 class TimerViewModel: ObservableObject {
     // 公開プロパティ（ビューに変更を通知）

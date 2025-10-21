@@ -48,10 +48,10 @@
 		'': 'ホーム',
 		setup: '環境構築',
 		tutorial: 'チュートリアル',
-		quiz: 'クイズ',
+		quiz: '練習問題',
 		project: 'プロジェクト',
 		timer: 'タイマーアプリ',
-		cheatsheet: 'チートシート',
+		cheatsheet: 'swift基本構文',
 		editor: 'JSONエディタ'
 	};
 
@@ -109,7 +109,7 @@
 				<li><a href="{base}/">ホーム</a></li>
 				<li><a href="{base}/setup">環境構築</a></li>
 				<li><a href="{base}/tutorial">チュートリアル</a></li>
-				<li><a href="{base}/cheatsheet">チートシート</a></li>
+				<li><a href="{base}/cheatsheet">swift基本構文</a></li>
 				<li><a href="{base}/quiz">練習</a></li>
 				<li><a href="{base}/project">プロジェクト</a></li>
 				{#if dev}
@@ -135,7 +135,7 @@
 		<ul class="menu menu-horizontal hidden px-1 lg:flex">
 			<li><a href="{base}/setup">環境構築</a></li>
 			<li><a href="{base}/tutorial">チュートリアル</a></li>
-			<li><a href="{base}/cheatsheet">チートシート</a></li>
+			<li><a href="{base}/cheatsheet">swift基本構文</a></li>
 			<li><a href="{base}/quiz">練習</a></li>
 			<li><a href="{base}/project">プロジェクト</a></li>
 			{#if dev}

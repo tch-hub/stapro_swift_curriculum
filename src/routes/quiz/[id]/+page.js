@@ -9,7 +9,7 @@ export async function load({ params }) {
 		// 動的にJSONファイルをインポート
 		quizData = await import(`$lib/data/quiz/quiz${id}.json`);
 	} catch {
-		throw error(404, 'クイズが見つかりません');
+		throw error(404, '練習問題が見つかりません');
 	}
 
 	return {

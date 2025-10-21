@@ -36,8 +36,10 @@
 					以下の設定を入力：
 					<ul class="mt-2 ml-8 list-inside list-disc">
 						<li>Product Name: Timer</li>
+						<li>Organization Identifier: com</li>
 						<li>Interface: SwiftUI</li>
 						<li>Language: Swift</li>
+						<li>「Use Core Data」と「Include Tests」はNone</li>
 					</ul>
 				</li>
 				<li>保存場所を選択してプロジェクトを作成</li>
@@ -51,11 +53,9 @@
 				<pre><code
 						>Timer/
 ├── TimerApp.swift          # アプリのメインエントリーポイント
-├── ContentView.swift        # メインのビュー
-├── Assets.xcassets/         # 画像や色などのアセット
-│   └── Contents.json
-├── Preview Content/         # プレビュー用
-└── Timer.xcodeproj          # プロジェクトファイル</code
+├── ContentView.swift       # メインのビュー
+├── Assets.xcassets         # 画像や色などのアセット
+</code
 					></pre>
 			</div>
 		</div>

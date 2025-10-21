@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AVFAudio
 
 enum TimerState {
     case idle
@@ -28,7 +29,7 @@ struct ContentView: View {
             }
             
             HStack(spacing: 130) {
-                ColorButton(text: "キャンセル", color: .white, action: viewModel.stopTimer)
+                ColorButton(text: "キャンセル", color: .black, action: viewModel.stopTimer)
                     .opacity(viewModel.timerState == .idle ? 0.3 : 1)
                     .disabled(viewModel.timerState == .idle)
                 

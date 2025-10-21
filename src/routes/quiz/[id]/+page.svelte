@@ -5,7 +5,7 @@
 	/** @type {import('./$types').PageData} */
 	export let data;
 
-	// クイズIDとチートシートセクションの対応関係
+	// 練習問題IDとswift基本構文セクションの対応関係
 	const quizToCheatsheetMap = {
 		'1': 'basic-syntax',
 		'2': 'basic-syntax',
@@ -15,7 +15,7 @@
 		'6': 'basic-syntax'
 	};
 
-	// 現在のチートシートセクションを取得
+	// 現在のswift基本構文セクションを取得
 	$: currentCheatsheetSection = quizToCheatsheetMap[data.sectionId] || 'basic-syntax';
 
 	// 現在の問題インデックス
@@ -63,8 +63,8 @@
 		if (currentQuestionIndex < data.quizData.length - 1) {
 			currentQuestionIndex++;
 		} else {
-			// クイズ終了
-			alert(`クイズ終了！スコア: ${score}/${data.quizData.length}`);
+			// 練習問題終了
+			alert(`練習問題終了！スコア: ${score}/${data.quizData.length}`);
 			// リセット
 			currentQuestionIndex = 0;
 			score = 0;
@@ -118,10 +118,10 @@
 						class="btn btn-outline btn-info"
 						target="_blank"
 					>
-						チートシートで確認
+						swift基本構文で確認
 					</a>
 					<button class="btn btn-primary" onclick={nextQuestion}>
-						{currentQuestionIndex < data.quizData.length - 1 ? '次の問題' : 'クイズをリセット'}
+						{currentQuestionIndex < data.quizData.length - 1 ? '次の問題' : '練習問題をリセット'}
 					</button>
 				</div>
 			{/if}

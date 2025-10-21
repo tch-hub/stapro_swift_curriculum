@@ -112,7 +112,7 @@
 							type="text"
 							id="idea2"
 							class="input-bordered input mt-1 w-full"
-							placeholder="（例）友達と対戦できる簡単なクイズゲーム"
+							placeholder="（例）友達と対戦できる簡単な練習問題ゲーム"
 							bind:value={ideas[1].idea}
 							oninput={() => handleInputChange(1, 'idea', ideas[1].idea)}
 						/>

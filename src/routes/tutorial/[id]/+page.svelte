@@ -116,7 +116,7 @@
 
 		<!-- ナビゲーション -->
 		<div class="fixed right-0 bottom-0 left-0 z-10 flex justify-between bg-base-100 p-4 shadow-lg">
-			{#if parseInt(id) > 1}
+			{#if parseInt(id) > 0}
 				<button onclick={prevPage} class="btn btn-primary">前の項目</button>
 			{:else}
 				<div></div>

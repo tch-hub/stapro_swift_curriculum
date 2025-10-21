@@ -2,7 +2,7 @@
 	import { base } from '$app/paths';
 	import quizData from '$lib/data/quiz.json';
 
-	// クイズIDとチートシートセクションの対応関係
+	// 練習問題IDとswift基本構文セクションの対応関係
 	const quizToCheatsheetMap = {
 		'1': 'basic-syntax',
 		'2': 'basic-syntax',

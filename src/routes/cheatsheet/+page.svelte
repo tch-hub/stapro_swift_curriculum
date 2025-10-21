@@ -137,7 +137,7 @@
 			<!-- ローディングアニメーション -->
 			<div class="flex min-h-[50vh] flex-col items-center justify-center space-y-4">
 				<div class="loading loading-lg loading-spinner text-primary"></div>
-				<p class="text-lg text-base-content/70">チートシートを読み込み中...</p>
+				<p class="text-lg text-base-content/70">swift基本構文を読み込み中...</p>
 				<div class="flex space-x-1">
 					<div class="h-2 w-2 animate-bounce rounded-full bg-primary"></div>
 					<div

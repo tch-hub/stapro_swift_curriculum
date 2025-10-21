@@ -33,6 +33,7 @@
 			<CodeBlock
 				title="TimerViewModel.swift (AVFoundationインポート)"
 				code={`import SwiftUI
+import Combine
 import AVFoundation  // 音声再生のために追加
 
 class TimerViewModel: ObservableObject {
@@ -117,11 +118,13 @@ do {
 						<div class="flex-1">
 							<CodeBlock
 								title="ContentView.swift (Alert追加)"
-								code={`struct ContentView: View {
-    @StateObject var viewModel = TimerViewModel()
-    @State var hours = 0
-    @State var minutes = 0
-    @State var seconds = 0
+								code={`import AVFAudio
+								
+struct ContentView: View {
+@StateObject var viewModel = TimerViewModel()
+@State var hours = 0
+@State var minutes = 0
+@State var seconds = 0
     
     var body: some View {
         VStack {

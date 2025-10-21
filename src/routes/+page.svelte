@@ -9,7 +9,7 @@
 			id: 0,
 			title: '第0回授業: 環境構築',
 			description:
-				'Swift開発環境の構築方法を学びます。Xcodeのインストールと基本設定を行います。時間がかかるので事前にダウンロードしておきましょう。ダウンロードできていなかった場合はクイズに挑戦してください。',
+				'Swift開発環境の構築方法を学びます。Xcodeのインストールと基本設定を行います。時間がかかるので事前にダウンロードしておきましょう。ダウンロードできていなかった場合は練習問題に挑戦してください。',
 			checked: false,
 			tutorialUrl: '/setup',
 			quizUrl: null
@@ -18,7 +18,7 @@
 			id: 1,
 			title: '第1回授業: SwiftUIの基本とSwiftの基礎',
 			description:
-				'SwiftUIの基本的なUI要素（テキスト、ボタン、レイアウト、図形）を学びます。また、クイズで変数と定数、型推論について理解します。',
+				'SwiftUIの基本的なUI要素（テキスト、ボタン、レイアウト、図形）を学びます。また、練習問題で変数と定数、型推論について理解します。',
 			checked: false,
 			tutorialUrl: '/tutorial',
 			quizUrl: '/quiz'
@@ -27,7 +27,7 @@
 			id: 2,
 			title: '第2回授業: SwiftUIの状態管理と制御構文',
 			description:
-				'SwiftUIでの状態管理、入力処理、簡単なアプリの作成を学びます。また、クイズで条件分岐、関数、配列について理解します。',
+				'SwiftUIでの状態管理、入力処理、簡単なアプリの作成を学びます。また、練習問題で条件分岐、関数、配列について理解します。',
 			checked: false,
 			tutorialUrl: '/tutorial',
 			quizUrl: '/quiz'
@@ -290,11 +290,11 @@
 	<div class="mb-8 text-center">
 		<h2 class="mb-4 text-3xl font-bold">学習の流れ</h2>
 		<p class="mb-6 text-lg">
-			以下の順序で学習を進めてください。チュートリアルとクイズは同時並行で進められます。チートシートは補助教材として随時参照できます。
+			以下の順序で学習を進めてください。チュートリアルと練習問題は同時並行で進められます。swift基本構文は補助教材として随時参照できます。
 		</p>
 		<ul class="steps steps-vertical lg:steps-horizontal">
 			<li class="step">環境構築</li>
-			<li class="step">チュートリアル & クイズ</li>
+			<li class="step">チュートリアル & 練習問題</li>
 			<li class="step">アプリ制作</li>
 		</ul>
 	</div>
@@ -325,7 +325,7 @@
 								</a>
 							{/if}
 							{#if lesson.quizUrl}
-								<a href="{base}{lesson.quizUrl}" class="btn btn-secondary">クイズ</a>
+								<a href="{base}{lesson.quizUrl}" class="btn btn-secondary">練習問題</a>
 							{/if}
 							{#if lesson.projectSteps}
 								{#each lesson.projectSteps as step, i}

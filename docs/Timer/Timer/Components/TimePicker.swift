@@ -14,7 +14,7 @@ struct TimePicker: View {
     
     var body: some View {
         Picker(selection: $selection, label: Text(title)) {
-            ForEach(range, id: \.self) { value in
+            ForEach(Array(range), id: \.self) { value in
                 Text("\(value) \(title)").tag(value)
             }
         }
