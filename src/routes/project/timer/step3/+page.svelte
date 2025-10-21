@@ -60,19 +60,11 @@ struct TimePicker: View {
 						</div>
 						<div class="flex flex-1 items-center justify-center">
 							<div class="relative">
-								<img src="/images/iphone-mock.png" alt="iPhone mockup" class="w-full max-w-xs" />
-								<div
-									class="absolute top-[12%] left-[8%] flex h-[76%] w-[84%] items-center justify-center rounded-[2rem] bg-base-100"
-								>
-									<div class="p-4 text-center">
-										<div class="mb-4 text-lg font-bold">TimePicker</div>
-										<div class="space-y-2">
-											<div class="text-sm opacity-70">ホイール型の選択UI</div>
-											<div class="text-sm opacity-70">0-23時間、0-59分/秒</div>
-											<div class="text-sm opacity-70">スクロールして値を選択</div>
-										</div>
-									</div>
-								</div>
+								<img
+									src="{base}{base}/images/timer/picker.png"
+									alt="iPhone mockup"
+									class="w-full max-w-xs"
+								/>
 							</div>
 						</div>
 					</div>
@@ -111,19 +103,11 @@ struct TimeSelectionView: View {
 						</div>
 						<div class="flex flex-1 items-center justify-center">
 							<div class="relative">
-								<img src="/images/iphone-mock.png" alt="iPhone mockup" class="w-full max-w-xs" />
-								<div
-									class="absolute top-[12%] left-[8%] flex h-[76%] w-[84%] items-center justify-center rounded-[2rem] bg-base-100"
-								>
-									<div class="p-4 text-center">
-										<div class="mb-4 text-lg font-bold">TimeSelectionView</div>
-										<div class="space-y-2">
-											<div class="text-sm opacity-70">3つのPickerを横並び</div>
-											<div class="text-sm opacity-70">時間・分・秒を選択</div>
-											<div class="text-sm opacity-70">HStackレイアウト</div>
-										</div>
-									</div>
-								</div>
+								<img
+									src="{base}/images/timer/t31.png"
+									alt="iPhone mockup"
+									class="w-full max-w-xs"
+								/>
 							</div>
 						</div>
 					</div>

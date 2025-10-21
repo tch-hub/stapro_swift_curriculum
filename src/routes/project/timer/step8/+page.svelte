@@ -62,20 +62,11 @@ struct ColorButton: View {
 						</div>
 						<div class="flex flex-1 items-center justify-center">
 							<div class="relative">
-								<img src="/images/iphone-mock.png" alt="iPhone mockup" class="w-full max-w-xs" />
-								<div
-									class="absolute top-[12%] left-[8%] flex h-[76%] w-[84%] items-center justify-center rounded-[2rem] bg-base-100"
-								>
-									<div class="p-4 text-center">
-										<div class="mb-4 text-lg font-bold">ColorButton</div>
-										<div class="space-y-2">
-											<div class="text-sm opacity-70">円形ボタン</div>
-											<div class="text-sm opacity-70">カスタム色指定</div>
-											<div class="text-sm opacity-70">再利用可能コンポーネント</div>
-											<div class="text-sm opacity-70">アクションクロージャ</div>
-										</div>
-									</div>
-								</div>
+								<img
+									src="{base}/images/timer/button.png"
+									alt="iPhone mockup"
+									class="w-full max-w-xs"
+								/>
 							</div>
 						</div>
 					</div>
