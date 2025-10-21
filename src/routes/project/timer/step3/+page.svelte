@@ -61,7 +61,7 @@ struct TimePicker: View {
 						<div class="flex flex-1 items-center justify-center">
 							<div class="relative">
 								<img
-									src="{base}{base}/images/timer/picker.png"
+									src="{base}/images/timer/picker.png"
 									alt="iPhone mockup"
 									class="w-full max-w-xs"
 								/>
