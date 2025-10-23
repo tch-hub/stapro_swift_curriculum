@@ -21,7 +21,8 @@
 				'Swiftの基本構文を学びます。変数、定数、型推論、条件分岐、関数などについて理解します。',
 			checked: false,
 			tutorialUrl: null,
-			quizUrl: '/quiz'
+			quizUrl: '/quiz',
+			cheatsheetUrl: '/cheatsheet'
 		},
 		{
 			id: 2,
@@ -327,9 +328,12 @@
 							{#if lesson.quizUrl}
 								<a href="{base}{lesson.quizUrl}" class="btn btn-secondary">練習問題</a>
 							{/if}
+							{#if lesson.cheatsheetUrl}
+								<a href="{base}{lesson.cheatsheetUrl}" class="btn btn-primary">Swift基本構文</a>
+							{/if}
 							{#if lesson.projectSteps}
 								{#each lesson.projectSteps as step, i}
-									<a href="{base}{step}" class="btn btn-accent"
+									<a href="{base}{step}" class="btn btn-primary"
 										>{lesson.projectName} ステップ{step.split('/').pop().replace('step', '')}</a
 									>
 								{/each}
