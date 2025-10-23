@@ -18,7 +18,7 @@
 			id: 1,
 			title: '第1回授業: Swiftの基本構文',
 			description:
-				"Swiftの基本構文を学びます。変数、定数、型推論、条件分岐、関数などについて理解します。<br>まずはSwift基本構文を学習し、その後練習問題に取り組んでみましょう。",
+				'Swiftの基本構文を学びます。変数、定数、型推論、条件分岐、関数などについて理解します。<br>まずはSwift基本構文を学習し、その後練習問題に取り組んでみましょう。',
 			checked: false,
 			tutorialUrl: null,
 			quizUrl: '/quiz',
