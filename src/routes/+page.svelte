@@ -16,21 +16,21 @@
 		},
 		{
 			id: 1,
-			title: '第1回授業: SwiftUIの基本とSwiftの基礎',
+			title: '第1回授業: Swiftの基本構文',
 			description:
-				'SwiftUIの基本的なUI要素（テキスト、ボタン、レイアウト、図形）を学びます。また、練習問題で変数と定数、型推論について理解します。',
+				'Swiftの基本構文を学びます。変数、定数、型推論、条件分岐、関数などについて理解します。',
 			checked: false,
-			tutorialUrl: '/tutorial',
+			tutorialUrl: null,
 			quizUrl: '/quiz'
 		},
 		{
 			id: 2,
-			title: '第2回授業: SwiftUIの状態管理と制御構文',
+			title: '第2回授業: SwiftUI学習',
 			description:
-				'SwiftUIでの状態管理、入力処理、簡単なアプリの作成を学びます。また、練習問題で条件分岐、関数、配列について理解します。',
+				'SwiftUIの基本的なUI要素（テキスト、ボタン、レイアウト、図形）と状態管理を学びます。簡単なアプリの作成も行います。',
 			checked: false,
 			tutorialUrl: '/tutorial',
-			quizUrl: '/quiz'
+			quizUrl: null
 		},
 		{
 			id: 3,

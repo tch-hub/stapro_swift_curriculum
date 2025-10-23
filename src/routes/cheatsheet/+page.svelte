@@ -159,20 +159,21 @@
 						<p>変数、定数、データ型の基本です。</p>
 						<CodeBlock
 							title="変数と定数"
-							code={`// 定数の宣言（値を変更できない）
-let schoolName = "中央中学校"
-let pi = 3.14159
+							code={`// Swiftでは、定数（let）と変数（var）を宣言できます
+// 定数の宣言（値を変更できない）
+let schoolName = "中央中学校"  // 学校名を定数として宣言
+let pi = 3.14159  // 円周率も定数
 
 // 変数の宣言（値を変更できる）
-var score = 85
-var isStudying = true
+var score = 85  // スコアを変数として宣言
+var isStudying = true  // 勉強中かどうかを変数で管理
 
-// データ型を明示的に指定
-var height: Double = 165.5
-var weight: Int = 50
+// データ型を明示的に指定することも可能
+var height: Double = 165.5  // 身長をDouble型で宣言
+var weight: Int = 50  // 体重をInt型で宣言
 
-// 値の出力
-print("学校名: \\(schoolName)")
+// print関数を使って値を出力
+print("学校名: \\(schoolName)")  // 文字列補間を使って変数を埋め込み
 print("スコア: \\(score)")
 print("勉強中: \\(isStudying)")
 print("身長: \\(height)cm")
@@ -199,43 +200,44 @@ note: change 'let' to 'var' to make it mutable`}
 						/>
 						<CodeBlock
 							title="列挙型（Enum）"
-							code={`// 列挙型の定義
+							code={`// 列挙型（Enum）は、関連する値をグループ化する型です
+// 基本的な列挙型の定義
 enum Direction {
-    case north
-    case south
-    case east
-    case west
+    case north  // 北
+    case south  // 南
+    case east   // 東
+    case west   // 西
 }
 
-// 短縮形での定義
+// 短縮形での定義（1行で複数のcaseを定義）
 enum Direction {
     case north, south, east, west
 }
 
-// enumの使用
-let currentDirection = Direction.north
+// enumの使用例
+let currentDirection = Direction.north  // 北方向を指定
 
-// switch文での使用
+// switch文を使ってenumの値を処理
 switch currentDirection {
 case .north:
-    print("北へ進む")
+    print("北へ進む")  // northの場合の処理
 case .south:
-    print("南へ進む")
+    print("南へ進む")  // southの場合の処理
 case .east:
-    print("東へ進む")
+    print("東へ進む")  // eastの場合の処理
 case .west:
-    print("西へ進む")
+    print("西へ進む")  // westの場合の処理
 }
 
-// 生の値を持つenum
-enum Planet: Int {
-    case mercury = 1
-    case venus = 2
-    case earth = 3
-    case mars = 4
+// 生の値（raw value）を持つenumの例
+enum Planet: Int {  // Int型のraw valueを持つ
+    case mercury = 1  // 水星
+    case venus = 2    // 金星
+    case earth = 3    // 地球
+    case mars = 4     // 火星
 }
 
-let earthNumber = Planet.earth.rawValue
+let earthNumber = Planet.earth.rawValue  // rawValueで数値を取得
 print("地球の番号: \\(earthNumber)")`}
 							output={`北へ進む
 地球の番号: 3`}
@@ -251,16 +253,17 @@ print("地球の番号: \\(earthNumber)")`}
 						<p>計算や比較に使う記号です。</p>
 						<CodeBlock
 							title="算術演算子"
-							code={`// 基本的な計算
-let a = 10
-let b = 3
+							code={`// 算術演算子を使って数値の計算を行う
+let a = 10  // 変数aに10を代入
+let b = 3   // 変数bに3を代入
 
-let sum = a + b        // 13
-let difference = a - b // 7
-let product = a * b    // 30
-let quotient = a / b   // 3（整数除算）
-let remainder = a % b  // 1
+let sum = a + b        // 加算（和）: 10 + 3 = 13
+let difference = a - b // 減算（差）: 10 - 3 = 7
+let product = a * b    // 乗算（積）: 10 * 3 = 30
+let quotient = a / b   // 除算（商）: 10 / 3 = 3（整数除算なので小数点以下切り捨て）
+let remainder = a % b  // 剰余（余り）: 10 % 3 = 1
 
+// 計算結果を出力
 print("和: \\(sum)")
 print("差: \\(difference)")
 print("積: \\(product)")
@@ -275,16 +278,16 @@ print("余り: \\(remainder)")`}
 						/>
 						<CodeBlock
 							title="比較演算子"
-							code={`// 値の比較
-let x = 5
-let y = 10
+							code={`// 比較演算子を使って値の大小や等しさを比較する
+let x = 5   // 変数xに5を代入
+let y = 10  // 変数yに10を代入
 
-print("x == y: \\(x == y)")  // false（等しい）
-print("x != y: \\(x != y)")  // true（等しくない）
-print("x < y: \\(x < y)")   // true（より小さい）
-print("x > y: \\(x > y)")   // false（より大きい）
-print("x <= y: \\(x <= y)")  // true（以下）
-print("x >= y: \\(x >= y)")  // false（以上）`}
+print("x == y: \\(x == y)")  // 等しい（xはyと等しいか？）: false
+print("x != y: \\(x != y)")  // 等しくない（xはyと等しくないか？）: true
+print("x < y: \\(x < y)")   // より小さい（xはyより小さいか？）: true
+print("x > y: \\(x > y)")   // より大きい（xはyより大きいか？）: false
+print("x <= y: \\(x <= y)")  // 以下（xはy以下か？）: true
+print("x >= y: \\(x >= y)")  // 以上（xはy以上か？）: false`}
 							output={`x == y: false
 x != y: true
 x < y: true
@@ -293,32 +296,55 @@ x <= y: true
 x >= y: false`}
 							executable={true}
 						/>
+						<CodeBlock
+							title="三項演算子"
+							code={`// 三項演算子は条件式 ? 真の値 : 偽の値 の形式で、条件によって値を選択する
+let score = 85  // テストのスコア
+
+// 条件に基づいて値を選択（60点以上なら合格、そうでなければ不合格）
+let result = score >= 60 ? "合格" : "不合格"
+print("テスト結果: \\(result)")
+
+// 数値の比較（aとbのうち大きい方を選択）
+let a = 10
+let b = 20
+let max = a > b ? a : b  // aがbより大きい場合はa、そうでなければb
+print("大きい方の値: \\(max)")
+
+// 文字列の選択（学生かどうかに応じてメッセージを選択）
+let isStudent = true
+let message = isStudent ? "学生です" : "学生ではありません"
+print(message)`}
+							output={`テスト結果: 合格
+大きい方の値: 20
+学生です`}
+							executable={true}
+						/>
 					</div>
 				</div>
-
-				<!-- 制御構造 -->
 				<div id="control-structures" class="card mb-6 bg-base-100 shadow-xl">
 					<div class="card-body">
 						<h2 class="card-title">制御構造</h2>
 						<p>プログラムの流れを制御します。</p>
 						<CodeBlock
 							title="if文"
-							code={`// 条件分岐
-let age = 13
+							code={`// if文を使って条件分岐を行う
+let age = 13  // 年齢
 
+// 基本的なif-else文（13歳以上なら中学生、そうでなければ小学生）
 if age >= 13 {
     print("中学生です")
 } else {
     print("小学生です")
 }
 
-// 複数の条件
+// 複数の条件をチェックするif-else if-else文
 if age >= 18 {
-    print("大人")
+    print("大人")  // 18歳以上は大人
 } else if age >= 13 {
-    print("中学生")
+    print("中学生")  // 13-17歳は中学生
 } else {
-    print("小学生")
+    print("小学生")  // 12歳以下は小学生
 }`}
 							output={`中学生です
 中学生`}
@@ -326,15 +352,16 @@ if age >= 18 {
 						/>
 						<CodeBlock
 							title="for-inループ"
-							code={`// 配列の要素を順番に処理
-let fruits = ["りんご", "バナナ", "オレンジ"]
+							code={`// for-inループを使ってコレクションの要素を順番に処理する
+let fruits = ["りんご", "バナナ", "オレンジ"]  // 果物の配列
 
+// 配列の各要素を順番に処理
 for fruit in fruits {
     print("好きな果物: \\(fruit)")
 }
 
-// 範囲を使ったループ
-for i in 1...5 {
+// 範囲を使ったループ（1から5までの数字を順番に処理）
+for i in 1...5 {  // 1, 2, 3, 4, 5の順にiに代入される
     print("\\(i)回目のループ")
 }`}
 							output={`好きな果物: りんご
@@ -357,22 +384,23 @@ for i in 1...5 {
 						<p>処理をまとめて再利用できるようにします。</p>
 						<CodeBlock
 							title="関数の定義と呼び出し"
-							code={`// 簡単な関数の定義
+							code={`// funcキーワードを使って関数を定義する
+// 挨拶をする関数（名前を受け取って挨拶文を返す）
 func greet(name: String) -> String {
-    return "こんにちは、\\(name)さん!"
+    return "こんにちは、\\(name)さん!"  // 挨拶文を返す
 }
 
-// 計算を行う関数
+// 計算を行う関数（2つの整数を受け取ってその和を返す）
 func add(a: Int, b: Int) -> Int {
-    return a + b
+    return a + b  // a + bの結果を返す
 }
 
-// 関数の実行
-let message = greet(name: "太郎")
-let result = add(a: 10, b: 5)
+// 関数の実行（呼び出し）
+let message = greet(name: "太郎")  // greet関数を呼び出し、結果をmessageに代入
+let result = add(a: 10, b: 5)     // add関数を呼び出し、結果をresultに代入
 
-print(message)
-print("10 + 5 = \\(result)")`}
+print(message)  // 挨拶文を出力
+print("10 + 5 = \\(result)")  // 計算結果を出力`}
 							output={`こんにちは、太郎さん!
 10 + 5 = 15`}
 							executable={true}
@@ -387,21 +415,22 @@ print("10 + 5 = \\(result)")`}
 						<p>複数の値をまとめて扱います。</p>
 						<CodeBlock
 							title="配列（Array）"
-							code={`// 配列の作成
-var fruits = ["りんご", "バナナ", "オレンジ"]
-let numbers = [1, 2, 3, 4, 5]
+							code={`// 配列は複数の値を順番に格納するコレクション型
+// 配列の作成（文字列の配列）
+var fruits = ["りんご", "バナナ", "オレンジ"]  // 果物の名前を格納
+let numbers = [1, 2, 3, 4, 5]  // 数値の配列
 
-// 要素へのアクセス
-print(fruits[0])  // りんご
-print(numbers[0]) // 1
+// インデックスを使って要素にアクセス（0から始まる）
+print(fruits[0])  // 最初の要素（りんご）を出力
+print(numbers[0]) // 最初の要素（1）を出力
 
-// 要素の追加
-fruits.append("ぶどう")
-print(fruits)  // ["りんご", "バナナ", "オレンジ", "ぶどう"]
+// 要素の追加（appendメソッドを使う）
+fruits.append("ぶどう")  // 配列の末尾にぶどうを追加
+print(fruits)  // 追加後の配列全体を出力
 
-// 要素数の取得
-print(fruits.count)  // 4
-print(numbers.count) // 5`}
+// 要素数の取得（countプロパティ）
+print(fruits.count)  // fruits配列の要素数を出力
+print(numbers.count) // numbers配列の要素数を出力`}
 							output={`りんご
 1
 ["りんご", "バナナ", "オレンジ", "ぶどう"]
@@ -411,17 +440,18 @@ print(numbers.count) // 5`}
 						/>
 						<CodeBlock
 							title="辞書（Dictionary）"
-							code={`// 辞書の作成
+							code={`// 辞書はキーと値のペアを格納するコレクション型
+// 辞書の作成（キーが科目名、値が点数の辞書）
 var scores = ["数学": 85, "英語": 92, "国語": 78]
 
-// 値の取得
-if let mathScore = scores["数学"] {
-    print("数学の点数: \\(mathScore)")
+// キーを使って値を取得（オプショナルバインディングを使用）
+if let mathScore = scores["数学"] {  // 数学の点数を取得しようとする
+    print("数学の点数: \\(mathScore)")  // 取得成功したら出力
 }
 
-// 値の更新
-scores["理科"] = 88
-print(scores)  // ["数学": 85, "英語": 92, "国語": 78, "理科": 88]`}
+// 値の更新または追加
+scores["理科"] = 88  // 理科の点数を追加
+print(scores)  // 更新後の辞書全体を出力`}
 							output={`数学の点数: 85
 ["数学": 85, "英語": 92, "国語": 78, "理科": 88]`}
 							executable={true}
@@ -436,17 +466,17 @@ print(scores)  // ["数学": 85, "英語": 92, "国語": 78, "理科": 88]`}
 						<p>データをまとめて扱うための型です。</p>
 						<CodeBlock
 							title="構造体の定義"
-							code={`// 構造体の定義
-struct Student {
-    var name: String
-    var age: Int
-    var grade: String
+							code={`// structキーワードを使って構造体を定義（関連するデータをまとめる）
+struct Student {  // 学生を表す構造体
+    var name: String   // 名前（変数）
+    var age: Int       // 年齢（変数）
+    var grade: String  // 学年（変数）
 }
 
-// インスタンスの作成
+// 構造体のインスタンスを作成
 var student1 = Student(name: "太郎", age: 13, grade: "中学1年")
 
-// プロパティへのアクセス
+// ドット記法を使ってプロパティにアクセス
 print("\\(student1.name)は\\(student1.age)歳です")`}
 							output="太郎は13歳です"
 							executable={true}
@@ -461,30 +491,31 @@ print("\\(student1.name)は\\(student1.age)歳です")`}
 						<p>値が存在しない可能性を扱います。</p>
 						<CodeBlock
 							title="Optional型"
-							code={`// Optional型の変数
-var optionalName: String? = "太郎"
-var optionalAge: Int? = nil
+							code={`// Optional型は値が存在しない可能性を表す（型名の後に?をつける）
+var optionalName: String? = "太郎"  // 値があるOptional
+var optionalAge: Int? = nil         // nil（値なし）のOptional
 
-// オプショナルバインディング
-if let name = optionalName {
+// オプショナルバインディング（if let）で安全に値を取り出す
+if let name = optionalName {  // optionalNameに値があればnameに代入
     print("名前: \\(name)")
 } else {
     print("名前が設定されていません")
 }
 
 // nilの値に対するオプショナルバインディング
-if let age = optionalAge {
+if let age = optionalAge {  // optionalAgeはnilなので実行されない
     print("年齢: \\(age)")
 } else {
     print("年齢が設定されていません")
 }
 
-// 強制アンラップ（注意: nilの場合はエラー）
+// 強制アンラップ（!）はnilでないことを確認してから使用（危険）
 if optionalAge != nil {
-    print("年齢: \\(optionalAge!)")
+    print("年齢: \\(optionalAge!)")  // !で強制的に値を取り出す
 }
 
-// エラーが発生する例（実行時はコメントアウトを外さないでください）
+// 注意: nilに対して強制アンラップするとランタイムエラーになる
+// 以下のコードは実行しないこと（コメントアウト）
 // let nilValue: Int? = nil
 // print(nilValue!)  // Fatal error: Unexpectedly found nil while unwrapping an Optional value`}
 							output={`名前: 太郎
@@ -501,20 +532,20 @@ if optionalAge != nil {
 						<p>よく使う組み込み関数です。</p>
 						<CodeBlock
 							title="print関数"
-							code={`// コンソール出力
-print("Hello, World!")
-print("名前: 太郎, 年齢: 13")
+							code={`// print関数はコンソールに値を出力する
+print("Hello, World!")  // 基本的な出力
+print("名前: 太郎, 年齢: 13")  // 複数の値をカンマ区切りで出力
 
-// 改行なし出力
-print("こんにちは", terminator: "")
+// terminatorパラメータで改行を制御（デフォルトは\\n）
+print("こんにちは", terminator: "")  // 改行なしで出力
 
-// 改行付き出力（デフォルト）
+// 明示的に改行を指定（デフォルトと同じ）
 print("こんにちは", terminator: "\\n")
 
-// 複数の改行
-print("1行目")
-print("2行目", terminator: "\\n\\n")  // 2行改行
-print("4行目")`}
+// 複数の改行を出力
+print("1行目")  // 1行目出力
+print("2行目", terminator: "\\n\\n")  // 2行目出力後に2回改行
+print("4行目")  // 4行目出力`}
 							output={`Hello, World!
 名前: 太郎, 年齢: 13
 こんにちはこんにちは
@@ -526,18 +557,20 @@ print("4行目")`}
 						/>
 						<CodeBlock
 							title="Stringのメソッド"
-							code={`let message = "Hello, Swift!"
+							code={`let message = "Hello, Swift!"  // 文字列を変数に代入
 
-// 文字数の取得
-print(message.count)  // 13
+// countプロパティで文字数を取得
+print(message.count)  // 文字列の長さ（文字数）を出力
 
-// 大文字/小文字変換
+// uppercased()メソッドで大文字に変換
 print(message.uppercased())  // "HELLO, SWIFT!"
+
+// lowercased()メソッドで小文字に変換
 print(message.lowercased())  // "hello, swift!"
 
-// 文字列の検索
-if message.contains("Swift") {
-    print("Swiftが見つかりました")
+// contains()メソッドで部分文字列の検索
+if message.contains("Swift") {  // "Swift"が含まれているかチェック
+    print("Swiftが見つかりました")  // 含まれていれば出力
 }`}
 							output={`13
 HELLO, SWIFT!

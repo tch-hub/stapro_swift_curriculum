@@ -80,6 +80,11 @@
 				<div class="card-body">
 					<div class="flex flex-col gap-6 lg:flex-row">
 						<div class="flex-1">
+							{#if codeBlock.intro}
+								<div class=" mb-4">
+									<span>{codeBlock.intro}</span>
+								</div>
+							{/if}
 							<CodeBlock
 								title={codeBlock.title}
 								code={codeBlock.code}

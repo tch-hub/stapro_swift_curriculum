@@ -71,8 +71,11 @@
 			if (segment.startsWith('step')) {
 				label = `ステップ ${segment.slice(4)}`;
 			} else if (!isNaN(segment)) {
-				// 数字の場合はレッスン番号など、または breadcrumbTitle があればそれを使う
-				label = breadcrumbTitle || `レッスン ${segment}`;
+				// 数字の場合はレッスン番号とタイトルを表示（プログラム上の番号に+1）
+				const lessonNumber = parseInt(segment) + 1;
+				label = breadcrumbTitle
+					? `レッスン ${lessonNumber}: ${breadcrumbTitle}`
+					: `レッスン ${lessonNumber}`;
 			}
 			breadcrumbs.push({ label, href: currentPath });
 		}
