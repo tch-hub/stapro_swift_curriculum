@@ -18,7 +18,7 @@
 			id: 1,
 			title: '第1回授業: Swiftの基本構文',
 			description:
-				'Swiftの基本構文を学びます。変数、定数、型推論、条件分岐、関数などについて理解します。',
+				"Swiftの基本構文を学びます。変数、定数、型推論、条件分岐、関数などについて理解します。<br>まずはSwift基本構文を学習し、その後練習問題に取り組んでみましょう。",
 			checked: false,
 			tutorialUrl: null,
 			quizUrl: '/quiz',
@@ -318,18 +318,18 @@
 							/>
 							<h3 class="card-title">{lesson.title}</h3>
 						</div>
-						<p class="mb-4">{lesson.description}</p>
+						<p class="mb-4">{@html lesson.description}</p>
 						<div class="card-actions justify-end">
 							{#if lesson.tutorialUrl}
 								<a href="{base}{lesson.tutorialUrl}" class="btn btn-primary">
 									{lesson.id === 0 ? '環境構築' : 'チュートリアル'}
 								</a>
 							{/if}
-							{#if lesson.quizUrl}
-								<a href="{base}{lesson.quizUrl}" class="btn btn-secondary">練習問題</a>
-							{/if}
 							{#if lesson.cheatsheetUrl}
 								<a href="{base}{lesson.cheatsheetUrl}" class="btn btn-primary">Swift基本構文</a>
+							{/if}
+							{#if lesson.quizUrl}
+								<a href="{base}{lesson.quizUrl}" class="btn btn-secondary">練習問題</a>
 							{/if}
 							{#if lesson.projectSteps}
 								{#each lesson.projectSteps as step, i}
