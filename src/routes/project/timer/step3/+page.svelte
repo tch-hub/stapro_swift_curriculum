@@ -29,24 +29,26 @@
 	<div class="space-y-6">
 		<div>
 			<h2 class="mb-4 text-3xl font-bold">1. TimePickerコンポーネントの作成</h2>
-			<p class="mb-4">時間を選択するためのPickerコンポーネントを作成します：</p>
+			<p class="mb-4">
+				時間を選択するためのPickerコンポーネントを作成します。新しくTimePicker.swiftファイルを作成する必要があります：
+			</p>
 			<div class="card mb-6 bg-base-100 shadow-xl">
 				<div class="card-body">
 					<div class="flex flex-col gap-6 lg:flex-row">
 						<div class="flex-1">
 							<CodeBlock
 								title="TimePicker.swift"
-								code={`import SwiftUI
+								code={`import SwiftUI  // SwiftUIフレームワークをインポート
 
-struct TimePicker: View {
-    var title: String          // 「時間」「分」「秒」などのタイトル
-    var range: ClosedRange<Int> // 選択範囲（例: 0...23）
-    @Binding var selection: Int  // 選択された値
+struct TimePicker: View {  // TimePickerという名前のView構造体を定義
+    var title: String          // 「時間」「分」「秒」などのタイトルを表すプロパティ
+    var range: ClosedRange<Int> // 選択範囲（例: 0...23）を表すプロパティ
+    @Binding var selection: Int  // 選択された値を表すバインディングプロパティ
     
-    var body: some View {
-        Picker(selection: $selection, label: Text(title)) {
-            ForEach(Array(range), id: \.self) { value in
-                Text("\\(value) \\(title)").tag(value)
+    var body: some View {  // Viewのボディを定義
+        Picker(selection: $selection, label: Text(title)) {  // Pickerを作成、選択値とラベルを設定
+            ForEach(Array(range), id: \.self) { value in  // rangeの各値をループ
+                Text("\\(value) \\(title)").tag(value)  // 値をテキストとして表示し、タグを設定
             }
         }
         .pickerStyle(.wheel)  // ホイールスタイルで表示
@@ -74,25 +76,27 @@ struct TimePicker: View {
 
 		<div>
 			<h2 class="mb-4 text-3xl font-bold">2. TimeSelectionViewの作成</h2>
-			<p class="mb-4">時間、分、秒の3つのPickerを横に並べたビューを作成します：</p>
+			<p class="mb-4">
+				時間、分、秒の3つのPickerを横に並べたビューを作成します。新しくTimeSelectionView.swiftファイルを作成する必要があります：
+			</p>
 			<div class="card mb-6 bg-base-100 shadow-xl">
 				<div class="card-body">
 					<div class="flex flex-col gap-6 lg:flex-row">
 						<div class="flex-1">
 							<CodeBlock
 								title="TimeSelectionView.swift"
-								code={`import SwiftUI
+								code={`import SwiftUI  // SwiftUIフレームワークをインポート
 
-struct TimeSelectionView: View {
-    @Binding var hours: Int
-    @Binding var minutes: Int
-    @Binding var seconds: Int
+struct TimeSelectionView: View {  // TimeSelectionViewという名前のView構造体を定義
+    @Binding var hours: Int  // 時間を表すバインディングプロパティ
+    @Binding var minutes: Int  // 分を表すバインディングプロパティ
+    @Binding var seconds: Int  // 秒を表すバインディングプロパティ
     
-    var body: some View {
-        HStack {
-            TimePicker(title: "時間", range: 0...23, selection: $hours)
-            TimePicker(title: "分", range: 0...59, selection: $minutes)
-            TimePicker(title: "秒", range: 0...59, selection: $seconds)
+    var body: some View {  // Viewのボディを定義
+        HStack {  // 水平方向にビューを並べるコンテナ
+            TimePicker(title: "時間", range: 0...23, selection: $hours)  // 時間のPickerを表示
+            TimePicker(title: "分", range: 0...59, selection: $minutes)  // 分のPickerを表示
+            TimePicker(title: "秒", range: 0...59, selection: $seconds)  // 秒のPickerを表示
         }
     }
 }`}

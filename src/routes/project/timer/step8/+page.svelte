@@ -247,7 +247,6 @@ struct ContentView: View {
 				<p>SwiftUIの基本的な概念を学び、実際のアプリを作成することができました。</p>
 				<div class="mt-4 card-actions justify-center">
 					<a href="{base}/project" class="btn btn-primary">他のプロジェクトに挑戦</a>
-					<a href="{base}/quiz" class="btn btn-outline">知識をテスト</a>
 				</div>
 			</div>
 		</div>

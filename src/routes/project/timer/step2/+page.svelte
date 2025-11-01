@@ -102,52 +102,52 @@ HStack {        // 横に並べる
 						<div class="flex-1">
 							<CodeBlock
 								title="ContentView.swift"
-								code={`import SwiftUI  // SwiftUIというライブラリを読み込む。これでiOSアプリの画面を作れるようになる
+								code={`import SwiftUI  // SwiftUIライブラリをインポートして、iOSアプリのUIを作成できるようにする
 
-enum TimerState {  // タイマーの状態を表すための選択肢を定義する
-    case idle      // 待機中（何もしていない状態）
-    case running   // 実行中（タイマーが動いている状態）
-    case paused    // 一時停止中（タイマーが止まっている状態）
+enum TimerState {  // タイマーの状態を表す列挙型を定義する
+    case idle      // 待機中の状態（タイマーが何もしていない）
+    case running   // 実行中の状態（タイマーがカウントダウン中）
+    case paused    // 一時停止中の状態（タイマーが一時的に止まっている）
 }
 
-struct ContentView: View {  // アプリのメイン画面を定義する構造体
-    @State var timerState: TimerState = .idle  // タイマーの現在の状態を保存する変数。最初は待機中
-    @State var hours = 0     // タイマーの時間を保存する変数
-    @State var minutes = 0   // タイマーの分を保存する変数
-    @State var seconds = 0   // タイマーの秒を保存する変数
+struct ContentView: View {  // アプリのメイン画面を定義する構造体で、Viewプロトコルに準拠
+    @State var timerState: TimerState = .idle  // タイマーの現在の状態を保存する状態変数、初期値は待機中
+    @State var hours = 0     // タイマーの時間を保存する状態変数
+    @State var minutes = 0   // タイマーの分を保存する状態変数
+    @State var seconds = 0   // タイマーの秒を保存する状態変数
     
-    var body: some View {  // 画面に表示する内容を定義する部分
-        VStack {  // 縦に並べるレイアウトを使う
+    var body: some View {  // 画面に表示する内容を定義する計算プロパティ
+        VStack {  // 子ビューを垂直方向に並べるスタックビュー
             // ここに時間設定ビューまたはタイマー表示ビューが入る
-            Text("タイマーアプリ")  // 画面に「タイマーアプリ」という文字を表示
-                .font(.largeTitle)  // 文字を大きくする
-                .padding()  // 文字の周りに余白を追加
+            Text("タイマーアプリ")  // 「タイマーアプリ」というテキストを表示するビュー
+                .font(.largeTitle)  // フォントサイズを大きく設定
+                .padding()  // ビュー周囲に余白を追加
             
             // ここにボタンが入る
-            HStack {  // 横に並べるレイアウトを使う
-                Button("開始") {  // 「開始」というボタンを作る
+            HStack {  // 子ビューを水平方向に並べるスタックビュー
+                Button("開始") {  // 「開始」というラベルのボタンを作成
                     // タイマーを開始する処理（後で実装）
                 }
-                .padding()  // ボタンの周りに余白を追加
-                .background(Color.green)  // ボタンの背景を緑色にする
-                .foregroundColor(.white)  // 文字を白くする
+                .padding()  // ボタン周囲に余白を追加
+                .background(Color.green)  // ボタンの背景色を緑に設定
+                .foregroundColor(.white)  // ボタンの文字色を白に設定
                 .cornerRadius(10)  // ボタンの角を丸くする
                 
-                Button("キャンセル") {  // 「キャンセル」というボタンを作る
+                Button("キャンセル") {  // 「キャンセル」というラベルのボタンを作成
                     // タイマーをキャンセルする処理（後で実装）
                 }
-                .padding()  // ボタンの周りに余白を追加
-                .background(Color.gray)  // ボタンの背景を灰色にする
-                .foregroundColor(.white)  // 文字を白くする
+                .padding()  // ボタン周囲に余白を追加
+                .background(Color.gray)  // ボタンの背景色を灰に設定
+                .foregroundColor(.white)  // ボタンの文字色を白に設定
                 .cornerRadius(10)  // ボタンの角を丸くする
             }
         }
-        .padding()  // 全体の周りに余白を追加
+        .padding()  // VStack全体に余白を追加
     }
 }
 
-#Preview {  // Xcodeでプレビューを表示するための設定
-    ContentView()  // ContentViewをプレビューする
+#Preview {  // Xcodeのプレビュー機能でこのビューを表示するための設定
+    ContentView()  // ContentViewのインスタンスをプレビュー
 }`}
 							/>
 							<p class="mt-4 text-sm text-base-content opacity-80">
@@ -163,18 +163,11 @@ struct ContentView: View {  // アプリのメイン画面を定義する構造�
 						</div>
 						<div class="flex flex-1 items-center justify-center">
 							<div class="relative">
-								<img src="{base}/images/timer/t21.png" alt="iPhone mockup" class="w-full max-w-xs" />
-								<!-- <div
-									class="absolute top-[12%] left-[8%] flex h-[76%] w-[84%] items-center justify-center rounded-[2rem] bg-base-100"
-								>
-									<div class="p-4 text-center">
-										<div class="mb-4 text-2xl font-bold">基本画面</div>
-										<div class="space-y-2">
-											<div class="text-sm opacity-70">ここにタイトルとボタンが表示されます</div>
-											<div class="text-sm opacity-70">ステップ3で時間設定ビューが追加されます</div>
-										</div>
-									</div>
-								</div> -->
+								<img
+									src="{base}/images/timer/t21.png"
+									alt="iPhone mockup"
+									class="w-full max-w-xs"
+								/>
 							</div>
 						</div>
 					</div>
