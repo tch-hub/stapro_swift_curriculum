@@ -152,6 +152,47 @@
 			</div>
 		{:else}
 			<div class="container mx-auto">
+				<!-- SwiftFiddle実行の解説 -->
+				<div id="basic-syntax" class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">
+							<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+								<path
+									fill-rule="evenodd"
+									d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+									clip-rule="evenodd"
+								></path>
+							</svg>
+							SwiftFiddleで実行できます
+						</h2>
+						<p class="mb-4">
+							このページのSwiftコードは、オンライン実行環境「SwiftFiddle」で実際に動かして試すことができます。
+						</p>
+
+						<div class="grid gap-4 md:grid-cols-2">
+
+							<div class="space-y-2">
+								<h3 class="text-lg font-semibold">使い方</h3>
+								<ol class="list-inside list-decimal space-y-1 text-sm">
+									<li>各コードブロックの右上にある実行ボタンをクリックする</li>
+									<li>
+										<a
+											href="https://swiftfiddle.com"
+											target="_blank"
+											rel="noopener noreferrer"
+											class="link link-accent">SwiftFiddle</a
+										>を開く
+									</li>
+									<li>このページのコードをコピー</li>
+									<li>SwiftFiddleに貼り付けて実行</li>
+									<li>結果が右側に表示されます</li>
+									<li>clear consoleボタンで右側の結果をリセットできます</li>
+								</ol>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<!-- 基本構文 -->
 				<div id="basic-syntax" class="card mb-6 bg-base-100 shadow-xl">
 					<div class="card-body">
