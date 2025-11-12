@@ -56,13 +56,22 @@
 		class="fixed top-0 left-0 hidden h-[calc(100vh)] w-80 overflow-y-auto bg-base-200 p-4 shadow-lg lg:block"
 	>
 		<ul class="menu">
-			<li class="pt-16">
+			<li>
 				<a
 					href="#basic-syntax"
 					onclick={(e) => handleClick(e, 'basic-syntax')}
 					onkeydown={(e) => handleKeydown(e, 'basic-syntax')}
 					role="button"
 					tabindex="0">基本構文</a
+				>
+			</li>
+			<li>
+				<a
+					href="#types"
+					onclick={(e) => handleClick(e, 'types')}
+					onkeydown={(e) => handleKeydown(e, 'types')}
+					role="button"
+					tabindex="0">型</a
 				>
 			</li>
 			<li>
@@ -170,7 +179,6 @@
 						</p>
 
 						<div class="grid gap-4 md:grid-cols-2">
-
 							<div class="space-y-2">
 								<h3 class="text-lg font-semibold">使い方</h3>
 								<ol class="list-inside list-decimal space-y-1 text-sm">
@@ -282,6 +290,166 @@ let earthNumber = Planet.earth.rawValue  // rawValueで数値を取得
 print("地球の番号: \\(earthNumber)")`}
 							output={`北へ進む
 地球の番号: 3`}
+							executable={true}
+						/>
+					</div>
+				</div>
+
+				<!-- 型 -->
+				<div id="types" class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">型</h2>
+						<p>Swiftのデータ型について学びます。</p>
+						<CodeBlock
+							title="基本型"
+							code={`// Swiftの基本的なデータ型
+// 整数型（Int）- 正負の整数を扱う
+let age: Int = 13  // 年齢（整数）
+let score: Int = 85  // スコア（整数）
+
+// 浮動小数点型（Double, Float）- 小数点を扱う
+let height: Double = 165.5  // 身長（倍精度浮動小数点）
+let weight: Float = 50.5    // 体重（単精度浮動小数点）
+
+// 論理型（Bool）- trueまたはfalseの値
+let isStudent: Bool = true   // 学生かどうか
+let hasHomework: Bool = false  // 宿題があるかどうか
+
+// 文字列型（String）- 文字の並び
+let name: String = "太郎"  // 名前
+let message: String = "こんにちは"  // メッセージ
+
+// 文字型（Character）- 単一の文字
+let grade: Character = "A"  // 成績
+let symbol: Character = "★"  // 記号
+
+// 値の出力
+print("年齢: \\(age)歳")
+print("身長: \\(height)cm")
+print("学生: \\(isStudent)")
+print("名前: \\(name)")
+print("成績: \\(grade)")`}
+							output={`年齢: 13歳
+身長: 165.5cm
+学生: true
+名前: 太郎
+成績: A`}
+							executable={true}
+						/>
+						<CodeBlock
+							title="型の確認（type(of:)関数）"
+							code={`// type(of:)関数を使って変数の型を確認する
+let number = 42
+let decimal = 3.14
+let text = "Hello"
+let flag = true
+
+print("numberの型: \\(type(of: number))")  // Int型
+print("decimalの型: \\(type(of: decimal))")  // Double型
+print("textの型: \\(type(of: text))")      // String型
+print("flagの型: \\(type(of: flag))")      // Bool型`}
+							output={`numberの型: Int
+decimalの型: Double
+decimalの型: String
+flagの型: Bool`}
+							executable={true}
+						/>
+						<CodeBlock
+							title="タプル（Tuple）"
+							code={`// タプルは複数の値をグループ化する型
+// 生徒の情報をタプルで表現
+let student: (String, Int, String) = ("太郎", 13, "中学1年")
+let point: (x: Int, y: Int) = (x: 10, y: 20)
+
+// インデックスでアクセス
+print("名前: \\(student.0)")  // 最初の要素（太郎）
+print("年齢: \\(student.1)")  // 2番目の要素（13）
+print("学年: \\(student.2)")  // 3番目の要素（中学1年）
+
+// ラベル付きでアクセス
+print("X座標: \\(point.x)")  // xラベルでアクセス
+print("Y座標: \\(point.y)")  // yラベルでアクセス
+
+// 分解して代入
+let (name, age, grade) = student
+print("\\(name)は\\(age)歳の\\(grade)生です")`}
+							output={`名前: 太郎
+年齢: 13
+学年: 中学1年
+X座標: 10
+Y座標: 20
+太郎は13歳の中学1年生です`}
+							executable={true}
+						/>
+						<CodeBlock
+							title="型の変換（キャスト）"
+							code={`// 異なる型同士の変換（キャスト）
+// IntからDoubleへの変換
+let intValue = 42
+let doubleValue = Double(intValue)  // IntからDoubleに変換
+print("IntからDouble: \\(doubleValue)")  // 42.0
+
+// DoubleからIntへの変換（小数点以下切り捨て）
+let decimalValue = 3.9
+let intFromDouble = Int(decimalValue)  // DoubleからIntに変換
+print("DoubleからInt: \\(intFromDouble)")  // 3
+
+// StringからIntへの変換（失敗する可能性あり）
+let numberString = "123"
+if let convertedNumber = Int(numberString) {
+    print("StringからInt: \\(convertedNumber)")  // 変換成功
+} else {
+    print("変換できませんでした")
+}
+
+// IntからStringへの変換
+let numberToString = String(intValue)
+print("IntからString: \\(numberToString)")`}
+							output={`IntからDouble: 42.0
+DoubleからInt: 3
+StringからInt: 123
+IntからString: 42`}
+							executable={true}
+						/>
+						<CodeBlock
+							title="範囲型（Range）"
+							code={`// 範囲型は連続した値の範囲を表す型
+// ClosedRangeは開始値と終了値を含む範囲（...演算子）
+let closedRange: ClosedRange<Int> = 1...5  // 1, 2, 3, 4, 5を含む範囲
+print("ClosedRange: \\(closedRange)")  // 1...5と表示される
+
+// 範囲を使ったループ
+print("範囲内の値:")
+for number in closedRange {
+    print("\\(number)", terminator: " ")  // 1 2 3 4 5 と出力
+}
+print()  // 改行
+
+// 範囲に値が含まれるかチェック
+let testValue = 3
+if closedRange.contains(testValue) {
+    print("\\(testValue)は範囲内に含まれます")  // 3は範囲内に含まれる
+}
+
+// 範囲の境界値を取得
+print("開始値: \\(closedRange.lowerBound)")  // 1
+print("終了値: \\(closedRange.upperBound)")  // 5
+
+// 半開範囲（..<演算子）との比較
+let halfOpenRange = 1..<5  // 1, 2, 3, 4を含む（5を含まない）
+print("Half-open range: \\(halfOpenRange)")  // 1..<5
+
+// 文字の範囲も可能
+let charRange: ClosedRange<Character> = "a"..."z"
+print("文字の範囲: \\(charRange.contains(\\"m\\"))")  // true`}
+							output={`ClosedRange: 1...5
+範囲内の値:
+1 2 3 4 5
+3は範囲内に含まれます
+開始値: 1
+終了値: 5
+Half-open range: 1..<5
+文字の範囲: true`}
 							executable={true}
 						/>
 					</div>
