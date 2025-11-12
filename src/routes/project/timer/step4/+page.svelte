@@ -31,13 +31,12 @@
 		<div>
 			<h2 class="mb-4 text-3xl font-bold">1. TimerDisplayViewの作成</h2>
 			<p class="mb-4">タイマーの残り時間を円形のプログレスバーで表示するビューを作成します：</p>
-			<div class="card mb-6 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<div class="flex flex-col gap-6 lg:flex-row">
-						<div class="flex-1">
-							<CodeBlock
-								title="TimerDisplayView.swift"
-								code={`import SwiftUI
+			<div class="">
+				<div class="flex flex-col gap-6 lg:flex-row">
+					<div class="flex-1">
+						<CodeBlock
+							title="TimerDisplayView.swift"
+							code={`import SwiftUI
 
 struct TimerDisplayView: View {
     var remainingTime: Int  // 残り時間（秒）
@@ -73,19 +72,49 @@ struct TimerDisplayView: View {
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
 }`}
-							/>
-							<p class="mt-4 text-sm text-base-content opacity-80">
-								TimerDisplayViewはZStackを使って円形プログレスバーと時間表示を重ねます。trim()で円の割合を制御し、アニメーションで滑らかに変化します。
+						/>
+
+						<!-- 円形プログレスバー各行の個別解説 -->
+						<div class="mt-4 text-sm text-base-content opacity-80">
+							<p>
+								TimerDisplayViewはZStackを使って円形プログレスバーと時間表示を重ねます。以下はプログレスバーを構成する各行の説明です。
 							</p>
-						</div>
-						<div class="flex flex-1 items-center justify-center">
-							<div class="relative">
-								<img
-									src="{base}/images/timer/t41.png"
-									alt="iPhone mockup"
-									class="w-full max-w-xs"
-								/>
-							</div>
+							<ul class="mt-2 ml-4 list-inside list-disc">
+								<li>
+									<code>Circle()</code>:
+									SwiftUIの基本的な図形ビューで、ここではプログレスのベースとなる円を描画します。
+								</li>
+								<li>
+									<code>.trim(from: 0.0, to: CGFloat(completionPercentage))</code>:
+									円の一部だけを表示するための修飾子です。<code>from</code>と<code>to</code
+									>は0〜1の割合で開始位置と終了位置を指定します。<code>completionPercentage</code
+									>に応じて表示される円弧の長さが変わります。
+								</li>
+								<li>
+									<code>.stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round))</code>:
+									図形を塗りつぶすのではなく線で描画します。ここでは線幅を10にし、<code
+										>lineCap</code
+									>を<code>.round</code>にすることで線の端が丸くなります。<em>注意:</em>
+									<code>trim</code>で切り取った後に<code>stroke</code
+									>を適用することで、切り取られた円弧に対して線が引かれます。
+								</li>
+								<li>
+									<code>.foregroundColor(.orange)</code>:
+									図形または線の色を指定します。ここでは進捗を分かりやすくするためオレンジ色に設定しています。
+								</li>
+								<li>
+									<code>.rotationEffect(Angle(degrees: 270))</code>:
+									円全体を回転させます。デフォルトだと円の開始位置は右（3時）方向なので、270度回転させることで表示が上（12時）から始まるように調整しています。
+								</li>
+								<li>
+									<code>.animation(.linear, value: completionPercentage)</code>:
+									<code>completionPercentage</code> の変化に対してアニメーションを適用します。ここでは線形イージング（linear）を使い、値が変わると円弧の長さが滑らかに変化します。
+								</li>
+								<li>
+									<code>.padding(10)</code>:
+									ビューの周囲に余白を追加します。親コンテナとの余白を確保して、円が端に張り付かないようにします。
+								</li>
+							</ul>
 						</div>
 					</div>
 				</div>
@@ -124,63 +153,73 @@ struct TimerDisplayView: View {
 		<div>
 			<h2 class="mb-4 text-3xl font-bold">3. ContentViewの更新</h2>
 			<p class="mb-4">ContentViewでTimerDisplayViewを使用するように更新します：</p>
-			<CodeBlock
-				title="ContentView.swift (更新版)"
-				code={`import SwiftUI
+			<!-- コード表示と画像を横並び（レスポンシブで縦並びにも）に配置 -->
+			<div class="flex flex-col gap-6 lg:flex-row">
+				<div class="flex-1">
+					<CodeBlock
+						title="ContentView.swift (更新版)"
+						code={`import SwiftUI
 
 enum TimerState {
-    case idle
-    case running
-    case paused
+	case idle
+	case running
+	case paused
 }
 
 struct ContentView: View {
-    @State var timerState: TimerState = .idle
-    @State var hours = 0
-    @State var minutes = 0
-    @State var seconds = 0
+	@State var timerState: TimerState = .idle
+	@State var hours = 0
+	@State var minutes = 0
+	@State var seconds = 0
     
-    // 仮の残り時間（後でViewModelから取得）
-    @State var remainingTime = 3600  // 1時間
-    @State var totalTime = 3600       // 1時間
+	// 仮の残り時間（後でViewModelから取得）
+	@State var remainingTime = 3600  // 1時間
+	@State var totalTime = 3600       // 1時間
     
-    var body: some View {
-        VStack {
-            if timerState == .idle {
-                TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
-            } else {
-                TimerDisplayView(remainingTime: remainingTime, totalTime: totalTime)
-            }
+	var body: some View {
+		VStack {
+			if timerState == .idle {
+				TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
+			} else {
+				TimerDisplayView(remainingTime: remainingTime, totalTime: totalTime)
+			}
             
-            HStack {
-                Button("開始") {
-                    timerState = .running
-                    // 選択された時間を秒に変換
-                    totalTime = hours * 3600 + minutes * 60 + seconds
-                    remainingTime = totalTime
-                }
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+			HStack {
+				Button("開始") {
+					timerState = .running
+					// 選択された時間を秒に変換
+					totalTime = hours * 3600 + minutes * 60 + seconds
+					remainingTime = totalTime
+				}
+				.padding()
+				.background(Color.green)
+				.foregroundColor(.white)
+				.cornerRadius(10)
                 
-                Button("キャンセル") {
-                    timerState = .idle
-                }
-                .padding()
-                .background(Color.gray)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-            }
-        }
-        .padding()
-    }
+				Button("キャンセル") {
+					timerState = .idle
+				}
+				.padding()
+				.background(Color.gray)
+				.foregroundColor(.white)
+				.cornerRadius(10)
+			}
+		}
+		.padding()
+	}
 }
 
 #Preview {
-    ContentView()
+	ContentView()
 }`}
-			/>
+					/>
+				</div>
+				<div class="flex flex-1 items-center justify-center">
+					<div class="relative">
+						<img src="{base}/images/timer/t41.png" alt="iPhone mockup" class="w-full max-w-xs" />
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<div>
