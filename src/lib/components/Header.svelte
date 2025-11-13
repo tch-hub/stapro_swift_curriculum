@@ -111,9 +111,9 @@
 			<ul class="dropdown-content menu z-[1] mt-3 w-52 menu-sm rounded-box bg-base-100 p-2 shadow">
 				<li><a href="{base}/">ホーム</a></li>
 				<li><a href="{base}/setup">環境構築</a></li>
-				<li><a href="{base}/tutorial">チュートリアル</a></li>
 				<li><a href="{base}/cheatsheet">swift基本構文</a></li>
-				<li><a href="{base}/quiz">練習</a></li>
+				<li><a href="{base}/quiz">練習問題</a></li>
+				<li><a href="{base}/tutorial">チュートリアル</a></li>
 				<li><a href="{base}/project">プロジェクト</a></li>
 				{#if dev}
 					<li><a href="{base}/editor">JSONエディタ</a></li>
