@@ -47,8 +47,11 @@
 	}
 
 	// 行番号付きでコードを表示するための処理
+	// code / language が変化したときにも Prism ハイライトを再適用する
 	$effect(() => {
-		// Prism.jsでシンタックスハイライトを適用
+		// 依存として code / language / showLineNumbers を参照することで
+		// これらが変化したときにこの effect が再実行されるようにする
+		const __dep = `${code}|${language}|${showLineNumbers}`;
 		if (typeof window !== 'undefined' && window.Prism) {
 			window.Prism.highlightAll();
 		}

@@ -2,6 +2,7 @@
 	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import TimerDemo from '$lib/components/TimerDemo.svelte';
+	import { timerSteps } from './steps-config';
 </script>
 
 <div class="container mx-auto px-4 py-8">
@@ -64,109 +65,19 @@
 		</p>
 
 		<div class="space-y-4">
-			<!-- ステップ1 -->
-			<div class="card bg-base-100 shadow-lg">
-				<div class="card-body">
-					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ1: プロジェクトの作成とセットアップ</h3>
-							<p class="text-sm opacity-70">Xcodeでの新規プロジェクト作成と基本構造の理解</p>
+			{#each timerSteps as step}
+				<div class="card bg-base-100 shadow-lg">
+					<div class="card-body">
+						<div class="flex items-center justify-between">
+							<div>
+								<h3 class="card-title text-xl">{step.title}</h3>
+								<p class="text-sm opacity-70">{step.summary}</p>
+							</div>
+							<a href="{base}/project/timer/{step.id}" class="btn btn-primary">開始</a>
 						</div>
-						<a href="{base}/project/timer/step1" class="btn btn-primary">開始</a>
 					</div>
 				</div>
-			</div>
-
-			<!-- ステップ2 -->
-			<div class="card bg-base-100 shadow-lg">
-				<div class="card-body">
-					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ2: 基本的なUIの作成</h3>
-							<p class="text-sm opacity-70">ContentViewの作成と状態管理の基本</p>
-						</div>
-						<a href="{base}/project/timer/step2" class="btn btn-primary">開始</a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ステップ3 -->
-			<div class="card bg-base-100 shadow-lg">
-				<div class="card-body">
-					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ3: 時間選択ビューの実装</h3>
-							<p class="text-sm opacity-70">Pickerと@Bindingを使った時間設定</p>
-						</div>
-						<a href="{base}/project/timer/step3" class="btn btn-primary">開始</a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ステップ4 -->
-			<div class="card bg-base-100 shadow-lg">
-				<div class="card-body">
-					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ4: タイマー表示ビューの実装</h3>
-							<p class="text-sm opacity-70">円形プログレスバーとアニメーション</p>
-						</div>
-						<a href="{base}/project/timer/step4" class="btn btn-primary">開始</a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ステップ5 -->
-			<div class="card bg-base-100 shadow-lg">
-				<div class="card-body">
-					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ5: ViewModelの作成</h3>
-							<p class="text-sm opacity-70">MVVMアーキテクチャとObservableObject</p>
-						</div>
-						<a href="{base}/project/timer/step5" class="btn btn-primary">開始</a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ステップ6 -->
-			<div class="card bg-base-100 shadow-lg">
-				<div class="card-body">
-					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ6: タイマーロジックの追加</h3>
-							<p class="text-sm opacity-70">Timer.scheduledTimerを使ったカウントダウン</p>
-						</div>
-						<a href="{base}/project/timer/step6" class="btn btn-primary">開始</a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ステップ7 -->
-			<div class="card bg-base-100 shadow-lg">
-				<div class="card-body">
-					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ7: アラーム機能の実装</h3>
-							<p class="text-sm opacity-70">AVAudioPlayerとAlertの実装</p>
-						</div>
-						<a href="{base}/project/timer/step7" class="btn btn-primary">開始</a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ステップ8 -->
-			<div class="card bg-base-100 shadow-lg">
-				<div class="card-body">
-					<div class="flex items-center justify-between">
-						<div>
-							<h3 class="card-title text-xl">ステップ8: 最終調整とテスト</h3>
-							<p class="text-sm opacity-70">ColorButtonと総合テスト</p>
-						</div>
-						<a href="{base}/project/timer/step8" class="btn btn-primary">開始</a>
-					</div>
-				</div>
-			</div>
+			{/each}
 		</div>
 	</div>
 
