@@ -4,21 +4,7 @@
     import {base} from '$app/paths';
 </script>
 
-### 完成イメージ
-
-<table style="width:100%; margin-bottom:1rem;">
-    <tr>
-        <td style="width:320px; vertical-align:top; padding-right:1rem;">
-            <img src={base + '/images/timer/t21.png'} alt="タイマーUIの完成イメージ — 開始/キャンセルボタンと時間表示" width="300" />
-        </td>
-        <td style="vertical-align:top;">
-            <strong>完成イメージ</strong>
-            <p>シンプルなタイマーUIです。中央に時間表示、下に「開始」ボタンと「キャンセル」ボタンが並びます。まずは画面の骨組みを作って見た目を整えます。</p>
-        </td>
-    </tr>
-</table>
-
-### 1. TimerState enum とは
+### 1. TimerState enum
 
 - `idle`: 待機中
 - `running`: 実行中
@@ -32,7 +18,7 @@ enum TimerState {
 }
 ```
 
-### 2. @State の使いどころ
+### 2. @State
 
 - `@State` は View が保持する状態を表し、値が変わると自動で再描画されます。
 - タイマーの残り時間や現在の状態（`TimerState`）、時間設定に使います。
