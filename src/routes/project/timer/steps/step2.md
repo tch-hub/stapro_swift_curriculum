@@ -1,11 +1,15 @@
 # ステップ2: 基本的なUIの作成
 
+<script>
+    import {base} from '$app/paths';
+</script>
+
 ### 完成イメージ
 
 <table style="width:100%; margin-bottom:1rem;">
     <tr>
         <td style="width:320px; vertical-align:top; padding-right:1rem;">
-            <img src="/images/timer/t21.png" alt="タイマーUIの完成イメージ — 開始/キャンセルボタンと時間表示" width="300" />
+            <img src={base + '/images/timer/t21.png'} alt="タイマーUIの完成イメージ — 開始/キャンセルボタンと時間表示" width="300" />
         </td>
         <td style="vertical-align:top;">
             <strong>完成イメージ</strong>
@@ -69,6 +73,7 @@ VStack {
     }
 }
 ```
+
 ### コード全体 — ContentView
 
 以下はこのビューの全体ソースコードです。タイマーのロジックは別ステップで追加します。

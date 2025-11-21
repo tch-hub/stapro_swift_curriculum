@@ -1,12 +1,16 @@
 # ステップ1: プロジェクトの作成とセットアップ
 
+<script>
+    import {base} from '$app/paths';
+</script>
+
 ### 1. Xcodeで新規プロジェクトを作成
 
 1. Xcodeを起動し、「Create a new Xcode project」を選択する。
 2. テンプレートで「App」を選択して「Next」をクリックする。
 3. 設定を入力し、以下の画像のように指定して「Next」を押す。
 
-![Xcode の設定画面](/images/setup.png)
+![Xcode の設定画面]({base}/images/setup.png)
 
 4. 保存先を選んでプロジェクトを作成する。
 
