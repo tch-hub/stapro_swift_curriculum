@@ -1,6 +1,5 @@
 # ステップ3: 時間選択ビューの実装
 
-
 ### 1. TimePickerコンポーネントを作る
 
 時間を選ぶための再利用可能なPickerを`TimePicker.swift`に定義する。
@@ -81,3 +80,104 @@ if timerState == .idle {
 
 - `timerState` に応じて `TimeSelectionView` を表示するか、別のビューを表示するかを切り替える。
 - `@State` で保持した時間を `TimeSelectionView` へ渡し、Pickerの値を更新する。
+
+---
+
+### コード全体 — ファイル別の完成コード
+
+以下は、このステップで作成した各ファイルごとの完成コードを個別のコードブロックとして示したものです。
+
+// TimePicker.swift
+
+```swift
+import SwiftUI
+
+struct TimePicker: View {
+    var title: String
+    var range: ClosedRange<Int>
+    @Binding var selection: Int
+
+    var body: some View {
+        Picker(selection: $selection, label: Text(title)) {
+            ForEach(Array(range), id: \.self) { value in
+                Text("\(value) \(title)").tag(value)
+            }
+        }
+        .pickerStyle(.wheel)
+    }
+}
+```
+
+// TimeSelectionView.swift
+
+```swift
+import SwiftUI
+
+struct TimeSelectionView: View {
+    @Binding var hours: Int
+    @Binding var minutes: Int
+    @Binding var seconds: Int
+
+    var body: some View {
+        HStack {
+            TimePicker(title: "時間", range: 0...23, selection: $hours)
+            TimePicker(title: "分", range: 0...59, selection: $minutes)
+            TimePicker(title: "秒", range: 0...59, selection: $seconds)
+        }
+    }
+}
+```
+
+// ContentView.swift
+
+```swift
+import SwiftUI
+
+struct ContentView: View {
+    @State var timerState: TimerState = .idle
+    @State var hours = 0
+    @State var minutes = 0
+    @State var seconds = 0
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("タイマーアプリ")
+                .font(.largeTitle)
+                .padding()
+
+            // 時間選択は待機時のみ表示
+            if timerState == .idle {
+                TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
+            } else {
+                Text("タイマーが実行中です")
+                    .font(.title)
+            }
+
+            HStack(spacing: 16) {
+                Button("開始") {
+                    // ここでは簡単に状態を切り替え
+                    timerState = .running
+                }
+                .padding()
+                .background(Color.green)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+
+                Button("キャンセル") {
+                    timerState = .idle
+                    hours = 0; minutes = 0; seconds = 0
+                }
+                .padding()
+                .background(Color.gray)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+            }
+        }
+        .padding()
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```
