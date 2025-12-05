@@ -12,8 +12,8 @@ export const timerSteps: TimerStep[] = [
 	},
 	{
 		id: 'step2',
-		title: 'ステップ2: 基本的なUIの作成',
-		summary: 'VStack/HStackと@StateでUIの骨組みを作り、TimerStateを定義します。'
+		title: 'ステップ2: 基本的なUIの作成(ContentView.swift)',
+		summary: 'VStack/HStackと@StateでUIの骨組みを作り、TimerStateを定義します。ContentView.swiftにコードを記述してください。'
 	},
 	{
 		id: 'step3',

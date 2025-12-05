@@ -10,7 +10,7 @@
 2. テンプレートで「App」を選択して「Next」をクリックする。
 3. 設定を入力し、以下の画像のように指定して「Next」を押す。
 
-![Xcode の設定画面]({base}/images/setup.png)
+![Xcode の設定画面](/images/setup.png)
 
 4. 保存先を選んでプロジェクトを作成する。
 
@@ -23,22 +23,15 @@
 - Xcodeのプロジェクトナビゲーターで、削除したいファイルまたはフォルダを見つけて選択します。
 - 選択したファイルまたはフォルダを右クリックし、メニューから「Delete」を選択する。
 
-削除するファイルの例
-
-```
-TimerApp.swift
-ContentView.swift
-Assets.xcassets
-```
-
 #### 必要なファイルを作成する
 
-Xcodeで新しいファイルを作る手順（いずれかの方法でファイルを作成してください）
+タイマーアプリでは次のような構成を作成します。以下の構成と同じになるようにフォルダやファイルを作成してください。
 
-- Xcode メニューバーの「File」→「New」→「File…」を選択
-- プロジェクトナビゲーターの空白の部分で右クリック（またはコントロールクリック）し、「New File…」を選択
+#### 作成するフォルダ
 
-タイマーでは次のような構成を作成します。
+- ViewModels
+- Views
+- Components
 
 ```
 Timer/
@@ -54,6 +47,15 @@ Timer/
     └── TimePicker.swift     # 時間選択ピッカー
 ```
 
+Xcodeで新しいフォルダを作る手順
+
+- プロジェクトナビゲーターの空白の部分で右クリックし、「New Folder」を選択
+
+Xcodeで新しいファイルを作る手順（いずれかの方法でファイルを作成してください）
+
+- Xcode メニューバーの「File」→「New」→「EmptyFile」を選択
+- プロジェクトナビゲーターの空白の部分で右クリックし、「New EmptyFile」を選択
+
 ### 3. TimerApp.swiftに以下のコードを追加する
 
 ```swift
@@ -61,10 +63,39 @@ import SwiftUI
 
 @main
 struct TimerApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+    var body: some View {
     }
 }
+
+#Preview {
+    ContentView()
+}
 ```
+
+```
+import SwiftUI
+```
+
+SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使えるようになります。
+
+```
+@main
+struct TimerApp: App {
+    var body: some View {
+    }
+}
+
+```
+
+ContentViewという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。bodyという部分は、画面に何を表示するかを書くところです。some Viewは、戻り値の型を指定する特別な書き方です。これでSwiftUIがうまく動きます。
+
+```
+#Preview {
+    ContentView()
+}
+
+```
+
+#Previewは、コードを書くたびに画面をすぐに見られる機能です。これで、アプリの見た目をすぐに確認できます。
+
+#### ※ここまでの状態では画面に何も表示されないので次のステップに進んでください。

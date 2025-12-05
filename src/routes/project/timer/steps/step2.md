@@ -1,4 +1,4 @@
-# ステップ2: 基本的なUIの作成
+
 
 <script>
     import {base} from '$app/paths';
@@ -6,11 +6,15 @@
 
 ### 1. TimerState enum
 
+まず、タイマーの状態を管理する変数を定義します。
+
 - `idle`: 待機中
 - `running`: 実行中
 - `paused`: 一時停止
 
 ```swift
+import SwiftUI
+
 enum TimerState {
     case idle
     case running
