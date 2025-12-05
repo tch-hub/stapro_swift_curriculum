@@ -63,13 +63,10 @@ import SwiftUI
 
 @main
 struct TimerApp: App {
-    var body: some View {
+    var body: some Scene {
     }
 }
 
-#Preview {
-    ContentView()
-}
 ```
 
 ```
@@ -81,7 +78,10 @@ SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使え
 ```
 @main
 struct TimerApp: App {
-    var body: some View {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
     }
 }
 
@@ -90,9 +90,9 @@ struct TimerApp: App {
 ContentViewという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。bodyという部分は、画面に何を表示するかを書くところです。some Viewは、戻り値の型を指定する特別な書き方です。これでSwiftUIがうまく動きます。
 
 ```
-#Preview {
-    ContentView()
-}
+WindowGroup {
+            ContentView()
+        }
 
 ```
 

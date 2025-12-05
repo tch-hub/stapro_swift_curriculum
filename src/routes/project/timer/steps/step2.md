@@ -40,7 +40,6 @@ enum TimerState {
 - `HStack` は横方向にビューを並べます。
 - `spacing` や `alignment` を調整して見た目を整えます。
 
-例:
 
 ```swift
 VStack {

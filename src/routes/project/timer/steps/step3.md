@@ -18,14 +18,21 @@ struct TimePicker: View {
                 Text("\(value) \(title)").tag(value)
             }
         }
-        .pickerStyle(.wheel)
+        .pickerStyle(.wheel) //ホイール表示
     }
 }
 ```
+```
+var title: String
+var range: ClosedRange<Int>
+```
+- `title` でタイマーの時間の単位を設定できるようにします。
+- `range` でタイマーの分や秒などの数字の選択範囲を設定できるようにします。
+```
+@Binding var selection: Int
+```
+- `@Binding` を使って親ビューの `@State` と値を同期させます。
 
-- `title` でラベル表示、`range` で選択肢の範囲を定義。
-- `@Binding` を使って親ビューの `@State` と値を同期させる。
-- `pickerStyle(.wheel)` で iOS 標準のホイール表示に。
 
 ### 2. Pickerの使い方
 
