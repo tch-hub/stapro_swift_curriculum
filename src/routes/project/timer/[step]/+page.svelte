@@ -24,10 +24,20 @@
 		.filter((token) => token.type !== 'space')
 		.map((token) => {
 			if (token.type === 'code') {
+				// title="FileName.swift" から FileName.swift を抽出
+				let fileName = '';
+				if (token.meta) {
+					const titleMatch = token.meta.match(/title="([^"]+)"/);
+					if (titleMatch) {
+						fileName = titleMatch[1];
+					}
+				}
+
 				return {
 					type: 'code',
 					code: token.text,
-					language: token.lang || 'swift'
+					language: token.lang || 'swift',
+					fileName: fileName
 				};
 			}
 
@@ -67,7 +77,7 @@
 			{#if block.type === 'code'}
 				<div class="mb-6">
 					{#key block.code}
-						<CodeBlock code={block.code} language={block.language} />
+						<CodeBlock code={block.code} language={block.language} fileName={block.fileName} />
 					{/key}
 				</div>
 			{:else}

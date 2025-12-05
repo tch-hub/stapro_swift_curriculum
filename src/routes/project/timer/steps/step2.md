@@ -64,7 +64,7 @@ VStack {
 
 以下はこのビューの全体ソースコードです。タイマーのロジックは別ステップで追加します。
 
-```swift
+```swift title="ContentView.swift"
 import SwiftUI
 
 enum TimerState {

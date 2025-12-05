@@ -92,8 +92,10 @@
 				{/if}
 			</div>
 			<div class="flex items-center space-x-2">
-				{#if fileName}
-					<span class="text-xs text-base-content opacity-70">{fileName}</span>
+				{#if title && fileName}
+					<span class="font-mono text-xs text-base-content opacity-70">{fileName}</span>
+				{:else if fileName}
+					<h3 class="font-mono text-sm font-semibold text-base-content">{fileName}</h3>
 				{/if}
 				<span class="badge badge-outline badge-sm">Swift</span>
 				{#if executable}
