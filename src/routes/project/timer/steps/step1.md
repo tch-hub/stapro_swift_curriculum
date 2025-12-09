@@ -10,7 +10,7 @@
 2. テンプレートで「App」を選択して「Next」をクリックする。
 3. 設定を入力し、以下の画像のように指定して「Next」を押す。
 
-![Xcode の設定画面]({base}/images/setup.png)
+![Xcode の設定画面](/images/setup.png)
 
 4. 保存先を選んでプロジェクトを作成する。
 
