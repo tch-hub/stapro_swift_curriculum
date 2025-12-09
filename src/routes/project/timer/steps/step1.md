@@ -1,9 +1,5 @@
 # ステップ1: プロジェクトの作成とセットアップ
 
-<script>
-    import {base} from '$app/paths';
-</script>
-
 ### 1. Xcodeで新規プロジェクトを作成
 
 1. Xcodeを起動し、「Create a new Xcode project」を選択する。

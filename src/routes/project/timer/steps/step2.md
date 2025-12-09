@@ -1,8 +1,4 @@
-
-
-<script>
-    import {base} from '$app/paths';
-</script>
+# ステップ2: ViewModelの基礎
 
 ### 1. TimerState enum
 
@@ -39,7 +35,6 @@ enum TimerState {
 - `VStack` は縦方向にビューを並べます。
 - `HStack` は横方向にビューを並べます。
 - `spacing` や `alignment` を調整して見た目を整えます。
-
 
 ```swift
 VStack {

@@ -1,9 +1,5 @@
 # ステップ4: タイマー表示ビューの実装
 
-<script>
-    import {base} from '$app/paths';
-</script>
-
 ## 1. TimerDisplayView
 
 タイマーの残り時間を大きく表示し、円形の進捗インジケーターで視覚化するビュー(`TimerDisplayView.swift`)を作ります。

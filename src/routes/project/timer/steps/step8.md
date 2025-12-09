@@ -1,9 +1,5 @@
 # ステップ8: 最終調整とテスト
 
-<script>
-    import {base} from '$app/paths';
-</script>
-
 ## 1. ColorButtonコンポーネント
 
 ボタンコンポーネント（`ColorButton.swift`）を編集します。

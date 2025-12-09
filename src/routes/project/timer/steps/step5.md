@@ -1,9 +1,5 @@
 # ステップ5: ViewModelの作成
 
-<script>
-    import {base} from '$app/paths';
-</script>
-
 ## 1. TimerViewModel
 
 タイマーの振る舞い（時間管理・開始/停止/一時停止）を扱う `TimerViewModel` を作ります。

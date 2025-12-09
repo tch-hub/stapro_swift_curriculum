@@ -1,9 +1,5 @@
 # ステップ6: タイマーロジックの追加
 
-<script>
-    import {base} from '$app/paths';
-</script>
-
 ## 1. countDownメソッド
 
 タイマーを1秒ごとに進めるロジック（`countDown`）を `TimerViewModel` に追加します。
