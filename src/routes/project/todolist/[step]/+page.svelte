@@ -41,9 +41,22 @@
 				};
 			}
 
+			let html = marked.parser([token], parserOptions);
+
+			// base パスを適用
+			if (base) {
+				const normalizedBase = (base || '').replace(/\/$/, '');
+				html = html.replace(/(src|href)=(['"])\/(?!\/)([^'\"]*)/g, (m, attr, q, rest) => {
+					return `${attr}=${q}${normalizedBase}/${rest}`;
+				});
+				html = html.replace(/url\((['"]?)\/(?!\/)([^)'\"]*)\)/g, (m, q, rest) => {
+					return `url(${q}${normalizedBase}/${rest})`;
+				});
+			}
+
 			return {
 				type: 'html',
-				html: marked.parser([token], parserOptions)
+				html
 			};
 		});
 </script>
