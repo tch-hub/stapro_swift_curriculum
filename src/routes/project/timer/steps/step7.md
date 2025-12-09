@@ -1,52 +1,79 @@
 # ステップ7: アラーム機能の実装
 
-このステップでは、カウントダウン終了時にアラート表示と音声再生を行う仕組みを追加します。
-先に要点と短いコード例を示し、最後に `TimerViewModel` 全体の実装をまとめて掲載します。
+<script>
+    import {base} from '$app/paths';
+</script>
 
-### 1. AVFoundationとアラームの準備
+## 1. アラーム機能
 
-- AVFoundation を使って音声を再生します。ViewModel 側で `AVAudioPlayer` を保持し、終了時に再生します。
-- アラート表示のための `@Published var isShowingAlert` を用意して View と連携します。
+カウントダウン終了時にアラート表示と音声再生を行う機能を追加します。
 
-コード例（AVAudioPlayer と isShowingAlert の最小例）:
+### 1. 必要なプロパティの追加
 
 ```swift
 import AVFoundation
 
-class TimerViewModel: ObservableObject {
-    @Published var isShowingAlert = false
-    var audioPlayer: AVAudioPlayer?
-
-    func playSound() {
-        // Bundle から音声をロードして再生する処理
-    }
-}
+@Published var isShowingAlert = false
+var audioPlayer: AVAudioPlayer?
 ```
 
----
+- `@Published var isShowingAlert = false` でアラート表示フラグを管理します。
+- `var audioPlayer: AVAudioPlayer?` で音声再生用のプレイヤーを保持します。
 
-### 2. 音声ファイルの追加
-
-- 音声ファイル (例: Alarm.mp3) を Xcode のプロジェクトに追加し、ターゲットに含めます。
-- アプリ内リソースとして Bundle に置けば `Bundle.main.url(forResource:withExtension:)` で取得できます。
-
-コード例（Bundle から URL を取得する例）:
+### 2. 音声ファイルの準備
 
 ```swift
 guard let url = Bundle.main.url(forResource: "Alarm", withExtension: "mp3") else {
-    // ファイルが見つからない場合の処理
     return
 }
 ```
 
----
+- Xcode のプロジェクトに音声ファイル（例：`Alarm.mp3`）を追加します。
+- ターゲットに含めることを確認してください。
+- `Bundle.main.url(forResource:withExtension:)` でアプリ内リソースから音声を取得します。
 
-### 3. Alertで終了を通知
+### 3. 音声再生メソッド
 
-- カウントダウンが終わったら `isShowingAlert = true` をセットして View 側でアラートを表示します。
-- アラートのボタンで音声停止や状態リセットを行います。
+```swift
+func playSound() {
+    guard let url = Bundle.main.url(forResource: "Alarm", withExtension: "mp3") else { return }
+    do {
+        audioPlayer = try AVAudioPlayer(contentsOf: url)
+        audioPlayer?.play()
+    } catch {
+        print("音声ファイルが再生できませんでした")
+    }
+}
+```
 
-コード例（View の .alert）:
+- `AVAudioPlayer` を初期化して音声を再生します。
+- エラーハンドリングで失敗時もアプリが止まらないようにします。
+
+### 4. countDownメソッドの修正
+
+```swift
+func countDown() {
+    timer?.invalidate()
+    timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+        guard let self = self else { return }
+        DispatchQueue.main.async {
+            if self.remainingTime > 0 {
+                self.remainingTime -= 1
+            } else {
+                timer.invalidate()
+                self.timerState = .idle
+                self.isShowingAlert = true  // 追加
+                self.playSound()            // 追加
+            }
+        }
+    }
+}
+```
+
+- タイマー終了時に `isShowingAlert = true` を設定します。
+- `playSound()` で音声を再生します。
+
+### 5. ContentViewでのアラート表示
 
 ```swift
 .alert("時間です", isPresented: $viewModel.isShowingAlert) {
@@ -58,43 +85,16 @@ guard let url = Bundle.main.url(forResource: "Alarm", withExtension: "mp3") else
 }
 ```
 
----
-
-### 4. Alertの基本構文
-
-- `.alert("タイトル", isPresented: $isPresented)` の形でモーダルが出せます。
-- ボタンの中で `isPresented` や他の状態を更新して閉じます。
-
-コード例（最小構文）:
-
-```swift
-Text("完了")
-    .alert("通知", isPresented: $isShowing) {
-        Button("OK") { isShowing = false }
-    }
-```
+- `.alert()` でアラートダイアログを表示します。
+- ボタンを押すと状態をリセットし、音声を停止します。
 
 ---
 
-### 5. テスト
+## コード全体
 
-1. 5秒など短時間のタイマーで終了処理を確認してください。
-2. 終了時に `isShowingAlert` が true に変わり、アラートと音声が正しく動くかを確認します。
+以下は アラーム機能を含む `TimerViewModel` の実装です。
 
-テスト補助コード（短時間確認の例）:
-
-```swift
-viewModel.startTimer(hours: 0, minutes: 0, seconds: 5)
-// カウントダウン終了でアラートと再生が発生するかをチェック
-```
-
----
-
-### コード全体 — TimerViewModel のアラーム対応
-
-以下は ViewModel にアラーム再生とアラート用フラグを追加した全体実装です。既存の countDown と playSound を合わせて動作する例です。
-
-```swift
+```swift title="TimerViewModel.swift"
 import SwiftUI
 import Combine
 import AVFoundation
@@ -158,4 +158,20 @@ class TimerViewModel: ObservableObject {
         countDown()
     }
 }
+```
+
+    func pauseTimer() {
+        timerState = .paused
+        timer?.invalidate()
+    }
+
+    func restartTimer() {
+        timerState = .running
+        countDown()
+    }
+
+}
+
+```
+
 ```

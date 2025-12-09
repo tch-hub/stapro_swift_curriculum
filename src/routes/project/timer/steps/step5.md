@@ -1,102 +1,91 @@
 # ステップ5: ViewModelの作成
 
-このステップではタイマーの振る舞い（時間管理・開始/停止/一時停止）を扱う `TimerViewModel` を実装します。
-以下で役割とポイントを説明し、最後にクラス全体のコードをまとめて掲載します。
+<script>
+    import {base} from '$app/paths';
+</script>
 
-### 1. TimerViewModelの骨組み
+## 1. TimerViewModel
 
-- ViewModel はタイマー状態や残り時間、Timer インスタンスを保持します。
-- View 側は ViewModel の公開プロパティを監視し、自動的に UI を更新できます。
+タイマーの振る舞い（時間管理・開始/停止/一時停止）を扱う `TimerViewModel` を作ります。
 
-コード例（プロパティとメソッドの宣言例、冒頭のみ）:
+### 1. 変数の定義
 
 ```swift
-import Combine
+@Published var remainingTime = 0
+@Published var timerState: TimerState = .idle
+var timer: Timer?
+var totalTime: Int = 0
+```
 
+- `@Published` で標記したプロパティが変わると、View が自動的に再描画されます。
+- `remainingTime` はタイマーの残り時間を、`timerState` はタイマーの状態（待機・実行・一時停止）を保持します。
+- `timer` は Timer インスタンスを管理し、`totalTime` は最初の合計時間を保持します。
+
+### 2. ObservableObjectの役割
+
+```swift
 class TimerViewModel: ObservableObject {
     @Published var remainingTime = 0
     @Published var timerState: TimerState = .idle
-
-    // Timer 管理用
-    var timer: Timer?
-    var totalTime: Int = 0
-
-    func startTimer(hours: Int, minutes: Int, seconds: Int) {
-        // 実装は下の完全なコードを参照
-    }
 }
 ```
 
----
+- `ObservableObject` を継承することで、View がこの ViewModel インスタンスを監視できるようになります。
+- `@Published` が付いたプロパティが変わると、View に通知され自動的に再描画されます。
 
-### 2. ObservableObjectと@Publishedの関係
-
-- `ObservableObject` を継承したクラスの中で `@Published` を使うと、プロパティ変更が View に通知されます。
-
-コード例（@Published が View に反映する仕組みのイメージ）:
+### 3. メソッドの定義
 
 ```swift
-class TimerViewModel: ObservableObject {
-    @Published var remainingTime = 0 // 変更時に View が再描画される
+func startTimer(hours: Int, minutes: Int, seconds: Int) {
+    remainingTime = hours * 3600 + minutes * 60 + seconds
+    totalTime = remainingTime
+    timerState = .running
 }
 
-// View 側
-@StateObject var viewModel = TimerViewModel()
-Text("残り: \(viewModel.remainingTime)")
+func stopTimer() {
+    timerState = .idle
+    timer?.invalidate()
+}
+
+func pauseTimer() {
+    timerState = .paused
+    timer?.invalidate()
+}
+
+func restartTimer() {
+    timerState = .running
+}
 ```
 
----
+- `startTimer()` は選択された時間をセットして実行状態に変更します。
+- `stopTimer()` はタイマーを無効化して待機状態に戻します。
+- `pauseTimer()` はタイマーを一時停止します。
+- `restartTimer()` は一時停止状態から再開します。
 
-### 3. ContentViewからViewModelを使う
-
-- `@StateObject` で ViewModel を作成し、ボタンや UI の操作から ViewModel のメソッドを呼び出します。
-
-コード例（ContentView での利用例）:
+### 4. ContentViewでの利用
 
 ```swift
 @StateObject var viewModel = TimerViewModel()
 
 Button("開始") {
-    viewModel.startTimer(hours: 0, minutes: 5, seconds: 0)
+    viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
 }
 
-Button("停止") {
-    viewModel.stopTimer()
+Button("一時停止") {
+    viewModel.pauseTimer()
 }
 ```
 
----
-
-### 4. MVVMの役割
-
-- Model: データ（時間や設定）を表す。
-- View: UI 表示とユーザー操作（SwiftUI の View）。
-- ViewModel: View と Model の橋渡し。UI に依存しないロジック（タイマーの進行や状態遷移）をまとめる。
-
-コード例（役割のスニペット）:
-
-```swift
-// Model: 単純なデータ構造
-struct TimerData { var totalSeconds: Int }
-
-// ViewModel: TimerData を扱う
-class TimerViewModel: ObservableObject {
-    @Published var model: TimerData
-    init(total: Int) { model = TimerData(totalSeconds: total) }
-}
-
-// View: ViewModel を監視して表示
-@StateObject var viewModel = TimerViewModel(total: 60)
-Text("合計: \(viewModel.model.totalSeconds) 秒")
-```
+- `@StateObject` で ViewModel インスタンスを作成し、View がその変更を監視できるようにします。
+- ボタンが押されると ViewModel のメソッドが呼び出され、状態が更新されます。
 
 ---
 
-### コード全体 — TimerViewModel
+## コード全体
 
 以下は TimerViewModel の全体ソースコードです（コピーしてそのまま使えます）。
 
-```swift
+```swift title="TimerViewModel.swift"
 import SwiftUI
 import Combine
 
@@ -111,7 +100,6 @@ class TimerViewModel: ObservableObject {
         remainingTime = hours * 3600 + minutes * 60 + seconds
         totalTime = remainingTime
         timerState = .running
-        // 後でcountDownを呼び出す
     }
 
     func stopTimer() {
@@ -126,7 +114,6 @@ class TimerViewModel: ObservableObject {
 
     func restartTimer() {
         timerState = .running
-        // 後でcountDownを呼び出す
     }
 }
 ```

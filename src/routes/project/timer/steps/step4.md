@@ -1,26 +1,22 @@
 # ステップ4: タイマー表示ビューの実装
 
-まずは TimerDisplayView が何をするのかを説明し、最後にファイル（ビュー）全体のコードをまとめて掲載します。
+<script>
+    import {base} from '$app/paths';
+</script>
 
-### 1. このビューの役割
+## 1. TimerDisplayView
 
-- タイマーの残り時間を大きく表示し、円形の進捗インジケーターで視覚化します。
-- `remainingTime`（残り秒）と `totalTime`（合計秒）を受け取り、進捗割合を計算して描画します。
+タイマーの残り時間を大きく表示し、円形の進捗インジケーターで視覚化するビュー(`TimerDisplayView.swift`)を作ります。
 
-コード例（プロパティ受け取りの基本）:
+### 1. 変数の定義
 
 ```swift
-// 受け取りプロパティとして remainingTime / totalTime を定義
-struct TimerDisplayView: View {
-    var remainingTime: Int
-    var totalTime: Int
-
-    var body: some View {
-        // 実装は下でまとめて掲載しています
-        EmptyView()
-    }
-}
+var remainingTime: Int
+var totalTime: Int
 ```
+
+- `remainingTime` は現在の残り時間（秒）を受け取ります。
+- `totalTime` は最初に設定した合計時間（秒）を受け取ります。
 
 ### 2. UIの構成（ポイント）
 
@@ -45,25 +41,7 @@ ZStack {
 }
 ```
 
-### 3. 進捗（completionPercentage）の計算
-
-- totalTime が 0 より大きければ残り時間 / 合計時間で割合（0..1）を計算します。
-- 合計時間が 0 の場合は 1（満杯）を返すようにして安全にしています。
-
-コード例（completionPercentage の定義）:
-
-```swift
-var completionPercentage: Double {
-    // 0..1 の範囲で進捗を返す
-    return (totalTime > 0) ? (Double(remainingTime) / Double(totalTime)) : 1
-}
-```
-
-### 4. 時刻文字列の整形
-
-- 秒数を HH:MM:SS の形式に変換するヘルパー関数を用意しています。
-
-コード例（秒数を HH:MM:SS に変換する関数）:
+### 3. 時刻文字列の整形
 
 ```swift
 func formatTime(seconds: Int) -> String {
@@ -74,25 +52,43 @@ func formatTime(seconds: Int) -> String {
 }
 ```
 
-### 5. ContentView での使い方（例）
+- 秒数を HH:MM:SS の形式に変換するヘルパー関数です。
+- タイマーの残り時間を見やすい形式で表示します。
 
-コンテンツビュー側では、タイマーの状態に応じて時間選択ビューか表示ビューを切り替えます。例:
+### 4. UIの作成
 
 ```swift
-if timerState == .idle {
-    TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
-} else {
-    TimerDisplayView(remainingTime: remainingTime, totalTime: totalTime)
+var body: some View {
+    ZStack {
+        // 円形プログレス（一部のみを描画）
+        Circle()
+            .trim(from: 0.0, to: CGFloat(completionPercentage))
+            .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round))
+            .foregroundColor(.orange)
+            .rotationEffect(Angle(degrees: 270))
+            .animation(.linear, value: completionPercentage)
+            .padding(10)
+
+        // 中央に残り時間を表示
+        Text(formatTime(seconds: remainingTime))
+            .font(.system(size: 70))
+    }
 }
 ```
 
+- `ZStack` で円形進捗と時間表示テキストを重ねます。
+- `Circle().trim(from: 0.0, to: CGFloat(completionPercentage))` で、進捗に応じて円弧の一部を描画します。
+- `.rotationEffect(Angle(degrees: 270))` で円弧を上（12時）方向から開始するように回転します。
+- `.animation(.linear, value: completionPercentage)` で、進捗の変化を滑らかにアニメーションさせます。
+- `StrokeStyle(lineWidth: 10, lineCap: .round)` で線幅と線端の丸みを調整します。
+
 ---
 
-### コード全体 — TimerDisplayView
+## コード全体
 
 以下はこのビューの全体ソースコードです（コピーしてそのまま使えます）。
 
-```swift
+```swift title="TimerDisplayView.swift"
 import SwiftUI
 
 struct TimerDisplayView: View {

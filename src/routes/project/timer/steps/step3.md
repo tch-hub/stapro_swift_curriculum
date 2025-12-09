@@ -1,102 +1,83 @@
 # ステップ3: 時間選択ビューの実装
 
-### 1. TimePickerコンポーネントを作る
+## 1. TimePickerコンポーネント
 
-時間を選ぶための再利用可能なPickerを`TimePicker.swift`に定義する。
+時間を選ぶための再利用可能なPicker(`TimePicker.swift`)をつくります。
 
-```swift
-import SwiftUI
+### 1. 変数の定義
 
-struct TimePicker: View {
-    var title: String
-    var range: ClosedRange<Int>
-    @Binding var selection: Int
-
-    var body: some View {
-        Picker(selection: $selection, label: Text(title)) {
-            ForEach(Array(range), id: \.self) { value in
-                Text("\(value) \(title)").tag(value)
-            }
-        }
-        .pickerStyle(.wheel) //ホイール表示
-    }
-}
-```
 ```
 var title: String
 var range: ClosedRange<Int>
-```
-- `title` でタイマーの時間の単位を設定できるようにします。
-- `range` でタイマーの分や秒などの数字の選択範囲を設定できるようにします。
-```
 @Binding var selection: Int
 ```
-- `@Binding` を使って親ビューの `@State` と値を同期させます。
 
+- `title` でタイマーの時間の単位を設定できるようにします。
+- `range` でタイマーの分や秒などの数字の選択範囲を設定できるようにします。
+- `selection` は`@Binding`を使って同期できるようにします。
 
-### 2. Pickerの使い方
+### 2. UIの作成
 
-- `selection` にバインディングを渡し、値の変化を受け取る。
-- `ForEach(Array(range), id: \.self)` で範囲内の値を繰り返す。
-- `Text("\(value) \(title)")` で各行の表示を作る。
-
-```swift
-Picker(selection: $selection, label: Text(title)) {
-    ForEach(Array(range), id: \.self) { value in
-        Text("\(value) \(title)").tag(value)
+```
+var body: some View {
+    Picker(selection: $selection, label: Text(title)) {
     }
-}
-.pickerStyle(.wheel)
-```
-
-### 3. TimeSelectionViewの作成
-
-3つの `TimePicker` を横並びにしたカスタムビュー。`TimeSelectionView.swift` に記述。
-
-```swift
-import SwiftUI
-
-struct TimeSelectionView: View {
-    @Binding var hours: Int
-    @Binding var minutes: Int
-    @Binding var seconds: Int
-
-    var body: some View {
-        HStack {
-            TimePicker(title: "時間", range: 0...23, selection: $hours)
-            TimePicker(title: "分", range: 0...59, selection: $minutes)
-            TimePicker(title: "秒", range: 0...59, selection: $seconds)
-        }
-    }
+    .pickerStyle(.wheel) //pickerSのスタイルをwheelにする
 }
 ```
 
-- `HStack` で `TimePicker` を横並び。
-- 親ビュー側(`ContentView`)で `@State var hours = 0` などを定義し、`$hours` のようにバインディングを渡す。
+- `selection` には `@Binding` の `$selection` を渡しており、Pickerで選択した値が親ビューへ即時に伝わります。これにより `ContentView` 側の `@State` 変数が更新され、選択された時間が同期されます。
+- `label: Text(title)` によって Picker のラベルに `title`（例えば「時間」「分」「秒」）を表示でき、同じ `TimePicker` コンポーネントを異なる単位で再利用できます。
 
-### 4. ContentViewの更新例
-
-```swift
-if timerState == .idle {
-    TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
-} else {
-    Text("タイマーが実行中です")
-        .font(.largeTitle)
+```
+ForEach(Array(range), id: \.self) { value in
 }
 ```
+- `ForEach(Array(range), id: \.self)` は `range` で指定された値の一覧を行として生成します。`range` を変えるだけで選択肢の範囲を簡単に変更できます。
+```
+Text("\(value) \(title)").tag(value)
+```
+- `Text("\(value) \(title)")` で表示テキストを構成し、`.tag(value)` によってその行が選択されたときに `selection` に対応する値が設定されます。
 
-- `timerState` に応じて `TimeSelectionView` を表示するか、別のビューを表示するかを切り替える。
-- `@State` で保持した時間を `TimeSelectionView` へ渡し、Pickerの値を更新する。
 
 ---
 
-### コード全体 — ファイル別の完成コード
+## 2. TimeSelectionView
 
-以下は、このステップで作成した各ファイルごとの完成コードを個別のコードブロックとして示したものです。
+`TimePicker`を使って時間選択画面(`TimeSelectionView.swift`)を作ります。
 
-// TimePicker.swift
+### 1. 変数の定義
 
 ```swift
+@Binding var hours: Int
+@Binding var minutes: Int
+@Binding var seconds: Int
+```
+
+- `hours`, `minutes`, `seconds` はそれぞれ `@Binding` として定義され、親ビュー（例: `ContentView`）の `@State` と双方向に同期します。Pickerで値を変更すると親の値も即座に更新され、親側の状態に応じて表示/非表示などの振る舞いを制御できます。
+- `@Binding` を使うことで、`TimeSelectionView` は状態管理を持たず、親に状態を委ねたシンプルな再利用コンポーネントになります。
+
+### 2. UIの作成
+
+```swift
+var body: some View {
+    HStack {
+        TimePicker(title: "時間", range: 0...23, selection: $hours)
+        TimePicker(title: "分", range: 0...59, selection: $minutes)
+        TimePicker(title: "秒", range: 0...59, selection: $seconds)
+    }
+}
+```
+
+- `HStack` によって3つの `TimePicker` を横に並べています。各Pickerにはそれぞれ適切な `range` と `selection` の `@Binding` を渡し、選択値が親ビューへ即時に反映されるようにしています。
+- `selection: $hours` のように `$` を付けて渡すことで、`TimePicker` の `@Binding` と紐づき、ユーザー操作が同じメモリ上の状態に反映されます。
+
+---
+
+## コード全体
+
+```swift
+// TimePicker.swift
 import SwiftUI
 
 struct TimePicker: View {
@@ -115,9 +96,8 @@ struct TimePicker: View {
 }
 ```
 
-// TimeSelectionView.swift
-
 ```swift
+// TimeSelectionView.swift
 import SwiftUI
 
 struct TimeSelectionView: View {
@@ -135,9 +115,8 @@ struct TimeSelectionView: View {
 }
 ```
 
-// ContentView.swift
-
 ```swift
+// ContentView.swift
 import SwiftUI
 
 struct ContentView: View {
