@@ -64,11 +64,7 @@ struct TimerApp: App {
 }
 
 ```
-
-```
-import SwiftUI
-```
-
+`import SwiftUI`
 SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使えるようになります
 
 ```
