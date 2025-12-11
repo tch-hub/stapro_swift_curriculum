@@ -1,4 +1,17 @@
-# ステップ2: ViewModelの基礎
+## swiftUIの基本構造
+```
+import SwiftUI
+
+struct ContentView: View {
+    var body: some View {
+    }
+}
+
+#Preview {
+    ContentView()
+}
+
+```
 
 ### 1. TimerState enum
 
@@ -9,8 +22,6 @@
 - `paused`: 一時停止
 
 ```swift
-import SwiftUI
-
 enum TimerState {
     case idle
     case running
