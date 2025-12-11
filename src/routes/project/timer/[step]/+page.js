@@ -1,5 +1,5 @@
 import { error } from "@sveltejs/kit";
-import { base } from '$app/paths';
+
 import { timerSteps } from "../steps-config";
 
 const markdownFiles = import.meta.glob("../steps/*.md", { as: "raw" });
@@ -20,21 +20,7 @@ export async function load({ params }) {
 
     let content = await loader();
 
-    // When markdown is loaded as raw HTML, image/link paths that start with "/"
-    // point to the site root and will break if the site is served from a subpath
-    // (for example GitHub Pages: https://user.github.io/repo/). Prefix those
-    // paths with the app `base` so they resolve correctly.
-    const normalizedBase = (base || '').replace(/\/$/, '');
-    if (normalizedBase) {
-        // Replace src="/... and src='/... and href="/... and url('/... and so on.
-        content = content.replace(/(src|href)=(['"])\/(?!\/)([^'\"]*)/g, (m, attr, q, rest) => {
-            return `${attr}=${q}${normalizedBase}/${rest}`;
-        });
 
-        content = content.replace(/url\((['"]?)\/(?!\/)([^)'\"]*)\)/g, (m, q, rest) => {
-            return `url(${q}${normalizedBase}/${rest})`;
-        });
-    }
 
     return {
         stepId,
