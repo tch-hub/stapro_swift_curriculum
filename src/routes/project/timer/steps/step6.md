@@ -1,108 +1,95 @@
-# ステップ6: タイマーロジックの追加
-
-## 1. countDownメソッド
-
-タイマーを1秒ごとに進めるロジック（`countDown`）を `TimerViewModel` に追加します。
-
-### 1. Timerの基本構文
+### 1. ContentViewの更新
 
 ```swift
-timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-    // ここに1秒ごとの処理
+// @State var timerState: TimerState = .idleの上に追加
+@StateObject var viewModel = TimerViewModel()
+```
+
+- `@StateObject` で ViewModel インスタンスを作成し、View がその変更を監視できるようにします。
+
+```swift
+// Button("開始") {timerState = .running}を書き換え
+Button("開始") {
+    viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
 }
 ```
 
-- `withTimeInterval: 1` で1秒ごとに処理を実行します。
-- `repeats: true` で繰り返し実行するように設定します。
-- クロージャ内に1秒ごとに実行する処理を記述します。
-
-### 2. 残り時間の更新
+- "開始"ボタンが押されたときに、ViewModel の `startTimer` メソッドを呼び出すように変更します。
 
 ```swift
-{ [weak self] timer in
-    guard let self = self else { return }
-
-    if self.remainingTime > 0 {
-        self.remainingTime -= 1
-    } else {
-        timer.invalidate()
-        self.timerState = .idle
-    }
+// Button("キャンセル") {}の下に追加
+Button("一時停止") {
+    viewModel.pauseTimer()
 }
 ```
 
-- `[weak self]` でメモリリークを防ぎます。
-- `guard let self = self else { return }` で自身が存在することを確認します。
-- 残り時間が 0 より大きければ1秒減らし、0になればタイマーを停止します。
+- 新しく"一時停止"ボタンを追加し、ViewModel の `pauseTimer` メソッドを呼び出します。
 
-### 3. メインスレッドでのUI更新
-
-```swift
-DispatchQueue.main.async {
-    if self.remainingTime > 0 {
-        self.remainingTime -= 1
-    } else {
-        timer.invalidate()
-        self.timerState = .idle
-    }
-}
-```
-
-- UI 更新は必ずメインスレッドで行う必要があります。
-- `DispatchQueue.main.async` でメインスレッドに処理を切り替えます。
-
-### 4. タイマーの安全な管理
-
-```swift
-// 既存タイマーを停止してから新規作成
-timer?.invalidate()
-timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-    // 処理
-}
-```
-
-- 新しいタイマーを作る前に既存のタイマーを停止します。
-- 二重実行を防ぐため `timer?.invalidate()` で安全に停止します。
 
 ---
 
-## コード全体
+## コード全体 — ContentView
+<img src="/images/timer/t51.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
-以下は `TimerViewModel` に追加する `countDown()` メソッドの実装です。
 
-```swift title="TimerViewModel.swift（countDownメソッドの追加）"
-func countDown() {
-    // 既存タイマーを停止
-    timer?.invalidate()
+```swift 
+// ContentView.swift
+import SwiftUI
 
-    timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
-        guard let self = self else { return }
+struct ContentView: View {
+    @StateObject var viewModel = TimerViewModel()
+    @State var timerState: TimerState = .idle
+    @State var hours = 0
+    @State var minutes = 0
+    @State var seconds = 0
 
-        // UI 更新はメインスレッドで
-        DispatchQueue.main.async {
-            if self.remainingTime > 0 {
-                self.remainingTime -= 1
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("タイマーアプリ")
+                .font(.largeTitle)
+                .padding()
+
+            // 時間選択は待機時のみ表示
+            if timerState == .idle {
+                TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
             } else {
-                timer.invalidate()
-                self.timerState = .idle
+                Text("タイマーが実行中です")
+                    .font(.title)
+            }
+
+            HStack(spacing: 16) {
+                Button("開始") {
+                    viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+                }
+                .padding()
+                .background(Color.green)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+
+                Button("キャンセル") {
+                    timerState = .idle
+                    hours = 0; minutes = 0; seconds = 0
+                }
+                .padding()
+                .background(Color.gray)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+
+                Button("一時停止") {
+                    viewModel.pauseTimer()
+                }
+                .padding()
+                .background(Color.orange)
+                .foregroundColor(.white)
+                .cornerRadius(10)
             }
         }
+        .padding()
     }
 }
-```
 
-`startTimer()` と `restartTimer()` から `countDown()` を呼び出すように修正します。
-
-```swift
-func startTimer(hours: Int, minutes: Int, seconds: Int) {
-    remainingTime = hours * 3600 + minutes * 60 + seconds
-    totalTime = remainingTime
-    timerState = .running
-    countDown()  // 追加
+#Preview {
+    ContentView()
 }
 
-func restartTimer() {
-    timerState = .running
-    countDown()  // 追加
-}
 ```

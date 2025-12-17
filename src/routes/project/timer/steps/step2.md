@@ -12,42 +12,45 @@ struct ContentView: View {
 }
 
 ```
+このコードは、SwiftUIで画面(View)を定義するための最小構成です。
+アプリの画面はすべて、このような View の組み合わせで作られています。
 
 ### 1. TimerState enum
 
-まず、タイマーの状態を管理する変数を定義します。
 
-- `idle`: 待機中
-- `running`: 実行中
-- `paused`: 一時停止
 
 ```swift
+// import SwiftUIの次の行に追加
 enum TimerState {
     case idle
     case running
     case paused
 }
 ```
+まず、タイマーの状態を管理する変数を定義します。
+
+- `idle`: 待機中
+- `running`: 実行中
+- `paused`: 一時停止
 
 ### 2. @State
 
-- `@State` は View が保持する状態を表し、値が変わると自動で再描画されます。
-- タイマーの残り時間や現在の状態（`TimerState`）、時間設定に使います。
 
 ```swift
+// struct ContentView: View {}内に追加
 @State var timerState: TimerState = .idle
 @State var hours = 0
 @State var minutes = 0
 @State var seconds = 0
 ```
+- `@State` は View が保持する状態を表し、値が変わると自動で再描画されます。
+- タイマーの残り時間や現在の状態（`TimerState`）、時間設定に使います。
+
 
 ### 3. 基本レイアウト — VStack と HStack
 
-- `VStack` は縦方向にビューを並べます。
-- `HStack` は横方向にビューを並べます。
-- `spacing` や `alignment` を調整して見た目を整えます。
-
 ```swift
+// var body: some View {}内に追加
 VStack {
     Text("タイマーアプリ")
         .font(.largeTitle)
@@ -69,9 +72,12 @@ VStack {
 }
 ```
 
-### コード全体 — ContentView
+- `VStack` は縦方向にビューを並べます。
+- `HStack` は横方向にビューを並べます。
+- `spacing` や `alignment` を調整して見た目を整えます。
 
-以下はこのビューの全体ソースコードです。タイマーのロジックは別ステップで追加します。
+
+### コード全体 — ContentView
 
 <img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 

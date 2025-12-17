@@ -22,13 +22,6 @@
 #### 必要なファイルを作成する
 
 タイマーアプリでは次のような構成を作成します。以下の構成と同じになるようにフォルダやファイルを作成してください。
-
-#### 作成するフォルダ
-
-- ViewModels
-- Views
-- Components
-
 ```
 Timer/
 ├── TimerApp.swift          # アプリのエントリーポイント
@@ -65,8 +58,8 @@ struct TimerApp: App {
 
 ```
 `import SwiftUI`
-SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使えるようになります
-
+SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使えるようになります。  
+bodyという部分は、画面に何を表示するかを書くところです。
 ```
 @main
 struct TimerApp: App {
@@ -79,7 +72,7 @@ struct TimerApp: App {
 
 ```
 
-ContentViewという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。bodyという部分は、画面に何を表示するかを書くところです。some Viewは、戻り値の型を指定する特別な書き方です。これでSwiftUIがうまく動きます。
+ContentViewという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。
 
 ```
 WindowGroup {

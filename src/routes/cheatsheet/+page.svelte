@@ -121,6 +121,15 @@
 			</li>
 			<li>
 				<a
+					href="#methods"
+					onclick={(e) => handleClick(e, 'methods')}
+					onkeydown={(e) => handleKeydown(e, 'methods')}
+					role="button"
+					tabindex="0">メソッド</a
+				>
+			</li>
+			<li>
+				<a
 					href="#optionals-error-handling"
 					onclick={(e) => handleClick(e, 'optionals-error-handling')}
 					onkeydown={(e) => handleKeydown(e, 'optionals-error-handling')}
@@ -690,6 +699,81 @@ print("\\(student1.name)は\\(student1.age)歳です")`}
 							output="太郎は13歳です"
 							executable={true}
 						/>
+					</div>
+				</div>
+
+				<!-- メソッド -->
+				<div id="methods" class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">メソッド</h2>
+						<p>
+							メソッドは、特定の型（クラス、構造体、列挙型）の内部で定義された関数です。その型のデータ（プロパティ）を使って処理を行う「振る舞い」を定義します。
+						</p>
+						<CodeBlock
+							title="メソッドの定義と使用"
+							code={`class Counter {
+    var count = 0
+    
+    // カウントを1増やすメソッド
+    func increment() {
+        count += 1
+        print("カウント: \\(count)")
+    }
+    
+    // 指定した数だけ増やすメソッド
+    func increment(by amount: Int) {
+        count += amount
+        print("\\(amount)増やしました。合計: \\(count)")
+    }
+}
+
+// クラスのインスタンスを作成
+let myCounter = Counter()
+
+// メソッドの呼び出し
+myCounter.increment()
+myCounter.increment(by: 5)`}
+							output={`カウント: 1
+5増やしました。合計: 6`}
+							executable={true}
+						/>
+
+						<div class="mt-8">
+							<h3 class="mb-4 text-xl font-bold">関数とメソッドの違い</h3>
+							<div class="overflow-x-auto">
+								<table class="table w-full rounded-box table-zebra bg-base-200">
+									<thead>
+										<tr class="bg-base-300">
+											<th class="text-base text-base-content">項目</th>
+											<th class="text-base text-base-content">関数 (Function)</th>
+											<th class="text-base text-base-content">メソッド (Method)</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="font-bold">定義場所</td>
+											<td>型の外側（グローバル）</td>
+											<td>型（クラス・構造体）の内側</td>
+										</tr>
+										<tr>
+											<td class="font-bold">呼び出し方</td>
+											<td><code class="rounded bg-base-300 px-1">funcName()</code></td>
+											<td><code class="rounded bg-base-300 px-1">instance.methodName()</code></td>
+										</tr>
+										<tr>
+											<td class="font-bold">役割</td>
+											<td>単独で動作する処理のまとまり</td>
+											<td>その型のデータ操作や振る舞い</td>
+										</tr>
+										<tr>
+											<td class="font-bold">データアクセス</td>
+											<td>引数のみ</td>
+											<td>インスタンス自身のプロパティ（<code>self</code>）にアクセス可能</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 

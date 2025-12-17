@@ -17,7 +17,7 @@ export const timerSteps: TimerStep[] = [
 	},
 	{
 		id: 'step3',
-		title: 'ステップ3: 時間選択ビューの実装',
+		title: 'ステップ3: 時間選択ビューの実装(TimePicker.swift, TimeSelectionView.swift)',
 		summary: '再利用可能なTimePickerとTimeSelectionViewをつかって時間入力UIを作ります。'
 	},
 	{
@@ -27,22 +27,22 @@ export const timerSteps: TimerStep[] = [
 	},
 	{
 		id: 'step5',
-		title: 'ステップ5: ViewModelの作成',
+		title: 'ステップ5: ViewModelの作成(TimerViewModel.swift)',
 		summary: 'ObservableObjectと@Publishedを使って段階的にViewModelへロジックを移します。'
 	},
 	{
 		id: 'step6',
-		title: 'ステップ6: タイマーロジックの追加',
+		title: 'ステップ6: タイマーロジックの追加(TimerViewModel.swift)',
 		summary: 'Timer.scheduledTimerでカウントダウン処理を実装し、クロージャを理解します。'
 	},
 	{
 		id: 'step7',
-		title: 'ステップ7: アラーム機能の実装',
+		title: 'ステップ7: アラーム機能の実装(TimerViewModel.swift, ContentView.swift)',
 		summary: 'AVAudioPlayerとAlertで音声再生と完了通知を加えます。'
 	},
 	{
 		id: 'step8',
-		title: 'ステップ8: 最終調整とテスト',
-		summary: 'ColorButtonやテストリストで仕上げを行いアプリ全体を確認します。'
+		title: 'ステップ8: UIの調整(ColorButton.swift, ContentView.swift)',
+		summary: 'コンポーネントを作成してUIを完成させます。'
 	}
 ];

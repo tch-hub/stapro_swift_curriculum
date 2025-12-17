@@ -1,4 +1,3 @@
-# ステップ8: 最終調整とテスト
 
 ## 1. ColorButtonコンポーネント
 
@@ -18,6 +17,7 @@ struct ColorButton: View {
 - `var body: some View` はビューの見た目を返す場所です。ここに UI の構成を記述します。
 
 ```swift
+// struct ColorButton: View {}内に追加
 let text: String
 let color: Color
 let action: () -> Void
@@ -28,6 +28,7 @@ let action: () -> Void
 - `let action: () -> Void` はボタンが押されたときに実行するクロージャ（処理）を受け取ります。
 
 ```
+// var body: some View {}内に追加
 Button(action: action) {
 }
 .frame(width: 90, height: 90)
@@ -41,6 +42,7 @@ Button(action: action) {
 - `.clipShape(Circle())` で背景を円形に切り抜き、丸いボタンに見せています。
 
 ```
+// Button(action: action) {}内に追加
 Text(text)
     .foregroundStyle(color)
     .font(.subheadline)
@@ -59,6 +61,7 @@ Text(text)
 ### 1. 操作ボタンエリア
 
 ```swift
+// HStack() {}を編集
 HStack(spacing: 130) {
     ColorButton(text: "キャンセル", color: .black, action: viewModel.stopTimer)
         .opacity(viewModel.timerState == .idle ? 0.3 : 1)
@@ -80,28 +83,14 @@ HStack(spacing: 130) {
 - キャンセルボタンは待機状態で無効化します（`.disabled()`）。
 - `switch` で状態に応じてボタンを切り替えます。
 
-### 2. アラート設定
-
-```swift
-.alert("時間です", isPresented: $viewModel.isShowingAlert) {
-    Button("完了") {
-        viewModel.isShowingAlert = false
-        viewModel.timerState = .idle
-        viewModel.audioPlayer?.stop()
-    }
-}
-```
-
-- タイマー終了時にアラートを表示します。
-- 「完了」ボタンで音声を停止し状態をリセットします。
-
 ---
 
 ## コード全体
 
-以下は `ColorButton` コンポーネントと ContentView の操作エリアの完成形です。
+<img src="/images/timer/download.jpg" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
 ```swift title="ColorButton.swift"
+// ColorButton.swift
 import SwiftUI
 
 struct ColorButton: View {
@@ -119,5 +108,63 @@ struct ColorButton: View {
         .background(color.opacity(0.2))
         .clipShape(Circle())
     }
+}
+```
+
+<img src="/images/timer/t82.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
+```swift title="ContentView.swift"
+// ContentView.swift
+import SwiftUI
+
+enum TimerState {
+    case idle
+    case running
+    case paused
+}
+
+struct ContentView: View {
+    @StateObject var viewModel = TimerViewModel()
+    @State var hours = 0
+    @State var minutes = 0
+    @State var seconds = 0
+
+    var body: some View {
+        VStack {
+            if viewModel.timerState == .idle {
+                TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
+            } else {
+                TimerDisplayView(remainingTime: viewModel.remainingTime, totalTime: viewModel.totalTime)
+            }
+
+            HStack(spacing: 130) {
+                ColorButton(text: "キャンセル", color: .white, action: viewModel.stopTimer)
+                    .opacity(viewModel.timerState == .idle ? 0.3 : 1)
+                    .disabled(viewModel.timerState == .idle)
+
+                switch viewModel.timerState {
+                case .idle:
+                    ColorButton(text: "開始", color: .green, action: {
+                        viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+                    })
+                case .running:
+                    ColorButton(text: "一時停止", color: .orange, action: viewModel.pauseTimer)
+                case .paused:
+                    ColorButton(text: "再開", color: .green, action: viewModel.restartTimer)
+                }
+            }
+        }
+        .alert("時間です", isPresented: $viewModel.isShowingAlert) {
+            Button("完了") {
+                viewModel.isShowingAlert = false
+                viewModel.timerState = .idle
+                viewModel.audioPlayer?.stop()
+            }
+        }
+    }
+}
+
+#Preview {
+    ContentView()
 }
 ```
