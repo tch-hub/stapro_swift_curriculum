@@ -128,7 +128,7 @@ func restartTimer() {
 
 ## コード全体 — TimerViewModel
 
-このステップではロジック（仕組み）の部分を作成するため、UI（見た目）への変更はありません。
+ここまでの状態では画面の変化はないので次のステップに進んでください。
 
 ```swift title="TimerViewModel.swift"
 import SwiftUI

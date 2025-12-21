@@ -54,6 +54,8 @@ Text(text)
 - `.foregroundStyle(color)` によってテキストの色を `color` に応じた見た目にします。
 - `.font(.subheadline)` は表示フォントサイズをサブ見出し程度に調整し、ボタン内テキストのバランスを整えます。
 
+ColorButton使用イメージ
+<img src="/images/timer/download.jpg" alt="ColorButtonの使用イメージ" width="360" style=" margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 ---
 
 ## 2. ContentViewの編集
