@@ -1,4 +1,3 @@
-
 ## 1. ColorButtonコンポーネント
 
 ボタンコンポーネント（`ColorButton.swift`）を編集します。
@@ -16,8 +15,9 @@ struct ColorButton: View {
 - `struct ColorButton: View` で `ColorButton` コンポーネント（ビュー）を定義します。
 - `var body: some View` はビューの見た目を返す場所です。ここに UI の構成を記述します。
 
+struct ColorButton: View {}内に追加
+
 ```swift
-// struct ColorButton: View {}内に追加
 let text: String
 let color: Color
 let action: () -> Void
@@ -27,8 +27,9 @@ let action: () -> Void
 - `let color: Color` はボタンやテキストに使う色を受け取るプロパティです。呼び出し側で色を切り替えることで見た目を変えられます。
 - `let action: () -> Void` はボタンが押されたときに実行するクロージャ（処理）を受け取ります。
 
+var body: some View {}内に追加
+
 ```
-// var body: some View {}内に追加
 Button(action: action) {
 }
 .frame(width: 90, height: 90)
@@ -41,8 +42,9 @@ Button(action: action) {
 - `.background(color.opacity(0.2))` はボタンの背景色を設定します。`opacity(0.2)` で淡い背景にしています。
 - `.clipShape(Circle())` で背景を円形に切り抜き、丸いボタンに見せています。
 
+Button(action: action) {}内に追加
+
 ```
-// Button(action: action) {}内に追加
 Text(text)
     .foregroundStyle(color)
     .font(.subheadline)
@@ -60,8 +62,9 @@ Text(text)
 
 ### 1. 操作ボタンエリア
 
+HStack() {}を編集
+
 ```swift
-// HStack() {}を編集
 HStack(spacing: 130) {
     ColorButton(text: "キャンセル", color: .black, action: viewModel.stopTimer)
         .opacity(viewModel.timerState == .idle ? 0.3 : 1)

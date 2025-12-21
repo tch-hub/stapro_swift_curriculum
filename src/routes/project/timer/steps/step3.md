@@ -14,8 +14,9 @@ struct TimePicker: View {
 
 ### 2. 変数の定義
 
+struct TimePicker: View {}内に追加
+
 ```
-// struct TimePicker: View {}内に追加
 var title: String
 var range: ClosedRange<Int>
 @Binding var selection: Int
@@ -27,8 +28,9 @@ var range: ClosedRange<Int>
 
 ### 3. UIの作成
 
+var body: some View {}内に追加
+
 ```
-// var body: some View {}内に追加
 Picker(selection: $selection, label: Text(title)) {
 }
 .pickerStyle(.wheel) //pickerSのスタイルをwheelにする
@@ -37,20 +39,25 @@ Picker(selection: $selection, label: Text(title)) {
 - `selection` には `@Binding` の `$selection` を渡しており、Pickerで選択した値が親ビューへ即時に伝わります。これにより `ContentView` 側の `@State` 変数が更新され、選択された時間が同期されます。
 - `label: Text(title)` によって Picker のラベルに `title`（例えば「時間」「分」「秒」）を表示でき、同じ `TimePicker` コンポーネントを異なる単位で再利用できます。
 
+Picker() {}内に追加
+
 ```
-// Picker() {}内に追加
 ForEach(Array(range), id: \.self) { value in
 }
 ```
 
 - `ForEach(Array(range), id: \.self)` は `range` で指定された値の一覧を行として生成します。`range` を変えるだけで選択肢の範囲を簡単に変更できます。
 
+ForEach() {}内に追加
+
 ```
-// ForEach() {}内に追加
 Text("\(value) \(title)").tag(value)
 ```
 
 - `Text("\(value) \(title)")` で表示テキストを構成し、`.tag(value)` によってその行が選択されたときに `selection` に対応する値が設定されます。
+
+TimePicker使用イメージ
+<img src="/images/timer/picker.png" alt="TimePickerの使用イメージ" width="360" style=" margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
 ---
 
@@ -71,8 +78,9 @@ struct TimeSelectionView: View {
 
 ### 2. 変数の定義
 
+struct TimeSelectionView: View {}内に追加
+
 ```swift
-// struct TimeSelectionView: View {}内に追加
 @Binding var hours: Int
 @Binding var minutes: Int
 @Binding var seconds: Int
@@ -83,8 +91,9 @@ struct TimeSelectionView: View {
 
 ### 3. UIの作成
 
+var body: some View {}内に追加
+
 ```swift
-// var body: some View {}内に追加
 HStack {
     TimePicker(title: "時間", range: 0...23, selection: $hours)
     TimePicker(title: "分", range: 0...59, selection: $minutes)
@@ -95,12 +104,16 @@ HStack {
 - `HStack` によって3つの `TimePicker` を横に並べています。各Pickerにはそれぞれ適切な `range` と `selection` の `@Binding` を渡し、選択値が親ビューへ即時に反映されるようにしています。
 - `selection: $hours` のように `$` を付けて渡すことで、`TimePicker` の `@Binding` と紐づき、ユーザー操作が同じメモリ上の状態に反映されます。
 
+TimeSelectionView使用イメージ
+<img src="/images/timer/t32.png" alt="TimeSelectionViewの使用イメージ" width="360" style=" margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
 ## 3. コンポーネントの組み合わせ(ContentView.swift)
 
 ### 1. 時間選択画面
 
+var body: some View {}内に追加
+
 ```
-// var body: some View {}内に追加
 if timerState == .idle {
     TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
 } else {
@@ -115,8 +128,9 @@ if timerState == .idle {
 
 ### 2. 開始ボタン
 
+Button("開始") {}内に追加
+
 ```
-// Button("開始") {}内に追加
 timerState = .running
 ```
 
@@ -125,8 +139,9 @@ timerState = .running
 
 ### 3. キャンセルボタン
 
+Button("キャンセル") {}内に追加
+
 ```
-// Button("キャンセル") {}内に追加
 timerState = .idle
 hours = 0; minutes = 0; seconds = 0
 ```

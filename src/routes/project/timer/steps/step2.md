@@ -1,4 +1,5 @@
 ## swiftUIの基本構造
+
 ```
 import SwiftUI
 
@@ -12,21 +13,22 @@ struct ContentView: View {
 }
 
 ```
+
 このコードは、SwiftUIで画面(View)を定義するための最小構成です。
 アプリの画面はすべて、このような View の組み合わせで作られています。
 
 ### 1. TimerState enum
 
-
+import SwiftUIの次の行に追加
 
 ```swift
-// import SwiftUIの次の行に追加
 enum TimerState {
     case idle
     case running
     case paused
 }
 ```
+
 まず、タイマーの状態を管理する変数を定義します。
 
 - `idle`: 待機中
@@ -35,22 +37,23 @@ enum TimerState {
 
 ### 2. @State
 
+struct ContentView: View {}内に追加
 
 ```swift
-// struct ContentView: View {}内に追加
 @State var timerState: TimerState = .idle
 @State var hours = 0
 @State var minutes = 0
 @State var seconds = 0
 ```
+
 - `@State` は View が保持する状態を表し、値が変わると自動で再描画されます。
 - タイマーの残り時間や現在の状態（`TimerState`）、時間設定に使います。
 
-
 ### 3. 基本レイアウト — VStack と HStack
 
+var body: some View {}内に追加
+
 ```swift
-// var body: some View {}内に追加
 VStack {
     Text("タイマーアプリ")
         .font(.largeTitle)
@@ -75,7 +78,6 @@ VStack {
 - `VStack` は縦方向にビューを並べます。
 - `HStack` は横方向にビューを並べます。
 - `spacing` や `alignment` を調整して見た目を整えます。
-
 
 ### コード全体 — ContentView
 

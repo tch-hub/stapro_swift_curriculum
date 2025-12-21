@@ -6,20 +6,21 @@
 </a>
 をダウンロードして、Xcodeのプロジェクトナビゲータ内にある `Timer` フォルダに配置してください。。
 
-
 ### 2. 必要な「道具」の準備
 
 音を扱ったり、アラートを表示したりするための変数を追加します。
 
+import Combineの下に追加
+
 ```swift
-// import Combineの下に追加
 import AVFoundation
 ```
 
 - `AVFoundation`: iPhoneで音を鳴らすための「専門ツールセット」のようなものです。これをインポートすることで、音楽再生の機能が使えるようになります。
 
+class TimerViewModel: ObservableObject {}内に追加
+
 ```swift
-// class TimerViewModel: ObservableObject {}内に追加
 @Published var isShowingAlert = false
 var audioPlayer: AVAudioPlayer?
 ```
@@ -31,8 +32,9 @@ var audioPlayer: AVAudioPlayer?
 
 実際に音を再生する `playSound` という命令（メソッド）を作ります。
 
+func restartTimer() {}の下に追加
+
 ```swift
-// func restartTimer() {}の下に追加
 func playSound() {
     // 1. アプリの中から "Alarm.mp3" というファイルを探します
     guard let url = Bundle.main.url(forResource: "Alarm", withExtension: "mp3") else { return }
@@ -56,8 +58,9 @@ func playSound() {
 
 タイマーが0になったとき、先ほど作った「スイッチ」と「音」を作動させるように書き換えます。
 
+func countDown() {}を編集
+
 ```swift
-// func countDown() {}を編集
 func countDown() {
     timer?.invalidate()
     timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
@@ -82,8 +85,9 @@ func countDown() {
 
 最後に、`ContentView`（画面側）でスイッチがONになったときにアラートを表示する設定を追加します。
 
+VStack(spacing: 24) {}の下に追加
+
 ```swift
-// VStack(spacing: 24) {}の下に追加
 .alert("時間です", isPresented: $viewModel.isShowingAlert) {
     Button("完了") {
         // "完了"ボタンが押されたら...
@@ -100,6 +104,7 @@ func countDown() {
 ---
 
 ## コード全体
+
 ```swift title="TimerViewModel.swift"
 // TimerViewModel.swift
 import SwiftUI

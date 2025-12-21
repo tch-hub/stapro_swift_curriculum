@@ -37,11 +37,9 @@ Timer/
 ```
 
 Xcodeで新しいフォルダを作る手順
-
-- プロジェクトナビゲーターの空白の部分で右クリックし、「New Folder」を選択
+- プロジェクトナビゲーターの空白の部分で右クリックし、「New Folder」を選択  
 
 Xcodeで新しいファイルを作る手順（いずれかの方法でファイルを作成してください）
-
 - Xcode メニューバーの「File」→「New」→「EmptyFile」を選択
 - プロジェクトナビゲーターの空白の部分で右クリックし、「New EmptyFile」を選択
 
@@ -53,17 +51,6 @@ import SwiftUI
 @main
 struct TimerApp: App {
     var body: some Scene {
-    }
-}
-
-```
-`import SwiftUI`
-SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使えるようになります。  
-bodyという部分は、画面に何を表示するかを書くところです。
-```
-@main
-struct TimerApp: App {
-    var body: some Scene {
         WindowGroup {
             ContentView()
         }
@@ -71,16 +58,10 @@ struct TimerApp: App {
 }
 
 ```
-
-ContentViewという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。
-
-```
-WindowGroup {
-            ContentView()
-        }
-
-```
-
-#Previewは、コードを書くたびに画面をすぐに見られる機能です。これで、アプリの見た目をすぐに確認できます。
+`import SwiftUI`
+SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使えるようになります。  
+`body`という部分は、画面に何を表示するかを書くところです。 
+ContentViewという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。  
+`WindowGroup {ContentView()}`は、コードを書くたびに画面をすぐに見られる機能です。これで、アプリの見た目をすぐに確認できます。
 
 #### ※ここまでの状態では画面に何も表示されないので次のステップに進んでください。

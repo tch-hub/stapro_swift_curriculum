@@ -2,23 +2,26 @@
 
 まずは、`ContentView` が `TimerViewModel` を使うように変更します。
 
+@State var timerState... を削除し、代わりに以下を追加
+
 ```swift
-// @State var timerState... を削除し、代わりに以下を追加
 @StateObject var viewModel = TimerViewModel()
 ```
 
 - アプリの状態管理を `TimerViewModel` に任せるため、`@StateObject` を定義します。
 - ローカルで管理していた `timerState` は不要になるので削除します。
 
+if timerState == .idle { を書き換え
+
 ```swift
-// if timerState == .idle { を書き換え
 if viewModel.timerState == .idle {
 ```
 
 - 画面の切り替え判定も `viewModel` の状態を見るように変更します。
 
+Button("開始") { ... } を書き換え
+
 ```swift
-// Button("開始") { ... } を書き換え
 Button("開始") {
     viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
 }
@@ -26,8 +29,9 @@ Button("開始") {
 
 - "開始"ボタンで `viewModel.startTimer` を呼び出します。
 
+Button("キャンセル") { ... } を書き換え
+
 ```swift
-// Button("キャンセル") { ... } を書き換え
 Button("キャンセル") {
     viewModel.stopTimer()
     hours = 0; minutes = 0; seconds = 0
@@ -36,8 +40,9 @@ Button("キャンセル") {
 
 - "キャンセル"ボタンで `viewModel.stopTimer` を呼び出します。
 
+Button("キャンセル") { ... } の下に追加
+
 ```swift
-// Button("キャンセル") { ... } の下に追加
 Button("一時停止") {
     viewModel.pauseTimer()
 }

@@ -1,7 +1,5 @@
 ## タイマーの「頭脳」を作る (TimerViewModel)
 
-
-
 ここでは、タイマーの動き（スタート、ストップ、時間の計算など）を管理する「頭脳」部分を作ります。
 SwiftUIでは、この頭脳部分を `ViewModel` (ビューモデル) と呼びます。
 
@@ -20,8 +18,9 @@ class TimerViewModel: ObservableObject {
 
 タイマーに必要な情報を保存する変数を定義します。
 
+class TimerViewModel: ObservableObject {}内に追加
+
 ```swift
-// class TimerViewModel: ObservableObject {}内に追加
 @Published var remainingTime = 0
 @Published var timerState: TimerState = .idle
 var timer: Timer?
@@ -42,8 +41,9 @@ var totalTime: Int = 0
 
 1秒ごとに残り時間を減らし、0になったら止める機能です。
 
+var totalTime: Int = 0の下に追加
+
 ```swift
-// var totalTime: Int = 0の下に追加
 func countDown() {
     // 古いタイマーがあれば捨てて、新しいタイマーをセットします
     timer?.invalidate()
@@ -69,8 +69,9 @@ func countDown() {
 
 時間をセットして、カウントダウンを開始します。
 
+func countDown() {}の下に追加
+
 ```swift
-// func countDown() {}の下に追加
 func startTimer(hours: Int, minutes: Int, seconds: Int) {
     // 選択された時間をすべて「秒」に変換して計算します
     remainingTime = hours * 3600 + minutes * 60 + seconds
@@ -88,8 +89,9 @@ func startTimer(hours: Int, minutes: Int, seconds: Int) {
 
 タイマーを完全に停止して、最初に戻します。
 
+func startTimer() {}の下に追加
+
 ```swift
-// func startTimer() {}の下に追加
 func stopTimer() {
     timerState = .idle // 状態を「待機中」に
     timer?.invalidate() // タイマーを破棄
@@ -100,8 +102,9 @@ func stopTimer() {
 
 時間はそのままにして、カウントダウンだけ止めます。
 
+func stopTimer() {}の下に追加
+
 ```swift
-// func stopTimer() {}の下に追加
 func pauseTimer() {
     timerState = .paused // 状態を「一時停止」に
     timer?.invalidate()  // タイマーを一時的に止める
@@ -112,8 +115,9 @@ func pauseTimer() {
 
 止まっていたタイマーを再び動かします。
 
+func pauseTimer() {}の下に追加
+
 ```swift
-// func pauseTimer() {}の下に追加
 func restartTimer() {
     timerState = .running // 状態を「実行中」に
     countDown()           // カウントダウン再開
@@ -123,6 +127,7 @@ func restartTimer() {
 ---
 
 ## コード全体 — TimerViewModel
+
 このステップではロジック（仕組み）の部分を作成するため、UI（見た目）への変更はありません。
 
 ```swift title="TimerViewModel.swift"

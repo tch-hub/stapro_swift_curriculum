@@ -18,8 +18,9 @@ struct TimerDisplayView: View {
 
 ### 1. 変数の定義
 
+struct TimerDisplayView: View {}内に追加
+
 ```swift
-// struct TimerDisplayView: View {}内に追加
 var remainingTime: Int
 var totalTime: Int
 var completionPercentage: Double {
@@ -35,8 +36,9 @@ var completionPercentage: Double {
 
 ### 2. UIの作成
 
+var body: some View {}内に追加
+
 ```swift
-// var body: some View {}内に追加
 ZStack {
     Circle()
         .trim(from: 0.0, to: CGFloat(completionPercentage))
@@ -62,8 +64,9 @@ ZStack {
 
 ### 3. 時刻文字列の整形
 
+var body: some View {}の下に追加
+
 ```swift
-//var body: some View {}の下に追加
 func formatTime(seconds: Int) -> String {
     let hours = seconds / 3600
     let minutes = (seconds % 3600) / 60
