@@ -1,5 +1,7 @@
 ## タイマーの「頭脳」を作る (TimerViewModel)
 
+
+
 ここでは、タイマーの動き（スタート、ストップ、時間の計算など）を管理する「頭脳」部分を作ります。
 SwiftUIでは、この頭脳部分を `ViewModel` (ビューモデル) と呼びます。
 
@@ -121,6 +123,7 @@ func restartTimer() {
 ---
 
 ## コード全体 — TimerViewModel
+このステップではロジック（仕組み）の部分を作成するため、UI（見た目）への変更はありません。
 
 ```swift title="TimerViewModel.swift"
 import SwiftUI
