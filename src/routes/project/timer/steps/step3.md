@@ -56,11 +56,31 @@ Text("\(value) \(title)").tag(value)
 
 - `Text("\(value) \(title)")` で表示テキストを構成し、`.tag(value)` によってその行が選択されたときに `selection` に対応する値が設定されます。
 
-TimePicker使用イメージ
-<img src="/images/timer/picker.png" alt="TimePickerの使用イメージ" width="360" style=" margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
+## コード全体
+<img src="/images/timer/picker.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
+```swift
+// TimePicker.swift
+import SwiftUI
+
+struct TimePicker: View {
+    var title: String
+    var range: ClosedRange<Int>
+    @Binding var selection: Int
+
+    var body: some View {
+        Picker(selection: $selection, label: Text(title)) {
+            ForEach(Array(range), id: \.self) { value in
+                Text("\(value) \(title)").tag(value)
+            }
+        }
+        .pickerStyle(.wheel)
+    }
+}
+```
 
 ---
-
 ## 2. TimeSelectionView
 
 `TimePicker`を使って時間選択画面を作ります。
@@ -104,14 +124,38 @@ HStack {
 - `HStack` によって3つの `TimePicker` を横に並べています。各Pickerにはそれぞれ適切な `range` と `selection` の `@Binding` を渡し、選択値が親ビューへ即時に反映されるようにしています。
 - `selection: $hours` のように `$` を付けて渡すことで、`TimePicker` の `@Binding` と紐づき、ユーザー操作が同じメモリ上の状態に反映されます。
 
-TimeSelectionView使用イメージ
-<img src="/images/timer/t32.png" alt="TimeSelectionViewの使用イメージ" width="360" style=" margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+## コード全体
 
+<img src="/images/timer/t32.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
+```swift
+// TimeSelectionView.swift
+import SwiftUI
+
+struct TimeSelectionView: View {
+    @Binding var hours: Int
+    @Binding var minutes: Int
+    @Binding var seconds: Int
+
+    var body: some View {
+        HStack {
+            TimePicker(title: "時間", range: 0...23, selection: $hours)
+            TimePicker(title: "分", range: 0...59, selection: $minutes)
+            TimePicker(title: "秒", range: 0...59, selection: $seconds)
+        }
+    }
+}
+```
+
+---
 ## 3. コンポーネントの組み合わせ(ContentView.swift)
 
 ### 1. 時間選択画面
 
-var body: some View {}内に追加
+Text("タイマーアプリ")  
+                .font(.largeTitle)  
+                .padding()  
+の1行下に追加
 
 ```
 if timerState == .idle {
@@ -152,48 +196,6 @@ hours = 0; minutes = 0; seconds = 0
 ---
 
 ## コード全体
-<img src="/images/timer/picker.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
-
-```swift
-// TimePicker.swift
-import SwiftUI
-
-struct TimePicker: View {
-    var title: String
-    var range: ClosedRange<Int>
-    @Binding var selection: Int
-
-    var body: some View {
-        Picker(selection: $selection, label: Text(title)) {
-            ForEach(Array(range), id: \.self) { value in
-                Text("\(value) \(title)").tag(value)
-            }
-        }
-        .pickerStyle(.wheel)
-    }
-}
-```
-
-<img src="/images/timer/t32.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
-
-```swift
-// TimeSelectionView.swift
-import SwiftUI
-
-struct TimeSelectionView: View {
-    @Binding var hours: Int
-    @Binding var minutes: Int
-    @Binding var seconds: Int
-
-    var body: some View {
-        HStack {
-            TimePicker(title: "時間", range: 0...23, selection: $hours)
-            TimePicker(title: "分", range: 0...59, selection: $minutes)
-            TimePicker(title: "秒", range: 0...59, selection: $seconds)
-        }
-    }
-}
-```
 
 <img src="/images/timer/t31.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 

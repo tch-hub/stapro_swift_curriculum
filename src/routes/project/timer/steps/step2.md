@@ -54,7 +54,7 @@ struct ContentView: View {}内に追加
 var body: some View {}内に追加
 
 ```swift
-VStack {
+VStack(spacing: 24) {
     Text("タイマーアプリ")
         .font(.largeTitle)
         .padding()
@@ -99,7 +99,7 @@ struct ContentView: View {
     @State var seconds = 0
 
     var body: some View {
-        VStack {
+        VStack(spacing: 24) {
             Text("タイマーアプリ")
                 .font(.largeTitle)
                 .padding()

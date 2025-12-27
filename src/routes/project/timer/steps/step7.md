@@ -183,7 +183,6 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var viewModel = TimerViewModel()
-    @State var timerState: TimerState = .idle
     @State var hours = 0
     @State var minutes = 0
     @State var seconds = 0
@@ -195,11 +194,10 @@ struct ContentView: View {
                 .padding()
 
             // 時間選択は待機時のみ表示
-            if timerState == .idle {
+            if viewModel.timerState == .idle {
                 TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
             } else {
-                Text("タイマーが実行中です")
-                    .font(.title)
+                TimerDisplayView(remainingTime: viewModel.remainingTime, totalTime: viewModel.totalTime)
             }
 
             HStack(spacing: 16) {
@@ -212,7 +210,7 @@ struct ContentView: View {
                 .cornerRadius(10)
 
                 Button("キャンセル") {
-                    timerState = .idle
+                    viewModel.stopTimer()
                     hours = 0; minutes = 0; seconds = 0
                 }
                 .padding()
@@ -230,11 +228,11 @@ struct ContentView: View {
             }
         }
         .padding()
-        .alert("時間です", isPresented: $viewModel.isShowingAlert) { // 追加
-            Button("完了") {                                         // 追加
-                viewModel.isShowingAlert = false                    // 追加
-                viewModel.timerState = .idle                        // 追加
-                viewModel.audioPlayer?.stop()                        // 追加
+        .alert("時間です", isPresented: $viewModel.isShowingAlert) {
+            Button("完了") {
+                viewModel.isShowingAlert = false
+                viewModel.timerState = .idle
+                viewModel.audioPlayer?.stop()
             }
         }
     }

@@ -83,7 +83,7 @@ func formatTime(seconds: Int) -> String {
 
 ## コード全体 — TimerDisplayView
 
-<img src="/images/timer/t41.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/timer/t42.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
 ```swift title="TimerDisplayView.swift"
 import SwiftUI

@@ -19,6 +19,16 @@ if viewModel.timerState == .idle {
 
 - 画面の切り替え判定も `viewModel` の状態を見るように変更します。
 
+else { ... } ブロックの中身を書き換え
+
+```swift
+} else {
+    TimerDisplayView(remainingTime: viewModel.remainingTime, totalTime: viewModel.totalTime)
+}
+```
+
+- ステップ4で作成した `TimerDisplayView` を使用して、残り時間を表示するようにします。
+
 Button("開始") { ... } を書き換え
 
 ```swift
@@ -82,8 +92,7 @@ struct ContentView: View {
             if viewModel.timerState == .idle {
                 TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
             } else {
-                Text("タイマーが実行中です")
-                    .font(.title)
+                TimerDisplayView(remainingTime: viewModel.remainingTime, totalTime: viewModel.totalTime)
             }
 
             HStack(spacing: 16) {
