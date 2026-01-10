@@ -203,6 +203,12 @@ hours = 0; minutes = 0; seconds = 0
 // ContentView.swift
 import SwiftUI
 
+enum TimerState {
+    case idle
+    case running
+    case paused
+}
+
 struct ContentView: View {
     @State var timerState: TimerState = .idle
     @State var hours = 0

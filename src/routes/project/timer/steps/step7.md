@@ -18,7 +18,7 @@ import AVFoundation
 
 - `AVFoundation`: iPhoneで音を鳴らすための「専門ツールセット」のようなものです。これをインポートすることで、音楽再生の機能が使えるようになります。
 
-class TimerViewModel: ObservableObject {}内に追加
+@Published var timerState: TimerState = .idle の下に記述
 
 ```swift
 @Published var isShowingAlert = false
@@ -85,7 +85,7 @@ func countDown() {
 
 最後に、`ContentView`（画面側）でスイッチがONになったときにアラートを表示する設定を追加します。
 
-VStack(spacing: 24) {}の下に追加
+.padding() の下に記述
 
 ```swift
 .alert("時間です", isPresented: $viewModel.isShowingAlert) {
@@ -180,6 +180,12 @@ class TimerViewModel: ObservableObject {
 ```swift
 // ContentView.swift
 import SwiftUI
+
+enum TimerState {
+    case idle
+    case running
+    case paused
+}
 
 struct ContentView: View {
     @StateObject var viewModel = TimerViewModel()
