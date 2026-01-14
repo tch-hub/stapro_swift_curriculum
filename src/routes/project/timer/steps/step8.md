@@ -143,7 +143,7 @@ struct ContentView: View {
             }
 
             HStack(spacing: 130) {
-                ColorButton(text: "キャンセル", color: .white, action: viewModel.stopTimer)
+                ColorButton(text: "キャンセル", color: .black, action: viewModel.stopTimer)
                     .opacity(viewModel.timerState == .idle ? 0.3 : 1)
                     .disabled(viewModel.timerState == .idle)
 
@@ -162,8 +162,7 @@ struct ContentView: View {
         .alert("時間です", isPresented: $viewModel.isShowingAlert) {
             Button("完了") {
                 viewModel.isShowingAlert = false
-                viewModel.timerState = .idle
-                viewModel.audioPlayer?.stop()
+                viewModel.stopTimer()
             }
         }
     }

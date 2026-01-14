@@ -237,8 +237,7 @@ struct ContentView: View {
         .alert("時間です", isPresented: $viewModel.isShowingAlert) {
             Button("完了") {
                 viewModel.isShowingAlert = false
-                viewModel.timerState = .idle
-                viewModel.audioPlayer?.stop()
+                viewModel.stopTimer()
             }
         }
     }
