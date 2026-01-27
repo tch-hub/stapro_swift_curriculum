@@ -17,7 +17,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class ToDoTab {
+final class ToDoTab: Identifiable {
     var id: UUID = UUID()
     var name: String = ""
     var createdAt: Date = Date()

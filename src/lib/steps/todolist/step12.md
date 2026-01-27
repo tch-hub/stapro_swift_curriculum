@@ -34,7 +34,7 @@ private func toggleTaskCompletion(_ task: ToDoTask) {
 
 ## 重要な修正点
 
-1. `ForEach`に`id: \.self`パラメータを追加して、各タスクを一意に識別できるようにします
+1. `ToDoTask`は`Identifiable`なので、`ForEach`に`id`指定は不要です
 2. Button内の画像をタップすると完了状態が切り替わります
 3. 完了したタスクは緑色で表示されます
 

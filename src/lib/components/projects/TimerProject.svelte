@@ -1,92 +1,15 @@
 <script>
 	import { base } from '$app/paths';
-	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import TimerDemo from '$lib/components/TimerDemo.svelte';
 	import { timerSteps } from '$lib/data/projects/timer-steps';
-</script>
+	import ProjectSteps from './ProjectSteps.svelte';
+	import ProjectCodeSamples from './ProjectCodeSamples.svelte';
 
-<div class="container mx-auto px-4 py-8">
-	<h1 class="mb-8 text-center text-4xl font-bold">タイマーアプリプロジェクト</h1>
-	<p class="mb-12 text-center text-lg">
-		シンプルなタイマーアプリを作成します。時間設定、カウントダウン、アラーム機能を実装します。
-	</p>
-
-	<!-- プロジェクト概要 -->
-	<div class="card mb-8 bg-base-100 shadow-xl">
-		<div class="card-body">
-			<h2 class="card-title text-2xl">プロジェクト概要</h2>
-			<p class="mb-4">
-				このプロジェクトでは、SwiftUIを使ってタイマーアプリを作成します。以下の機能を学習できます：
-			</p>
-			<ul class="mb-4 list-inside list-disc">
-				<li>SwiftUIでのUI構築</li>
-				<li>状態管理（@State, @StateObject）</li>
-				<li>タイマーの実装</li>
-				<li>アラーム音の再生</li>
-				<li>アニメーションの実装</li>
-				<li>MVVMアーキテクチャ</li>
-			</ul>
-			<div class="card-actions justify-end">
-				<a href="{base}/source/Timer.zip" download class="btn btn-primary"
-					>プロジェクトをダウンロード</a
-				>
-			</div>
-		</div>
-	</div>
-
-	<!-- プロジェクト構造 -->
-	<div class="mb-8">
-		<h2 class="mb-6 text-3xl font-bold">プロジェクト構造</h2>
-		<div class="mockup-code">
-			<pre><code
-					>Timer/
-├── TimerApp.swift          # アプリのエントリーポイント
-├── ContentView.swift        # メインのビュー
-├── ViewModels/
-│   └── TimerViewModel.swift # タイマーのロジック
-├── Views/
-│   ├── TimeSelectionView.swift  # 時間設定ビュー
-│   └── TimerDisplayView.swift   # タイマー表示ビュー
-└── Components/
-    ├── ColorButton.swift    # カスタムボタン
-    └── TimePicker.swift     # 時間選択ピッカー</code
-				></pre>
-		</div>
-	</div>
-
-	<!-- ライブデモ -->
-	<TimerDemo />
-
-	<!-- 制作ステップ -->
-	<div class="mb-8">
-		<h2 class="mb-6 text-3xl font-bold">制作ステップ</h2>
-		<p class="mb-6">
-			タイマーアプリを8つのステップで段階的に作成しましょう。各ステップで必要な知識と実装方法を詳しく説明します。
-		</p>
-
-		<div class="space-y-4">
-			{#each timerSteps as step}
-				<div class="card bg-base-100 shadow-lg">
-					<div class="card-body">
-						<div class="flex items-center justify-between">
-							<div>
-								<h3 class="card-title text-xl">{step.title}</h3>
-								<p class="text-sm opacity-70">{step.summary}</p>
-							</div>
-							<a href="{base}/project/timer/{step.id}" class="btn btn-primary">開始</a>
-						</div>
-					</div>
-				</div>
-			{/each}
-		</div>
-	</div>
-
-	<!-- コードサンプル -->
-	<div class="space-y-8">
-		<!-- TimerApp.swift -->
-		<CodeBlock
-			title="TimerApp.swift - アプリのエントリーポイント"
-			code={`//
+	const codeSamples = [
+		{
+			title: 'TimerApp.swift - アプリのエントリーポイント',
+			fileName: 'TimerApp.swift',
+			code: `//
 //  TimerApp.swift
 //  Timer
 //
@@ -102,13 +25,12 @@ struct TimerApp: App {
             ContentView()
         }
     }
-}`}
-		/>
-
-		<!-- ContentView.swift -->
-		<CodeBlock
-			title="ContentView.swift - メインのビュー"
-			code={`//
+}`
+		},
+		{
+			title: 'ContentView.swift - メインのビュー',
+			fileName: 'ContentView.swift',
+			code: `//
 //  ContentView.swift
 //  Timer
 //
@@ -168,13 +90,12 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .preferredColorScheme(.dark)
-}`}
-		/>
-
-		<!-- TimerViewModel.swift -->
-		<CodeBlock
-			title="TimerViewModel.swift - タイマーのロジック"
-			code={`//
+}`
+		},
+		{
+			title: 'TimerViewModel.swift - タイマーのロジック',
+			fileName: 'TimerViewModel.swift',
+			code: `//
 //  TimerViewModel.swift
 //  Timer
 //
@@ -237,13 +158,12 @@ class TimerViewModel: ObservableObject {
             }
         }
     }
-}`}
-		/>
-
-		<!-- TimeSelectionView.swift -->
-		<CodeBlock
-			title="TimeSelectionView.swift - 時間設定ビュー"
-			code={`//
+}`
+		},
+		{
+			title: 'TimeSelectionView.swift - 時間設定ビュー',
+			fileName: 'TimeSelectionView.swift',
+			code: `//
 //  TimeSelectionView.swift
 //  Timer
 //
@@ -264,13 +184,12 @@ struct TimeSelectionView: View {
             TimePicker(title: "秒", range: 0...59, selection: $seconds)
         }
     }
-}`}
-		/>
-
-		<!-- TimerDisplayView.swift -->
-		<CodeBlock
-			title="TimerDisplayView.swift - タイマー表示ビュー"
-			code={`//
+}`
+		},
+		{
+			title: 'TimerDisplayView.swift - タイマー表示ビュー',
+			fileName: 'TimerDisplayView.swift',
+			code: `//
 //  TimerDisplayView.swift
 //  Timer
 //
@@ -308,13 +227,12 @@ struct TimerDisplayView: View {
         let seconds = seconds % 60
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
-}`}
-		/>
-
-		<!-- ColorButton.swift -->
-		<CodeBlock
-			title="ColorButton.swift - カスタムボタン"
-			code={`//
+}`
+		},
+		{
+			title: 'ColorButton.swift - カスタムボタン',
+			fileName: 'ColorButton.swift',
+			code: `//
 //  ColorButton.swift
 //  Timer
 //
@@ -338,13 +256,12 @@ struct ColorButton: View {
         .background(color.opacity(0.2))
         .clipShape(Circle())
     }
-}`}
-		/>
-
-		<!-- TimePicker.swift -->
-		<CodeBlock
-			title="TimePicker.swift - 時間選択ピッカー"
-			code={`//
+}`
+		},
+		{
+			title: 'TimePicker.swift - 時間選択ピッカー',
+			fileName: 'TimePicker.swift',
+			code: `//
 //  TimePicker.swift
 //  Timer
 //
@@ -360,13 +277,195 @@ struct TimePicker: View {
     
     var body: some View {
         Picker(selection: $selection, label: Text(title)) {
-            ForEach(Array(range), id: \.self) { value in
+            ForEach(Array(range), id: \\.self) { value in
                 Text("\\(value) \\(title)").tag(value)
             }
         }
         .pickerStyle(.wheel)
     }
-}`}
-		/>
+}`
+		}
+	];
+</script>
+
+<div class="container mx-auto max-w-5xl px-4 py-8">
+	<div class="mb-12 text-center">
+		<h1 class="mb-6 text-4xl font-extrabold tracking-tight sm:text-5xl">
+			タイマーアプリプロジェクト
+		</h1>
+		<p class="mx-auto max-w-2xl text-lg text-base-content/80">
+			シンプルなタイマーアプリを作成します。時間設定、カウントダウン、アラーム機能を実装します。
+		</p>
 	</div>
+
+	<!-- プロジェクト概要 -->
+	<section class="mb-16">
+		<div class="card overflow-hidden bg-base-100 shadow-xl">
+			<div class="card-body p-8 sm:p-10">
+				<div class="flex flex-col gap-8 lg:flex-row lg:items-start">
+					<div class="flex-1">
+						<h2 class="mb-4 text-2xl font-bold">プロジェクト概要</h2>
+						<p class="mb-6 leading-relaxed">
+							このプロジェクトでは、SwiftUIを使ってタイマーアプリを作成します。以下の機能を学習できます：
+						</p>
+						<ul class="mb-8 grid grid-cols-1 gap-2 sm:grid-cols-2">
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								SwiftUIでのUI構築
+							</li>
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								状態管理（@State, @StateObject）
+							</li>
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								タイマーの実装
+							</li>
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								アラーム音の再生
+							</li>
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								アニメーションの実装
+							</li>
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								MVVMアーキテクチャ
+							</li>
+						</ul>
+						<div>
+							<a href="{base}/source/Timer.zip" download class="btn btn-primary">
+								<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+									/>
+								</svg>
+								プロジェクトをダウンロード
+							</a>
+						</div>
+					</div>
+					<div class="flex w-full justify-center lg:w-1/3">
+						<TimerDemo />
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- プロジェクト構造 -->
+	<section class="mb-16 hidden">
+		<!-- Hiding project structure for now as it takes space and might be redundant with code samples? Or keep it? The user wanted less scrolling.
+             Let's keep it but maybe compact? Or just put it in a details tag. -->
+		<details class="collapse-arrow collapse bg-base-200">
+			<summary class="collapse-title text-xl font-medium">プロジェクト構造</summary>
+			<div class="collapse-content">
+				<div class="mockup-code text-sm">
+					<pre><code
+							>Timer/
+├── TimerApp.swift          # アプリのエントリーポイント
+├── ContentView.swift        # メインのビュー
+├── ViewModels/
+│   └── TimerViewModel.swift # タイマーのロジック
+├── Views/
+│   ├── TimeSelectionView.swift  # 時間設定ビュー
+│   └── TimerDisplayView.swift   # タイマー表示ビュー
+└── Components/
+    ├── ColorButton.swift    # カスタムボタン
+    └── TimePicker.swift     # 時間選択ピッカー</code
+						></pre>
+				</div>
+			</div>
+		</details>
+	</section>
+
+	<!-- 制作ステップ -->
+	<section class="mb-16">
+		<h2 class="mb-8 text-3xl font-bold">制作ステップ</h2>
+		<p class="mb-8 text-lg text-base-content/80">
+			タイマーアプリを8つのステップで段階的に作成しましょう。各ステップで必要な知識と実装方法を詳しく説明します。
+		</p>
+		<ProjectSteps steps={timerSteps} projectId="timer" />
+	</section>
+
+	<!-- コードサンプル -->
+	<section class="mb-16">
+		<h2 class="mb-8 text-3xl font-bold">完成コード</h2>
+		<ProjectCodeSamples {codeSamples} />
+	</section>
 </div>

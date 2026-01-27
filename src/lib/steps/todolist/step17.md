@@ -47,12 +47,23 @@ struct FloatingButton: View {
 }
 ```
 
-## HomeView での使用例
+## HomeView の修正
+
+リストとボタン部分を`ZStack`で包み、追加ボタンを`FloatingButton`に置き換えます：
 
 ```swift
 ZStack {
     VStack {
-        // 既存のコンテンツ
+        // 既存のコンテンツ（Picker、CustomListなど）
+
+        HStack {
+            Button(action: {
+                navigationPath.append(NavigationItem(id: .tabManage))
+            }) {
+                Text("タブ管理")
+            }
+            .padding()
+        }
     }
 
     FloatingButton(

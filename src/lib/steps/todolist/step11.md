@@ -22,7 +22,8 @@ struct HomeView: View {
     @Binding var navigationPath: [NavigationItem]
 
     var filteredTasks: [ToDoTask] {
-        tasks.filter { $0.tabId == selectedTabId }
+        guard let selectedTabId else { return [] }
+        return tasks.filter { $0.tabId == selectedTabId }
     }
 
     var body: some View {

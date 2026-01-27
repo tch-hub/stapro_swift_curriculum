@@ -76,13 +76,9 @@ struct InitialView: View {
                 ToDoTabService.addTab(newTab, to: modelContext)
 
                 // タブに属するタスクを追加
-                if let addedTab = try? modelContext.fetch(
-                    FetchDescriptor<ToDoTab>(predicate: #Predicate { $0.name == tabName })
-                ).first {
-                    for taskName in taskNames {
-                        let newTask = ToDoTask(title: taskName, description: "", tabId: addedTab.id)
-                        ToDoTaskService.addTask(newTask, to: modelContext)
-                    }
+                for taskName in taskNames {
+                    let newTask = ToDoTask(title: taskName, description: "", tabId: newTab.id)
+                    ToDoTaskService.addTask(newTask, to: modelContext)
                 }
             }
         }

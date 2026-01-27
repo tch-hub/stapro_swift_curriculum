@@ -18,7 +18,7 @@ import SwiftData
 
 // データモデルとしてマークするデコレータ
 @Model
-final class ToDoTask {
+final class ToDoTask: Identifiable {
     var id: UUID = UUID()
     var title: String = ""
     var description: String = ""

@@ -324,155 +324,137 @@
 	}
 </script>
 
-<div class="card mb-8 bg-base-100 shadow-xl">
-	<div class="card-body">
-		<h2 class="mb-4 card-title text-2xl">ライブデモ</h2>
-		<p class="mb-6">完成したタイマーアプリをHTMLで再現したものです。実際に操作してみてください。</p>
-
-		<div class="flex justify-center">
-			<div class="mockup-phone border-primary">
-				<div class="camera"></div>
-				<div class="display">
-					<div class="artboard artboard-demo phone-1">
-						<!-- タイマーデモ -->
-						<div
-							id="timer-demo"
-							class="relative flex h-full flex-col items-center justify-center p-4"
-						>
-							<!-- iOSスタイル通知バナー -->
-							<div
-								id="notification-banner"
-								class="absolute top-4 right-4 left-4 z-50 -translate-y-full transform rounded-lg bg-white p-3 text-black shadow-lg transition-transform duration-300"
-								style="display: none;"
-							>
-								<div class="flex items-center space-x-3">
-									<div class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500">
-										<span class="notification-icon text-sm text-white">⏰</span>
-									</div>
-									<div class="flex-1">
-										<div class="text-sm font-semibold">タイマー</div>
-										<div class="notification-message text-xs text-gray-600">時間です！</div>
-									</div>
-									<button
-										id="notification-close-btn"
-										class="text-xs font-medium text-blue-600 hover:text-blue-800"
-									>
-										完了
-									</button>
-								</div>
-							</div>
-							<!-- 時間設定モード -->
-							<div id="setup-mode" class="flex flex-col items-center space-y-6">
-								<!-- 時間選択 -->
-								<div class="flex space-x-4">
-									<div class="flex flex-col items-center">
-										<div class="wheel-picker" data-unit="hours" data-value="0">
-											<div class="wheel-container"></div>
-											<div class="wheel-overlay"></div>
-										</div>
-									</div>
-									<div class="flex flex-col items-center">
-										<div class="wheel-picker" data-unit="minutes" data-value="0">
-											<div class="wheel-container"></div>
-											<div class="wheel-overlay"></div>
-										</div>
-									</div>
-									<div class="flex flex-col items-center">
-										<div class="wheel-picker" data-unit="seconds" data-value="0">
-											<div class="wheel-container"></div>
-											<div class="wheel-overlay"></div>
-										</div>
-									</div>
-								</div>
-
-								<!-- コントロールボタン -->
-								<div class="flex space-x-12">
-									<button
-										id="reset-btn"
-										class="large-circle-btn cancel-btn-custom btn btn-circle btn-lg"
-										title="キャンセル"
-									>
-										<span class="text-xs font-bold">キャンセル</span>
-									</button>
-									<button
-										id="start-btn"
-										class="large-circle-btn start-btn-custom btn btn-circle btn-lg"
-										title="開始"
-									>
-										<span class="text-xs font-bold">開始</span>
-									</button>
-								</div>
-							</div>
-
-							<!-- タイマー実行モード -->
-							<div
-								id="timer-mode"
-								class="flex flex-col items-center space-y-6"
-								style="display: none;"
-							>
-								<!-- 円形プログレスバー -->
-								<div class="relative">
-									<svg width="200" height="200" class="-rotate-90 transform">
-										<circle
-											cx="100"
-											cy="100"
-											r="90"
-											stroke="currentColor"
-											stroke-width="10"
-											fill="none"
-											class="text-base-300"
-											opacity="0.3"
-										/>
-										<circle
-											id="progress-circle"
-											cx="100"
-											cy="100"
-											r="90"
-											stroke="currentColor"
-											stroke-width="10"
-											fill="none"
-											class="text-orange-500"
-											stroke-linecap="round"
-											stroke-dasharray="565.48"
-											stroke-dashoffset="565.48"
-											style="transition: stroke-dashoffset 1s linear;"
-										/>
-									</svg>
-									<div class="absolute inset-0 flex items-center justify-center">
-										<div id="time-display" class="text-4xl font-bold">00:00:00</div>
-									</div>
-								</div>
-
-								<!-- コントロールボタン -->
-								<div class="flex space-x-12">
-									<button
-										id="timer-cancel-btn"
-										class="large-circle-btn cancel-btn-custom btn btn-circle btn-lg"
-										title="キャンセル"
-									>
-										<span class="text-xs font-bold">キャンセル</span>
-									</button>
-									<button
-										id="pause-btn"
-										class="large-circle-btn pause-btn-custom btn btn-circle btn-lg"
-										title="一時停止"
-									>
-										<span class="text-xs font-bold">一時停止</span>
-									</button>
-								</div>
-							</div>
-
-							<!-- アラートモーダル -->
-							<div id="alert-modal" class="modal" style="display: none;">
-								<div class="modal-box">
-									<h3 class="text-lg font-bold">時間です！</h3>
-									<p class="py-4">タイマーが終了しました。</p>
-									<div class="modal-action">
-										<button id="alert-ok-btn" class="btn">完了</button>
-									</div>
-								</div>
-							</div>
+<div class="mockup-phone">
+	<div class="mockup-phone-camera"></div>
+	<div class="mockup-phone-display bg-[#F2F2F7] text-black">
+		<!-- タイマーデモ -->
+		<div id="timer-demo" class="relative flex h-full flex-col items-center justify-center p-4">
+			<!-- iOSスタイル通知バナー -->
+			<div
+				id="notification-banner"
+				class="absolute top-4 right-4 left-4 z-50 -translate-y-full transform rounded-lg bg-white p-3 text-black shadow-lg transition-transform duration-300"
+				style="display: none;"
+			>
+				<div class="flex items-center space-x-3">
+					<div class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500">
+						<span class="notification-icon text-sm text-white">⏰</span>
+					</div>
+					<div class="flex-1">
+						<div class="text-sm font-semibold">タイマー</div>
+						<div class="notification-message text-xs text-gray-600">時間です！</div>
+					</div>
+					<button
+						id="notification-close-btn"
+						class="text-xs font-medium text-blue-600 hover:text-blue-800"
+					>
+						完了
+					</button>
+				</div>
+			</div>
+			<!-- 時間設定モード -->
+			<div id="setup-mode" class="flex flex-col items-center space-y-6">
+				<!-- 時間選択 -->
+				<div class="flex space-x-4">
+					<div class="flex flex-col items-center">
+						<div class="wheel-picker" data-unit="hours" data-value="0">
+							<div class="wheel-container"></div>
+							<div class="wheel-overlay"></div>
 						</div>
+					</div>
+					<div class="flex flex-col items-center">
+						<div class="wheel-picker" data-unit="minutes" data-value="0">
+							<div class="wheel-container"></div>
+							<div class="wheel-overlay"></div>
+						</div>
+					</div>
+					<div class="flex flex-col items-center">
+						<div class="wheel-picker" data-unit="seconds" data-value="0">
+							<div class="wheel-container"></div>
+							<div class="wheel-overlay"></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- コントロールボタン -->
+				<div class="flex space-x-12">
+					<button
+						id="reset-btn"
+						class="large-circle-btn cancel-btn-custom btn btn-circle btn-lg"
+						title="キャンセル"
+					>
+						<span class="text-xs font-bold">キャンセル</span>
+					</button>
+					<button
+						id="start-btn"
+						class="large-circle-btn start-btn-custom btn btn-circle btn-lg"
+						title="開始"
+					>
+						<span class="text-xs font-bold">開始</span>
+					</button>
+				</div>
+			</div>
+
+			<!-- タイマー実行モード -->
+			<div id="timer-mode" class="flex flex-col items-center space-y-6" style="display: none;">
+				<!-- 円形プログレスバー -->
+				<div class="relative">
+					<svg width="200" height="200" class="-rotate-90 transform">
+						<circle
+							cx="100"
+							cy="100"
+							r="90"
+							stroke="currentColor"
+							stroke-width="10"
+							fill="none"
+							class="text-gray-300"
+							opacity="1"
+						/>
+						<circle
+							id="progress-circle"
+							cx="100"
+							cy="100"
+							r="90"
+							stroke="currentColor"
+							stroke-width="10"
+							fill="none"
+							class="text-orange-500"
+							stroke-linecap="round"
+							stroke-dasharray="565.48"
+							stroke-dashoffset="565.48"
+							style="transition: stroke-dashoffset 1s linear;"
+						/>
+					</svg>
+					<div class="absolute inset-0 flex items-center justify-center">
+						<div id="time-display" class="text-4xl font-bold text-black">00:00:00</div>
+					</div>
+				</div>
+
+				<!-- コントロールボタン -->
+				<div class="flex space-x-12">
+					<button
+						id="timer-cancel-btn"
+						class="large-circle-btn cancel-btn-custom btn btn-circle btn-lg"
+						title="キャンセル"
+					>
+						<span class="text-xs font-bold">キャンセル</span>
+					</button>
+					<button
+						id="pause-btn"
+						class="large-circle-btn pause-btn-custom btn btn-circle btn-lg"
+						title="一時停止"
+					>
+						<span class="text-xs font-bold">一時停止</span>
+					</button>
+				</div>
+			</div>
+
+			<!-- アラートモーダル -->
+			<div id="alert-modal" class="modal" style="display: none;">
+				<div class="modal-box bg-white text-black">
+					<h3 class="text-lg font-bold">時間です！</h3>
+					<p class="py-4">タイマーが終了しました。</p>
+					<div class="modal-action">
+						<button id="alert-ok-btn" class="btn">完了</button>
 					</div>
 				</div>
 			</div>
@@ -486,7 +468,7 @@
 		height: 120px;
 		overflow: hidden;
 		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.1);
+		background: transparent;
 		position: relative;
 		cursor: pointer;
 	}
@@ -503,7 +485,7 @@
 		align-items: center;
 		justify-content: center;
 		font-size: 14px;
-		color: rgba(255, 255, 255, 0.7);
+		color: rgba(0, 0, 0, 0.4);
 		transition: all 0.2s ease;
 		user-select: none;
 	}
@@ -511,7 +493,7 @@
 	:global(.wheel-item.selected) {
 		font-size: 18px;
 		font-weight: bold;
-		color: #ffffff;
+		color: #000000;
 	}
 
 	.wheel-overlay {
@@ -523,10 +505,10 @@
 		pointer-events: none;
 		background: linear-gradient(
 			to bottom,
-			rgba(0, 0, 0, 0.3) 0%,
-			transparent 30%,
-			transparent 70%,
-			rgba(0, 0, 0, 0.3) 100%
+			rgba(242, 242, 247, 1) 0%,
+			rgba(242, 242, 247, 0.3) 30%,
+			rgba(242, 242, 247, 0.3) 70%,
+			rgba(242, 242, 247, 1) 100%
 		);
 	}
 
@@ -538,8 +520,8 @@
 		right: 0;
 		height: 30px;
 		transform: translateY(-50%);
-		border-top: 1px solid rgba(255, 255, 255, 0.3);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 		pointer-events: none;
 	}
 
@@ -548,38 +530,38 @@
 		height: 5rem;
 		min-width: 5rem;
 		font-size: 0.75rem;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		transition: all 0.2s;
 	}
 
 	.start-btn-custom {
-		background-color: rgba(34, 197, 94, 0.5) !important;
-		color: #22c55e !important;
-		border-color: rgba(34, 197, 94, 0.5) !important;
+		background-color: rgba(34, 197, 94, 0.15) !important;
+		color: #15803d !important;
 	}
 
 	.start-btn-custom:hover {
-		background-color: rgba(34, 197, 94, 0.6) !important;
-		border-color: rgba(34, 197, 94, 0.6) !important;
+		background-color: rgba(34, 197, 94, 0.25) !important;
 	}
 
 	.cancel-btn-custom {
-		background-color: rgba(107, 114, 128, 0.5) !important;
-		color: #6b7280 !important;
-		border-color: rgba(107, 114, 128, 0.5) !important;
+		background-color: rgba(107, 114, 128, 0.15) !important;
+		color: #374151 !important;
 	}
 
 	.cancel-btn-custom:hover {
-		background-color: rgba(107, 114, 128, 0.6) !important;
-		border-color: rgba(107, 114, 128, 0.6) !important;
+		background-color: rgba(107, 114, 128, 0.25) !important;
 	}
 
 	.pause-btn-custom {
-		background-color: rgba(249, 115, 22, 0.5) !important;
-		color: #f97316 !important;
-		border-color: rgba(249, 115, 22, 0.5) !important;
+		background-color: rgba(249, 115, 22, 0.15) !important;
+		color: #c2410c !important;
 	}
 
 	.pause-btn-custom:hover {
-		background-color: rgba(249, 115, 22, 0.6) !important;
-		border-color: rgba(249, 115, 22, 0.6) !important;
+		background-color: rgba(249, 115, 22, 0.25) !important;
 	}
 </style>

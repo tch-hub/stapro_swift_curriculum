@@ -1,110 +1,15 @@
 <script>
 	import { base } from '$app/paths';
-	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import ToDoListDemo from '$lib/components/ToDoListDemo.svelte';
 	import { todolistSteps } from '$lib/data/projects/todolist-steps';
-</script>
+	import ProjectSteps from './ProjectSteps.svelte';
+	import ProjectCodeSamples from './ProjectCodeSamples.svelte';
 
-<div class="container mx-auto px-4 py-8">
-	<h1 class="mb-8 text-center text-4xl font-bold">ToDoリストアプリプロジェクト</h1>
-	<p class="mb-12 text-center text-lg">
-		複数タブ対応のToDoリストアプリを作成します。タスク管理、カテゴリ分類、データ永続化機能を実装します。
-	</p>
-
-	<!-- プロジェクト概要 -->
-	<div class="card mb-8 bg-base-100 shadow-xl">
-		<div class="card-body">
-			<h2 class="card-title text-2xl">プロジェクト概要</h2>
-			<p class="mb-4">
-				このプロジェクトでは、SwiftUIを使ってToDoリストアプリを作成します。以下の機能を学習できます：
-			</p>
-			<ul class="mb-4 list-inside list-disc">
-				<li>SwiftUIでのUI構築</li>
-				<li>SwiftDataを使ったデータ管理</li>
-				<li>複数タブの管理</li>
-				<li>CRUD操作の実装</li>
-				<li>カスタムUIコンポーネント</li>
-				<li>ナビゲーション管理</li>
-			</ul>
-			<div class="card-actions justify-end">
-				<a href="{base}/source/ToDoList.zip" download class="btn btn-primary"
-					>プロジェクトをダウンロード</a
-				>
-			</div>
-		</div>
-	</div>
-
-	<!-- プロジェクト構造 -->
-	<div class="mb-8">
-		<h2 class="mb-6 text-3xl font-bold">プロジェクト構造</h2>
-		<div class="mockup-code">
-			<pre><code
-					>UIToDoList/
-├── SwiftUIToDoListApp.swift     # アプリのエントリーポイント
-├── Screens/
-│   ├── Views/
-│   │   ├── InitialView.swift    # スプラッシュスクリーン
-│   │   └── Main/
-│   │       ├── HomeView.swift   # メイン画面
-│   │       ├── MainStack.swift  # ナビゲーション
-│   │       └── TabManageView.swift  # タブ管理画面
-│   ├── Layouts/
-│   │   └── NavigationBarModifier.swift
-│   └── Navigation/
-│       ├── ScreenID.swift
-│       └── NavigationItem.swift
-├── Components/
-│   ├── CustomAlert.swift
-│   ├── FloatingButton.swift
-│   ├── ToDoListItem.swift
-│   ├── CustomList.swift
-│   └── TextFieldAlertModifier.swift
-├── Services/
-│   ├── ToDoTaskService.swift
-│   └── ToDoTabService.swift
-└── SwiftData/
-    ├── Models/
-    │   ├── ToDoTask.swift
-    │   └── ToDoTab.swift
-    ├── Services/
-    └── Data/</code
-				></pre>
-		</div>
-	</div>
-
-	<!-- ライブデモ -->
-	<ToDoListDemo />
-
-	<!-- 制作ステップ -->
-	<div class="mb-8">
-		<h2 class="mb-6 text-3xl font-bold">制作ステップ</h2>
-		<p class="mb-6">
-			ToDoリストアプリを21のステップで段階的に作成しましょう。各ステップで必要な知識と実装方法を詳しく説明します。
-		</p>
-
-		<div class="space-y-4">
-			{#each todolistSteps as step}
-				<div class="card bg-base-100 shadow-lg">
-					<div class="card-body">
-						<div class="flex items-center justify-between">
-							<div>
-								<h3 class="card-title text-xl">{step.title}</h3>
-								<p class="text-sm opacity-70">{step.summary}</p>
-							</div>
-							<a href="{base}/project/todolist/{step.id}" class="btn btn-primary">開始</a>
-						</div>
-					</div>
-				</div>
-			{/each}
-		</div>
-	</div>
-
-	<!-- コードサンプル -->
-	<div class="space-y-8">
-		<!-- SwiftUIToDoListApp.swift -->
-		<CodeBlock
-			title="SwiftUIToDoListApp.swift - アプリのエントリーポイント"
-			code={`//
+	const codeSamples = [
+		{
+			title: 'SwiftUIToDoListApp.swift - アプリのエントリーポイント',
+			fileName: 'SwiftUIToDoListApp.swift',
+			code: `//
 //  SwiftUIToDoListApp.swift
 //  SwiftUIToDoList
 //
@@ -138,13 +43,12 @@ struct SwiftUIToDoListApp: App {
         }
         .modelContainer(container)
     }
-}`}
-		/>
-
-		<!-- ToDoTask.swift -->
-		<CodeBlock
-			title="ToDoTask.swift - タスクモデル"
-			code={`//
+}`
+		},
+		{
+			title: 'ToDoTask.swift - タスクモデル',
+			fileName: 'ToDoTask.swift',
+			code: `//
 //  ToDoTask.swift
 //  SwiftUIToDoList
 //
@@ -169,13 +73,12 @@ final class ToDoTask {
         self.tabId = tabId
         self.createdAt = Date()
     }
-}`}
-		/>
-
-		<!-- ToDoTab.swift -->
-		<CodeBlock
-			title="ToDoTab.swift - タブモデル"
-			code={`//
+}`
+		},
+		{
+			title: 'ToDoTab.swift - タブモデル',
+			fileName: 'ToDoTab.swift',
+			code: `//
 //  ToDoTab.swift
 //  SwiftUIToDoList
 //
@@ -194,13 +97,12 @@ final class ToDoTab {
         self.name = name
         self.createdAt = Date()
     }
-}`}
-		/>
-
-		<!-- ToDoTaskService.swift -->
-		<CodeBlock
-			title="ToDoTaskService.swift - タスク管理サービス"
-			code={`//
+}`
+		},
+		{
+			title: 'ToDoTaskService.swift - タスク管理サービス',
+			fileName: 'ToDoTaskService.swift',
+			code: `//
 //  ToDoTaskService.swift
 //  SwiftUIToDoList
 //
@@ -235,13 +137,12 @@ class ToDoTaskService {
         tasks?.forEach { modelContext.delete($0) }
         try? modelContext.save()
     }
-}`}
-		/>
-
-		<!-- ToDoTabService.swift -->
-		<CodeBlock
-			title="ToDoTabService.swift - タブ管理サービス"
-			code={`//
+}`
+		},
+		{
+			title: 'ToDoTabService.swift - タブ管理サービス',
+			fileName: 'ToDoTabService.swift',
+			code: `//
 //  ToDoTabService.swift
 //  SwiftUIToDoList
 //
@@ -268,7 +169,205 @@ class ToDoTabService {
     static func updateTab(_ tab: ToDoTab, modelContext: ModelContext) {
         try? modelContext.save()
     }
-}`}
-		/>
+}`
+		}
+	];
+</script>
+
+<div class="container mx-auto max-w-5xl px-4 py-8">
+	<div class="mb-12 text-center">
+		<h1 class="mb-6 text-4xl font-extrabold tracking-tight sm:text-5xl">
+			ToDoリストアプリプロジェクト
+		</h1>
+		<p class="mx-auto max-w-2xl text-lg text-base-content/80">
+			複数タブ対応のToDoリストアプリを作成します。タスク管理、カテゴリ分類、データ永続化機能を実装します。
+		</p>
 	</div>
+
+	<!-- プロジェクト概要 -->
+	<section class="mb-16">
+		<div class="card overflow-hidden bg-base-100 shadow-xl">
+			<div class="card-body p-8 sm:p-10">
+				<div class="flex flex-col gap-8 lg:flex-row lg:items-start">
+					<div class="flex-1">
+						<h2 class="mb-4 text-2xl font-bold">プロジェクト概要</h2>
+						<p class="mb-6 leading-relaxed">
+							このプロジェクトでは、SwiftUIを使ってToDoリストアプリを作成します。以下の機能を学習できます：
+						</p>
+						<ul class="mb-8 grid grid-cols-1 gap-2 sm:grid-cols-2">
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								SwiftUIでのUI構築
+							</li>
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								SwiftDataを使ったデータ管理
+							</li>
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								複数タブの管理
+							</li>
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								CRUD操作の実装
+							</li>
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								カスタムUIコンポーネント
+							</li>
+							<li class="flex items-center gap-2">
+								<svg
+									class="h-5 w-5 text-success"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+								ナビゲーション管理
+							</li>
+						</ul>
+						<div>
+							<a href="{base}/source/ToDoList.zip" download class="btn btn-primary">
+								<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+									/>
+								</svg>
+								プロジェクトをダウンロード
+							</a>
+						</div>
+					</div>
+					<div class="flex w-full justify-center lg:w-1/3">
+						<ToDoListDemo />
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- プロジェクト構造 -->
+	<section class="mb-16 hidden">
+		<details class="collapse-arrow collapse bg-base-200">
+			<summary class="collapse-title text-xl font-medium">プロジェクト構造</summary>
+			<div class="collapse-content">
+				<div class="mockup-code text-sm">
+					<pre><code
+							>UIToDoList/
+├── SwiftUIToDoListApp.swift     # アプリのエントリーポイント
+├── Screens/
+│   ├── Views/
+│   │   ├── InitialView.swift    # スプラッシュスクリーン
+│   │   └── Main/
+│   │       ├── HomeView.swift   # メイン画面
+│   │       ├── MainStack.swift  # ナビゲーション
+│   │       └── TabManageView.swift  # タブ管理画面
+│   ├── Layouts/
+│   │   └── NavigationBarModifier.swift
+│   └── Navigation/
+│       ├── ScreenID.swift
+│       └── NavigationItem.swift
+├── Components/
+│   ├── CustomAlert.swift
+│   ├── FloatingButton.swift
+│   ├── ToDoListItem.swift
+│   ├── CustomList.swift
+│   └── TextFieldAlertModifier.swift
+├── Services/
+│   ├── ToDoTaskService.swift
+│   └── ToDoTabService.swift
+└── SwiftData/
+    ├── Models/
+    │   ├── ToDoTask.swift
+    │   └── ToDoTab.swift
+    ├── Services/
+    └── Data/</code
+						></pre>
+				</div>
+			</div>
+		</details>
+	</section>
+
+	<!-- 制作ステップ -->
+	<section class="mb-16">
+		<h2 class="mb-8 text-3xl font-bold">制作ステップ</h2>
+		<p class="mb-8 text-lg text-base-content/80">
+			ToDoリストアプリを21のステップで段階的に作成しましょう。各ステップで必要な知識と実装方法を詳しく説明します。
+		</p>
+		<ProjectSteps steps={todolistSteps} projectId="todolist" />
+	</section>
+
+	<!-- コードサンプル -->
+	<section class="mb-16">
+		<h2 class="mb-8 text-3xl font-bold">完成コード</h2>
+		<ProjectCodeSamples {codeSamples} />
+	</section>
 </div>

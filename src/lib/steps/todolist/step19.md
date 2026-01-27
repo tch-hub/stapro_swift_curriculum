@@ -38,7 +38,9 @@ struct CustomList<Content: View>: View {
 - `.listStyle(.plain)`: デフォルトのListスタイルを削除
 - `.scrollContentBackground(.hidden)`: スクロール背景を非表示
 
-## HomeView での使用例
+## HomeView の修正
+
+`List`を`CustomList`に置き換えます：
 
 ```swift
 CustomList {

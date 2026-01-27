@@ -48,14 +48,13 @@ struct MainStack: View {
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            Text("ここはホーム画面です")
-                .navigationTitle("ToDoリスト")
+            HomeView(navigationPath: $navigationPath)
                 .navigationDestination(for: NavigationItem.self) { item in
                     switch item.id {
                     case .home:
-                        Text("ホーム画面")
+                        HomeView(navigationPath: $navigationPath)
                     case .tabManage:
-                        Text("タブ管理画面")
+                        TabManageView()
                     }
                 }
         }
