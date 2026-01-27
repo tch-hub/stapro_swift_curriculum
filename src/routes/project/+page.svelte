@@ -1,6 +1,6 @@
 <script>
 	import { base } from '$app/paths';
-	import CodeBlock from '$lib/components/CodeBlock.svelte';
+	import { projects } from '$lib/data/projects';
 </script>
 
 <div class="container mx-auto px-4 py-8">
@@ -9,45 +9,24 @@
 
 	<!-- プロジェクト一覧 -->
 	<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-		<!-- タイマーアプリプロジェクト -->
-		<div class="card bg-base-100 shadow-xl">
-			<div class="card-body">
-				<h2 class="card-title text-2xl">タイマーアプリ</h2>
-				<p class="mb-4">
-					シンプルなタイマーアプリを作成します。時間設定、カウントダウン、アラーム機能を実装します。
-				</p>
-				<div class="card-actions justify-between">
-					<a href="{base}/project/timer" class="btn btn-primary">詳細を見る</a>
-					<a href="{base}/source/Timer.zip" download class="btn btn-outline">ダウンロード</a>
+		{#each projects as project}
+			<div class="card bg-base-100 shadow-xl">
+				<div class="card-body">
+					<h2 class="card-title text-2xl">{project.title}</h2>
+					<p class="mb-4">{project.summary}</p>
+					<div class="card-actions justify-between">
+						<a href="{base}/project/{project.id}" class="btn btn-primary">詳細を見る</a>
+						{#if project.downloadUrl}
+							<a href="{base}{project.downloadUrl}" download class="btn btn-outline">
+								ダウンロード
+							</a>
+						{:else}
+							<span class="btn-disabled btn btn-outline">ダウンロード</span>
+						{/if}
+					</div>
 				</div>
 			</div>
-		</div>
-
-		<!-- ToDoリストアプリプロジェクト -->
-		<div class="card bg-base-100 shadow-xl">
-			<div class="card-body">
-				<h2 class="card-title text-2xl">ToDoリストアプリ</h2>
-				<p class="mb-4">
-					SwiftDataとMVVMアーキテクチャを採用した本格的なToDoリストアプリを作成します。
-				</p>
-				<div class="card-actions justify-between">
-					<a href="{base}/project/todolist" class="btn btn-primary">詳細を見る</a>
-					<a href="{base}/source/ToDoLitst.zip" download class="btn btn-outline">ダウンロード</a>
-				</div>
-			</div>
-		</div>
-
-		<!-- オリジナルアプリプロジェクト -->
-		<div class="card bg-base-100 shadow-xl">
-			<div class="card-body">
-				<h2 class="card-title text-2xl">オリジナルアプリ</h2>
-				<p class="mb-4">学んだ知識を総動員して、自分だけのオリジナルアプリ開発に挑戦しましょう！</p>
-				<div class="card-actions justify-between">
-					<a href="{base}/project/original-app" class="btn btn-primary">詳細を見る</a>
-					<span class="btn-disabled btn btn-outline">ダウンロード</span>
-				</div>
-			</div>
-		</div>
+		{/each}
 	</div>
 
 	<!-- プロジェクトの説明 -->

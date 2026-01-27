@@ -90,10 +90,8 @@ func countDown() {
 ```swift
 .alert("時間です", isPresented: $viewModel.isShowingAlert) {
     Button("完了") {
-        // "完了"ボタンが押されたら...
-        viewModel.isShowingAlert = false // スイッチをOFFに戻す
-        viewModel.timerState = .idle     // タイマーをリセット
-        viewModel.audioPlayer?.stop()    // 音も止める
+        viewModel.isShowingAlert = false
+        viewModel.stopTimer()
     }
 }
 ```

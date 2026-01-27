@@ -2,10 +2,8 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 
-	// 画面要素データを管理するリアクティブな変数
 	let screens = $state([{ elements: '' }, { elements: '' }, { elements: '' }]);
 
-	// ページ読み込み時にlocalStorageからデータを読み込む
 	onMount(() => {
 		const saved = localStorage.getItem('original-app-step2-screens');
 		if (saved) {
@@ -17,12 +15,10 @@
 		}
 	});
 
-	// データをlocalStorageに保存する関数
 	function saveData() {
 		localStorage.setItem('original-app-step2-screens', JSON.stringify(screens));
 	}
 
-	// 入力変更時に自動保存
 	function handleInputChange(index, value) {
 		screens[index].elements = value;
 		saveData();

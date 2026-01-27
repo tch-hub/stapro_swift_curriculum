@@ -2,7 +2,7 @@
 	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import ToDoListDemo from '$lib/components/ToDoListDemo.svelte';
-	import { todolistSteps } from './steps-config';
+	import { todolistSteps } from '$lib/data/projects/todolist-steps';
 </script>
 
 <div class="container mx-auto px-4 py-8">

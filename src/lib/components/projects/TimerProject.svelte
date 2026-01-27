@@ -2,7 +2,7 @@
 	import { base } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import TimerDemo from '$lib/components/TimerDemo.svelte';
-	import { timerSteps } from './steps-config';
+	import { timerSteps } from '$lib/data/projects/timer-steps';
 </script>
 
 <div class="container mx-auto px-4 py-8">

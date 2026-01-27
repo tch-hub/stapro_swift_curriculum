@@ -2,14 +2,12 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 
-	// アイデアデータを管理するリアクティブな変数
 	let ideas = $state([
 		{ idea: '', reason: '' },
 		{ idea: '', reason: '' },
 		{ idea: '', reason: '' }
 	]);
 
-	// ページ読み込み時にlocalStorageからデータを読み込む
 	onMount(() => {
 		const saved = localStorage.getItem('original-app-step1-ideas');
 		if (saved) {
@@ -21,12 +19,10 @@
 		}
 	});
 
-	// データをlocalStorageに保存する関数
 	function saveData() {
 		localStorage.setItem('original-app-step1-ideas', JSON.stringify(ideas));
 	}
 
-	// 入力変更時に自動保存
 	function handleInputChange(index, field, value) {
 		ideas[index][field] = value;
 		saveData();

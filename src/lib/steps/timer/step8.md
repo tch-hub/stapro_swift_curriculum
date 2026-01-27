@@ -62,7 +62,19 @@ ColorButton使用イメージ
 
 `ColorButton` を使い、タイマーの状態に応じてボタンを切り替えます。
 
-### 1. 操作ボタンエリア
+### 1. タイトルの削除
+
+VStack(spacing: 24) {}を編集
+以下を削除します
+
+```swift
+Text("タイマーアプリ")
+    .font(.largeTitle)
+    .padding()
+```
+`VStack(spacing: 24)`を`VStack`に変更します
+
+### 2. 操作ボタンエリア
 
 HStack() {}を編集
 

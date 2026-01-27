@@ -2,7 +2,6 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 
-	// 機能リストデータを管理するリアクティブな変数
 	let features = $state([
 		{ name: '', description: '', priority: '絶対必要' },
 		{ name: '', description: '', priority: '絶対必要' },
@@ -11,7 +10,6 @@
 		{ name: '', description: '', priority: '絶対必要' }
 	]);
 
-	// ページ読み込み時にlocalStorageからデータを読み込む
 	onMount(() => {
 		const saved = localStorage.getItem('original-app-step3-features');
 		if (saved) {
@@ -23,12 +21,10 @@
 		}
 	});
 
-	// データをlocalStorageに保存する関数
 	function saveData() {
 		localStorage.setItem('original-app-step3-features', JSON.stringify(features));
 	}
 
-	// 入力変更時に自動保存
 	function handleInputChange(index, field, value) {
 		features[index][field] = value;
 		saveData();
@@ -160,22 +156,22 @@
 								</td>
 							</tr>
 							<tr>
-								<td
-									><input
+								<td>
+									<input
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[2].name}
 										oninput={() => handleInputChange(2, 'name', features[2].name)}
-									/></td
-								>
-								<td
-									><input
+									/>
+								</td>
+								<td>
+									<input
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[2].description}
 										oninput={() => handleInputChange(2, 'description', features[2].description)}
-									/></td
-								>
+									/>
+								</td>
 								<td>
 									<select
 										class="select-bordered select w-full max-w-xs"
@@ -188,22 +184,22 @@
 								</td>
 							</tr>
 							<tr>
-								<td
-									><input
+								<td>
+									<input
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[3].name}
 										oninput={() => handleInputChange(3, 'name', features[3].name)}
-									/></td
-								>
-								<td
-									><input
+									/>
+								</td>
+								<td>
+									<input
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[3].description}
 										oninput={() => handleInputChange(3, 'description', features[3].description)}
-									/></td
-								>
+									/>
+								</td>
 								<td>
 									<select
 										class="select-bordered select w-full max-w-xs"
@@ -216,22 +212,22 @@
 								</td>
 							</tr>
 							<tr>
-								<td
-									><input
+								<td>
+									<input
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[4].name}
 										oninput={() => handleInputChange(4, 'name', features[4].name)}
-									/></td
-								>
-								<td
-									><input
+									/>
+								</td>
+								<td>
+									<input
 										type="text"
 										class="input-bordered input w-full"
 										bind:value={features[4].description}
 										oninput={() => handleInputChange(4, 'description', features[4].description)}
-									/></td
-								>
+									/>
+								</td>
 								<td>
 									<select
 										class="select-bordered select w-full max-w-xs"
