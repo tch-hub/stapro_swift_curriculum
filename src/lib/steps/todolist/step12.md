@@ -20,7 +20,6 @@ struct HomeView: View {
     @State private var showingAddTask = false
     @State private var newTaskTitle = ""
     @Binding var navigationPath: [NavigationItem]
-    @FocusState private var isInputFocused: Bool
 
     var filteredTasks: [ToDoTask] {
         guard let selectedTabId else { return [] }
@@ -53,9 +52,7 @@ struct HomeView: View {
 
             HStack {
                 Button(action: { 
-                    newTaskTitle = ""
                     showingAddTask = true
-                    isInputFocused = true
                 }) {
                     Label("追加", systemImage: "plus")
                 }
@@ -71,35 +68,30 @@ struct HomeView: View {
         }
         .navigationTitle("ToDoリスト")
         .sheet(isPresented: $showingAddTask) {
-            NavigationStack {
-                VStack {
-                    TextField("タスクを入力", text: $newTaskTitle)
-                        .textFieldStyle(.roundedBorder)
-                        .padding()
-                        .focused($isInputFocused)
-
-                    HStack {
-                        Spacer()
-                        
-                        Button("キャンセル") {
-                            showingAddTask = false
-                            newTaskTitle = ""
-                        }
-
-                        Button("追加") {
-                            if !newTaskTitle.isEmpty {
-                                addTask()
-                            }
-                        }
-                        .disabled(newTaskTitle.isEmpty)
-                    }
+            VStack(spacing: 20) {
+                Text("タスク追加")
+                    .font(.headline)
+                
+                TextField("タスクを入力", text: $newTaskTitle)
+                    .textFieldStyle(.roundedBorder)
                     .padding()
 
-                    Spacer()
+                HStack(spacing: 20) {
+                    Button("キャンセル") {
+                        showingAddTask = false
+                        newTaskTitle = ""
+                    }
+
+                    Button("追加") {
+                        addTask()
+                    }
+                    .disabled(newTaskTitle.isEmpty)
                 }
-                .navigationTitle("タスク追加")
-                .navigationBarTitleDisplayMode(.inline)
+                .padding()
+
+                Spacer()
             }
+            .padding()
         }
         .onAppear {
             loadTabs()
@@ -122,11 +114,7 @@ struct HomeView: View {
         guard let tabId = selectedTabId else { return }
         let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: tabId)
         ToDoTaskService.addTask(newTask, to: modelContext)
-        
-        // 追加後、タスク一覧を再読み込み
         loadTasks()
-        
-        // モーダルを閉じる
         showingAddTask = false
         newTaskTitle = ""
     }
