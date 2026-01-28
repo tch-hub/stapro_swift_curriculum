@@ -40,7 +40,7 @@ struct ToDoListItem: View {
 
 #Preview {
     ToDoListItem(
-        task: ToDoTask(title: "サンプルタスク", description: "", tabId: UUID()),
+        task: ToDoTask(title: "サンプルタスク", detail: "", tabId: UUID()),
         onToggleCompletion: { _ in }
     )
 }

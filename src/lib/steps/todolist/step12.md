@@ -104,7 +104,7 @@ struct HomeView: View {
 
     private func addTask() {
         guard let tabId = selectedTabId else { return }
-        let newTask = ToDoTask(title: newTaskTitle, description: "", tabId: tabId)
+        let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: tabId)
         ToDoTaskService.addTask(newTask, to: modelContext)
         newTaskTitle = ""
         showingAddTask = false

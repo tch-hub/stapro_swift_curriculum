@@ -77,7 +77,7 @@ struct ContentView: View {
 
                 // タブに属するタスクを追加
                 for taskName in taskNames {
-                    let newTask = ToDoTask(title: taskName, description: "", tabId: newTab.id)
+                    let newTask = ToDoTask(title: taskName, detail: "", tabId: newTab.id)
                     ToDoTaskService.addTask(newTask, to: modelContext)
                 }
             }
