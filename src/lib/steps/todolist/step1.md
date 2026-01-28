@@ -29,14 +29,15 @@
 ToDoList/
 ├── ToDoListApp.swift  # アプリのエントリーポイント
 ├── Screens/
-│   ├── Views/
-│   │   └── InitialView.swift
+│   ├── Views
+    │   ├── MainStack.swift
+    │   └── ContentView.swift
 │   └── Navigation/
-│       └── ScreenID.swift
+│       │── ScreenID.swift
+│       └── NavigationItem.swift
 ├── SwiftData/
-│   └── Models/
-│       ├── ToDoTask.swift
-│       └── ToDoTab.swift
+│   ├── ToDoTask.swift
+│   └── ToDoTab.swift
 ├── Services/
 │   ├── ToDoTaskService.swift
 │   └── ToDoTabService.swift
@@ -44,18 +45,19 @@ ToDoList/
 ```
 
 Xcodeで新しいフォルダを作る手順
-- プロジェクトナビゲーターの空白の部分で右クリックし、「New Folder」を選択  
+
+- プロジェクトナビゲーターの空白の部分で右クリックし、「New Folder」を選択
 
 Xcodeで新しいファイルを作る手順（いずれかの方法でファイルを作成してください）
+
 - Xcode メニューバーの「File」→「New」→「EmptyFile」を選択
 - プロジェクトナビゲーターの空白の部分で右クリックし、「New EmptyFile」を選択
 
 ### 3. ToDoListApp.swiftに以下のコードを追加する
 
-アプリのエントリーポイントとなるファイルを作成します。以下はひな形です：
-
 ```swift
 import SwiftUI
+import SwiftData
 
 @main
 struct ToDoListApp: App {
@@ -67,12 +69,13 @@ struct ToDoListApp: App {
 }
 ```
 
-このファイルは、アプリ起動時に最初に実行される重要なファイルです。SwiftDataの設定もここで行います。
+`import SwiftData`
+SwiftDataを読み込むと、アプリ内でデータモデルを定義して永続化できるようになります。`@Model`属性を使ったモデルを作り、SwiftUIと組み合わせて簡単にデータの保存・取得・更新が行えます。
 
-## 次のステップに進む準備
+`import SwiftUI`
+SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使えるようになります。  
+`body`という部分は、画面に何を表示するかを書くところです。
+ContentViewという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。  
+`WindowGroup {ContentView()}`は、コードを書くたびに画面をすぐに見られる機能です。これで、アプリの見た目をすぐに確認できます。
 
-- プロジェクトを正常に作成できたか確認する
-- Xcodeでプロジェクトをビルドして、エラーがないことを確認する
-- 必要なフォルダ構造が完成しているか確認する
-
-次のステップでSwiftDataの環境準備を行います。
+#### ※ここまでの状態では画面に何も表示されないので次のステップに進んでください。

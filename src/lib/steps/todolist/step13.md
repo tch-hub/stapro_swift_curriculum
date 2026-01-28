@@ -1,4 +1,4 @@
-# ステップ13: タスク削除機能の実装
+# ステップ12: タスク完了機能の実装
 
 <script>
     import {base} from '$app/paths';
@@ -6,7 +6,7 @@
 
 ## HomeView.swift の修正
 
-リスト内でスワイプして削除できるようにします：
+リスト内のタスク行をタップして完了状態を切り替える機能を追加します：
 
 ```swift
 List {
@@ -24,33 +24,28 @@ List {
                 .strikethrough(task.isCompleted)
         }
     }
-    .onDelete(perform: deleteTask)
 }
 
-private func deleteTask(offsets: IndexSet) {
-    for index in offsets {
-        let taskToDelete = filteredTasks[index]
-        ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
-    }
+private func toggleTaskCompletion(_ task: ToDoTask) {
+    ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
     loadTasks()
 }
 ```
 
-## .onDelete モディファイア
+## 重要な修正点
 
-- `.onDelete(perform:)`: リスト内でスワイプして削除できるようにします
-- `offsets`: 削除対象の行のインデックスを示します
-- 削除後は`loadTasks()`でUI更新します
+1. `ToDoTask`は`Identifiable`なので、`ForEach`に`id`指定は不要です
+2. Button内の画像をタップすると完了状態が切り替わります
+3. 完了したタスクは緑色で表示されます
 
-## 削除の流れ
+## toggleTaskCompletion メソッド
 
-1. ユーザーがタスクをスワイプします
-2. 削除ボタンが表示されます
-3. ユーザーが削除ボタンをタップします
-4. `deleteTask()`メソッドが呼び出されます
-5. サービスを通じてタスクをデータベースから削除します
-6. UI更新のためにタスク一覧を再度読み込みます
+このメソッドは：
+
+1. サービスを通じてタスクの完了状態を反転させます
+2. データベースに変更を保存します
+3. UI更新のためにタスク一覧を再度読み込みます
 
 ## 次のステップへ
 
-次は、タブを管理するための画面`TabManageView`を作成します。
+次は、タスクを削除する機能を実装します。

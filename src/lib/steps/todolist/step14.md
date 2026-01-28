@@ -1,105 +1,56 @@
-# ステップ14: TabManageView の作成（基本構造）
+# ステップ13: タスク削除機能の実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## TabManageView.swift の作成
+## HomeView.swift の修正
 
-`Screens/Views/Main/`フォルダに`TabManageView.swift`を作成します：
+リスト内でスワイプして削除できるようにします：
 
 ```swift
-import SwiftUI
-import SwiftData
-
-struct TabManageView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) var dismiss
-    @State private var tabs: [ToDoTab] = []
-    @State private var showingAddTab = false
-    @State private var newTabName = ""
-
-    var body: some View {
-        VStack {
-            List {
-                ForEach(tabs) { tab in
-                    Text(tab.name)
-                }
-                .onDelete(perform: deleteTab)
+List {
+    ForEach(filteredTasks) { task in
+        HStack {
+            Button(action: {
+                toggleTaskCompletion(task)
+            }) {
+                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(task.isCompleted ? .green : .gray)
             }
+            .buttonStyle(PlainButtonStyle())
 
-            HStack {
-                Button(action: { showingAddTab = true }) {
-                    Label("タブを追加", systemImage: "plus")
-                }
-                .padding()
-
-                Button("戻る") {
-                    dismiss()
-                }
-                .padding()
-            }
-        }
-        .navigationTitle("タブ管理")
-        .sheet(isPresented: $showingAddTab) {
-            VStack {
-                TextField("タブ名を入力", text: $newTabName)
-                    .textFieldStyle(.roundedBorder)
-                    .padding()
-
-                HStack {
-                    Button("キャンセル") {
-                        showingAddTab = false
-                        newTabName = ""
-                    }
-
-                    Button("追加") {
-                        addTab()
-                    }
-                    .disabled(newTabName.isEmpty)
-                }
-                .padding()
-            }
-        }
-        .onAppear {
-            loadTabs()
+            Text(task.title)
+                .strikethrough(task.isCompleted)
         }
     }
-
-    private func loadTabs() {
-        let descriptor = FetchDescriptor<ToDoTab>()
-        tabs = (try? modelContext.fetch(descriptor)) ?? []
-    }
-
-    private func addTab() {
-        let newTab = ToDoTab(name: newTabName)
-        ToDoTabService.addTab(newTab, to: modelContext)
-        newTabName = ""
-        showingAddTab = false
-        loadTabs()
-    }
-
-    private func deleteTab(offsets: IndexSet) {
-        for index in offsets {
-            let tabToDelete = tabs[index]
-            ToDoTabService.deleteTab(tabToDelete, from: modelContext)
-        }
-        loadTabs()
-    }
+    .onDelete(perform: deleteTask)
 }
 
-#Preview {
-    TabManageView()
+private func deleteTask(offsets: IndexSet) {
+    for index in offsets {
+        let taskToDelete = filteredTasks[index]
+        ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
+    }
+    loadTasks()
 }
 ```
 
-## 各要素の説明
+## .onDelete モディファイア
 
-- `loadTabs()`: データベースからすべてのタブを読み込みます
-- `addTab()`: 新しいタブを追加します
-- `deleteTab()`: タブを削除します（関連するタスクも削除されます）
-- `@Environment(\.dismiss)`: 前の画面に戻るために使用します
+- `.onDelete(perform:)`: リスト内でスワイプして削除できるようにします
+- `offsets`: 削除対象の行のインデックスを示します
+- 削除後は`loadTasks()`でUI更新します
+
+## 削除の流れ
+
+1. ユーザーがタスクをスワイプします
+2. 削除ボタンが表示されます
+3. ユーザーが削除ボタンをタップします
+4. `deleteTask()`メソッドが呼び出されます
+5. サービスを通じてタスクをデータベースから削除します
+6. UI更新のためにタスク一覧を再度読み込みます
 
 ## 次のステップへ
 
-次は、このビューをより整えて、エラーハンドリングを追加します。
+次は、タブを管理するための画面`TabManageView`を作成します。

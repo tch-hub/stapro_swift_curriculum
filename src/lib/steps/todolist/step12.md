@@ -1,4 +1,4 @@
-# ステップ12: タスク完了機能の実装
+# ステップ11: タスク追加機能の実装
 
 <script>
     import {base} from '$app/paths';
@@ -6,46 +6,120 @@
 
 ## HomeView.swift の修正
 
-リスト内のタスク行をタップして完了状態を切り替える機能を追加します：
+タスクを追加するための入力フォームと「+」ボタンを追加します：
 
 ```swift
-List {
-    ForEach(filteredTasks) { task in
-        HStack {
-            Button(action: {
-                toggleTaskCompletion(task)
-            }) {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(task.isCompleted ? .green : .gray)
-            }
-            .buttonStyle(PlainButtonStyle())
+import SwiftUI
+import SwiftData
 
-            Text(task.title)
-                .strikethrough(task.isCompleted)
+struct HomeView: View {
+    @Environment(\.modelContext) private var modelContext
+    @State private var tabs: [ToDoTab] = []
+    @State private var tasks: [ToDoTask] = []
+    @State private var selectedTabId: UUID?
+    @State private var showingAddTask = false
+    @State private var newTaskTitle = ""
+    @Binding var navigationPath: [NavigationItem]
+
+    var filteredTasks: [ToDoTask] {
+        guard let selectedTabId else { return [] }
+        return tasks.filter { $0.tabId == selectedTabId }
+    }
+
+    var body: some View {
+        VStack {
+            if !tabs.isEmpty {
+                Picker("タブを選択", selection: $selectedTabId) {
+                    ForEach(tabs) { tab in
+                        Text(tab.name).tag(Optional(tab.id))
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: selectedTabId) { _, _ in
+                    loadTasks()
+                }
+            }
+
+            List {
+                ForEach(filteredTasks) { task in
+                    HStack {
+                        Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                        Text(task.title)
+                            .strikethrough(task.isCompleted)
+                    }
+                }
+            }
+
+            HStack {
+                Button(action: { showingAddTask = true }) {
+                    Label("追加", systemImage: "plus")
+                }
+                .padding()
+
+                Button(action: {
+                    navigationPath.append(NavigationItem(id: .tabManage))
+                }) {
+                    Text("タブ管理")
+                }
+                .padding()
+            }
+        }
+        .navigationTitle("ToDoリスト")
+        .sheet(isPresented: $showingAddTask) {
+            VStack {
+                TextField("タスクを入力", text: $newTaskTitle)
+                    .textFieldStyle(.roundedBorder)
+                    .padding()
+
+                HStack {
+                    Button("キャンセル") {
+                        showingAddTask = false
+                        newTaskTitle = ""
+                    }
+
+                    Button("追加") {
+                        addTask()
+                    }
+                    .disabled(newTaskTitle.isEmpty)
+                }
+                .padding()
+            }
+        }
+        .onAppear {
+            loadTabs()
+            loadTasks()
         }
     }
-}
 
-private func toggleTaskCompletion(_ task: ToDoTask) {
-    ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
-    loadTasks()
+    private func loadTabs() {
+        let descriptor = FetchDescriptor<ToDoTab>()
+        tabs = (try? modelContext.fetch(descriptor)) ?? []
+        selectedTabId = tabs.first?.id
+    }
+
+    private func loadTasks() {
+        let descriptor = FetchDescriptor<ToDoTask>()
+        tasks = (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    private func addTask() {
+        guard let tabId = selectedTabId else { return }
+        let newTask = ToDoTask(title: newTaskTitle, description: "", tabId: tabId)
+        ToDoTaskService.addTask(newTask, to: modelContext)
+        newTaskTitle = ""
+        showingAddTask = false
+        loadTasks()
+    }
 }
 ```
 
-## 重要な修正点
+## 新しい要素
 
-1. `ToDoTask`は`Identifiable`なので、`ForEach`に`id`指定は不要です
-2. Button内の画像をタップすると完了状態が切り替わります
-3. 完了したタスクは緑色で表示されます
-
-## toggleTaskCompletion メソッド
-
-このメソッドは：
-
-1. サービスを通じてタスクの完了状態を反転させます
-2. データベースに変更を保存します
-3. UI更新のためにタスク一覧を再度読み込みます
+- `@State private var showingAddTask`: モーダル表示の状態を管理します
+- `@State private var newTaskTitle`: 入力されたタスクのタイトルを保持します
+- `.sheet()`: モーダルダイアログを表示します
+- `addTask()`: 新しいタスクをデータベースに保存します
 
 ## 次のステップへ
 
-次は、タスクを削除する機能を実装します。
+次は、タスクの完了状態を切り替える機能を実装します。

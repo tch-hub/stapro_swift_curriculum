@@ -35,7 +35,7 @@ let INITIAL_TODO_TABS = [
 ]
 ```
 
-## InitialView.swift の修正
+## ContentView.swift の修正
 
 アプリ初回起動時に初期データを作成します：
 
@@ -43,7 +43,7 @@ let INITIAL_TODO_TABS = [
 import SwiftUI
 import SwiftData
 
-struct InitialView: View {
+struct ContentView: View {
     @State private var isInitialized = false
     @Environment(\.modelContext) private var modelContext
 
@@ -88,7 +88,7 @@ struct InitialView: View {
 
 ## 初期化処理の流れ
 
-1. アプリ起動時にInitialViewが表示されます
+1. アプリ起動時にContentViewが表示されます
 2. `onAppear`で`initializeAppIfNeeded()`が呼び出されます
 3. 既存データをチェックします
 4. データが存在しなければ、初期データを作成します

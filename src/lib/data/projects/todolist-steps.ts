@@ -17,7 +17,7 @@ export const todolistSteps: TodolistStep[] = [
 	},
 	{
 		id: 'step3',
-		title: 'ステップ3: ToDoタスクモデルの作成',
+		title: 'ステップ3: ToDoタスクモデルの作成(ToDoTask.swift)',
 		summary: '@Modelデコレータを使ってToDoタスクのデータモデルを定義します。'
 	},
 	{

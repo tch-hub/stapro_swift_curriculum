@@ -1,4 +1,4 @@
-# ステップ11: タスク追加機能の実装
+# ステップ10: タスク一覧の表示
 
 <script>
     import {base} from '$app/paths';
@@ -6,7 +6,7 @@
 
 ## HomeView.swift の修正
 
-タスクを追加するための入力フォームと「+」ボタンを追加します：
+前のステップで作成した`HomeView`を以下のように修正します：
 
 ```swift
 import SwiftUI
@@ -17,8 +17,6 @@ struct HomeView: View {
     @State private var tabs: [ToDoTab] = []
     @State private var tasks: [ToDoTask] = []
     @State private var selectedTabId: UUID?
-    @State private var showingAddTask = false
-    @State private var newTaskTitle = ""
     @Binding var navigationPath: [NavigationItem]
 
     var filteredTasks: [ToDoTask] {
@@ -51,11 +49,6 @@ struct HomeView: View {
             }
 
             HStack {
-                Button(action: { showingAddTask = true }) {
-                    Label("追加", systemImage: "plus")
-                }
-                .padding()
-
                 Button(action: {
                     navigationPath.append(NavigationItem(id: .tabManage))
                 }) {
@@ -65,26 +58,6 @@ struct HomeView: View {
             }
         }
         .navigationTitle("ToDoリスト")
-        .sheet(isPresented: $showingAddTask) {
-            VStack {
-                TextField("タスクを入力", text: $newTaskTitle)
-                    .textFieldStyle(.roundedBorder)
-                    .padding()
-
-                HStack {
-                    Button("キャンセル") {
-                        showingAddTask = false
-                        newTaskTitle = ""
-                    }
-
-                    Button("追加") {
-                        addTask()
-                    }
-                    .disabled(newTaskTitle.isEmpty)
-                }
-                .padding()
-            }
-        }
         .onAppear {
             loadTabs()
             loadTasks()
@@ -101,25 +74,21 @@ struct HomeView: View {
         let descriptor = FetchDescriptor<ToDoTask>()
         tasks = (try? modelContext.fetch(descriptor)) ?? []
     }
-
-    private func addTask() {
-        guard let tabId = selectedTabId else { return }
-        let newTask = ToDoTask(title: newTaskTitle, description: "", tabId: tabId)
-        ToDoTaskService.addTask(newTask, to: modelContext)
-        newTaskTitle = ""
-        showingAddTask = false
-        loadTasks()
-    }
 }
 ```
 
 ## 新しい要素
 
-- `@State private var showingAddTask`: モーダル表示の状態を管理します
-- `@State private var newTaskTitle`: 入力されたタスクのタイトルを保持します
-- `.sheet()`: モーダルダイアログを表示します
-- `addTask()`: 新しいタスクをデータベースに保存します
+- `filteredTasks`: 選択されたタブに属するタスクのみをフィルタリングします
+- `List`: タスクを一覧表示するUIコンポーネントです
+- `onChange`: タブが変更されたときに自動的にタスク一覧を更新します
+- `strikethrough`: 完了したタスクに取り消し線を表示します
+
+## チェックボックスの表示
+
+- 完了していないタスク: `circle`（空の円）
+- 完了したタスク: `checkmark.circle.fill`（チェック付き円）
 
 ## 次のステップへ
 
-次は、タスクの完了状態を切り替える機能を実装します。
+次は、新しいタスクを追加する機能を実装します。

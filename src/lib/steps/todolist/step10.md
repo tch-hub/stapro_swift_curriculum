@@ -1,94 +1,77 @@
-# ステップ10: タスク一覧の表示
+# ステップ8: ContentView と MainStack の作成
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## HomeView.swift の修正
+## ContentView.swift の作成
 
-前のステップで作成した`HomeView`を以下のように修正します：
+`Screens/Views/`フォルダに`ContentView.swift`を作成します。このビューはアプリ起動時に最初に表示されます：
 
 ```swift
 import SwiftUI
-import SwiftData
 
-struct HomeView: View {
-    @Environment(\.modelContext) private var modelContext
-    @State private var tabs: [ToDoTab] = []
-    @State private var tasks: [ToDoTask] = []
-    @State private var selectedTabId: UUID?
-    @Binding var navigationPath: [NavigationItem]
-
-    var filteredTasks: [ToDoTask] {
-        guard let selectedTabId else { return [] }
-        return tasks.filter { $0.tabId == selectedTabId }
-    }
+struct ContentView: View {
+    @State private var isInitialized = false
 
     var body: some View {
-        VStack {
-            if !tabs.isEmpty {
-                Picker("タブを選択", selection: $selectedTabId) {
-                    ForEach(tabs) { tab in
-                        Text(tab.name).tag(Optional(tab.id))
-                    }
-                }
-                .pickerStyle(.menu)
-                .onChange(of: selectedTabId) { _, _ in
-                    loadTasks()
-                }
+        if isInitialized {
+            MainStack()
+        } else {
+            VStack {
+                Text("アプリを準備中...")
+                ProgressView()
             }
-
-            List {
-                ForEach(filteredTasks) { task in
-                    HStack {
-                        Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                        Text(task.title)
-                            .strikethrough(task.isCompleted)
-                    }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    isInitialized = true
                 }
-            }
-
-            HStack {
-                Button(action: {
-                    navigationPath.append(NavigationItem(id: .tabManage))
-                }) {
-                    Text("タブ管理")
-                }
-                .padding()
             }
         }
-        .navigationTitle("ToDoリスト")
-        .onAppear {
-            loadTabs()
-            loadTasks()
-        }
     }
+}
 
-    private func loadTabs() {
-        let descriptor = FetchDescriptor<ToDoTab>()
-        tabs = (try? modelContext.fetch(descriptor)) ?? []
-        selectedTabId = tabs.first?.id
-    }
-
-    private func loadTasks() {
-        let descriptor = FetchDescriptor<ToDoTask>()
-        tasks = (try? modelContext.fetch(descriptor)) ?? []
-    }
+#Preview {
+    ContentView()
 }
 ```
 
-## 新しい要素
+## MainStack.swift の作成
 
-- `filteredTasks`: 選択されたタブに属するタスクのみをフィルタリングします
-- `List`: タスクを一覧表示するUIコンポーネントです
-- `onChange`: タブが変更されたときに自動的にタスク一覧を更新します
-- `strikethrough`: 完了したタスクに取り消し線を表示します
+`Screens/Views/Main/`フォルダを作成し、その中に`MainStack.swift`を作成します：
 
-## チェックボックスの表示
+```swift
+import SwiftUI
 
-- 完了していないタスク: `circle`（空の円）
-- 完了したタスク: `checkmark.circle.fill`（チェック付き円）
+struct MainStack: View {
+    @State private var navigationPath: [NavigationItem] = []
+
+    var body: some View {
+        NavigationStack(path: $navigationPath) {
+            HomeView(navigationPath: $navigationPath)
+                .navigationDestination(for: NavigationItem.self) { item in
+                    switch item.id {
+                    case .home:
+                        HomeView(navigationPath: $navigationPath)
+                    case .tabManage:
+                        TabManageView()
+                    }
+                }
+        }
+    }
+}
+
+#Preview {
+    MainStack()
+}
+```
+
+## 各要素の説明
+
+- `ContentView`: アプリ起動時の初期化処理を行い、その後`MainStack`に遷移します
+- `MainStack`: NavigationStackを使って、複数の画面を管理します
+- `navigationDestination`: `NavigationItem`の内容に応じて、表示する画面を切り替えます
 
 ## 次のステップへ
 
-次は、新しいタスクを追加する機能を実装します。
+次は、ホーム画面（タスク一覧）を作成します。

@@ -57,6 +57,10 @@ struct HomeView: View {
         selectedTabId = tabs.first?.id
     }
 }
+
+#Preview {
+    HomeView(navigationPath: .constant([]))
+}
 ```
 
 ## コードの説明
