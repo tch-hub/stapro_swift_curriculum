@@ -8,16 +8,16 @@
 
 SwiftDataは、iOSアプリ内でデータを永続化するための仕組みです。データベースのようなもので、アプリを再起動してもデータが保存されます。
 
-## SwiftUIToDoListApp.swiftの修正
+## ToDoListApp.swiftの修正
 
-SwiftDataを使うために、`SwiftUIToDoListApp.swift`を以下のように修正します：
+SwiftDataを使うために、`ToDoListApp.swift`を以下のように修正します：
 
 ```swift
 import SwiftUI
 import SwiftData
 
 @main
-struct SwiftUIToDoListApp: App {
+struct ToDoListApp: App {
     let modelContainer: ModelContainer
 
     init() {
@@ -37,7 +37,7 @@ struct SwiftUIToDoListApp: App {
 
     var body: some Scene {
         WindowGroup {
-            InitialView()
+            ContentView()
         }
         .modelContainer(modelContainer)
     }

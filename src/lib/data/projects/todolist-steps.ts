@@ -97,7 +97,7 @@ export const todolistSteps: TodolistStep[] = [
 	},
 	{
 		id: 'step19',
-		title: 'ステップ19: SwiftUIToDoListAppの実装',
+		title: 'ステップ19: ToDoListAppの実装',
 		summary: 'アプリのエントリーポイントを実装します。'
 	},
 	{

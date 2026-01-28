@@ -4,29 +4,30 @@
     import {base} from '$app/paths';
 </script>
 
-## 1. Xcodeで新規プロジェクトを作成
+### 1. Xcodeで新規プロジェクトを作成
 
 1. Xcodeを起動し、「Create a new Xcode project」を選択する。
 2. テンプレートで「App」を選択して「Next」をクリックする。
-3. 設定を入力します：
-   - Product Name: `UIToDoList`
-   - Organization Identifier: `jp.ac.stpro` など適切な名前
-   - Interface: SwiftUI
-   - Language: Swift
+3. 設定を入力し、以下の画像のように指定して「Next」を押す。
+
+![Xcode の設定画面](/images/setup.png)
+
 4. 保存先を選んでプロジェクトを作成する。
 
-## 2. プロジェクトの構成を作成する
+### 2. 自動作成されるファイルを削除して必要なファイルを作成する
 
-新しいプロジェクトを作ると自動生成されるファイルの中で、以下の3つをまず削除します：
+新しいプロジェクトを作ると自動生成されるファイルはすべて削除し、必要なファイルを自分で作り直します。以下の手順で進めてください！
 
-- ContentView.swift
-- Assets.xcassets内の不要な画像
+#### ファイルを削除する方法
 
-次に、以下の構造でフォルダとファイルを作成します：
+- Xcodeのプロジェクトナビゲーターで、削除したいファイルまたはフォルダを見つけて選択します。
+- 選択したファイルまたはフォルダを右クリックし、メニューから「Delete」を選択する。
+
+#### 必要なファイルを作成する
 
 ```
-UIToDoList/
-├── SwiftUIToDoListApp.swift  # アプリのエントリーポイント
+ToDoList/
+├── ToDoListApp.swift  # アプリのエントリーポイント
 ├── Screens/
 │   ├── Views/
 │   │   └── InitialView.swift
@@ -42,15 +43,14 @@ UIToDoList/
 └── Components/
 ```
 
-## 3. ファイルの配置方法
+Xcodeで新しいフォルダを作る手順
+- プロジェクトナビゲーターの空白の部分で右クリックし、「New Folder」を選択  
 
-Xcodeでフォルダやファイルを作成する際の注意点：
+Xcodeで新しいファイルを作る手順（いずれかの方法でファイルを作成してください）
+- Xcode メニューバーの「File」→「New」→「EmptyFile」を選択
+- プロジェクトナビゲーターの空白の部分で右クリックし、「New EmptyFile」を選択
 
-- 「Create folder」を使ってフォルダを作成する
-- 「New File」→「Swift File」でSwiftファイルを作成する
-- 作成したファイルをドラッグ&ドロップで正しいフォルダに配置する
-
-## 4. SwiftUIToDoListApp.swiftの作成
+### 3. ToDoListApp.swiftに以下のコードを追加する
 
 アプリのエントリーポイントとなるファイルを作成します。以下はひな形です：
 
@@ -58,10 +58,10 @@ Xcodeでフォルダやファイルを作成する際の注意点：
 import SwiftUI
 
 @main
-struct SwiftUIToDoListApp: App {
+struct ToDoListApp: App {
     var body: some Scene {
         WindowGroup {
-            InitialView()
+            ContentView()
         }
     }
 }

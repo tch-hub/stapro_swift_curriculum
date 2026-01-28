@@ -7,11 +7,11 @@
 
 	const codeSamples = [
 		{
-			title: 'SwiftUIToDoListApp.swift - アプリのエントリーポイント',
-			fileName: 'SwiftUIToDoListApp.swift',
+			title: 'ToDoListApp.swift - アプリのエントリーポイント',
+			fileName: 'ToDoListApp.swift',
 			code: `//
-//  SwiftUIToDoListApp.swift
-//  SwiftUIToDoList
+//  ToDoListApp.swift
+//  ToDoList
 //
 //  Created by mogi yoshiki on 2024/04/09.
 //
@@ -20,7 +20,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct SwiftUIToDoListApp: App {
+struct ToDoListApp: App {
     var container: ModelContainer
     
     init() {
@@ -39,7 +39,7 @@ struct SwiftUIToDoListApp: App {
     
     var body: some Scene {
         WindowGroup {
-            InitialView()
+            ContentView()
         }
         .modelContainer(container)
     }
@@ -50,7 +50,7 @@ struct SwiftUIToDoListApp: App {
 			fileName: 'ToDoTask.swift',
 			code: `//
 //  ToDoTask.swift
-//  SwiftUIToDoList
+//  ToDoList
 //
 //  Created by mogi yoshiki on 2024/04/14.
 //
@@ -80,7 +80,7 @@ final class ToDoTask {
 			fileName: 'ToDoTab.swift',
 			code: `//
 //  ToDoTab.swift
-//  SwiftUIToDoList
+//  ToDoList
 //
 //  Created by mogi yoshiki on 2024/04/14.
 //
@@ -104,7 +104,7 @@ final class ToDoTab {
 			fileName: 'ToDoTaskService.swift',
 			code: `//
 //  ToDoTaskService.swift
-//  SwiftUIToDoList
+//  ToDoList
 //
 //  Created by mogi yoshiki on 2024/04/15.
 //
@@ -144,7 +144,7 @@ class ToDoTaskService {
 			fileName: 'ToDoTabService.swift',
 			code: `//
 //  ToDoTabService.swift
-//  SwiftUIToDoList
+//  ToDoList
 //
 //  Created by mogi yoshiki on 2024/04/15.
 //
@@ -322,7 +322,7 @@ class ToDoTabService {
 				<div class="mockup-code text-sm">
 					<pre><code
 							>UIToDoList/
-├── SwiftUIToDoListApp.swift     # アプリのエントリーポイント
+├── ToDoListApp.swift     # アプリのエントリーポイント
 ├── Screens/
 │   ├── Views/
 │   │   ├── InitialView.swift    # スプラッシュスクリーン

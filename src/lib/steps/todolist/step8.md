@@ -32,7 +32,7 @@ struct InitialView: View {
 }
 
 #Preview {
-    InitialView()
+    ContentView()
 }
 ```
 
