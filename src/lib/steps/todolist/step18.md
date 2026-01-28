@@ -81,6 +81,18 @@ extension View {
         ))
     }
 }
+
+#Preview {
+    Text("プレビュー")
+        .textFieldAlert(
+            isPresented: .constant(true),
+            title: "タブ名を変更",
+            message: "新しいタブ名を入力してください",
+            text: .constant(""),
+            placeholder: "タブ名",
+            onConfirm: { }
+        )
+}
 ```
 
 ## ViewModifier について
