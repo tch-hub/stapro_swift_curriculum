@@ -14,7 +14,6 @@ import SwiftData
 
 struct TabManageView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) var dismiss
     
     @State private var tabs: [ToDoTab] = []
     @State private var showingAddTab = false
