@@ -11,57 +11,6 @@
 ```swift
 import SwiftUI
 
-struct TextFieldAlert: ViewModifier {
-    @Binding var isPresented: Bool
-    let title: String
-    let message: String
-    @Binding var text: String
-    let placeholder: String
-    let onConfirm: () -> Void
-
-    func body(content: Content) -> some View {
-        content
-            .sheet(isPresented: $isPresented) {
-                VStack(spacing: 16) {
-                    Text(title)
-                        .font(.headline)
-                        .fontWeight(.bold)
-
-                    Text(message)
-                        .font(.body)
-                        .foregroundColor(.gray)
-
-                    TextField(placeholder, text: $text)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.vertical, 8)
-
-                    HStack(spacing: 12) {
-                        Button("キャンセル") {
-                            isPresented = false
-                            text = ""
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .border(Color.gray)
-                        .foregroundColor(.gray)
-
-                        Button("確認") {
-                            onConfirm()
-                            isPresented = false
-                            text = ""
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .disabled(text.isEmpty)
-                    }
-                }
-                .padding()
-            }
-    }
-}
-
 extension View {
     func textFieldAlert(
         isPresented: Binding<Bool>,
@@ -69,55 +18,62 @@ extension View {
         message: String,
         text: Binding<String>,
         placeholder: String = "",
-        onConfirm: @escaping () -> Void
+        actionButtonTitle: String = "確認",
+        action: @escaping () -> Void
     ) -> some View {
-        self.modifier(TextFieldAlert(
-            isPresented: isPresented,
-            title: title,
-            message: message,
-            text: text,
-            placeholder: placeholder,
-            onConfirm: onConfirm
-        ))
+        self.alert(title, isPresented: isPresented) {
+            // ここにTextFieldを配置するだけで、OS標準の入力付きアラートになる
+            TextField(placeholder, text: text)
+            
+            // キャンセルボタン（自動的に閉じる）
+            Button("キャンセル", role: .cancel) {
+                // キャンセル時の処理があればここに書く
+                // text.wrappedValue = "" // 必要ならクリアする
+            }
+            
+            // 実行ボタン
+            Button(actionButtonTitle) {
+                action()
+            }
+            .disabled(text.wrappedValue.isEmpty) // 入力が空なら押せないようにする
+            
+        } message: {
+            Text(message)
+        }
     }
 }
+
+// --- 使い方 ---
 
 #Preview {
-    Text("プレビュー")
-        .textFieldAlert(
-            isPresented: .constant(true),
-            title: "タブ名を変更",
-            message: "新しいタブ名を入力してください",
-            text: .constant(""),
-            placeholder: "タブ名",
-            onConfirm: { }
-        )
+    struct PreviewWrapper: View {
+        @State private var showDialog = false
+        @State private var inputText = ""
+        @State private var displayString = "ここが変わります"
+
+        var body: some View {
+            VStack(spacing: 20) {
+                Text(displayString)
+                    .font(.title)
+                
+                Button("名前を変更") {
+                    inputText = "" // 開く前に初期化
+                    showDialog = true
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .textFieldAlert(
+                isPresented: $showDialog,
+                title: "名前の変更",
+                message: "新しい名前を入力してください。",
+                text: $inputText,
+                placeholder: "例: タスクA",
+                action: {
+                    displayString = inputText
+                }
+            )
+        }
+    }
+    return PreviewWrapper()
 }
 ```
-
-## ViewModifier について
-
-ViewModifierは、既存のビューに機能を追加するための仕組みです。このモディファイアは、テキスト入力を伴うアラートを簡単に表示できます。
-
-## 使用例
-
-```swift
-@State private var showingRenameTab = false
-@State private var newTabName = ""
-
-// ビュー内
-.textFieldAlert(
-    isPresented: $showingRenameTab,
-    title: "タブ名を変更",
-    message: "新しいタブ名を入力してください",
-    text: $newTabName,
-    placeholder: "タブ名",
-    onConfirm: {
-        // タブ名更新処理
-    }
-)
-```
-
-## 次のステップへ
-
-次は、これまで実装したコンポーネントを統合して、全体を整えます。
