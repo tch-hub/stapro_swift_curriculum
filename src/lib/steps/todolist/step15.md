@@ -21,17 +21,26 @@ struct HomeView: View {
 
     var body: some View {
         VStack {
-            // タブ選択用Picker
+            // タブ選択とタブ管理を近くに配置
             if !tabs.isEmpty {
-                Picker("タブを選択", selection: $selectedTabId) {
-                    ForEach(tabs) { tab in
-                        Text(tab.name).tag(Optional(tab.id))
+                HStack(spacing: 12) {
+                    Picker("タブを選択", selection: $selectedTabId) {
+                        ForEach(tabs) { tab in
+                            Text(tab.name).tag(Optional(tab.id))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .onChange(of: selectedTabId) { _, _ in
+                        loadTasks()
+                    }
+
+                    Button(action: {
+                        navigationPath.append(NavigationItem(id: .tabManage))
+                    }) {
+                        Text("タブ管理")
                     }
                 }
-                .pickerStyle(.menu)
-                .onChange(of: selectedTabId) { _, _ in
-                    loadTasks()
-                }
+                .padding(.bottom, 8)
             }
 
             // タスク一覧を表示するだけのシンプルなList
@@ -51,13 +60,6 @@ struct HomeView: View {
                     .padding()
             }
 
-            // タブ管理ボタン
-            Button(action: {
-                navigationPath.append(NavigationItem(id: .tabManage))
-            }) {
-                Text("タブ管理")
-            }
-            .padding()
         }
         .navigationTitle("ToDoリスト")
         .onAppear {

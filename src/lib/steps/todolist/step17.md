@@ -25,15 +25,24 @@ struct HomeView: View {
         ZStack {
             VStack {
                 if !tabs.isEmpty {
-                    Picker("タブを選択", selection: $selectedTabId) {
-                        ForEach(tabs) { tab in
-                            Text(tab.name).tag(Optional(tab.id))
+                    HStack(spacing: 12) {
+                        Picker("タブを選択", selection: $selectedTabId) {
+                            ForEach(tabs) { tab in
+                                Text(tab.name).tag(Optional(tab.id))
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .onChange(of: selectedTabId) { _, _ in
+                            loadTasks()
+                        }
+
+                        Button(action: {
+                            navigationPath.append(NavigationItem(id: .tabManage))
+                        }) {
+                            Label("タブ管理", systemImage: "folder")
                         }
                     }
-                    .pickerStyle(.menu)
-                    .onChange(of: selectedTabId) { _, _ in
-                        loadTasks()
-                    }
+                    .padding(.bottom, 8)
                 }
 
                 if let selectedTabId = selectedTabId, !tasks.isEmpty {
@@ -67,14 +76,6 @@ struct HomeView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
 
-                Button(action: {
-                    navigationPath.append(NavigationItem(id: .tabManage))
-                }) {
-                    Label("タブ管理", systemImage: "folder")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.bordered)
-                .padding()
             }
             .padding()
             .navigationTitle("ToDoリスト")
