@@ -9,27 +9,18 @@
 リスト内でスワイプして削除できるようにします：
 
 ```swift
-List {
-    ForEach(filteredTasks) { task in
-        HStack {
-            Button(action: {
-                toggleTaskCompletion(task)
-            }) {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(task.isCompleted ? .green : .gray)
-            }
-            .buttonStyle(PlainButtonStyle())
-
-            Text(task.title)
-                .strikethrough(task.isCompleted)
-        }
+CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+    ToDoListItem(
+        title: task.title,
+        isCompleted: task.isCompleted
+    ) {
+        toggleTaskCompletion(task)
     }
-    .onDelete(perform: deleteTask)
 }
 
-private func deleteTask(offsets: IndexSet) {
+private func handleDeleteTask(_ offsets: IndexSet) {
     for index in offsets {
-        let taskToDelete = filteredTasks[index]
+        let taskToDelete = tasks[index]
         ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
     }
     loadTasks()
@@ -38,7 +29,7 @@ private func deleteTask(offsets: IndexSet) {
 
 ## .onDelete モディファイア
 
-- `.onDelete(perform:)`: リスト内でスワイプして削除できるようにします
+- `onDelete`: `CustomList`に削除処理を渡します
 - `offsets`: 削除対象の行のインデックスを示します
 - 削除後は`loadTasks()`でUI更新します
 
@@ -47,7 +38,7 @@ private func deleteTask(offsets: IndexSet) {
 1. ユーザーがタスクをスワイプします
 2. 削除ボタンが表示されます
 3. ユーザーが削除ボタンをタップします
-4. `deleteTask()`メソッドが呼び出されます
+4. `handleDeleteTask()`メソッドが呼び出されます
 5. サービスを通じてタスクをデータベースから削除します
 6. UI更新のためにタスク一覧を再度読み込みます
 

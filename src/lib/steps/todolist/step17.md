@@ -6,7 +6,7 @@
 
 ## HomeView.swift の修正
 
-タスクを追加するための入力フォームと「+」ボタンを追加します：
+タスクを追加するための入力アラートと「+」ボタンを追加します：
 
 ```swift
 import SwiftUI
@@ -21,151 +21,132 @@ struct HomeView: View {
     @State private var newTaskTitle = ""
     @Binding var navigationPath: [NavigationItem]
 
-    var filteredTasks: [ToDoTask] {
-        guard let selectedTabId else { return [] }
-        return tasks.filter { $0.tabId == selectedTabId }
-    }
-
     var body: some View {
-        VStack {
-            if !tabs.isEmpty {
-                Picker("タブを選択", selection: $selectedTabId) {
-                    ForEach(tabs) { tab in
-                        Text(tab.name).tag(Optional(tab.id))
+        ZStack {
+            VStack {
+                if !tabs.isEmpty {
+                    Picker("タブを選択", selection: $selectedTabId) {
+                        ForEach(tabs) { tab in
+                            Text(tab.name).tag(Optional(tab.id))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .onChange(of: selectedTabId) { _, _ in
+                        loadTasks()
                     }
                 }
-                .pickerStyle(.menu)
-                .onChange(of: selectedTabId) { _, _ in
-                    loadTasks()
-                }
-            } else {
-                Text("タブが登録されていません")
-                    .foregroundColor(.gray)
-                    .padding()
-            }
 
-            List {
-                ForEach(filteredTasks) { task in
-                    HStack {
-                        Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                        Text(task.title)
-                            .strikethrough(task.isCompleted)
+                if let selectedTabId = selectedTabId, !tasks.isEmpty {
+                    CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+                        ToDoListItem(
+                            title: task.title,
+                            isCompleted: task.isCompleted
+                        ) {
+                            // 完了切り替えは次のステップで実装します
+                        }
                     }
+                } else if selectedTabId != nil {
+                    VStack {
+                        Image(systemName: "checkmark.circle")
+                            .font(.system(size: 48))
+                            .foregroundColor(.gray)
+                        Text("タスクはまだありません")
+                            .foregroundColor(.gray)
+                            .padding(.top, 8)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    VStack {
+                        Image(systemName: "list.bullet")
+                            .font(.system(size: 48))
+                            .foregroundColor(.gray)
+                        Text("タブを選択してください")
+                            .foregroundColor(.gray)
+                            .padding(.top, 8)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-            }
-
-            HStack {
-                Button(action: { 
-                    showingAddTask = true
-                }) {
-                    Label("追加", systemImage: "plus")
-                }
-                .padding()
 
                 Button(action: {
                     navigationPath.append(NavigationItem(id: .tabManage))
                 }) {
-                    Text("タブ管理")
+                    Label("タブ管理", systemImage: "folder")
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.bordered)
                 .padding()
-            }
-        }
-        .navigationTitle("ToDoリスト")
-        .sheet(isPresented: $showingAddTask) {
-            VStack(spacing: 20) {
-                Text("タスク追加")
-                    .font(.headline)
-                
-                TextField("タスクを入力", text: $newTaskTitle)
-                    .textFieldStyle(.roundedBorder)
-                    .padding()
-
-                HStack(spacing: 20) {
-                    Button("キャンセル") {
-                        showingAddTask = false
-                        newTaskTitle = ""
-                    }
-
-                    Button("追加") {
-                        addTask()
-                    }
-                    .disabled(newTaskTitle.isEmpty)
-                }
-                .padding()
-
-                Spacer()
             }
             .padding()
-        }
-        .onAppear {
-            loadTabs()
-            loadTasks()
+            .navigationTitle("ToDoリスト")
+            .onAppear {
+                loadTabs()
+            }
+            .textFieldAlert(
+                isPresented: $showingAddTask,
+                title: "新しいタスクを追加",
+                message: "タスクの内容を入力してください",
+                text: $newTaskTitle,
+                placeholder: "例: 買い物に行く",
+                actionButtonTitle: "追加",
+                action: addTask
+            )
+
+            if selectedTabId != nil {
+                FloatingButton(
+                    action: { showingAddTask = true },
+                    icon: "plus",
+                    backgroundColor: .green
+                )
+            }
         }
     }
 
     private func loadTabs() {
         let descriptor = FetchDescriptor<ToDoTab>()
         tabs = (try? modelContext.fetch(descriptor)) ?? []
-        selectedTabId = tabs.first?.id
+
+        if selectedTabId == nil {
+            selectedTabId = tabs.first?.id
+        }
+        loadTasks()
     }
 
     private func loadTasks() {
-        let descriptor = FetchDescriptor<ToDoTask>()
+        guard let selectedTabId = selectedTabId else {
+            tasks = []
+            return
+        }
+
+        let descriptor = FetchDescriptor<ToDoTask>(
+            predicate: #Predicate { $0.tabId == selectedTabId }
+        )
         tasks = (try? modelContext.fetch(descriptor)) ?? []
     }
 
     private func addTask() {
-        // タブが存在しない場合は自動で作成
-        var tabId = selectedTabId
-        if tabId == nil {
-            let defaultTab = ToDoTab(name: "デフォルト")
-            ToDoTabService.addTab(defaultTab, to: modelContext)
-            loadTabs()
-            tabId = tabs.first?.id
-        }
-        
-        guard let tabId = tabId else { return }
-        
-        let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: tabId)
+        guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
+
+        let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
         ToDoTaskService.addTask(newTask, to: modelContext)
-        loadTasks()
-        showingAddTask = false
+
         newTaskTitle = ""
+        showingAddTask = false
+        loadTasks()
+    }
+
+    private func handleDeleteTask(_ offsets: IndexSet) {
+        // 削除処理は次のステップで実装します
     }
 }
 ```
 
 ## 新しい要素
 
-- `@State private var showingAddTask`: モーダル表示の状態を管理します
+- `@State private var showingAddTask`: 入力アラートの表示状態を管理します
 - `@State private var newTaskTitle`: 入力されたタスクのタイトルを保持します
-- `.sheet()`: モーダルダイアログを表示します
+- `.textFieldAlert()`: テキスト入力アラートを表示します
+- `FloatingButton`: 画面右下の追加ボタンを表示します
 - `addTask()`: 新しいタスクをデータベースに保存します
-
-## タブが存在しない場合の処理
-
-このステップで改善されました：
-
-```swift
-private func addTask() {
-    // タブが存在しない場合は自動で作成
-    var tabId = selectedTabId
-    if tabId == nil {
-        let defaultTab = ToDoTab(name: "デフォルト")
-        ToDoTabService.addTab(defaultTab, to: modelContext)
-        loadTabs()
-        tabId = tabs.first?.id
-    }
-    
-    guard let tabId = tabId else { return }
-    // ... タスク追加処理
-}
-```
-
-この処理により：
-- ユーザーがタスクを追加しようとした時にタブが存在しない場合、自動的に「デフォルト」という名前のタブが作成されます
-- そのタブにタスクが追加されます
-- タブ管理画面でタブの名前は後から変更できます
 
 
 ## ビルドと実行

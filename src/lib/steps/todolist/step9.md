@@ -1,117 +1,99 @@
-# ステップ2: SwiftData環境の準備
+# ステップ20: 初期データの設定
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## SwiftDataとは
+## 初期データとは
 
-SwiftDataは、iOSアプリ内でデータを永続化するための仕組みです。データベースのようなもので、アプリを再起動してもデータが保存されます。
+アプリ初回起動時に、サンプルのタブやタスクを自動で作成して、ユーザーがすぐにアプリを試せるようにします。
 
-## ToDoListApp.swiftの基本構造
+## Constants.swift の作成
 
-```swift
-import SwiftUI
-import SwiftData
-
-@main
-struct ToDoListApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
-}
-```
-
-このコードは、SwiftDataを使うための最小構成です。アプリのエントリーポイントを定義しています。
-
-### 1. スキーマ（Schema）の定義
-
-`struct ToDoListApp: App {`の下、`var body: some Scene {`の上に追加
+`SwiftData/`フォルダに`Constants.swift`を作成します：
 
 ```swift
-let modelContainer: ModelContainer
+import Foundation
 
-init() {
-    let schema = Schema([
-        // ToDoTask.self,
-        // ToDoTab.self
+// 初期タブデータ
+let INITIAL_TODO_TABS = [
+    ("仕事", [
+        "プロジェクト企画書を作成",
+        "メール返信",
+        "会議資料準備"
+    ]),
+    ("プライベート", [
+        "映画を見る",
+        "友人に連絡",
+        "運動する"
+    ]),
+    ("買い物", [
+        "食料品",
+        "日用品",
+        "衣類"
     ])
-}
+]
 ```
 
-スキーマは、アプリで保存するデータの種類を指定します。ここでは`ToDoTask`と`ToDoTab`という2つのデータモデルを保存することを宣言しています。
+## ContentView.swift の修正
 
-### 2. モデル設定（ModelConfiguration）
-
-`let schema = Schema([...])`の下に追加
+アプリ初回起動時に初期データを作成します：
 
 ```swift
-let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-```
-
-`ModelConfiguration`はデータベースの設定を行います。
-
-- `schema`: 上で定義したスキーマを指定
-- `isStoredInMemoryOnly: false`: ディスク（ストレージ）に保存することを指定します。`true`だとメモリのみで、アプリを閉じるとデータが消えます
-
-### 3. モデルコンテナ（ModelContainer）の初期化
-
-`let modelConfiguration = ...`の下に追加
-
-```swift
-do {
-    modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-} catch {
-    fatalError("Could not initialize ModelContainer: \(error)")
-}
-```
-
-`ModelContainer`はSwiftDataのデータベース接続を管理します。
-
-- `try`と`catch`で、初期化に失敗した場合のエラー処理をしています
-- `fatalError`で、エラーが発生したらアプリを停止して原因を通知します
-
-### 4. アプリ全体への適用
-
-`var body: some Scene {}`内の`WindowGroup { ... }`に追加
-
-```swift
-.modelContainer(modelContainer)
-```
-
-`WindowGroup`に`.modelContainer()`を追加することで、アプリ全体でSwiftDataが使えるようになります
-
-### コード全体 - ToDoListApp.swift
-
-```swift title="ToDoListApp.swift"
 import SwiftUI
 import SwiftData
 
-@main
-struct ToDoListApp: App {
-    let modelContainer: ModelContainer
+struct ContentView: View {
+    @State private var isInitialized = false
+    @Environment(\.modelContext) private var modelContext
 
-    init() {
-        let schema = Schema([
-            // ToDoTask.self,
-            // ToDoTab.self
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not initialize ModelContainer: \(error)")
+    var body: some View {
+        if isInitialized {
+            MainStack()
+        } else {
+            VStack {
+                Text("アプリを準備中...")
+                ProgressView()
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    initializeAppIfNeeded()
+                    isInitialized = true
+                }
+            }
         }
     }
 
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
+    private func initializeAppIfNeeded() {
+        // 既存データをチェック
+        let descriptor = FetchDescriptor<ToDoTab>()
+        let existingTabs = (try? modelContext.fetch(descriptor)) ?? []
+
+        // 初期データがなければ作成
+        if existingTabs.isEmpty {
+            for (tabName, taskNames) in INITIAL_TODO_TABS {
+                let newTab = ToDoTab(name: tabName)
+                ToDoTabService.addTab(newTab, to: modelContext)
+
+                // タブに属するタスクを追加
+                for taskName in taskNames {
+                    let newTask = ToDoTask(title: taskName, detail: "", tabId: newTab.id)
+                    ToDoTaskService.addTask(newTask, to: modelContext)
+                }
+            }
         }
-        .modelContainer(modelContainer)
     }
 }
 ```
+
+## 初期化処理の流れ
+
+1. アプリ起動時にContentViewが表示されます
+2. `onAppear`で`initializeAppIfNeeded()`が呼び出されます
+3. 既存データをチェックします
+4. データが存在しなければ、初期データを作成します
+5. 初期化が完了したら`MainStack`を表示します
+
+## 次のステップへ
+
+次は、アプリ全体を確認して、最終調整を行います。

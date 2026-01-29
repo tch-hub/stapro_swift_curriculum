@@ -1,4 +1,4 @@
-# ステップ10: タスク一覧の表示
+# ステップ10: タスク一覧の見た目を整える
 
 <script>
     import {base} from '$app/paths';
@@ -19,11 +19,6 @@ struct HomeView: View {
     @State private var selectedTabId: UUID?
     @Binding var navigationPath: [NavigationItem]
 
-    var filteredTasks: [ToDoTask] {
-        guard let selectedTabId else { return [] }
-        return tasks.filter { $0.tabId == selectedTabId }
-    }
-
     var body: some View {
         VStack {
             if !tabs.isEmpty {
@@ -38,14 +33,35 @@ struct HomeView: View {
                 }
             }
 
-            List {
-                ForEach(filteredTasks) { task in
-                    HStack {
-                        Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                        Text(task.title)
-                            .strikethrough(task.isCompleted)
+            if let selectedTabId = selectedTabId, !tasks.isEmpty {
+                CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+                    ToDoListItem(
+                        title: task.title,
+                        isCompleted: task.isCompleted
+                    ) {
+                        // 完了切り替えは次のステップで実装します
                     }
                 }
+            } else if selectedTabId != nil {
+                VStack {
+                    Image(systemName: "checkmark.circle")
+                        .font(.system(size: 48))
+                        .foregroundColor(.gray)
+                    Text("タスクはまだありません")
+                        .foregroundColor(.gray)
+                        .padding(.top, 8)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                VStack {
+                    Image(systemName: "list.bullet")
+                        .font(.system(size: 48))
+                        .foregroundColor(.gray)
+                    Text("タブを選択してください")
+                        .foregroundColor(.gray)
+                        .padding(.top, 8)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
 
             HStack {
@@ -67,27 +83,42 @@ struct HomeView: View {
     private func loadTabs() {
         let descriptor = FetchDescriptor<ToDoTab>()
         tabs = (try? modelContext.fetch(descriptor)) ?? []
-        selectedTabId = tabs.first?.id
+        if selectedTabId == nil {
+            selectedTabId = tabs.first?.id
+        }
+        loadTasks()
     }
 
     private func loadTasks() {
-        let descriptor = FetchDescriptor<ToDoTask>()
+        guard let selectedTabId = selectedTabId else {
+            tasks = []
+            return
+        }
+
+        let descriptor = FetchDescriptor<ToDoTask>(
+            predicate: #Predicate { $0.tabId == selectedTabId }
+        )
         tasks = (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    private func handleDeleteTask(_ offsets: IndexSet) {
+        // 削除処理は次のステップで実装します
     }
 }
 ```
 
 ## 新しい要素
 
-- `filteredTasks`: 選択されたタブに属するタスクのみをフィルタリングします
-- `List`: タスクを一覧表示するUIコンポーネントです
-- `onChange`: タブが変更されたときに自動的にタスク一覧を更新します
-- `strikethrough`: 完了したタスクに取り消し線を表示します
+- `CustomList`: 既存のカスタムリストを使って表示を統一します
+- `ToDoListItem`: タスクの表示行を専用コンポーネントに置き換えます
+- 空状態表示: タスクがない時のメッセージとアイコンを追加します
 
-## チェックボックスの表示
+## まだやらないこと
 
-- 完了していないタスク: `circle`（空の円）
-- 完了したタスク: `checkmark.circle.fill`（チェック付き円）
+- 完了状態の切り替え
+- タスクの削除
+
+この2つは次のステップで実装します。
 
 ## 次のステップへ
 

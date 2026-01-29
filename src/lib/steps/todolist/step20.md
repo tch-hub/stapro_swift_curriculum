@@ -1,99 +1,95 @@
-# ステップ20: 初期データの設定
+# ステップ21: 最終調整とテスト
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## 初期データとは
+## プロジェクト全体の確認
 
-アプリ初回起動時に、サンプルのタブやタスクを自動で作成して、ユーザーがすぐにアプリを試せるようにします。
+これまで実装した機能をすべて確認します：
 
-## Constants.swift の作成
+### 実装済み機能の確認リスト
 
-`SwiftData/`フォルダに`Constants.swift`を作成します：
+- [x] プロジェクト構造の作成
+- [x] SwiftDataのセットアップ
+- [x] データモデル（ToDoTask, ToDoTab）の作成
+- [x] サービスクラス（ToDoTaskService, ToDoTabService）の実装
+- [x] ナビゲーション定義（ScreenID, NavigationItem）
+- [x] ContentView の実装
+- [x] MainStack の実装
+- [x] HomeView の実装（タブ選択、タスク表示、追加、完了、削除）
+- [x] TabManageView の実装
+- [x] コンポーネント化（ListItem）
+- [x] カスタムコンポーネント（Alert, FloatingButton, TextFieldAlert, List）
+- [x] 初期データの設定
 
-```swift
-import Foundation
+## テストケース
 
-// 初期タブデータ
-let INITIAL_TODO_TABS = [
-    ("仕事", [
-        "プロジェクト企画書を作成",
-        "メール返信",
-        "会議資料準備"
-    ]),
-    ("プライベート", [
-        "映画を見る",
-        "友人に連絡",
-        "運動する"
-    ]),
-    ("買い物", [
-        "食料品",
-        "日用品",
-        "衣類"
-    ])
-]
-```
+アプリを起動して、以下をテストしてください：
 
-## ContentView.swift の修正
+1. **アプリ起動**
+   - [ ] アプリが正常に起動する
+   - [ ] 初期データが表示される
 
-アプリ初回起動時に初期データを作成します：
+2. **タブ操作**
+   - [ ] タブを選択できる
+   - [ ] 選択したタブのタスクが表示される
 
-```swift
-import SwiftUI
-import SwiftData
+3. **タスク操作**
+   - [ ] 新しいタスクを追加できる
+   - [ ] タスクの完了状態を切り替えられる
+   - [ ] タスクを削除できる
 
-struct ContentView: View {
-    @State private var isInitialized = false
-    @Environment(\.modelContext) private var modelContext
+4. **タブ管理**
+   - [ ] 「タブ管理」画面へ遷移できる
+   - [ ] 新しいタブを追加できる
+   - [ ] タブを削除できる
 
-    var body: some View {
-        if isInitialized {
-            MainStack()
-        } else {
-            VStack {
-                Text("アプリを準備中...")
-                ProgressView()
-            }
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    initializeAppIfNeeded()
-                    isInitialized = true
-                }
-            }
-        }
-    }
+5. **データの永続化**
+   - [ ] アプリを再起動してもデータが保存されている
 
-    private func initializeAppIfNeeded() {
-        // 既存データをチェック
-        let descriptor = FetchDescriptor<ToDoTab>()
-        let existingTabs = (try? modelContext.fetch(descriptor)) ?? []
+## 最終チェックリスト
 
-        // 初期データがなければ作成
-        if existingTabs.isEmpty {
-            for (tabName, taskNames) in INITIAL_TODO_TABS {
-                let newTab = ToDoTab(name: tabName)
-                ToDoTabService.addTab(newTab, to: modelContext)
+### コード品質
 
-                // タブに属するタスクを追加
-                for taskName in taskNames {
-                    let newTask = ToDoTask(title: taskName, detail: "", tabId: newTab.id)
-                    ToDoTaskService.addTask(newTask, to: modelContext)
-                }
-            }
-        }
-    }
-}
-```
+- [ ] コメントが日本語で記述されている
+- [ ] 文字列がダブルクォートで囲まれている
+- [ ] 変数名が分かりやすい
+- [ ] 適切にコンポーネント化されている
 
-## 初期化処理の流れ
+### UI/UX
 
-1. アプリ起動時にContentViewが表示されます
-2. `onAppear`で`initializeAppIfNeeded()`が呼び出されます
-3. 既存データをチェックします
-4. データが存在しなければ、初期データを作成します
-5. 初期化が完了したら`MainStack`を表示します
+- [ ] ボタンが押しやすい大きさ
+- [ ] テキストが読みやすい
+- [ ] エラーメッセージが明確
+- [ ] 画面遷移がスムーズ
 
-## 次のステップへ
+### パフォーマンス
 
-次は、アプリ全体を確認して、最終調整を行います。
+- [ ] タスク数が多くてもスムーズに動作
+- [ ] メモリリークがない
+- [ ] 不要なリロードがない
+
+## 追加実装の提案
+
+以下の機能を実装すると、さらに便利になります：
+
+1. **タスク編集機能**: 既存タスクのタイトルを編集できる
+2. **検索機能**: タスク名で検索できる
+3. **ソート機能**: 完了日時やタイトルでソートできる
+4. **日付機能**: タスクに期限日を設定できる
+5. **カテゴリアイコン**: タブごとに異なるアイコンを表示
+6. **ダークモード対応**: 暗いテーマに対応
+
+## まとめ
+
+このプロジェクトを通じて、以下を学習しました：
+
+- SwiftUIでのUI構築
+- SwiftDataでのデータ永続化
+- 状態管理と再レンダリング
+- コンポーネント設計とモジュール化
+- サービスクラスでのデータ操作
+- ナビゲーション管理
+
+おめでとうございます！これで、本格的なToDoリストアプリが完成しました。

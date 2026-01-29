@@ -1,59 +1,70 @@
-# ステップ6: ToDoTabServiceの実装
+# ステップ5: ToDoTaskServiceの実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## ToDoTabService.swift の作成
+## サービスクラスとは
 
-`Services/`フォルダに`ToDoTabService.swift`を作成し、以下のコードを記述します：
+データの追加、更新、削除などの操作をまとめるクラスです。ビューから直接データベースにアクセスするのではなく、サービスを通して操作することで、コードを整理します。
+
+## ToDoTaskService.swift の作成
+
+`Services/`フォルダに`ToDoTaskService.swift`を作成し、以下のコードを記述します：
 
 ```swift
 import Foundation
 import SwiftData
 
-class ToDoTabService {
+class ToDoTaskService {
     @MainActor
-    static func addTab(_ tab: ToDoTab, to modelContext: ModelContext) {
-        modelContext.insert(tab)
+    static func addTask(_ task: ToDoTask, to modelContext: ModelContext) {
+        modelContext.insert(task)
         try? modelContext.save()
     }
 
     @MainActor
-    static func updateTab(_ tab: ToDoTab, modelContext: ModelContext) {
+    static func updateTask(_ task: ToDoTask, modelContext: ModelContext) {
         try? modelContext.save()
     }
 
     @MainActor
-    static func deleteTab(_ tab: ToDoTab, from modelContext: ModelContext) {
-        // タブに属するタスクをすべて削除
-        ToDoTaskService.deleteAllTasks(for: tab.id, from: modelContext)
-        // タブを削除
-        modelContext.delete(tab)
+    static func deleteTask(_ task: ToDoTask, from modelContext: ModelContext) {
+        modelContext.delete(task)
         try? modelContext.save()
     }
 
     @MainActor
-    static func getAllTabs(from modelContext: ModelContext) -> [ToDoTab] {
-        let descriptor = FetchDescriptor<ToDoTab>()
-        return (try? modelContext.fetch(descriptor)) ?? []
+    static func toggleTaskCompletion(_ task: ToDoTask, modelContext: ModelContext) {
+        task.isCompleted.toggle()
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func deleteAllTasks(for tabId: UUID, from modelContext: ModelContext) {
+        let descriptor = FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })
+        if let tasks = try? modelContext.fetch(descriptor) {
+            tasks.forEach { modelContext.delete($0) }
+            try? modelContext.save()
+        }
     }
 }
 ```
 
 ## 各メソッドの説明
 
-| メソッド     | 説明                                     |
-| ------------ | ---------------------------------------- |
-| `addTab`     | 新しいタブを追加します                   |
-| `updateTab`  | タブを更新します                         |
-| `deleteTab`  | タブを削除します（関連するタスクも削除） |
-| `getAllTabs` | すべてのタブを取得します                 |
+| メソッド               | 説明                             |
+| ---------------------- | -------------------------------- |
+| `addTask`              | 新しいタスクを追加します         |
+| `updateTask`           | タスクを更新します               |
+| `deleteTask`           | タスクを削除します               |
+| `toggleTaskCompletion` | タスクの完了状態を切り替えます   |
+| `deleteAllTasks`       | 特定のタブの全タスクを削除します |
 
-## deleteTab の重要な処理
+## @MainActor について
 
-タブを削除する際には、そのタブに属するすべてのタスクも削除する必要があります。そのため、`ToDoTaskService.deleteAllTasks`を呼び出して、関連するタスクも削除しています。
+SwiftUIでUI更新を行う際には、メインスレッドで実行する必要があります。`@MainActor`はメインスレッドで実行することを指定します。
 
 ## 次のステップへ
 
-次は、ビュー（画面）の基本構造を作成します。ナビゲーションと初期画面を実装します。
+次は、タブを操作するためのサービス`ToDoTabService`を作成します。

@@ -6,23 +6,15 @@
 
 ## HomeView.swift の修正
 
-リスト内のタスク行をタップして完了状態を切り替える機能を追加します：
+タスク行をタップして完了状態を切り替える機能を追加します：
 
 ```swift
-List {
-    ForEach(filteredTasks) { task in
-        HStack {
-            Button(action: {
-                toggleTaskCompletion(task)
-            }) {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(task.isCompleted ? .green : .gray)
-            }
-            .buttonStyle(PlainButtonStyle())
-
-            Text(task.title)
-                .strikethrough(task.isCompleted)
-        }
+CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+    ToDoListItem(
+        title: task.title,
+        isCompleted: task.isCompleted
+    ) {
+        toggleTaskCompletion(task)
     }
 }
 
@@ -34,9 +26,8 @@ private func toggleTaskCompletion(_ task: ToDoTask) {
 
 ## 重要な修正点
 
-1. `ToDoTask`は`Identifiable`なので、`ForEach`に`id`指定は不要です
-2. Button内の画像をタップすると完了状態が切り替わります
-3. 完了したタスクは緑色で表示されます
+1. `ToDoListItem`のタップで完了状態が切り替わります
+2. 完了したタスクはチェック表示になります
 
 ## toggleTaskCompletion メソッド
 

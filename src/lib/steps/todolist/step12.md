@@ -1,224 +1,59 @@
-# ステップ14: TabManageView の作成（基本構造）
+# ステップ6: ToDoTabServiceの実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## TabManageView.swift の作成
+## ToDoTabService.swift の作成
 
-`Screens/Views/Main/`フォルダに`TabManageView.swift`を作成します：
+`Services/`フォルダに`ToDoTabService.swift`を作成し、以下のコードを記述します：
 
 ```swift
-import SwiftUI
+import Foundation
 import SwiftData
 
-struct TabManageView: View {
-    @Environment(\.modelContext) private var modelContext
-    
-    @State private var tabs: [ToDoTab] = []
-    @State private var showingAddTab = false
-    @State private var newTabName = ""
-    @State private var showDeleteAlert = false
-    @State private var tabToDelete: ToDoTab?
-
-    var body: some View {
-        ZStack {
-            VStack {
-                // 既存のタブリストをCustomListで表示
-                CustomList(items: tabs, onDelete: handleDelete) { tab in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(tab.name)
-                            .font(.headline)
-                        Text("作成日: \(tab.createdAt.formatted(date: .abbreviated, time: .omitted))")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                    }
-                }
-            }
-            .navigationTitle("タブ管理")
-            .onAppear {
-                loadTabs()
-            }
-            // テキスト入力アラートを使用してタブ名を入力
-            .textFieldAlert(
-                isPresented: $showingAddTab,
-                title: "新しいタブを追加",
-                message: "タブの名前を入力してください",
-                text: $newTabName,
-                placeholder: "例: 仕事、買い物など",
-                actionButtonTitle: "追加",
-                action: addTab
-            )
-            // 削除確認アラート
-            .deleteAlert(
-                isPresented: $showDeleteAlert,
-                title: "タブの削除",
-                message: "このタブを削除すると、関連するすべてのタスクも削除されます。",
-                deleteText: "削除",
-                cancelText: "キャンセル",
-                onDelete: confirmDelete
-            )
-            
-            // FloatingButtonでタブ追加機能を実装
-            FloatingButton(
-                action: { showingAddTab = true },
-                icon: "plus",
-                backgroundColor: .blue
-            )
-        }
+class ToDoTabService {
+    @MainActor
+    static func addTab(_ tab: ToDoTab, to modelContext: ModelContext) {
+        modelContext.insert(tab)
+        try? modelContext.save()
     }
 
-    // MARK: - Private Methods
+    @MainActor
+    static func updateTab(_ tab: ToDoTab, modelContext: ModelContext) {
+        try? modelContext.save()
+    }
 
-    private func loadTabs() {
+    @MainActor
+    static func deleteTab(_ tab: ToDoTab, from modelContext: ModelContext) {
+        // タブに属するタスクをすべて削除
+        ToDoTaskService.deleteAllTasks(for: tab.id, from: modelContext)
+        // タブを削除
+        modelContext.delete(tab)
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func getAllTabs(from modelContext: ModelContext) -> [ToDoTab] {
         let descriptor = FetchDescriptor<ToDoTab>()
-        tabs = (try? modelContext.fetch(descriptor)) ?? []
-    }
-
-    private func addTab() {
-        guard !newTabName.isEmpty else { return }
-        
-        let newTab = ToDoTab(name: newTabName)
-        ToDoTabService.addTab(newTab, to: modelContext)
-        
-        newTabName = ""
-        showingAddTab = false
-        loadTabs()
-    }
-
-    private func handleDelete(offsets: IndexSet) {
-        // スワイプで削除された場合、確認アラートを表示
-        if let index = offsets.first {
-            tabToDelete = tabs[index]
-            showDeleteAlert = true
-        }
-    }
-
-    private func confirmDelete() {
-        if let tabToDelete = tabToDelete {
-            ToDoTabService.deleteTab(tabToDelete, from: modelContext)
-            loadTabs()
-        }
-    }
-}
-
-#Preview {
-    struct PreviewWrapper: View {
-        // モックデータ用のモデルコンテキストを作成
-        var body: some View {
-            NavigationStack {
-                TabManageView()
-                    .modelContainer(
-                        try! ModelContainer(
-                            for: ToDoTab.self,
-                            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-                        )
-                    )
-            }
-        }
-    }
-
-    return PreviewWrapper()
-}
-```
-
-### プレビューについて
-
-このプレビューでは、以下のことができます：
-
-- **タブの表示**: 初期状態でデータベースにあるタブを表示
-- **タブの追加**: FloatingButtonをタップすると、タブ追加アラートが表示され、タブ名を入力して追加できます
-- **タブの削除**: リスト行をスワイプすると削除アラートが表示され、確認後にタブが削除されます
-- **リアルタイム更新**: タブ追加・削除後、自動的にリストが更新されます
-
-> **注意**: プレビューは`isStoredInMemoryOnly: true`でメモリのみに保存されるため、プレビューを再開するとデータはリセットされます。
-
-## 各要素の説明
-
-### 使用コンポーネント
-
-#### 1. **CustomList** (Step 3)
-- `items`: タブのリスト
-- `onDelete`: スワイプで削除された時の処理
-- `rowContent`: タブ情報を表示する行コンテンツ
-
-```swift
-CustomList(items: tabs, onDelete: handleDelete) { tab in
-    VStack(alignment: .leading, spacing: 4) {
-        Text(tab.name)
-            .font(.headline)
-        Text("作成日: \(tab.createdAt.formatted(date: .abbreviated, time: .omitted))")
-            .font(.caption)
-            .foregroundColor(.gray)
+        return (try? modelContext.fetch(descriptor)) ?? []
     }
 }
 ```
 
-#### 2. **TextFieldAlert Modifier** (Step 6)
-- テキスト入力が必要な場合にアラートを使用
-- キャンセルボタンと実行ボタンが自動で配置される
-- 入力が空の場合は実行ボタンが無効化される
+## 各メソッドの説明
 
-```swift
-.textFieldAlert(
-    isPresented: $showingAddTab,
-    title: "新しいタブを追加",
-    message: "タブの名前を入力してください",
-    text: $newTabName,
-    placeholder: "例: 仕事、買い物など",
-    actionButtonTitle: "追加",
-    action: addTab
-)
-```
+| メソッド     | 説明                                     |
+| ------------ | ---------------------------------------- |
+| `addTab`     | 新しいタブを追加します                   |
+| `updateTab`  | タブを更新します                         |
+| `deleteTab`  | タブを削除します（関連するタスクも削除） |
+| `getAllTabs` | すべてのタブを取得します                 |
 
-#### 3. **deleteAlert Modifier** (Step 4)
-- 削除確認用アラート
-- タップで削除ボタンをタップした場合に表示
-- タブ削除時に関連するすべてのタスクも削除されることをユーザーに通知
+## deleteTab の重要な処理
 
-```swift
-.deleteAlert(
-    isPresented: $showDeleteAlert,
-    title: "タブの削除",
-    message: "このタブを削除すると、関連するすべてのタスクも削除されます。",
-    deleteText: "削除",
-    cancelText: "キャンセル",
-    onDelete: confirmDelete
-)
-```
-
-#### 4. **FloatingButton** (Step 5)
-- 画面右下に配置される丸いボタン
-- タブを追加する際に使用
-- アイコンと背景色をカスタマイズ可能
-
-```swift
-FloatingButton(
-    action: { showingAddTab = true },
-    icon: "plus",
-    backgroundColor: .blue
-)
-```
-
-### メソッドの説明
-
-| メソッド          | 説明                               |
-| ----------------- | ---------------------------------- |
-| `loadTabs()`      | SwiftDataからすべてのタブを取得    |
-| `addTab()`        | 新しいタブを追加                   |
-| `handleDelete()`  | スワイプ削除時に確認アラートを表示 |
-| `confirmDelete()` | ユーザーの確認後、タブを実際に削除 |
-
-### 状態管理
-
-| State変数         | 説明                                 |
-| ----------------- | ------------------------------------ |
-| `tabs`            | 現在のタブリスト                     |
-| `showingAddTab`   | タブ追加アラートの表示/非表示        |
-| `newTabName`      | タブ追加時の入力フィールド           |
-| `showDeleteAlert` | 削除確認アラートの表示/非表示        |
-| `tabToDelete`     | 削除予定のタブ（確認後に実際に削除） |
+タブを削除する際には、そのタブに属するすべてのタスクも削除する必要があります。そのため、`ToDoTaskService.deleteAllTasks`を呼び出して、関連するタスクも削除しています。
 
 ## 次のステップへ
 
-次は、このビューをより整えて、エラーハンドリングを追加します。
+次は、ビュー（画面）の基本構造を作成します。ナビゲーションと初期画面を実装します。

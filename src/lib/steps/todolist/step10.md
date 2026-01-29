@@ -1,70 +1,117 @@
-# ステップ5: ToDoTaskServiceの実装
+# ステップ2: SwiftData環境の準備
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## サービスクラスとは
+## SwiftDataとは
 
-データの追加、更新、削除などの操作をまとめるクラスです。ビューから直接データベースにアクセスするのではなく、サービスを通して操作することで、コードを整理します。
+SwiftDataは、iOSアプリ内でデータを永続化するための仕組みです。データベースのようなもので、アプリを再起動してもデータが保存されます。
 
-## ToDoTaskService.swift の作成
-
-`Services/`フォルダに`ToDoTaskService.swift`を作成し、以下のコードを記述します：
+## ToDoListApp.swiftの基本構造
 
 ```swift
-import Foundation
+import SwiftUI
 import SwiftData
 
-class ToDoTaskService {
-    @MainActor
-    static func addTask(_ task: ToDoTask, to modelContext: ModelContext) {
-        modelContext.insert(task)
-        try? modelContext.save()
-    }
-
-    @MainActor
-    static func updateTask(_ task: ToDoTask, modelContext: ModelContext) {
-        try? modelContext.save()
-    }
-
-    @MainActor
-    static func deleteTask(_ task: ToDoTask, from modelContext: ModelContext) {
-        modelContext.delete(task)
-        try? modelContext.save()
-    }
-
-    @MainActor
-    static func toggleTaskCompletion(_ task: ToDoTask, modelContext: ModelContext) {
-        task.isCompleted.toggle()
-        try? modelContext.save()
-    }
-
-    @MainActor
-    static func deleteAllTasks(for tabId: UUID, from modelContext: ModelContext) {
-        let descriptor = FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })
-        if let tasks = try? modelContext.fetch(descriptor) {
-            tasks.forEach { modelContext.delete($0) }
-            try? modelContext.save()
+@main
+struct ToDoListApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
         }
     }
 }
 ```
 
-## 各メソッドの説明
+このコードは、SwiftDataを使うための最小構成です。アプリのエントリーポイントを定義しています。
 
-| メソッド               | 説明                             |
-| ---------------------- | -------------------------------- |
-| `addTask`              | 新しいタスクを追加します         |
-| `updateTask`           | タスクを更新します               |
-| `deleteTask`           | タスクを削除します               |
-| `toggleTaskCompletion` | タスクの完了状態を切り替えます   |
-| `deleteAllTasks`       | 特定のタブの全タスクを削除します |
+### 1. スキーマ（Schema）の定義
 
-## @MainActor について
+`struct ToDoListApp: App {`の下、`var body: some Scene {`の上に追加
 
-SwiftUIでUI更新を行う際には、メインスレッドで実行する必要があります。`@MainActor`はメインスレッドで実行することを指定します。
+```swift
+let modelContainer: ModelContainer
 
-## 次のステップへ
+init() {
+    let schema = Schema([
+        // ToDoTask.self,
+        // ToDoTab.self
+    ])
+}
+```
 
-次は、タブを操作するためのサービス`ToDoTabService`を作成します。
+スキーマは、アプリで保存するデータの種類を指定します。ここでは`ToDoTask`と`ToDoTab`という2つのデータモデルを保存することを宣言しています。
+
+### 2. モデル設定（ModelConfiguration）
+
+`let schema = Schema([...])`の下に追加
+
+```swift
+let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+```
+
+`ModelConfiguration`はデータベースの設定を行います。
+
+- `schema`: 上で定義したスキーマを指定
+- `isStoredInMemoryOnly: false`: ディスク（ストレージ）に保存することを指定します。`true`だとメモリのみで、アプリを閉じるとデータが消えます
+
+### 3. モデルコンテナ（ModelContainer）の初期化
+
+`let modelConfiguration = ...`の下に追加
+
+```swift
+do {
+    modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+} catch {
+    fatalError("Could not initialize ModelContainer: \(error)")
+}
+```
+
+`ModelContainer`はSwiftDataのデータベース接続を管理します。
+
+- `try`と`catch`で、初期化に失敗した場合のエラー処理をしています
+- `fatalError`で、エラーが発生したらアプリを停止して原因を通知します
+
+### 4. アプリ全体への適用
+
+`var body: some Scene {}`内の`WindowGroup { ... }`に追加
+
+```swift
+.modelContainer(modelContainer)
+```
+
+`WindowGroup`に`.modelContainer()`を追加することで、アプリ全体でSwiftDataが使えるようになります
+
+### コード全体 - ToDoListApp.swift
+
+```swift title="ToDoListApp.swift"
+import SwiftUI
+import SwiftData
+
+@main
+struct ToDoListApp: App {
+    let modelContainer: ModelContainer
+
+    init() {
+        let schema = Schema([
+            // ToDoTask.self,
+            // ToDoTab.self
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not initialize ModelContainer: \(error)")
+        }
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+        .modelContainer(modelContainer)
+    }
+}
+```
