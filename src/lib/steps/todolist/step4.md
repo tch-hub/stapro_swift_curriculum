@@ -12,23 +12,21 @@
 import SwiftUI
 
 extension View {
-    /// 削除確認ダイアログを表示する
-    func deleteConfirmation(
+    func deleteAlert(
         isPresented: Binding<Bool>,
-        title: String = "このタスクを削除しますか？", // デフォルト値を設定
-        deleteButtonText: String = "削除",
-        cancelButtonText: String = "キャンセル",
+        title: String = "削除確認",
+        message: String = "このタスクを完全に削除しますか？",
+        deleteText: String = "削除",
+        cancelText: String = "キャンセル",
         onDelete: @escaping () -> Void
     ) -> some View {
-        self.confirmationDialog(
-            title,
-            isPresented: isPresented,
-            titleVisibility: .visible
-        ) {
-            Button(deleteButtonText, role: .destructive) {
+        self.alert(title, isPresented: isPresented) {
+            Button(deleteText, role: .destructive) {
                 onDelete()
             }
-            Button(cancelButtonText, role: .cancel) { }
+            Button(cancelText, role: .cancel) {}
+        } message: {
+            Text(message)
         }
     }
 }
@@ -37,35 +35,24 @@ extension View {
 
 #Preview {
     struct PreviewWrapper: View {
-        @State private var showDefault = false
-        @State private var showCustom = false
+        @State private var showSheet = false
+        @State private var showAlert = false
 
         var body: some View {
-            VStack(spacing: 20) {
-                // パターン1: デフォルトの文言で使用
-                Button("デフォルト設定") {
-                    showDefault = true
-                }
-                .deleteConfirmation(isPresented: $showDefault) {
-                    print("デフォルトの削除実行")
-                }
+            VStack(spacing: 40) {
 
-                // パターン2: 引数で文言をカスタマイズ
-                Button("カスタム設定") {
-                    showCustom = true
-                }
-                .deleteConfirmation(
-                    isPresented: $showCustom,
-                    title: "データを完全に消去しますか？",
-                    deleteButtonText: "今すぐ消す",
-                    cancelButtonText: "戻る"
-                ) {
-                    print("カスタムの削除実行")
-                }
+                // パターンB: 中央に出る（iPadでもキャンセルボタン有り）
+                Button("パターンB: アラートで確認") { showAlert = true }
+                    .deleteAlert(
+                        isPresented: $showAlert,
+                        deleteText: "実行",
+                        onDelete: {
+                            print("アラートで削除")
+                        }
+                    )
             }
         }
     }
-
     return PreviewWrapper()
 }
 
