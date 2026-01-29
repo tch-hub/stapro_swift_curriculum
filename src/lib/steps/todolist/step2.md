@@ -7,8 +7,6 @@
 
 
 ```swift
-import SwiftUI
-
 struct ToDoListItem: View {
     let title: String
     let isCompleted: Bool
@@ -23,8 +21,8 @@ struct ToDoListItem: View {
                     .foregroundColor(isCompleted ? .gray : .accentColor)
 
                 Text(title)
-                    .foregroundColor(isCompleted ? .gray : .primary)
                     .strikethrough(isCompleted)
+                    .foregroundColor(isCompleted ? .gray : .primary)
 
                 Spacer()
             }
@@ -33,6 +31,7 @@ struct ToDoListItem: View {
         .buttonStyle(.plain)
     }
 }
+
 
 #Preview {
     struct PreviewWrapper: View {

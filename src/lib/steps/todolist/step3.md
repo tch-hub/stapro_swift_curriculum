@@ -18,12 +18,14 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
         List {
             ForEach(items) { item in
                 rowContent(item)
+                    .listRowSeparator(.visible)
             }
             .onDelete(perform: onDelete)
         }
         .listStyle(.plain)
     }
 }
+
 
 #Preview {
     struct PreviewWrapper: View {
