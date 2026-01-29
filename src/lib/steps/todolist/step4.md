@@ -1,4 +1,4 @@
-# ステップ16: Alert コンポーネントの実装
+# ステップ4: Alert コンポーネントの実装
 
 <script>
     import {base} from '$app/paths';

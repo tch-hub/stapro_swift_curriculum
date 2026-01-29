@@ -1,4 +1,4 @@
-# ステップ18: TextFieldAlertModifier の実装
+# ステップ6: TextFieldAlertModifier の実装
 
 <script>
     import {base} from '$app/paths';

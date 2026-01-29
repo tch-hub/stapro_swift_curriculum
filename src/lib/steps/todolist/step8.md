@@ -1,32 +1,29 @@
+# ステップ4: ToDoタブモデルの作成
+
 <script>
     import {base} from '$app/paths';
 </script>
 
-## データモデルとは
+## タブとは
 
-ToDoリストでは、各タスク（やることリストの1つ1つの項目）の情報を保存する必要があります。このデータを管理する仕組みを「データモデル」と呼びます。
+ToDoリストを複数のカテゴリに分類するために「タブ」を使います。例えば、「仕事」「プライベート」「買い物」など、異なるカテゴリでやることをまとめます。
 
-### ToDoTask.swift の作成
+## ToDoTab.swift の作成
+
+`SwiftData/Models/`フォルダに`ToDoTab.swift`を作成し、以下のコードを記述します：
 
 ```swift
 import Foundation
 import SwiftData
 
-// データモデルとしてマークするデコレータ
 @Model
-final class ToDoTask: Identifiable {
+final class ToDoTab: Identifiable {
     var id: UUID = UUID()
-    var title: String = ""
-    var detail: String = ""
-    var isCompleted: Bool = false
-    var tabId: UUID = UUID()
+    var name: String = ""
     var createdAt: Date = Date()
 
-    init(title: String, detail: String, tabId: UUID) {
-        self.title = title
-        self.detail = detail
-        self.isCompleted = false
-        self.tabId = tabId
+    init(name: String) {
+        self.name = name
         self.createdAt = Date()
     }
 }
@@ -34,19 +31,18 @@ final class ToDoTask: Identifiable {
 
 ## 各プロパティの説明
 
-| プロパティ    | 型     | 説明                       |
-| ------------- | ------ | -------------------------- |
-| `id`          | UUID   | タスクの一意な識別子       |
-| `title`       | String | タスクのタイトル           |
-| `detail` | String | タスクの説明               |
-| `isCompleted` | Bool   | タスクが完了したかどうか   |
-| `tabId`       | UUID   | このタスクが属するタブのID |
-| `createdAt`   | Date   | タスクが作成された日時     |
+| プロパティ  | 型     | 説明                                 |
+| ----------- | ------ | ------------------------------------ |
+| `id`        | UUID   | タブの一意な識別子                   |
+| `name`      | String | タブの名前（例：「仕事」「買い物」） |
+| `createdAt` | Date   | タブが作成された日時                 |
 
-## @Model デコレータ
+## タスクとタブの関係
 
-`@Model`を使うことで、このクラスをSwiftDataのデータモデルとして登録します。これにより、アプリを再起動しても数据が保存されます。
+- 1つのタブに複数のタスクが属することができます
+- 各タスク（`ToDoTask`）は`tabId`プロパティで、どのタブに属するかを指定しています
+- これによって、タブごとにタスクを管理することができます
 
 ## 次のステップへ
 
-次は、タスクを分類するための「タブ」を表すモデル`ToDoTab`を作成します。
+次は、これらのモデルを操作するための「サービス」を作成します。

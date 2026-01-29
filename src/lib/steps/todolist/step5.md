@@ -1,4 +1,4 @@
-# ステップ17: FloatingButton コンポーネントの実装
+# ステップ5: FloatingButton コンポーネントの実装
 
 <script>
     import {base} from '$app/paths';

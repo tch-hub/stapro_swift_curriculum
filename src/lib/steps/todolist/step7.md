@@ -1,117 +1,52 @@
-# ステップ2: SwiftData環境の準備
-
 <script>
     import {base} from '$app/paths';
 </script>
 
-## SwiftDataとは
+## データモデルとは
 
-SwiftDataは、iOSアプリ内でデータを永続化するための仕組みです。データベースのようなもので、アプリを再起動してもデータが保存されます。
+ToDoリストでは、各タスク（やることリストの1つ1つの項目）の情報を保存する必要があります。このデータを管理する仕組みを「データモデル」と呼びます。
 
-## ToDoListApp.swiftの基本構造
+### ToDoTask.swift の作成
 
 ```swift
-import SwiftUI
+import Foundation
 import SwiftData
 
-@main
-struct ToDoListApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+// データモデルとしてマークするデコレータ
+@Model
+final class ToDoTask: Identifiable {
+    var id: UUID = UUID()
+    var title: String = ""
+    var detail: String = ""
+    var isCompleted: Bool = false
+    var tabId: UUID = UUID()
+    var createdAt: Date = Date()
+
+    init(title: String, detail: String, tabId: UUID) {
+        self.title = title
+        self.detail = detail
+        self.isCompleted = false
+        self.tabId = tabId
+        self.createdAt = Date()
     }
 }
 ```
 
-このコードは、SwiftDataを使うための最小構成です。アプリのエントリーポイントを定義しています。
+## 各プロパティの説明
 
-### 1. スキーマ（Schema）の定義
+| プロパティ    | 型     | 説明                       |
+| ------------- | ------ | -------------------------- |
+| `id`          | UUID   | タスクの一意な識別子       |
+| `title`       | String | タスクのタイトル           |
+| `detail` | String | タスクの説明               |
+| `isCompleted` | Bool   | タスクが完了したかどうか   |
+| `tabId`       | UUID   | このタスクが属するタブのID |
+| `createdAt`   | Date   | タスクが作成された日時     |
 
-`struct ToDoListApp: App {`の下、`var body: some Scene {`の上に追加
+## @Model デコレータ
 
-```swift
-let modelContainer: ModelContainer
+`@Model`を使うことで、このクラスをSwiftDataのデータモデルとして登録します。これにより、アプリを再起動しても数据が保存されます。
 
-init() {
-    let schema = Schema([
-        // ToDoTask.self,
-        // ToDoTab.self
-    ])
-}
-```
+## 次のステップへ
 
-スキーマは、アプリで保存するデータの種類を指定します。ここでは`ToDoTask`と`ToDoTab`という2つのデータモデルを保存することを宣言しています。
-
-### 2. モデル設定（ModelConfiguration）
-
-`let schema = Schema([...])`の下に追加
-
-```swift
-let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-```
-
-`ModelConfiguration`はデータベースの設定を行います。
-
-- `schema`: 上で定義したスキーマを指定
-- `isStoredInMemoryOnly: false`: ディスク（ストレージ）に保存することを指定します。`true`だとメモリのみで、アプリを閉じるとデータが消えます
-
-### 3. モデルコンテナ（ModelContainer）の初期化
-
-`let modelConfiguration = ...`の下に追加
-
-```swift
-do {
-    modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-} catch {
-    fatalError("Could not initialize ModelContainer: \(error)")
-}
-```
-
-`ModelContainer`はSwiftDataのデータベース接続を管理します。
-
-- `try`と`catch`で、初期化に失敗した場合のエラー処理をしています
-- `fatalError`で、エラーが発生したらアプリを停止して原因を通知します
-
-### 4. アプリ全体への適用
-
-`var body: some Scene {}`内の`WindowGroup { ... }`に追加
-
-```swift
-.modelContainer(modelContainer)
-```
-
-`WindowGroup`に`.modelContainer()`を追加することで、アプリ全体でSwiftDataが使えるようになります
-
-### コード全体 - ToDoListApp.swift
-
-```swift title="ToDoListApp.swift"
-import SwiftUI
-import SwiftData
-
-@main
-struct ToDoListApp: App {
-    let modelContainer: ModelContainer
-
-    init() {
-        let schema = Schema([
-            // ToDoTask.self,
-            // ToDoTab.self
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not initialize ModelContainer: \(error)")
-        }
-    }
-
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-        .modelContainer(modelContainer)
-    }
-}
-```
+次は、タスクを分類するための「タブ」を表すモデル`ToDoTab`を作成します。

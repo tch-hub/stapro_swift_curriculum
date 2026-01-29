@@ -43,18 +43,43 @@ struct ContentView: View {
 ```swift
 import SwiftUI
 
+// MARK: - Navigation Definitions
+// ここに定義することで、MainStackがどのような遷移を持つかが一目でわかります
+
+/// 画面ID
+enum ScreenID: String {
+    case home // ホーム画面
+    case tabManage // タブ管理画面
+}
+
+/// 画面遷移の情報
+struct NavigationItem: Hashable {
+    let id: ScreenID
+}
+
+// MARK: - Main View
+
+/// メインスタック
 struct MainStack: View {
     @State private var navigationPath: [NavigationItem] = []
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
+            // ホーム画面
             HomeView(navigationPath: $navigationPath)
+
+                // 画面遷移定義
                 .navigationDestination(for: NavigationItem.self) { item in
                     switch item.id {
-                    case .home:
-                        HomeView(navigationPath: $navigationPath)
+                    // タブ管理画面
                     case .tabManage:
                         TabManageView()
+
+                    // case .home: はルートビューなのでここには不要ですが、
+                    // 将来的に他の画面が増えた場合はここに追加します
+                        
+                    default:
+                        EmptyView()
                     }
                 }
         }

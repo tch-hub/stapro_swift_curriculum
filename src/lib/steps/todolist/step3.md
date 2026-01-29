@@ -1,4 +1,4 @@
-# ステップ19: List コンポーネントの実装
+# ステップ3: List コンポーネントの実装
 
 <script>
     import {base} from '$app/paths';
