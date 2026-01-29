@@ -162,9 +162,47 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(navigationPath: .constant([]))
+    struct PreviewWrapper: View {
+        @State private var navigationPath: [NavigationItem] = []
+        
+        var body: some View {
+            NavigationStack(path: $navigationPath) {
+                HomeView(navigationPath: $navigationPath)
+                    .modelContainer(
+                        try! ModelContainer(
+                            for: ToDoTab.self, ToDoTask.self,
+                            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+                        )
+                    )
+                    .onAppear {
+                        // モックデータを初期化
+                        setupMockData()
+                    }
+            }
+        }
+        
+        private func setupMockData() {
+            // プレビュー用のモックデータはここで設定可能
+            // 実際の使用時は、SwiftDataコンテキストからデータを取得します
+        }
+    }
+
+    return PreviewWrapper()
 }
 ```
+
+### プレビューについて
+
+このプレビューでは、以下のことができます：
+
+- **タブの表示**: タブを選択するPickerが表示されます
+- **タスクの表示**: 選択したタブのタスク一覧が表示されます（初期状態では空）
+- **タスクの追加**: FloatingButtonをタップすると、タスク追加アラートが表示され、タスク内容を入力して追加できます
+- **タスクの削除**: リスト行をスワイプするとタスクが削除されます
+- **完了状態の切り替え**: ToDoListItemをタップするとチェックマークが切り替わります
+- **タブ管理へのナビゲーション**: 「タブ管理」ボタンをタップするとTabManageViewへ遷移できます
+
+> **注意**: プレビューは`isStoredInMemoryOnly: true`でメモリのみに保存されるため、プレビューを再開するとデータはリセットされます。
 
 ## コードの説明
 

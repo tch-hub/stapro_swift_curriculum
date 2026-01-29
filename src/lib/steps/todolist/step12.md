@@ -104,9 +104,36 @@ struct TabManageView: View {
 }
 
 #Preview {
-    TabManageView()
+    struct PreviewWrapper: View {
+        // モックデータ用のモデルコンテキストを作成
+        var body: some View {
+            NavigationStack {
+                TabManageView()
+                    .modelContainer(
+                        try! ModelContainer(
+                            for: ToDoTab.self,
+                            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+                        )
+                    )
+            }
+        }
+    }
+
+    return PreviewWrapper()
 }
 ```
+
+### プレビューについて
+
+このプレビューでは、以下のことができます：
+
+- **タブの表示**: 初期状態でデータベースにあるタブを表示
+- **タブの追加**: FloatingButtonをタップすると、タブ追加アラートが表示され、タブ名を入力して追加できます
+- **タブの削除**: リスト行をスワイプすると削除アラートが表示され、確認後にタブが削除されます
+- **リアルタイム更新**: タブ追加・削除後、自動的にリストが更新されます
+
+> **注意**: プレビューは`isStoredInMemoryOnly: true`でメモリのみに保存されるため、プレビューを再開するとデータはリセットされます。
+
 ## 各要素の説明
 
 ### 使用コンポーネント
