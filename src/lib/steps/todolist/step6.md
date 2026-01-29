@@ -1,62 +1,68 @@
-# ステップ19: CustomList コンポーネントの実装
+# ステップ19: List コンポーネントの実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## CustomList.swift の作成
-
-`Components/`フォルダに`CustomList.swift`を作成します。このコンポーネントは、スタイルをカスタマイズしたリストを提供します：
+## List.swift の作成
 
 ```swift
 import SwiftUI
 
-struct CustomList<Content: View>: View {
-    @ViewBuilder let content: Content
+/// どんなデータ(T)でも一覧表示できる再利用可能なリスト
+struct List<T: Identifiable, Content: View>: View {
+    let items: [T]                 // 表示するデータの配列
+    let onDelete: (T) -> Void      // 削除操作が行われた時の処理
+    @ViewBuilder let rowContent: (T) -> Content // 各行の見た目（ここを作るのは親の責任）
 
     var body: some View {
         List {
-            content
+            ForEach(items) { item in
+                rowContent(item) // 親から渡された「見た目」を表示する
+                    .listRowInsets(EdgeInsets()) // デフォルトの余白を削除して端まで広げる
+                    .listRowSeparator(.hidden)   // デフォルトの区切り線を消す
+            }
+            .onDelete(perform: delete) // スワイプ削除機能
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
+        .listStyle(.plain) // シンプルなスタイル
+        .scrollContentBackground(.hidden) // 背景を透明にする
+        .background(Color(.systemGray6))  // 背景色（薄いグレー）
+    }
+
+    /// IndexSet（何番目）からデータ（T）を特定して削除処理を呼ぶ
+    private func delete(indexSet: IndexSet) {
+        for index in indexSet {
+            let item = items[index]
+            onDelete(item)
+        }
     }
 }
 
+// プレビュー：さっき作った ToDoListItem を入れて表示してみる
 #Preview {
-    CustomList {
-        ForEach(0..<5, id: \.self) { index in
-            Text("アイテム \(index)")
-        }
+    // プレビュー用のダミーデータ型（まだデータベースは使いません）
+    struct MockData: Identifiable {
+        let id = UUID()
+        let name: String
+        let isCompleted: Bool
+    }
+    
+    // ダミーデータ
+    let mockItems = [
+        MockData(name: "牛乳を買う", isCompleted: false),
+        MockData(name: "部屋の掃除", isCompleted: true),
+        MockData(name: "Swiftの勉強", isCompleted: false)
+    ]
+    
+    return List(items: mockItems, onDelete: { item in
+        print("\(item.name) を削除しました")
+    }) { item in
+        // ここで Step 2 で作った部品を使う！
+        ToDoListItem(
+            title: item.name,
+            isCompleted: item.isCompleted,
+            onToggle: { print("チェック: \(item.name)") }
+        )
     }
 }
 ```
-
-## CustomListの特徴
-
-- `@ViewBuilder`: 複数の子ビューを受け入れるための仕組みです
-- `.listStyle(.plain)`: デフォルトのListスタイルを削除
-- `.scrollContentBackground(.hidden)`: スクロール背景を非表示
-
-## HomeView の修正
-
-`List`を`CustomList`に置き換えます：
-
-```swift
-CustomList {
-    ForEach(filteredTasks) { task in
-        ListItem(task: task, onToggleCompletion: toggleTaskCompletion)
-    }
-    .onDelete(perform: deleteTask)
-}
-```
-
-## 利点
-
-1. **統一されたスタイル**: アプリ全体で同じリストスタイルを使用
-2. **カスタマイズが容易**: 見た目の変更が必要な場合、1箇所だけ修正すればよい
-3. **再利用性**: 複数の画面でリストを使う際に便利
-
-## 次のステップへ
-
-次は、アプリの初期データ設定と最終調整を行います。

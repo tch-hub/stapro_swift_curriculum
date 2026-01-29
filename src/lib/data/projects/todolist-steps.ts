@@ -57,7 +57,7 @@ export const todolistSteps: TodolistStep[] = [
 	},
 	{
 		id: 'step11',
-		title: 'ステップ11: CustomListコンポーネントの実装',
+		title: 'ステップ11: Listコンポーネントの実装',
 		summary: 'リスト全体のUIと操作ロジックを実装します。'
 	},
 	{

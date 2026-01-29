@@ -20,7 +20,7 @@
 - [x] HomeView の実装（タブ選択、タスク表示、追加、完了、削除）
 - [x] TabManageView の実装
 - [x] コンポーネント化（ListItem）
-- [x] カスタムコンポーネント（Alert, FloatingButton, TextFieldAlert, CustomList）
+- [x] カスタムコンポーネント（Alert, FloatingButton, TextFieldAlert, List）
 - [x] 初期データの設定
 
 ## テストケース

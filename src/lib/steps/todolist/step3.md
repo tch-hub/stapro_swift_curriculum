@@ -68,29 +68,6 @@ struct Alert: View {
 }
 ```
 
-## Alert の使用例
-
-```swift
-@State private var showConfirmAlert = false
-
-// ビュー内
-if showConfirmAlert {
-    Alert(
-        title: "削除確認",
-        message: "このタスクを削除してもよろしいですか？",
-        primaryButtonText: "削除",
-        secondaryButtonText: "キャンセル",
-        primaryAction: {
-            // 削除処理
-            showConfirmAlert = false
-        },
-        secondaryAction: {
-            showConfirmAlert = false
-        }
-    )
-}
-```
-
 ## 各プロパティの説明
 
 | プロパティ            | 説明                                 |
@@ -102,6 +79,3 @@ if showConfirmAlert {
 | `primaryAction`       | メインボタンをタップした時の処理     |
 | `secondaryAction`     | キャンセルボタンをタップした時の処理 |
 
-## 次のステップへ
-
-次は、FloatingButton（フローティングアクションボタン）を実装します。
