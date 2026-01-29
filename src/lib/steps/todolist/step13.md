@@ -12,84 +12,101 @@
 import SwiftUI
 import SwiftData
 
+/// タブ管理画面
 struct TabManageView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) var dismiss
-    @State private var tabs: [ToDoTab] = []
-    @State private var showingAddTab = false
-    @State private var newTabName = ""
+    // データの取得は @Query を使って簡潔にする
+    @Query(sort: \ToDoTab.createdAt) private var toDoTabs: [ToDoTab]
+
+    @Environment(\.dismiss) private var dismiss
+    
+    // アラート制御用
+    @State private var isAddTabPresented = false
+    @State private var isEditTabPresented = false
+    @State private var alertInfo: AlertInfo?
+    @State private var selectedToDoTab: ToDoTab?
+
+    private let todoTabService = ToDoTabService()
 
     var body: some View {
-        VStack {
-            List {
-                ForEach(tabs) { tab in
-                    Text(tab.name)
+        // Listの代わりにCustomListを使用
+        CustomList(items: toDoTabs, onDelete: onDeleteButtonTapped) { toDoTab in
+            Text(toDoTab.name)
+                .padding(.vertical, 8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    selectedToDoTab = toDoTab
+                    isEditTabPresented = true
                 }
-                .onDelete(perform: deleteTab)
-            }
-
-            HStack {
-                Button(action: { showingAddTab = true }) {
-                    Label("タブを追加", systemImage: "plus")
-                }
-                .padding()
-
-                Button("戻る") {
-                    dismiss()
-                }
-                .padding()
-            }
         }
-        .navigationTitle("タブ管理")
-        .sheet(isPresented: $showingAddTab) {
-            VStack {
-                TextField("タブ名を入力", text: $newTabName)
-                    .textFieldStyle(.roundedBorder)
-                    .padding()
+        .contentMargins(.top, 30)
 
-                HStack {
-                    Button("キャンセル") {
-                        showingAddTab = false
-                        newTabName = ""
-                    }
+        // ナビゲーションバー設定（Component化されている場合）
+        .navigationBarSetting(title: "タブ管理", isVisible: true)
+        .navigationBarIconSetting(name: "plus", isEnabled: true, action: onTabAddIconTapped)
 
-                    Button("追加") {
-                        addTab()
-                    }
-                    .disabled(newTabName.isEmpty)
-                }
-                .padding()
-            }
-        }
-        .onAppear {
-            loadTabs()
+        // 画面スタイル
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color("BgColor")) // アセットで定義した色
+
+        // アラートコンポーネントの使用
+        .textFieldAlert(isPresented: $isAddTabPresented,
+                        title: "タブ追加",
+                        message: "追加するタブ名を入力してください\n(20文字以内)",
+                        placeholder: "例）勉強",
+                        defaultText: "",
+                        maxLength: 20,
+                        onConfirm: addTab)
+        .textFieldAlert(isPresented: $isEditTabPresented,
+                        title: "タブ修正",
+                        message: "修正するタブ名を入力してください\n(20文字以内)",
+                        placeholder: "例）勉強",
+                        defaultText: selectedToDoTab?.name ?? "",
+                        maxLength: 20,
+                        onConfirm: editTab)
+        .customAlert(alertInfo: $alertInfo)
+    }
+
+    /// タブ追加アイコンタップ時
+    private func onTabAddIconTapped() {
+        isAddTabPresented = true
+    }
+
+    /// 削除ボタンタップ時
+    private func onDeleteButtonTapped(toDoTab: ToDoTab) {
+        do {
+            try todoTabService.delete(tabId: toDoTab.id)
+        } catch {
+            alertInfo = .init(title: "エラー", message: "タブの削除に失敗しました")
         }
     }
 
-    private func loadTabs() {
-        let descriptor = FetchDescriptor<ToDoTab>()
-        tabs = (try? modelContext.fetch(descriptor)) ?? []
-    }
-
-    private func addTab() {
-        let newTab = ToDoTab(name: newTabName)
-        ToDoTabService.addTab(newTab, to: modelContext)
-        newTabName = ""
-        showingAddTab = false
-        loadTabs()
-    }
-
-    private func deleteTab(offsets: IndexSet) {
-        for index in offsets {
-            let tabToDelete = tabs[index]
-            ToDoTabService.deleteTab(tabToDelete, from: modelContext)
+    /// タブ追加処理
+    private func addTab(text: String) {
+        do {
+            _ = try todoTabService.add(name: text)
+        } catch {
+            alertInfo = .init(title: "エラー", message: "タブの追加に失敗しました")
         }
-        loadTabs()
+    }
+
+    /// タブ修正処理
+    private func editTab(text: String) {
+        guard let toDoTab = selectedToDoTab else { return }
+        do {
+            try todoTabService.edit(tabId: toDoTab.id, name: text)
+        } catch {
+            alertInfo = .init(title: "エラー", message: "タブの修正に失敗しました")
+        }
     }
 }
 
 #Preview {
-    TabManageView()
+    NavigationView {
+        TabManageView()
+            // プレビュー用のコンテナ設定が必要ならここに追加
+             .modelContainer(SwiftDataService.shared.getModelContainer()) 
+    }
 }
 ```
 
