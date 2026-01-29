@@ -1,57 +1,198 @@
-# ステップ7: ScreenID と NavigationItemの定義
+# ステップ14: TabManageView の作成（基本構造）
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## ナビゲーションの仕組み
+## TabManageView.swift の作成
 
-SwiftUIでは、複数の画面を切り替える際に、どの画面に遷移するかを管理する必要があります。そのために、画面を識別するための定義を作成します。
-
-## ScreenID.swift の作成
-
-`Screens/Navigation/`フォルダに`ScreenID.swift`を作成し、以下のコードを記述します：
+`Screens/Views/Main/`フォルダに`TabManageView.swift`を作成します：
 
 ```swift
-import Foundation
+import SwiftUI
+import SwiftData
 
-enum ScreenID: Hashable {
-    case home
-    case tabManage
+struct TabManageView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) var dismiss
+    
+    @State private var tabs: [ToDoTab] = []
+    @State private var showingAddTab = false
+    @State private var newTabName = ""
+    @State private var showDeleteAlert = false
+    @State private var tabToDelete: ToDoTab?
+
+    var body: some View {
+        ZStack {
+            VStack {
+                // 既存のタブリストをCustomListで表示
+                CustomList(items: tabs, onDelete: handleDelete) { tab in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(tab.name)
+                            .font(.headline)
+                        Text("作成日: \(tab.createdAt.formatted(date: .abbreviated, time: .omitted))")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+            .navigationTitle("タブ管理")
+            .onAppear {
+                loadTabs()
+            }
+            // テキスト入力アラートを使用してタブ名を入力
+            .textFieldAlert(
+                isPresented: $showingAddTab,
+                title: "新しいタブを追加",
+                message: "タブの名前を入力してください",
+                text: $newTabName,
+                placeholder: "例: 仕事、買い物など",
+                actionButtonTitle: "追加",
+                action: addTab
+            )
+            // 削除確認アラート
+            .deleteAlert(
+                isPresented: $showDeleteAlert,
+                title: "タブの削除",
+                message: "このタブを削除すると、関連するすべてのタスクも削除されます。",
+                deleteText: "削除",
+                cancelText: "キャンセル",
+                onDelete: confirmDelete
+            )
+            
+            // FloatingButtonでタブ追加機能を実装
+            FloatingButton(
+                action: { showingAddTab = true },
+                icon: "plus",
+                backgroundColor: .blue
+            )
+        }
+    }
+
+    // MARK: - Private Methods
+
+    private func loadTabs() {
+        let descriptor = FetchDescriptor<ToDoTab>()
+        tabs = (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    private func addTab() {
+        guard !newTabName.isEmpty else { return }
+        
+        let newTab = ToDoTab(name: newTabName)
+        ToDoTabService.addTab(newTab, to: modelContext)
+        
+        newTabName = ""
+        showingAddTab = false
+        loadTabs()
+    }
+
+    private func handleDelete(offsets: IndexSet) {
+        // スワイプで削除された場合、確認アラートを表示
+        if let index = offsets.first {
+            tabToDelete = tabs[index]
+            showDeleteAlert = true
+        }
+    }
+
+    private func confirmDelete() {
+        if let tabToDelete = tabToDelete {
+            ToDoTabService.deleteTab(tabToDelete, from: modelContext)
+            loadTabs()
+        }
+    }
+}
+
+#Preview {
+    TabManageView()
+}
+```
+## 各要素の説明
+
+### 使用コンポーネント
+
+#### 1. **CustomList** (Step 3)
+- `items`: タブのリスト
+- `onDelete`: スワイプで削除された時の処理
+- `rowContent`: タブ情報を表示する行コンテンツ
+
+```swift
+CustomList(items: tabs, onDelete: handleDelete) { tab in
+    VStack(alignment: .leading, spacing: 4) {
+        Text(tab.name)
+            .font(.headline)
+        Text("作成日: \(tab.createdAt.formatted(date: .abbreviated, time: .omitted))")
+            .font(.caption)
+            .foregroundColor(.gray)
+    }
 }
 ```
 
-## NavigationItem.swift の作成
-
-`Screens/Navigation/`フォルダに`NavigationItem.swift`を作成し、以下のコードを記述します：
+#### 2. **TextFieldAlert Modifier** (Step 6)
+- テキスト入力が必要な場合にアラートを使用
+- キャンセルボタンと実行ボタンが自動で配置される
+- 入力が空の場合は実行ボタンが無効化される
 
 ```swift
-import Foundation
-
-struct NavigationItem: Hashable {
-    let id: ScreenID
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-
-    static func == (lhs: NavigationItem, rhs: NavigationItem) -> Bool {
-        lhs.id == rhs.id
-    }
-}
+.textFieldAlert(
+    isPresented: $showingAddTab,
+    title: "新しいタブを追加",
+    message: "タブの名前を入力してください",
+    text: $newTabName,
+    placeholder: "例: 仕事、買い物など",
+    actionButtonTitle: "追加",
+    action: addTab
+)
 ```
 
-## Hashable について
+#### 3. **deleteAlert Modifier** (Step 4)
+- 削除確認用アラート
+- タップで削除ボタンをタップした場合に表示
+- タブ削除時に関連するすべてのタスクも削除されることをユーザーに通知
 
-NavigationStackで画面遷移を管理するには、ナビゲーション情報が`Hashable`である必要があります。`Hashable`は、オブジェクトを一意に識別できるプロトコルです。
+```swift
+.deleteAlert(
+    isPresented: $showDeleteAlert,
+    title: "タブの削除",
+    message: "このタブを削除すると、関連するすべてのタスクも削除されます。",
+    deleteText: "削除",
+    cancelText: "キャンセル",
+    onDelete: confirmDelete
+)
+```
 
-## 各ScreenIDの説明
+#### 4. **FloatingButton** (Step 5)
+- 画面右下に配置される丸いボタン
+- タブを追加する際に使用
+- アイコンと背景色をカスタマイズ可能
 
-| ScreenID    | 説明                         |
-| ----------- | ---------------------------- |
-| `home`      | ホーム画面（タスク一覧表示） |
-| `tabManage` | タブ管理画面                 |
+```swift
+FloatingButton(
+    action: { showingAddTab = true },
+    icon: "plus",
+    backgroundColor: .blue
+)
+```
+
+### メソッドの説明
+
+| メソッド          | 説明                               |
+| ----------------- | ---------------------------------- |
+| `loadTabs()`      | SwiftDataからすべてのタブを取得    |
+| `addTab()`        | 新しいタブを追加                   |
+| `handleDelete()`  | スワイプ削除時に確認アラートを表示 |
+| `confirmDelete()` | ユーザーの確認後、タブを実際に削除 |
+
+### 状態管理
+
+| State変数         | 説明                                 |
+| ----------------- | ------------------------------------ |
+| `tabs`            | 現在のタブリスト                     |
+| `showingAddTab`   | タブ追加アラートの表示/非表示        |
+| `newTabName`      | タブ追加時の入力フィールド           |
+| `showDeleteAlert` | 削除確認アラートの表示/非表示        |
+| `tabToDelete`     | 削除予定のタブ（確認後に実際に削除） |
 
 ## 次のステップへ
 
-次は、アプリの初期画面`ContentView`を作成します。
+次は、このビューをより整えて、エラーハンドリングを追加します。
