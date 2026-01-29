@@ -45,7 +45,7 @@ struct CustomList<Content: View>: View {
 ```swift
 CustomList {
     ForEach(filteredTasks) { task in
-        ToDoListItem(task: task, onToggleCompletion: toggleTaskCompletion)
+        ListItem(task: task, onToggleCompletion: toggleTaskCompletion)
     }
     .onDelete(perform: deleteTask)
 }

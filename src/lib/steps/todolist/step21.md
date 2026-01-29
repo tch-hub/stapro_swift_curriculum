@@ -19,8 +19,8 @@
 - [x] MainStack の実装
 - [x] HomeView の実装（タブ選択、タスク表示、追加、完了、削除）
 - [x] TabManageView の実装
-- [x] コンポーネント化（ToDoListItem）
-- [x] カスタムコンポーネント（CustomAlert, FloatingButton, TextFieldAlert, CustomList）
+- [x] コンポーネント化（ListItem）
+- [x] カスタムコンポーネント（Alert, FloatingButton, TextFieldAlert, CustomList）
 - [x] 初期データの設定
 
 ## テストケース

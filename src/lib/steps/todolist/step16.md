@@ -1,17 +1,17 @@
-# ステップ16: CustomAlert コンポーネントの実装
+# ステップ16: Alert コンポーネントの実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## CustomAlert.swift の作成
+## Alert.swift の作成
 
-`Components/`フォルダに`CustomAlert.swift`を作成します：
+`Components/`フォルダに`Alert.swift`を作成します：
 
 ```swift
 import SwiftUI
 
-struct CustomAlert: View {
+struct Alert: View {
     let title: String
     let message: String
     let primaryButtonText: String
@@ -57,7 +57,7 @@ struct CustomAlert: View {
 }
 
 #Preview {
-    CustomAlert(
+    Alert(
         title: "確認",
         message: "このタスクを削除しますか？",
         primaryButtonText: "削除",
@@ -68,14 +68,14 @@ struct CustomAlert: View {
 }
 ```
 
-## CustomAlert の使用例
+## Alert の使用例
 
 ```swift
 @State private var showConfirmAlert = false
 
 // ビュー内
 if showConfirmAlert {
-    CustomAlert(
+    Alert(
         title: "削除確認",
         message: "このタスクを削除してもよろしいですか？",
         primaryButtonText: "削除",

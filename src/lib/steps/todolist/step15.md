@@ -1,4 +1,4 @@
-# ステップ15: コンポーネント化（ToDoListItem）
+# ステップ15: コンポーネント化（ListItem）
 
 <script>
     import {base} from '$app/paths';
@@ -8,41 +8,55 @@
 
 コードの重複を減らすために、よく使う部品を独立した「コンポーネント」として分割することです。
 
-## ToDoListItem.swift の作成
+## ListItem.swift の作成
 
-`Components/`フォルダに`ToDoListItem.swift`を作成します：
+`Components/`フォルダに`ListItem.swift`を作成します：
 
 ```swift
 import SwiftUI
 
-struct ToDoListItem: View {
-    let task: ToDoTask
-    let onToggleCompletion: (ToDoTask) -> Void
+struct ListItem: View {
+    let title: String       // タスクのタイトル
+    let isCompleted: Bool   // 完了しているかどうか
+    let onToggle: () -> Void // チェックボックスが押された時の処理
 
     var body: some View {
         HStack {
-            Button(action: {
-                onToggleCompletion(task)
-            }) {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(task.isCompleted ? .green : .gray)
+            // チェックボックスボタン
+            Button(action: onToggle) {
+                Image(systemName: isCompleted ? "checkmark.square.fill" : "square")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(isCompleted ? .gray : .blue) // 完了ならグレー、未完了なら青
             }
-            .buttonStyle(PlainButtonStyle())
+            .buttonStyle(PlainButtonStyle()) // リスト内でのボタン反応範囲を制御
 
-            Text(task.title)
-                .strikethrough(task.isCompleted)
-                .foregroundColor(task.isCompleted ? .gray : .black)
-
+            // タスク名
+            Text(title)
+                .font(.body)
+                .foregroundColor(isCompleted ? .gray : .primary) // 完了なら文字もグレー
+                .strikethrough(isCompleted) // 完了なら取り消し線
+            
             Spacer()
+        }
+        .padding(.vertical, 8) // 上下の余白
+        .contentShape(Rectangle()) // タップ領域を行全体に広げる
+        .onTapGesture {
+            onToggle() // 行のどこを押してもチェックが切り替わるようにする
         }
     }
 }
 
+// プレビューで見た目を確認
 #Preview {
-    ToDoListItem(
-        task: ToDoTask(title: "サンプルタスク", detail: "", tabId: UUID()),
-        onToggleCompletion: { _ in }
-    )
+    VStack {
+        // 未完了パターン
+        ListItem(title: "牛乳を買う", isCompleted: false, onToggle: {})
+        
+        // 完了パターン
+        ListItem(title: "部屋の掃除", isCompleted: true, onToggle: {})
+    }
+    .padding()
 }
 ```
 
@@ -53,7 +67,7 @@ struct ToDoListItem: View {
 ```swift
 List {
     ForEach(filteredTasks) { task in
-        ToDoListItem(task: task, onToggleCompletion: toggleTaskCompletion)
+        ListItem(task: task, onToggleCompletion: toggleTaskCompletion)
     }
     .onDelete(perform: deleteTask)
 }

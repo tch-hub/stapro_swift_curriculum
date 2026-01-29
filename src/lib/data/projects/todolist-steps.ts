@@ -37,7 +37,7 @@ export const todolistSteps: TodolistStep[] = [
 	},
 	{
 		id: 'step7',
-		title: 'ステップ7: CustomAlertコンポーネントの実装',
+		title: 'ステップ7: Alertコンポーネントの実装',
 		summary: 'カスタムアラートダイアログUIを実装します。'
 	},
 	{
@@ -52,7 +52,7 @@ export const todolistSteps: TodolistStep[] = [
 	},
 	{
 		id: 'step10',
-		title: 'ステップ10: ToDoListItemコンポーネントの実装',
+		title: 'ステップ10: ListItemコンポーネントの実装',
 		summary: 'リストアイテムの表示と操作を実装します。'
 	},
 	{
