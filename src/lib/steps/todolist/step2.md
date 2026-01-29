@@ -1,117 +1,65 @@
-# ステップ2: SwiftData環境の準備
+# ステップ2: ListItemの作成
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## SwiftDataとは
 
-SwiftDataは、iOSアプリ内でデータを永続化するための仕組みです。データベースのようなもので、アプリを再起動してもデータが保存されます。
-
-## ToDoListApp.swiftの基本構造
 
 ```swift
 import SwiftUI
-import SwiftData
 
-@main
-struct ToDoListApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
+struct ListItem: View {
+    let title: String       // タスクのタイトル
+    let isCompleted: Bool   // 完了しているかどうか
+    let onToggle: () -> Void // チェックボックスが押された時の処理
+
+    var body: some View {
+        HStack {
+            // チェックボックスボタン
+            Button(action: onToggle) {
+                Image(systemName: isCompleted ? "checkmark.square.fill" : "cicle")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(isCompleted ? .gray : .blue) // 完了ならグレー、未完了なら青
+            }
+            .buttonStyle(PlainButtonStyle()) // リスト内でのボタン反応範囲を制御
+
+            // タスク名
+            Text(title)
+                .font(.body)
+                .foregroundColor(isCompleted ? .gray : .primary) // 完了なら文字もグレー
+                .strikethrough(isCompleted) // 完了なら取り消し線
+            
+            Spacer()
+        }
+        .padding(.vertical, 8) // 上下の余白
+        .contentShape(Rectangle()) // タップ領域を行全体に広げる
+        .onTapGesture {
+            onToggle() // 行のどこを押してもチェックが切り替わるようにする
         }
     }
 }
-```
 
-このコードは、SwiftDataを使うための最小構成です。アプリのエントリーポイントを定義しています。
-
-### 1. スキーマ（Schema）の定義
-
-`struct ToDoListApp: App {`の下、`var body: some Scene {`の上に追加
-
-```swift
-let modelContainer: ModelContainer
-
-init() {
-    let schema = Schema([
-        // ToDoTask.self,
-        // ToDoTab.self
-    ])
-}
-```
-
-スキーマは、アプリで保存するデータの種類を指定します。ここでは`ToDoTask`と`ToDoTab`という2つのデータモデルを保存することを宣言しています。
-
-### 2. モデル設定（ModelConfiguration）
-
-`let schema = Schema([...])`の下に追加
-
-```swift
-let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-```
-
-`ModelConfiguration`はデータベースの設定を行います。
-
-- `schema`: 上で定義したスキーマを指定
-- `isStoredInMemoryOnly: false`: ディスク（ストレージ）に保存することを指定します。`true`だとメモリのみで、アプリを閉じるとデータが消えます
-
-### 3. モデルコンテナ（ModelContainer）の初期化
-
-`let modelConfiguration = ...`の下に追加
-
-```swift
-do {
-    modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-} catch {
-    fatalError("Could not initialize ModelContainer: \(error)")
-}
-```
-
-`ModelContainer`はSwiftDataのデータベース接続を管理します。
-
-- `try`と`catch`で、初期化に失敗した場合のエラー処理をしています
-- `fatalError`で、エラーが発生したらアプリを停止して原因を通知します
-
-### 4. アプリ全体への適用
-
-`var body: some Scene {}`内の`WindowGroup { ... }`に追加
-
-```swift
-.modelContainer(modelContainer)
-```
-
-`WindowGroup`に`.modelContainer()`を追加することで、アプリ全体でSwiftDataが使えるようになります
-
-### コード全体 - ToDoListApp.swift
-
-```swift title="ToDoListApp.swift"
-import SwiftUI
-import SwiftData
-
-@main
-struct ToDoListApp: App {
-    let modelContainer: ModelContainer
-
-    init() {
-        let schema = Schema([
-            // ToDoTask.self,
-            // ToDoTab.self
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not initialize ModelContainer: \(error)")
+// プレビューで見た目を確認
+#Preview {
+    // プレビュー用に一時的な「状態」を持つ親ビューを作る
+    struct PreviewWrapper: View {
+        @State private var isCompleted = false
+        
+        var body: some View {
+            ListItem(
+                title: "タップして動作確認",
+                isCompleted: isCompleted,
+                onToggle: {
+                    // タップされたら状態を反転させる
+                    isCompleted.toggle()
+                }
+            )
         }
     }
-
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-        .modelContainer(modelContainer)
-    }
+    
+    return PreviewWrapper()
+        .padding()
 }
 ```

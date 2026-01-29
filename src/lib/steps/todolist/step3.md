@@ -1,52 +1,107 @@
+# ステップ16: Alert コンポーネントの実装
+
 <script>
     import {base} from '$app/paths';
 </script>
 
-## データモデルとは
+## Alert.swift の作成
 
-ToDoリストでは、各タスク（やることリストの1つ1つの項目）の情報を保存する必要があります。このデータを管理する仕組みを「データモデル」と呼びます。
-
-### ToDoTask.swift の作成
+`Components/`フォルダに`Alert.swift`を作成します：
 
 ```swift
-import Foundation
-import SwiftData
+import SwiftUI
 
-// データモデルとしてマークするデコレータ
-@Model
-final class ToDoTask: Identifiable {
-    var id: UUID = UUID()
-    var title: String = ""
-    var detail: String = ""
-    var isCompleted: Bool = false
-    var tabId: UUID = UUID()
-    var createdAt: Date = Date()
+struct Alert: View {
+    let title: String
+    let message: String
+    let primaryButtonText: String
+    let secondaryButtonText: String?
+    let primaryAction: () -> Void
+    let secondaryAction: (() -> Void)?
 
-    init(title: String, detail: String, tabId: UUID) {
-        self.title = title
-        self.detail = detail
-        self.isCompleted = false
-        self.tabId = tabId
-        self.createdAt = Date()
+    var body: some View {
+        VStack(spacing: 16) {
+            Text(title)
+                .font(.headline)
+                .fontWeight(.bold)
+
+            Text(message)
+                .font(.body)
+                .foregroundColor(.gray)
+
+            HStack(spacing: 12) {
+                if let secondaryButtonText = secondaryButtonText, let secondaryAction = secondaryAction {
+                    Button(action: secondaryAction) {
+                        Text(secondaryButtonText)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .border(Color.blue)
+                    }
+                    .foregroundColor(.blue)
+                }
+
+                Button(action: primaryAction) {
+                    Text(primaryButtonText)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                }
+            }
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(12)
+        .shadow(radius: 10)
     }
+}
+
+#Preview {
+    Alert(
+        title: "確認",
+        message: "このタスクを削除しますか？",
+        primaryButtonText: "削除",
+        secondaryButtonText: "キャンセル",
+        primaryAction: { },
+        secondaryAction: { }
+    )
+}
+```
+
+## Alert の使用例
+
+```swift
+@State private var showConfirmAlert = false
+
+// ビュー内
+if showConfirmAlert {
+    Alert(
+        title: "削除確認",
+        message: "このタスクを削除してもよろしいですか？",
+        primaryButtonText: "削除",
+        secondaryButtonText: "キャンセル",
+        primaryAction: {
+            // 削除処理
+            showConfirmAlert = false
+        },
+        secondaryAction: {
+            showConfirmAlert = false
+        }
+    )
 }
 ```
 
 ## 各プロパティの説明
 
-| プロパティ    | 型     | 説明                       |
-| ------------- | ------ | -------------------------- |
-| `id`          | UUID   | タスクの一意な識別子       |
-| `title`       | String | タスクのタイトル           |
-| `detail` | String | タスクの説明               |
-| `isCompleted` | Bool   | タスクが完了したかどうか   |
-| `tabId`       | UUID   | このタスクが属するタブのID |
-| `createdAt`   | Date   | タスクが作成された日時     |
-
-## @Model デコレータ
-
-`@Model`を使うことで、このクラスをSwiftDataのデータモデルとして登録します。これにより、アプリを再起動しても数据が保存されます。
+| プロパティ            | 説明                                 |
+| --------------------- | ------------------------------------ |
+| `title`               | アラートのタイトル                   |
+| `message`             | アラートの説明メッセージ             |
+| `primaryButtonText`   | メインボタンのテキスト               |
+| `secondaryButtonText` | キャンセルボタンのテキスト           |
+| `primaryAction`       | メインボタンをタップした時の処理     |
+| `secondaryAction`     | キャンセルボタンをタップした時の処理 |
 
 ## 次のステップへ
 
-次は、タスクを分類するための「タブ」を表すモデル`ToDoTab`を作成します。
+次は、FloatingButton（フローティングアクションボタン）を実装します。

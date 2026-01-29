@@ -1,62 +1,56 @@
-# ステップ19: CustomList コンポーネントの実装
+# ステップ13: タスク削除機能の実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## CustomList.swift の作成
+## HomeView.swift の修正
 
-`Components/`フォルダに`CustomList.swift`を作成します。このコンポーネントは、スタイルをカスタマイズしたリストを提供します：
-
-```swift
-import SwiftUI
-
-struct CustomList<Content: View>: View {
-    @ViewBuilder let content: Content
-
-    var body: some View {
-        List {
-            content
-        }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
-    }
-}
-
-#Preview {
-    CustomList {
-        ForEach(0..<5, id: \.self) { index in
-            Text("アイテム \(index)")
-        }
-    }
-}
-```
-
-## CustomListの特徴
-
-- `@ViewBuilder`: 複数の子ビューを受け入れるための仕組みです
-- `.listStyle(.plain)`: デフォルトのListスタイルを削除
-- `.scrollContentBackground(.hidden)`: スクロール背景を非表示
-
-## HomeView の修正
-
-`List`を`CustomList`に置き換えます：
+リスト内でスワイプして削除できるようにします：
 
 ```swift
-CustomList {
+List {
     ForEach(filteredTasks) { task in
-        ListItem(task: task, onToggleCompletion: toggleTaskCompletion)
+        HStack {
+            Button(action: {
+                toggleTaskCompletion(task)
+            }) {
+                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(task.isCompleted ? .green : .gray)
+            }
+            .buttonStyle(PlainButtonStyle())
+
+            Text(task.title)
+                .strikethrough(task.isCompleted)
+        }
     }
     .onDelete(perform: deleteTask)
 }
+
+private func deleteTask(offsets: IndexSet) {
+    for index in offsets {
+        let taskToDelete = filteredTasks[index]
+        ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
+    }
+    loadTasks()
+}
 ```
 
-## 利点
+## .onDelete モディファイア
 
-1. **統一されたスタイル**: アプリ全体で同じリストスタイルを使用
-2. **カスタマイズが容易**: 見た目の変更が必要な場合、1箇所だけ修正すればよい
-3. **再利用性**: 複数の画面でリストを使う際に便利
+- `.onDelete(perform:)`: リスト内でスワイプして削除できるようにします
+- `offsets`: 削除対象の行のインデックスを示します
+- 削除後は`loadTasks()`でUI更新します
+
+## 削除の流れ
+
+1. ユーザーがタスクをスワイプします
+2. 削除ボタンが表示されます
+3. ユーザーが削除ボタンをタップします
+4. `deleteTask()`メソッドが呼び出されます
+5. サービスを通じてタスクをデータベースから削除します
+6. UI更新のためにタスク一覧を再度読み込みます
 
 ## 次のステップへ
 
-次は、アプリの初期データ設定と最終調整を行います。
+次は、タブを管理するための画面`TabManageView`を作成します。

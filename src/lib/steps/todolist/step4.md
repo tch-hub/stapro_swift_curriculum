@@ -1,48 +1,86 @@
-# ステップ4: ToDoタブモデルの作成
+# ステップ17: FloatingButton コンポーネントの実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## タブとは
+## FloatingButton.swift の作成
 
-ToDoリストを複数のカテゴリに分類するために「タブ」を使います。例えば、「仕事」「プライベート」「買い物」など、異なるカテゴリでやることをまとめます。
-
-## ToDoTab.swift の作成
-
-`SwiftData/Models/`フォルダに`ToDoTab.swift`を作成し、以下のコードを記述します：
+`Components/`フォルダに`FloatingButton.swift`を作成します：
 
 ```swift
-import Foundation
-import SwiftData
+import SwiftUI
 
-@Model
-final class ToDoTab: Identifiable {
-    var id: UUID = UUID()
-    var name: String = ""
-    var createdAt: Date = Date()
+struct FloatingButton: View {
+    let action: () -> Void
+    let icon: String
+    let backgroundColor: Color
 
-    init(name: String) {
-        self.name = name
-        self.createdAt = Date()
+    var body: some View {
+        VStack {
+            Spacer()
+
+            HStack {
+                Spacer()
+
+                Button(action: action) {
+                    Image(systemName: icon)
+                        .font(.system(size: 24))
+                        .foregroundColor(.white)
+                        .frame(width: 60, height: 60)
+                        .background(backgroundColor)
+                        .clipShape(Circle())
+                        .shadow(radius: 5)
+                }
+                .padding(20)
+            }
+        }
     }
+}
+
+#Preview {
+    FloatingButton(
+        action: { },
+        icon: "plus",
+        backgroundColor: .blue
+    )
 }
 ```
 
-## 各プロパティの説明
+## HomeView の修正
 
-| プロパティ  | 型     | 説明                                 |
-| ----------- | ------ | ------------------------------------ |
-| `id`        | UUID   | タブの一意な識別子                   |
-| `name`      | String | タブの名前（例：「仕事」「買い物」） |
-| `createdAt` | Date   | タブが作成された日時                 |
+リストとボタン部分を`ZStack`で包み、追加ボタンを`FloatingButton`に置き換えます：
 
-## タスクとタブの関係
+```swift
+ZStack {
+    VStack {
+        // 既存のコンテンツ（Picker、CustomListなど）
 
-- 1つのタブに複数のタスクが属することができます
-- 各タスク（`ToDoTask`）は`tabId`プロパティで、どのタブに属するかを指定しています
-- これによって、タブごとにタスクを管理することができます
+        HStack {
+            Button(action: {
+                navigationPath.append(NavigationItem(id: .tabManage))
+            }) {
+                Text("タブ管理")
+            }
+            .padding()
+        }
+    }
+
+    FloatingButton(
+        action: { showingAddTask = true },
+        icon: "plus",
+        backgroundColor: .blue
+    )
+}
+```
+
+## FloatingButton の特徴
+
+1. **画面右下に配置**: `VStack`と`HStack`の`Spacer()`を使って配置
+2. **円形デザイン**: `.clipShape(Circle())`で円形にします
+3. **シャドウ効果**: `.shadow()`で浮き出た感じを表現
+4. **カスタマイズ可能**: アイコンと背景色を指定できます
 
 ## 次のステップへ
 
-次は、これらのモデルを操作するための「サービス」を作成します。
+次は、TextFieldを含むアラート機能を実装します。

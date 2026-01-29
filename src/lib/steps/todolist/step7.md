@@ -1,57 +1,117 @@
-# ステップ7: ScreenID と NavigationItemの定義
+# ステップ2: SwiftData環境の準備
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## ナビゲーションの仕組み
+## SwiftDataとは
 
-SwiftUIでは、複数の画面を切り替える際に、どの画面に遷移するかを管理する必要があります。そのために、画面を識別するための定義を作成します。
+SwiftDataは、iOSアプリ内でデータを永続化するための仕組みです。データベースのようなもので、アプリを再起動してもデータが保存されます。
 
-## ScreenID.swift の作成
-
-`Screens/Navigation/`フォルダに`ScreenID.swift`を作成し、以下のコードを記述します：
+## ToDoListApp.swiftの基本構造
 
 ```swift
-import Foundation
+import SwiftUI
+import SwiftData
 
-enum ScreenID: Hashable {
-    case home
-    case tabManage
-}
-```
-
-## NavigationItem.swift の作成
-
-`Screens/Navigation/`フォルダに`NavigationItem.swift`を作成し、以下のコードを記述します：
-
-```swift
-import Foundation
-
-struct NavigationItem: Hashable {
-    let id: ScreenID
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-
-    static func == (lhs: NavigationItem, rhs: NavigationItem) -> Bool {
-        lhs.id == rhs.id
+@main
+struct ToDoListApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
     }
 }
 ```
 
-## Hashable について
+このコードは、SwiftDataを使うための最小構成です。アプリのエントリーポイントを定義しています。
 
-NavigationStackで画面遷移を管理するには、ナビゲーション情報が`Hashable`である必要があります。`Hashable`は、オブジェクトを一意に識別できるプロトコルです。
+### 1. スキーマ（Schema）の定義
 
-## 各ScreenIDの説明
+`struct ToDoListApp: App {`の下、`var body: some Scene {`の上に追加
 
-| ScreenID    | 説明                         |
-| ----------- | ---------------------------- |
-| `home`      | ホーム画面（タスク一覧表示） |
-| `tabManage` | タブ管理画面                 |
+```swift
+let modelContainer: ModelContainer
 
-## 次のステップへ
+init() {
+    let schema = Schema([
+        // ToDoTask.self,
+        // ToDoTab.self
+    ])
+}
+```
 
-次は、アプリの初期画面`ContentView`を作成します。
+スキーマは、アプリで保存するデータの種類を指定します。ここでは`ToDoTask`と`ToDoTab`という2つのデータモデルを保存することを宣言しています。
+
+### 2. モデル設定（ModelConfiguration）
+
+`let schema = Schema([...])`の下に追加
+
+```swift
+let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+```
+
+`ModelConfiguration`はデータベースの設定を行います。
+
+- `schema`: 上で定義したスキーマを指定
+- `isStoredInMemoryOnly: false`: ディスク（ストレージ）に保存することを指定します。`true`だとメモリのみで、アプリを閉じるとデータが消えます
+
+### 3. モデルコンテナ（ModelContainer）の初期化
+
+`let modelConfiguration = ...`の下に追加
+
+```swift
+do {
+    modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+} catch {
+    fatalError("Could not initialize ModelContainer: \(error)")
+}
+```
+
+`ModelContainer`はSwiftDataのデータベース接続を管理します。
+
+- `try`と`catch`で、初期化に失敗した場合のエラー処理をしています
+- `fatalError`で、エラーが発生したらアプリを停止して原因を通知します
+
+### 4. アプリ全体への適用
+
+`var body: some Scene {}`内の`WindowGroup { ... }`に追加
+
+```swift
+.modelContainer(modelContainer)
+```
+
+`WindowGroup`に`.modelContainer()`を追加することで、アプリ全体でSwiftDataが使えるようになります
+
+### コード全体 - ToDoListApp.swift
+
+```swift title="ToDoListApp.swift"
+import SwiftUI
+import SwiftData
+
+@main
+struct ToDoListApp: App {
+    let modelContainer: ModelContainer
+
+    init() {
+        let schema = Schema([
+            // ToDoTask.self,
+            // ToDoTab.self
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not initialize ModelContainer: \(error)")
+        }
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+        .modelContainer(modelContainer)
+    }
+}
+```

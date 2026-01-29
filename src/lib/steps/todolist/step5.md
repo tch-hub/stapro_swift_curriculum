@@ -1,70 +1,123 @@
-# ステップ5: ToDoTaskServiceの実装
+# ステップ18: TextFieldAlertModifier の実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## サービスクラスとは
+## TextFieldAlertModifier.swift の作成
 
-データの追加、更新、削除などの操作をまとめるクラスです。ビューから直接データベースにアクセスするのではなく、サービスを通して操作することで、コードを整理します。
-
-## ToDoTaskService.swift の作成
-
-`Services/`フォルダに`ToDoTaskService.swift`を作成し、以下のコードを記述します：
+`Components/`フォルダに`TextFieldAlertModifier.swift`を作成します：
 
 ```swift
-import Foundation
-import SwiftData
+import SwiftUI
 
-class ToDoTaskService {
-    @MainActor
-    static func addTask(_ task: ToDoTask, to modelContext: ModelContext) {
-        modelContext.insert(task)
-        try? modelContext.save()
-    }
+struct TextFieldAlert: ViewModifier {
+    @Binding var isPresented: Bool
+    let title: String
+    let message: String
+    @Binding var text: String
+    let placeholder: String
+    let onConfirm: () -> Void
 
-    @MainActor
-    static func updateTask(_ task: ToDoTask, modelContext: ModelContext) {
-        try? modelContext.save()
-    }
+    func body(content: Content) -> some View {
+        content
+            .sheet(isPresented: $isPresented) {
+                VStack(spacing: 16) {
+                    Text(title)
+                        .font(.headline)
+                        .fontWeight(.bold)
 
-    @MainActor
-    static func deleteTask(_ task: ToDoTask, from modelContext: ModelContext) {
-        modelContext.delete(task)
-        try? modelContext.save()
-    }
+                    Text(message)
+                        .font(.body)
+                        .foregroundColor(.gray)
 
-    @MainActor
-    static func toggleTaskCompletion(_ task: ToDoTask, modelContext: ModelContext) {
-        task.isCompleted.toggle()
-        try? modelContext.save()
-    }
+                    TextField(placeholder, text: $text)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.vertical, 8)
 
-    @MainActor
-    static func deleteAllTasks(for tabId: UUID, from modelContext: ModelContext) {
-        let descriptor = FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })
-        if let tasks = try? modelContext.fetch(descriptor) {
-            tasks.forEach { modelContext.delete($0) }
-            try? modelContext.save()
-        }
+                    HStack(spacing: 12) {
+                        Button("キャンセル") {
+                            isPresented = false
+                            text = ""
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .border(Color.gray)
+                        .foregroundColor(.gray)
+
+                        Button("確認") {
+                            onConfirm()
+                            isPresented = false
+                            text = ""
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .disabled(text.isEmpty)
+                    }
+                }
+                .padding()
+            }
     }
+}
+
+extension View {
+    func textFieldAlert(
+        isPresented: Binding<Bool>,
+        title: String,
+        message: String,
+        text: Binding<String>,
+        placeholder: String = "",
+        onConfirm: @escaping () -> Void
+    ) -> some View {
+        self.modifier(TextFieldAlert(
+            isPresented: isPresented,
+            title: title,
+            message: message,
+            text: text,
+            placeholder: placeholder,
+            onConfirm: onConfirm
+        ))
+    }
+}
+
+#Preview {
+    Text("プレビュー")
+        .textFieldAlert(
+            isPresented: .constant(true),
+            title: "タブ名を変更",
+            message: "新しいタブ名を入力してください",
+            text: .constant(""),
+            placeholder: "タブ名",
+            onConfirm: { }
+        )
 }
 ```
 
-## 各メソッドの説明
+## ViewModifier について
 
-| メソッド               | 説明                             |
-| ---------------------- | -------------------------------- |
-| `addTask`              | 新しいタスクを追加します         |
-| `updateTask`           | タスクを更新します               |
-| `deleteTask`           | タスクを削除します               |
-| `toggleTaskCompletion` | タスクの完了状態を切り替えます   |
-| `deleteAllTasks`       | 特定のタブの全タスクを削除します |
+ViewModifierは、既存のビューに機能を追加するための仕組みです。このモディファイアは、テキスト入力を伴うアラートを簡単に表示できます。
 
-## @MainActor について
+## 使用例
 
-SwiftUIでUI更新を行う際には、メインスレッドで実行する必要があります。`@MainActor`はメインスレッドで実行することを指定します。
+```swift
+@State private var showingRenameTab = false
+@State private var newTabName = ""
+
+// ビュー内
+.textFieldAlert(
+    isPresented: $showingRenameTab,
+    title: "タブ名を変更",
+    message: "新しいタブ名を入力してください",
+    text: $newTabName,
+    placeholder: "タブ名",
+    onConfirm: {
+        // タブ名更新処理
+    }
+)
+```
 
 ## 次のステップへ
 
-次は、タブを操作するためのサービス`ToDoTabService`を作成します。
+次は、これまで実装したコンポーネントを統合して、全体を整えます。

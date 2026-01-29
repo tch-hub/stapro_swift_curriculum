@@ -1,94 +1,59 @@
-# ステップ10: タスク一覧の表示
+# ステップ6: ToDoTabServiceの実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## HomeView.swift の修正
+## ToDoTabService.swift の作成
 
-前のステップで作成した`HomeView`を以下のように修正します：
+`Services/`フォルダに`ToDoTabService.swift`を作成し、以下のコードを記述します：
 
 ```swift
-import SwiftUI
+import Foundation
 import SwiftData
 
-struct HomeView: View {
-    @Environment(\.modelContext) private var modelContext
-    @State private var tabs: [ToDoTab] = []
-    @State private var tasks: [ToDoTask] = []
-    @State private var selectedTabId: UUID?
-    @Binding var navigationPath: [NavigationItem]
-
-    var filteredTasks: [ToDoTask] {
-        guard let selectedTabId else { return [] }
-        return tasks.filter { $0.tabId == selectedTabId }
+class ToDoTabService {
+    @MainActor
+    static func addTab(_ tab: ToDoTab, to modelContext: ModelContext) {
+        modelContext.insert(tab)
+        try? modelContext.save()
     }
 
-    var body: some View {
-        VStack {
-            if !tabs.isEmpty {
-                Picker("タブを選択", selection: $selectedTabId) {
-                    ForEach(tabs) { tab in
-                        Text(tab.name).tag(Optional(tab.id))
-                    }
-                }
-                .pickerStyle(.menu)
-                .onChange(of: selectedTabId) { _, _ in
-                    loadTasks()
-                }
-            }
-
-            List {
-                ForEach(filteredTasks) { task in
-                    HStack {
-                        Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                        Text(task.title)
-                            .strikethrough(task.isCompleted)
-                    }
-                }
-            }
-
-            HStack {
-                Button(action: {
-                    navigationPath.append(NavigationItem(id: .tabManage))
-                }) {
-                    Text("タブ管理")
-                }
-                .padding()
-            }
-        }
-        .navigationTitle("ToDoリスト")
-        .onAppear {
-            loadTabs()
-            loadTasks()
-        }
+    @MainActor
+    static func updateTab(_ tab: ToDoTab, modelContext: ModelContext) {
+        try? modelContext.save()
     }
 
-    private func loadTabs() {
+    @MainActor
+    static func deleteTab(_ tab: ToDoTab, from modelContext: ModelContext) {
+        // タブに属するタスクをすべて削除
+        ToDoTaskService.deleteAllTasks(for: tab.id, from: modelContext)
+        // タブを削除
+        modelContext.delete(tab)
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func getAllTabs(from modelContext: ModelContext) -> [ToDoTab] {
         let descriptor = FetchDescriptor<ToDoTab>()
-        tabs = (try? modelContext.fetch(descriptor)) ?? []
-        selectedTabId = tabs.first?.id
-    }
-
-    private func loadTasks() {
-        let descriptor = FetchDescriptor<ToDoTask>()
-        tasks = (try? modelContext.fetch(descriptor)) ?? []
+        return (try? modelContext.fetch(descriptor)) ?? []
     }
 }
 ```
 
-## 新しい要素
+## 各メソッドの説明
 
-- `filteredTasks`: 選択されたタブに属するタスクのみをフィルタリングします
-- `List`: タスクを一覧表示するUIコンポーネントです
-- `onChange`: タブが変更されたときに自動的にタスク一覧を更新します
-- `strikethrough`: 完了したタスクに取り消し線を表示します
+| メソッド     | 説明                                     |
+| ------------ | ---------------------------------------- |
+| `addTab`     | 新しいタブを追加します                   |
+| `updateTab`  | タブを更新します                         |
+| `deleteTab`  | タブを削除します（関連するタスクも削除） |
+| `getAllTabs` | すべてのタブを取得します                 |
 
-## チェックボックスの表示
+## deleteTab の重要な処理
 
-- 完了していないタスク: `circle`（空の円）
-- 完了したタスク: `checkmark.circle.fill`（チェック付き円）
+タブを削除する際には、そのタブに属するすべてのタスクも削除する必要があります。そのため、`ToDoTaskService.deleteAllTasks`を呼び出して、関連するタスクも削除しています。
 
 ## 次のステップへ
 
-次は、新しいタスクを追加する機能を実装します。
+次は、ビュー（画面）の基本構造を作成します。ナビゲーションと初期画面を実装します。

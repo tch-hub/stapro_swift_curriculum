@@ -1,84 +1,77 @@
-# ステップ15: コンポーネント化（ListItem）
+# ステップ8: ContentView と MainStack の作成
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## コンポーネント化とは
+## ContentView.swift の作成
 
-コードの重複を減らすために、よく使う部品を独立した「コンポーネント」として分割することです。
-
-## ListItem.swift の作成
-
-`Components/`フォルダに`ListItem.swift`を作成します：
+`Screens/Views/`フォルダに`ContentView.swift`を作成します。このビューはアプリ起動時に最初に表示されます：
 
 ```swift
 import SwiftUI
 
-struct ListItem: View {
-    let title: String       // タスクのタイトル
-    let isCompleted: Bool   // 完了しているかどうか
-    let onToggle: () -> Void // チェックボックスが押された時の処理
+struct ContentView: View {
+    @State private var isInitialized = false
 
     var body: some View {
-        HStack {
-            // チェックボックスボタン
-            Button(action: onToggle) {
-                Image(systemName: isCompleted ? "checkmark.square.fill" : "square")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(isCompleted ? .gray : .blue) // 完了ならグレー、未完了なら青
+        if isInitialized {
+            MainStack()
+        } else {
+            VStack {
+                Text("アプリを準備中...")
+                ProgressView()
             }
-            .buttonStyle(PlainButtonStyle()) // リスト内でのボタン反応範囲を制御
-
-            // タスク名
-            Text(title)
-                .font(.body)
-                .foregroundColor(isCompleted ? .gray : .primary) // 完了なら文字もグレー
-                .strikethrough(isCompleted) // 完了なら取り消し線
-            
-            Spacer()
-        }
-        .padding(.vertical, 8) // 上下の余白
-        .contentShape(Rectangle()) // タップ領域を行全体に広げる
-        .onTapGesture {
-            onToggle() // 行のどこを押してもチェックが切り替わるようにする
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    isInitialized = true
+                }
+            }
         }
     }
 }
 
-// プレビューで見た目を確認
 #Preview {
-    VStack {
-        // 未完了パターン
-        ListItem(title: "牛乳を買う", isCompleted: false, onToggle: {})
-        
-        // 完了パターン
-        ListItem(title: "部屋の掃除", isCompleted: true, onToggle: {})
-    }
-    .padding()
+    ContentView()
 }
 ```
 
-## HomeView での使用
+## MainStack.swift の作成
 
-`HomeView`のリスト部分を以下のように修正します：
+`Screens/Views/Main/`フォルダを作成し、その中に`MainStack.swift`を作成します：
 
 ```swift
-List {
-    ForEach(filteredTasks) { task in
-        ListItem(task: task, onToggleCompletion: toggleTaskCompletion)
+import SwiftUI
+
+struct MainStack: View {
+    @State private var navigationPath: [NavigationItem] = []
+
+    var body: some View {
+        NavigationStack(path: $navigationPath) {
+            HomeView(navigationPath: $navigationPath)
+                .navigationDestination(for: NavigationItem.self) { item in
+                    switch item.id {
+                    case .home:
+                        HomeView(navigationPath: $navigationPath)
+                    case .tabManage:
+                        TabManageView()
+                    }
+                }
+        }
     }
-    .onDelete(perform: deleteTask)
+}
+
+#Preview {
+    MainStack()
 }
 ```
 
-## コンポーネント化の利点
+## 各要素の説明
 
-1. **再利用性**: 同じコンポーネントを複数の場所で使えます
-2. **可読性**: コードが短くて読みやすくなります
-3. **保守性**: 修正が必要な場合、1箇所だけ修正すればよいです
+- `ContentView`: アプリ起動時の初期化処理を行い、その後`MainStack`に遷移します
+- `MainStack`: NavigationStackを使って、複数の画面を管理します
+- `navigationDestination`: `NavigationItem`の内容に応じて、表示する画面を切り替えます
 
 ## 次のステップへ
 
-次は、カスタムアラートなどの追加コンポーネントを実装します。
+次は、ホーム画面（タスク一覧）を作成します。

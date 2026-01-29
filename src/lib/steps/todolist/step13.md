@@ -1,51 +1,105 @@
-# ステップ12: タスク完了機能の実装
+# ステップ14: TabManageView の作成（基本構造）
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## HomeView.swift の修正
+## TabManageView.swift の作成
 
-リスト内のタスク行をタップして完了状態を切り替える機能を追加します：
+`Screens/Views/Main/`フォルダに`TabManageView.swift`を作成します：
 
 ```swift
-List {
-    ForEach(filteredTasks) { task in
-        HStack {
-            Button(action: {
-                toggleTaskCompletion(task)
-            }) {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(task.isCompleted ? .green : .gray)
-            }
-            .buttonStyle(PlainButtonStyle())
+import SwiftUI
+import SwiftData
 
-            Text(task.title)
-                .strikethrough(task.isCompleted)
+struct TabManageView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) var dismiss
+    @State private var tabs: [ToDoTab] = []
+    @State private var showingAddTab = false
+    @State private var newTabName = ""
+
+    var body: some View {
+        VStack {
+            List {
+                ForEach(tabs) { tab in
+                    Text(tab.name)
+                }
+                .onDelete(perform: deleteTab)
+            }
+
+            HStack {
+                Button(action: { showingAddTab = true }) {
+                    Label("タブを追加", systemImage: "plus")
+                }
+                .padding()
+
+                Button("戻る") {
+                    dismiss()
+                }
+                .padding()
+            }
         }
+        .navigationTitle("タブ管理")
+        .sheet(isPresented: $showingAddTab) {
+            VStack {
+                TextField("タブ名を入力", text: $newTabName)
+                    .textFieldStyle(.roundedBorder)
+                    .padding()
+
+                HStack {
+                    Button("キャンセル") {
+                        showingAddTab = false
+                        newTabName = ""
+                    }
+
+                    Button("追加") {
+                        addTab()
+                    }
+                    .disabled(newTabName.isEmpty)
+                }
+                .padding()
+            }
+        }
+        .onAppear {
+            loadTabs()
+        }
+    }
+
+    private func loadTabs() {
+        let descriptor = FetchDescriptor<ToDoTab>()
+        tabs = (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    private func addTab() {
+        let newTab = ToDoTab(name: newTabName)
+        ToDoTabService.addTab(newTab, to: modelContext)
+        newTabName = ""
+        showingAddTab = false
+        loadTabs()
+    }
+
+    private func deleteTab(offsets: IndexSet) {
+        for index in offsets {
+            let tabToDelete = tabs[index]
+            ToDoTabService.deleteTab(tabToDelete, from: modelContext)
+        }
+        loadTabs()
     }
 }
 
-private func toggleTaskCompletion(_ task: ToDoTask) {
-    ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
-    loadTasks()
+#Preview {
+    TabManageView()
 }
 ```
 
-## 重要な修正点
+## 各要素の説明
 
-1. `ToDoTask`は`Identifiable`なので、`ForEach`に`id`指定は不要です
-2. Button内の画像をタップすると完了状態が切り替わります
-3. 完了したタスクは緑色で表示されます
-
-## toggleTaskCompletion メソッド
-
-このメソッドは：
-
-1. サービスを通じてタスクの完了状態を反転させます
-2. データベースに変更を保存します
-3. UI更新のためにタスク一覧を再度読み込みます
+- `loadTabs()`: データベースからすべてのタブを読み込みます
+- `addTab()`: 新しいタブを追加します
+- `deleteTab()`: タブを削除します（関連するタスクも削除されます）
+- `@Environment(\.dismiss)`: 前の画面に戻るために使用します
 
 ## 次のステップへ
 
-次は、タスクを削除する機能を実装します。
+次は、このビューをより整えて、エラーハンドリングを追加します。

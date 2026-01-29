@@ -1,77 +1,70 @@
-# ステップ8: ContentView と MainStack の作成
+# ステップ5: ToDoTaskServiceの実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## ContentView.swift の作成
+## サービスクラスとは
 
-`Screens/Views/`フォルダに`ContentView.swift`を作成します。このビューはアプリ起動時に最初に表示されます：
+データの追加、更新、削除などの操作をまとめるクラスです。ビューから直接データベースにアクセスするのではなく、サービスを通して操作することで、コードを整理します。
+
+## ToDoTaskService.swift の作成
+
+`Services/`フォルダに`ToDoTaskService.swift`を作成し、以下のコードを記述します：
 
 ```swift
-import SwiftUI
+import Foundation
+import SwiftData
 
-struct ContentView: View {
-    @State private var isInitialized = false
+class ToDoTaskService {
+    @MainActor
+    static func addTask(_ task: ToDoTask, to modelContext: ModelContext) {
+        modelContext.insert(task)
+        try? modelContext.save()
+    }
 
-    var body: some View {
-        if isInitialized {
-            MainStack()
-        } else {
-            VStack {
-                Text("アプリを準備中...")
-                ProgressView()
-            }
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    isInitialized = true
-                }
-            }
+    @MainActor
+    static func updateTask(_ task: ToDoTask, modelContext: ModelContext) {
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func deleteTask(_ task: ToDoTask, from modelContext: ModelContext) {
+        modelContext.delete(task)
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func toggleTaskCompletion(_ task: ToDoTask, modelContext: ModelContext) {
+        task.isCompleted.toggle()
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func deleteAllTasks(for tabId: UUID, from modelContext: ModelContext) {
+        let descriptor = FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })
+        if let tasks = try? modelContext.fetch(descriptor) {
+            tasks.forEach { modelContext.delete($0) }
+            try? modelContext.save()
         }
     }
 }
-
-#Preview {
-    ContentView()
-}
 ```
 
-## MainStack.swift の作成
+## 各メソッドの説明
 
-`Screens/Views/Main/`フォルダを作成し、その中に`MainStack.swift`を作成します：
+| メソッド               | 説明                             |
+| ---------------------- | -------------------------------- |
+| `addTask`              | 新しいタスクを追加します         |
+| `updateTask`           | タスクを更新します               |
+| `deleteTask`           | タスクを削除します               |
+| `toggleTaskCompletion` | タスクの完了状態を切り替えます   |
+| `deleteAllTasks`       | 特定のタブの全タスクを削除します |
 
-```swift
-import SwiftUI
+## @MainActor について
 
-struct MainStack: View {
-    @State private var navigationPath: [NavigationItem] = []
-
-    var body: some View {
-        NavigationStack(path: $navigationPath) {
-            HomeView(navigationPath: $navigationPath)
-                .navigationDestination(for: NavigationItem.self) { item in
-                    switch item.id {
-                    case .home:
-                        HomeView(navigationPath: $navigationPath)
-                    case .tabManage:
-                        TabManageView()
-                    }
-                }
-        }
-    }
-}
-
-#Preview {
-    MainStack()
-}
-```
-
-## 各要素の説明
-
-- `ContentView`: アプリ起動時の初期化処理を行い、その後`MainStack`に遷移します
-- `MainStack`: NavigationStackを使って、複数の画面を管理します
-- `navigationDestination`: `NavigationItem`の内容に応じて、表示する画面を切り替えます
+SwiftUIでUI更新を行う際には、メインスレッドで実行する必要があります。`@MainActor`はメインスレッドで実行することを指定します。
 
 ## 次のステップへ
 
-次は、ホーム画面（タスク一覧）を作成します。
+次は、タブを操作するためのサービス`ToDoTabService`を作成します。

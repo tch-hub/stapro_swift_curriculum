@@ -1,59 +1,62 @@
-# ステップ6: ToDoTabServiceの実装
+# ステップ19: CustomList コンポーネントの実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## ToDoTabService.swift の作成
+## CustomList.swift の作成
 
-`Services/`フォルダに`ToDoTabService.swift`を作成し、以下のコードを記述します：
+`Components/`フォルダに`CustomList.swift`を作成します。このコンポーネントは、スタイルをカスタマイズしたリストを提供します：
 
 ```swift
-import Foundation
-import SwiftData
+import SwiftUI
 
-class ToDoTabService {
-    @MainActor
-    static func addTab(_ tab: ToDoTab, to modelContext: ModelContext) {
-        modelContext.insert(tab)
-        try? modelContext.save()
+struct CustomList<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        List {
+            content
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
     }
+}
 
-    @MainActor
-    static func updateTab(_ tab: ToDoTab, modelContext: ModelContext) {
-        try? modelContext.save()
-    }
-
-    @MainActor
-    static func deleteTab(_ tab: ToDoTab, from modelContext: ModelContext) {
-        // タブに属するタスクをすべて削除
-        ToDoTaskService.deleteAllTasks(for: tab.id, from: modelContext)
-        // タブを削除
-        modelContext.delete(tab)
-        try? modelContext.save()
-    }
-
-    @MainActor
-    static func getAllTabs(from modelContext: ModelContext) -> [ToDoTab] {
-        let descriptor = FetchDescriptor<ToDoTab>()
-        return (try? modelContext.fetch(descriptor)) ?? []
+#Preview {
+    CustomList {
+        ForEach(0..<5, id: \.self) { index in
+            Text("アイテム \(index)")
+        }
     }
 }
 ```
 
-## 各メソッドの説明
+## CustomListの特徴
 
-| メソッド     | 説明                                     |
-| ------------ | ---------------------------------------- |
-| `addTab`     | 新しいタブを追加します                   |
-| `updateTab`  | タブを更新します                         |
-| `deleteTab`  | タブを削除します（関連するタスクも削除） |
-| `getAllTabs` | すべてのタブを取得します                 |
+- `@ViewBuilder`: 複数の子ビューを受け入れるための仕組みです
+- `.listStyle(.plain)`: デフォルトのListスタイルを削除
+- `.scrollContentBackground(.hidden)`: スクロール背景を非表示
 
-## deleteTab の重要な処理
+## HomeView の修正
 
-タブを削除する際には、そのタブに属するすべてのタスクも削除する必要があります。そのため、`ToDoTaskService.deleteAllTasks`を呼び出して、関連するタスクも削除しています。
+`List`を`CustomList`に置き換えます：
+
+```swift
+CustomList {
+    ForEach(filteredTasks) { task in
+        ListItem(task: task, onToggleCompletion: toggleTaskCompletion)
+    }
+    .onDelete(perform: deleteTask)
+}
+```
+
+## 利点
+
+1. **統一されたスタイル**: アプリ全体で同じリストスタイルを使用
+2. **カスタマイズが容易**: 見た目の変更が必要な場合、1箇所だけ修正すればよい
+3. **再利用性**: 複数の画面でリストを使う際に便利
 
 ## 次のステップへ
 
-次は、ビュー（画面）の基本構造を作成します。ナビゲーションと初期画面を実装します。
+次は、アプリの初期データ設定と最終調整を行います。

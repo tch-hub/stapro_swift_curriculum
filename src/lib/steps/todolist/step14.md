@@ -1,56 +1,78 @@
-# ステップ13: タスク削除機能の実装
+# ステップ9: HomeView の作成（タブ選択）
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## HomeView.swift の修正
+## HomeView.swift の作成
 
-リスト内でスワイプして削除できるようにします：
+`Screens/Views/Main/`フォルダに`HomeView.swift`を作成します：
 
 ```swift
-List {
-    ForEach(filteredTasks) { task in
-        HStack {
-            Button(action: {
-                toggleTaskCompletion(task)
-            }) {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(task.isCompleted ? .green : .gray)
-            }
-            .buttonStyle(PlainButtonStyle())
+import SwiftUI
+import SwiftData
 
-            Text(task.title)
-                .strikethrough(task.isCompleted)
+struct HomeView: View {
+    @Environment(\.modelContext) private var modelContext
+    @State private var tabs: [ToDoTab] = []
+    @State private var selectedTabId: UUID?
+    @Binding var navigationPath: [NavigationItem]
+
+    var body: some View {
+        VStack {
+            if !tabs.isEmpty {
+                Picker("タブを選択", selection: $selectedTabId) {
+                    ForEach(tabs) { tab in
+                        Text(tab.name).tag(Optional(tab.id))
+                    }
+                }
+                .pickerStyle(.menu)
+            }
+
+            VStack {
+                Text("タスク一覧がここに表示されます")
+                    .foregroundColor(.gray)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            HStack {
+                Button(action: {
+                    navigationPath.append(NavigationItem(id: .tabManage))
+                }) {
+                    Text("タブ管理")
+                }
+                .padding()
+            }
+        }
+        .padding()
+        .navigationTitle("ToDoリスト")
+        .onAppear {
+            loadTabs()
         }
     }
-    .onDelete(perform: deleteTask)
+
+    private func loadTabs() {
+        let descriptor = FetchDescriptor<ToDoTab>()
+        tabs = (try? modelContext.fetch(descriptor)) ?? []
+        selectedTabId = tabs.first?.id
+    }
 }
 
-private func deleteTask(offsets: IndexSet) {
-    for index in offsets {
-        let taskToDelete = filteredTasks[index]
-        ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
-    }
-    loadTasks()
+#Preview {
+    HomeView(navigationPath: .constant([]))
 }
 ```
 
-## .onDelete モディファイア
+## コードの説明
 
-- `.onDelete(perform:)`: リスト内でスワイプして削除できるようにします
-- `offsets`: 削除対象の行のインデックスを示します
-- 削除後は`loadTasks()`でUI更新します
+- `@Environment(\.modelContext)`: SwiftDataのコンテキストを取得して、データベースにアクセスします
+- `Picker`: タブを選択するドロップダウンメニューです
+- `loadTabs()`: アプリ起動時にデータベースからタブを読み込みます
 
-## 削除の流れ
+## Pickerの説明
 
-1. ユーザーがタスクをスワイプします
-2. 削除ボタンが表示されます
-3. ユーザーが削除ボタンをタップします
-4. `deleteTask()`メソッドが呼び出されます
-5. サービスを通じてタスクをデータベースから削除します
-6. UI更新のためにタスク一覧を再度読み込みます
+`Picker`は選択肢を提示するUIコンポーネントです。`pickerStyle(.menu)`でメニュー形式で表示されます。
 
 ## 次のステップへ
 
-次は、タブを管理するための画面`TabManageView`を作成します。
+次は、タスク一覧を表示する部分を実装します。
