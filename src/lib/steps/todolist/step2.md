@@ -15,56 +15,43 @@ struct ToDoListItem: View {
     let onToggle: () -> Void
 
     var body: some View {
-        HStack {
-            Button(action: onToggle) {
-                Image(systemName: isCompleted ? "checkmark.square.fill" : "square")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(isCompleted ? .gray : .blue)
+        Button(action: onToggle) {
+            HStack(spacing: 12) {
+                Image(systemName: isCompleted
+                      ? "checkmark.circle.fill"
+                      : "circle")
+                    .foregroundColor(isCompleted ? .gray : .accentColor)
+
+                Text(title)
+                    .foregroundColor(isCompleted ? .gray : .primary)
+                    .strikethrough(isCompleted)
+
+                Spacer()
             }
-            .buttonStyle(PlainButtonStyle())
-
-            Text(title)
-                .font(.body)
-                .foregroundColor(isCompleted ? .gray : .primary)
-                .strikethrough(isCompleted)
-            
-            Spacer()
+            .padding(.vertical, 8)
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 16) // 【重要】手動で左右の余白をつける（復活）
-        .frame(maxWidth: .infinity, alignment: .leading) // 【新規追加】横幅を画面いっぱいに確保する
-        .background(Color(.systemBackground)) // 背景色
-        .contentShape(Rectangle())
-        .onTapGesture {
-            onToggle()
-        }
+        .buttonStyle(.plain)
     }
 }
 
-// #Preview はそのままでOK
-
-// #Preview はそのままでOK
-
-// プレビューで見た目を確認
 #Preview {
-    // プレビュー用に一時的な「状態」を持つ親ビューを作る
     struct PreviewWrapper: View {
-        @State private var isCompleted = false
-        
+        @State private var completed = false
+
         var body: some View {
-            ListItem(
-                title: "タップして状態切り替え",
-                isCompleted: isCompleted,
-                onToggle: {
-                    // タップされたら状態を反転させる
-                    isCompleted.toggle()
+            List {
+                ToDoListItem(
+                    title: "タップで状態切り替え",
+                    isCompleted: completed
+                ) {
+                    completed.toggle()
                 }
-            )
+            }
+            .listStyle(.plain)
         }
     }
-    
+
     return PreviewWrapper()
-        .padding()
 }
+
 ```
