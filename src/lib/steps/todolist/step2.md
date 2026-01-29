@@ -32,13 +32,17 @@ struct ToDoListItem: View {
             Spacer()
         }
         .padding(.vertical, 8)
-        .background(Color(.systemBackground)) // 背景色はスワイプ時の見栄えのために残す
+        .padding(.horizontal, 16) // 【重要】手動で左右の余白をつける（復活）
+        .frame(maxWidth: .infinity, alignment: .leading) // 【新規追加】横幅を画面いっぱいに確保する
+        .background(Color(.systemBackground)) // 背景色
         .contentShape(Rectangle())
         .onTapGesture {
             onToggle()
         }
     }
 }
+
+// #Preview はそのままでOK
 
 // #Preview はそのままでOK
 

@@ -18,8 +18,8 @@ struct CustomList<T: Identifiable, Content: View>: View {
         List {
             ForEach(items) { item in
                 rowContent(item)
-                    // .listRowInsets(EdgeInsets())  <-- 【削除】これを消します
-                    .listRowSeparator(.hidden)    // 区切り線を消す設定は残してOK
+                    .listRowInsets(EdgeInsets()) // 【重要】これを復活させます（システム余白をゼロにする）
+                    .listRowSeparator(.hidden)
             }
             .onDelete(perform: delete)
         }
@@ -27,7 +27,8 @@ struct CustomList<T: Identifiable, Content: View>: View {
         .scrollContentBackground(.hidden)
         .background(Color(.systemGray6))
     }
-
+    
+    // ... deleteメソッドなどはそのまま ...
     private func delete(indexSet: IndexSet) {
         for index in indexSet {
             let item = items[index]
