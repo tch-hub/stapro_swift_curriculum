@@ -32,16 +32,15 @@ struct ToDoListItem: View {
             Spacer()
         }
         .padding(.vertical, 8)
-        // 【追加】左右に標準的な余白を入れる（これで見切れを防ぐ）
-        .padding(.horizontal, 16)
-        // 【追加】背景色を白（ダークモード対応）にして、裏透けを防ぐ
-        .background(Color(.systemBackground))
+        .background(Color(.systemBackground)) // 背景色はスワイプ時の見栄えのために残す
         .contentShape(Rectangle())
         .onTapGesture {
             onToggle()
         }
     }
 }
+
+// #Preview はそのままでOK
 
 // プレビューで見た目を確認
 #Preview {
@@ -51,7 +50,7 @@ struct ToDoListItem: View {
         
         var body: some View {
             ListItem(
-                title: "タップして動作確認",
+                title: "タップして状態切り替え",
                 isCompleted: isCompleted,
                 onToggle: {
                     // タップされたら状態を反転させる

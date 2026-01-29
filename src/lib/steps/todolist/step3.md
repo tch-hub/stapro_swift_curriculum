@@ -9,27 +9,25 @@
 ```swift
 import SwiftUI
 
-/// どんなデータ(T)でも一覧表示できる再利用可能なリスト
-struct List<T: Identifiable, Content: View>: View {
-    let items: [T]                 // 表示するデータの配列
-    let onDelete: (T) -> Void      // 削除操作が行われた時の処理
-    @ViewBuilder let rowContent: (T) -> Content // 各行の見た目（ここを作るのは親の責任）
+struct CustomList<T: Identifiable, Content: View>: View {
+    let items: [T]
+    let onDelete: (T) -> Void
+    @ViewBuilder let rowContent: (T) -> Content
 
     var body: some View {
         List {
             ForEach(items) { item in
-                rowContent(item) // 親から渡された「見た目」を表示する
-                    .listRowInsets(EdgeInsets()) // デフォルトの余白を削除して端まで広げる
-                    .listRowSeparator(.hidden)   // デフォルトの区切り線を消す
+                rowContent(item)
+                    // .listRowInsets(EdgeInsets())  <-- 【削除】これを消します
+                    .listRowSeparator(.hidden)    // 区切り線を消す設定は残してOK
             }
-            .onDelete(perform: delete) // スワイプ削除機能
+            .onDelete(perform: delete)
         }
-        .listStyle(.plain) // シンプルなスタイル
-        .scrollContentBackground(.hidden) // 背景を透明にする
-        .background(Color(.systemGray6))  // 背景色（薄いグレー）
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(Color(.systemGray6))
     }
 
-    /// IndexSet（何番目）からデータ（T）を特定して削除処理を呼ぶ
     private func delete(indexSet: IndexSet) {
         for index in indexSet {
             let item = items[index]
@@ -37,8 +35,6 @@ struct List<T: Identifiable, Content: View>: View {
         }
     }
 }
-
-// プレビュー：さっき作った ToDoListItem を入れて表示してみる
 #Preview {
     // プレビュー内でデータを管理するためのラッパーView
     struct PreviewWrapper: View {
