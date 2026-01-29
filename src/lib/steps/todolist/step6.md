@@ -1,68 +1,123 @@
-# ステップ19: List コンポーネントの実装
+# ステップ18: TextFieldAlertModifier の実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## List.swift の作成
+## TextFieldAlertModifier.swift の作成
+
+`Components/`フォルダに`TextFieldAlertModifier.swift`を作成します：
 
 ```swift
 import SwiftUI
 
-/// どんなデータ(T)でも一覧表示できる再利用可能なリスト
-struct List<T: Identifiable, Content: View>: View {
-    let items: [T]                 // 表示するデータの配列
-    let onDelete: (T) -> Void      // 削除操作が行われた時の処理
-    @ViewBuilder let rowContent: (T) -> Content // 各行の見た目（ここを作るのは親の責任）
+struct TextFieldAlert: ViewModifier {
+    @Binding var isPresented: Bool
+    let title: String
+    let message: String
+    @Binding var text: String
+    let placeholder: String
+    let onConfirm: () -> Void
 
-    var body: some View {
-        List {
-            ForEach(items) { item in
-                rowContent(item) // 親から渡された「見た目」を表示する
-                    .listRowInsets(EdgeInsets()) // デフォルトの余白を削除して端まで広げる
-                    .listRowSeparator(.hidden)   // デフォルトの区切り線を消す
+    func body(content: Content) -> some View {
+        content
+            .sheet(isPresented: $isPresented) {
+                VStack(spacing: 16) {
+                    Text(title)
+                        .font(.headline)
+                        .fontWeight(.bold)
+
+                    Text(message)
+                        .font(.body)
+                        .foregroundColor(.gray)
+
+                    TextField(placeholder, text: $text)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.vertical, 8)
+
+                    HStack(spacing: 12) {
+                        Button("キャンセル") {
+                            isPresented = false
+                            text = ""
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .border(Color.gray)
+                        .foregroundColor(.gray)
+
+                        Button("確認") {
+                            onConfirm()
+                            isPresented = false
+                            text = ""
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .disabled(text.isEmpty)
+                    }
+                }
+                .padding()
             }
-            .onDelete(perform: delete) // スワイプ削除機能
-        }
-        .listStyle(.plain) // シンプルなスタイル
-        .scrollContentBackground(.hidden) // 背景を透明にする
-        .background(Color(.systemGray6))  // 背景色（薄いグレー）
-    }
-
-    /// IndexSet（何番目）からデータ（T）を特定して削除処理を呼ぶ
-    private func delete(indexSet: IndexSet) {
-        for index in indexSet {
-            let item = items[index]
-            onDelete(item)
-        }
     }
 }
 
-// プレビュー：さっき作った ToDoListItem を入れて表示してみる
+extension View {
+    func textFieldAlert(
+        isPresented: Binding<Bool>,
+        title: String,
+        message: String,
+        text: Binding<String>,
+        placeholder: String = "",
+        onConfirm: @escaping () -> Void
+    ) -> some View {
+        self.modifier(TextFieldAlert(
+            isPresented: isPresented,
+            title: title,
+            message: message,
+            text: text,
+            placeholder: placeholder,
+            onConfirm: onConfirm
+        ))
+    }
+}
+
 #Preview {
-    // プレビュー用のダミーデータ型（まだデータベースは使いません）
-    struct MockData: Identifiable {
-        let id = UUID()
-        let name: String
-        let isCompleted: Bool
-    }
-    
-    // ダミーデータ
-    let mockItems = [
-        MockData(name: "牛乳を買う", isCompleted: false),
-        MockData(name: "部屋の掃除", isCompleted: true),
-        MockData(name: "Swiftの勉強", isCompleted: false)
-    ]
-    
-    return List(items: mockItems, onDelete: { item in
-        print("\(item.name) を削除しました")
-    }) { item in
-        // ここで Step 2 で作った部品を使う！
-        ToDoListItem(
-            title: item.name,
-            isCompleted: item.isCompleted,
-            onToggle: { print("チェック: \(item.name)") }
+    Text("プレビュー")
+        .textFieldAlert(
+            isPresented: .constant(true),
+            title: "タブ名を変更",
+            message: "新しいタブ名を入力してください",
+            text: .constant(""),
+            placeholder: "タブ名",
+            onConfirm: { }
         )
-    }
 }
 ```
+
+## ViewModifier について
+
+ViewModifierは、既存のビューに機能を追加するための仕組みです。このモディファイアは、テキスト入力を伴うアラートを簡単に表示できます。
+
+## 使用例
+
+```swift
+@State private var showingRenameTab = false
+@State private var newTabName = ""
+
+// ビュー内
+.textFieldAlert(
+    isPresented: $showingRenameTab,
+    title: "タブ名を変更",
+    message: "新しいタブ名を入力してください",
+    text: $newTabName,
+    placeholder: "タブ名",
+    onConfirm: {
+        // タブ名更新処理
+    }
+)
+```
+
+## 次のステップへ
+
+次は、これまで実装したコンポーネントを統合して、全体を整えます。

@@ -9,34 +9,36 @@
 ```swift
 import SwiftUI
 
-struct ListItem: View {
-    let title: String       // タスクのタイトル
-    let isCompleted: Bool   // 完了しているかどうか
-    let onToggle: () -> Void // チェックボックスが押された時の処理
+struct ToDoListItem: View {
+    let title: String
+    let isCompleted: Bool
+    let onToggle: () -> Void
 
     var body: some View {
         HStack {
-            // チェックボックスボタン
             Button(action: onToggle) {
-                Image(systemName: isCompleted ? "checkmark.square.fill" : "cicle")
+                Image(systemName: isCompleted ? "checkmark.square.fill" : "square")
                     .resizable()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(isCompleted ? .gray : .blue) // 完了ならグレー、未完了なら青
+                    .foregroundColor(isCompleted ? .gray : .blue)
             }
-            .buttonStyle(PlainButtonStyle()) // リスト内でのボタン反応範囲を制御
+            .buttonStyle(PlainButtonStyle())
 
-            // タスク名
             Text(title)
                 .font(.body)
-                .foregroundColor(isCompleted ? .gray : .primary) // 完了なら文字もグレー
-                .strikethrough(isCompleted) // 完了なら取り消し線
+                .foregroundColor(isCompleted ? .gray : .primary)
+                .strikethrough(isCompleted)
             
             Spacer()
         }
-        .padding(.vertical, 8) // 上下の余白
-        .contentShape(Rectangle()) // タップ領域を行全体に広げる
+        .padding(.vertical, 8)
+        // 【追加】左右に標準的な余白を入れる（これで見切れを防ぐ）
+        .padding(.horizontal, 16)
+        // 【追加】背景色を白（ダークモード対応）にして、裏透けを防ぐ
+        .background(Color(.systemBackground))
+        .contentShape(Rectangle())
         .onTapGesture {
-            onToggle() // 行のどこを押してもチェックが切り替わるようにする
+            onToggle()
         }
     }
 }
