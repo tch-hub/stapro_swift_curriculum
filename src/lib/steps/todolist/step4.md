@@ -9,63 +9,42 @@
 `Components/`フォルダに`Alert.swift`を作成します：
 
 ```swift
-import SwiftUI
+struct DeleteConfirmationModifier: ViewModifier {
+    @Binding var isPresented: Bool
+    let onDelete: () -> Void
 
-struct Alert: View {
-    let title: String
-    let message: String
-    let primaryButtonText: String
-    let secondaryButtonText: String?
-    let primaryAction: () -> Void
-    let secondaryAction: (() -> Void)?
-
-    var body: some View {
-        VStack(spacing: 16) {
-            Text(title)
-                .font(.headline)
-                .fontWeight(.bold)
-
-            Text(message)
-                .font(.body)
-                .foregroundColor(.gray)
-
-            HStack(spacing: 12) {
-                if let secondaryButtonText = secondaryButtonText, let secondaryAction = secondaryAction {
-                    Button(action: secondaryAction) {
-                        Text(secondaryButtonText)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .border(Color.blue)
-                    }
-                    .foregroundColor(.blue)
+    func body(content: Content) -> some View {
+        content
+            .confirmationDialog(
+                "このタスクを削除しますか？",
+                isPresented: $isPresented
+            ) {
+                Button("削除", role: .destructive) {
+                    onDelete()
                 }
-
-                Button(action: primaryAction) {
-                    Text(primaryButtonText)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                }
+                Button("キャンセル", role: .cancel) {}
             }
-        }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(12)
-        .shadow(radius: 10)
     }
 }
 
 #Preview {
-    Alert(
-        title: "確認",
-        message: "このタスクを削除しますか？",
-        primaryButtonText: "削除",
-        secondaryButtonText: "キャンセル",
-        primaryAction: { },
-        secondaryAction: { }
-    )
+    struct PreviewWrapper: View {
+        @State private var showDialog = true
+
+        var body: some View {
+            Text("長押し or 削除")
+                .padding()
+                .deleteConfirmation(
+                    isPresented: $showDialog,
+                    onDelete: {}
+                )
+        }
+    }
+
+    return PreviewWrapper()
 }
+
+
 ```
 
 ## 各プロパティの説明
