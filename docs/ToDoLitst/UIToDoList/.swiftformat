@@ -1,3 +1,0 @@
---swiftversion 6.0
---disable andOperator, blankLinesBetweenChainedFunctions, elseOnSameLine, numberFormatting, preferKeyPath, redundantParens, redundantPattern, redundantReturn, trailingCommas, wrapMultilineStatementBraces
---enable isEmpty
