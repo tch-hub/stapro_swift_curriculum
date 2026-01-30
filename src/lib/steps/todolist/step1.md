@@ -79,4 +79,19 @@ SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使え
 ContentViewという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。  
 `WindowGroup {ContentView()}`は、コードを書くたびに画面をすぐに見られる機能です。これで、アプリの見た目をすぐに確認できます。
 
-#### ※ここまでの状態では画面に何も表示されないので次のステップに進んでください。
+### 3. ContentView.swiftに以下のコードを追加する
+
+```swift
+import SwiftUI
+import SwiftData
+
+struct ContentView: View {
+    var body: some View {
+        Text("ToDoList")
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```
