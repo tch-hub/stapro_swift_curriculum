@@ -40,19 +40,24 @@ List {
     // 削除機能が有効（onDelete が存在する）かどうかで分岐
     if let onDelete = onDelete {
         // データごとの行を作成
-        ForEach(items) { item in
+        ForEach(items.indices, id: \.self) { index in
             // 行の中身を表示
+            let item = items[index]
             rowContent(item)
-                // 各行の区切り線を表示する設定
-                .listRowSeparator(.visible)
+                // 先頭の上線は表示しない
+                .listRowSeparator(.hidden, edges: .top)
+                // 最後の下線は表示しない（境目だけ表示）
+                .listRowSeparator(index == items.count - 1 ? .hidden : .visible, edges: .bottom)
         }
         // スワイプ削除アクションを設定
         .onDelete(perform: onDelete)
     } else {
         // 削除機能がない場合
-        ForEach(items) { item in
+        ForEach(items.indices, id: \.self) { index in
+            let item = items[index]
             rowContent(item)
-                .listRowSeparator(.visible)
+                .listRowSeparator(.hidden, edges: .top)
+                .listRowSeparator(index == items.count - 1 ? .hidden : .visible, edges: .bottom)
         }
     }
 }
@@ -62,7 +67,7 @@ List {
 
 `onDelete` が渡されている場合は `.onDelete(perform: onDelete)` を適用してスワイプ削除を有効にし、渡されていない場合は単にリスト表示のみを行います。
 
-`List` コンポーネントを使用してデータを一覧表示します。`onDelete` が渡されている場合は `.onDelete(perform: onDelete)` を適用してスワイプ削除を有効にし、渡されていない場合は単にリスト表示のみを行います。各行の表示内容は `rowContent(item)` を呼び出すことで生成し、`.listRowSeparator(.visible)` で明示的に区切り線を表示しています。
+`List` コンポーネントを使用してデータを一覧表示します。`onDelete` が渡されている場合は `.onDelete(perform: onDelete)` を適用してスワイプ削除を有効にし、渡されていない場合は単にリスト表示のみを行います。各行の表示内容は `rowContent(item)` を呼び出すことで生成し、先頭の上線と最後の下線は隠して、行と行の境目だけに線が表示されるようにしています。
 
 ---
 
@@ -81,15 +86,19 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
     var body: some View {
         List {
             if let onDelete = onDelete {
-                ForEach(items) { item in
+                ForEach(items.indices, id: \.self) { index in
+                    let item = items[index]
                     rowContent(item)
-                        .listRowSeparator(.visible)
+                        .listRowSeparator(.hidden, edges: .top)
+                        .listRowSeparator(index == items.count - 1 ? .hidden : .visible, edges: .bottom)
                 }
                 .onDelete(perform: onDelete)
             } else {
-                ForEach(items) { item in
+                ForEach(items.indices, id: \.self) { index in
+                    let item = items[index]
                     rowContent(item)
-                        .listRowSeparator(.visible)
+                        .listRowSeparator(.hidden, edges: .top)
+                        .listRowSeparator(index == items.count - 1 ? .hidden : .visible, edges: .bottom)
                 }
             }
         }

@@ -57,7 +57,7 @@ struct HomeView: View {
                     .padding()
             } else {
                 TabHeaderView(
-                    tabs: tabs,
+                    tabs: tabs.map { .init(id: $0.id, name: $0.name) },
                     selectedTabId: $selectedTabId,
                     onManageTabs: {
                         navigationPath.append(NavigationItem(id: .tabManage))

@@ -46,7 +46,7 @@ TabHeaderView(
 ```swift
 if selectedTabId != nil && !tasks.isEmpty {
     // 1. タブが選択され、かつタスクがある場合：リストを表示
-    CustomList(items: tasks) { task in
+    CustomList(items: tasks, onDelete: nil) { task in
         ToDoListItem(
             title: task.title,
             isCompleted: task.isCompleted
@@ -62,6 +62,9 @@ if selectedTabId != nil && !tasks.isEmpty {
 ```
 
 リスト部分の条件分岐です。タスクがある場合はリストを表示し、それ以外の場合はステップ4で作った `EmptyStateView` を利用して「タスクなし」または「タブ未選択」の画面を表示します。
+
+`CustomList` は `onDelete` が省略できないため、削除機能を使わない場合は `onDelete: nil` を渡します。  
+また、`task.title` や `task.isCompleted` でエラーが出る場合は、ステップ7の `ToDoTask` に `title` と `isCompleted` を追加してください。
 
 ---
 
@@ -99,7 +102,7 @@ struct HomeView: View {
                 }
 
                 if selectedTabId != nil && !tasks.isEmpty {
-                    CustomList(items: tasks) { task in
+                    CustomList(items: tasks, onDelete: nil) { task in
                         ToDoListItem(
                             title: task.title,
                             isCompleted: task.isCompleted
