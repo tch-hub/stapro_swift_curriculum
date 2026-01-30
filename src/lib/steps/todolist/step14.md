@@ -1,12 +1,6 @@
-<script>
-    import {base} from '$app/paths';
-</script>
-
-
 ```swift
+// HomeView.swift
 import SwiftUI
-
-// MARK: - Home View
 
 /// ホーム画面（枠だけ作成）
 struct HomeView: View {

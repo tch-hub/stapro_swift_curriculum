@@ -1,8 +1,5 @@
-<script>
-    import {base} from '$app/paths';
-</script>
-
 ```swift
+// ToDoTaskService.swift
 import Foundation
 import SwiftData
 

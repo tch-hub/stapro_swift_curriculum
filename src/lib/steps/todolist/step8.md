@@ -1,8 +1,3 @@
-<script>
-    import {base} from '$app/paths';
-</script>
-
-
 ```swift
 import Foundation
 import SwiftData

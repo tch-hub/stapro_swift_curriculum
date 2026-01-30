@@ -1,12 +1,6 @@
-<script>
-    import {base} from '$app/paths';
-</script>
-
 ```swift
 import SwiftUI
-
-// MARK: - Navigation Definitions
-// ここに定義することで、MainStackがどのような遷移を持つかが一目でわかります
+// MainStack.swift
 
 /// 画面ID
 enum ScreenID: String {

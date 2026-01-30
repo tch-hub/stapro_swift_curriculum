@@ -1,10 +1,3 @@
-
-
-<script>
-    import {base} from '$app/paths';
-</script>
-
-
 ```swift
 import SwiftUI
 

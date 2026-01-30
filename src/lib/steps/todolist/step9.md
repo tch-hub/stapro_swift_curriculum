@@ -1,18 +1,5 @@
-# ステップ20: 初期データの設定
-
-<script>
-    import {base} from '$app/paths';
-</script>
-
-## 初期データとは
-
-アプリ初回起動時に、サンプルのタブやタスクを自動で作成して、ユーザーがすぐにアプリを試せるようにします。
-
-## Constants.swift の作成
-
-`SwiftData/`フォルダに`Constants.swift`を作成します：
-
 ```swift
+// Constants.swift
 import Foundation
 
 // 初期タブデータ
@@ -35,11 +22,8 @@ let INITIAL_TODO_TABS = [
 ]
 ```
 
-## ContentView.swift の修正
-
-アプリ初回起動時に初期データを作成します：
-
 ```swift
+// ContentView.swift
 import SwiftUI
 import SwiftData
 

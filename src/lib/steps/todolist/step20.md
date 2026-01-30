@@ -1,9 +1,5 @@
-<script>
-   import {base} from '$app/paths';
-</script>
-
-
 ```swift
+// HomeView.swift
 import SwiftUI
 import SwiftData
 
