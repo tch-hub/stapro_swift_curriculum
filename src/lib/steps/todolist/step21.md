@@ -1,109 +1,42 @@
-# ステップ20: タスク編集を実装する
+# ステップ19: スワイプ削除を追加する
 
-長押しでタスク名を編集できるようにします。
+タスクを左にスワイプして削除できるようにします。
 
-### 1. 入力付きアラートの拡張機能を追加
-
-タスク名の編集にはテキスト入力が必要ですが、標準のアラートだけでは入力欄を作れません。そこで、便利な拡張機能を追加します。
-`View+Extensions.swift` （または `Extensions.swift`）という新しいファイルを作成し、以下のコードを追加してください。
+### 1. onDelete を渡す
 
 ```swift
-import SwiftUI
-
-extension View {
-    func textFieldAlert(
-        isPresented: Binding<Bool>,
-        title: String,
-        message: String,
-        text: Binding<String>,
-        placeholder: String = "",
-        actionButtonTitle: String = "保存",
-        action: @escaping () -> Void
-    ) -> some View {
-        self.alert(title, isPresented: isPresented) {
-            TextField(placeholder, text: text)
-            Button("キャンセル", role: .cancel) {}
-            Button(actionButtonTitle) {
-                action()
-            }
-            .disabled(text.wrappedValue.isEmpty)
-        } message: {
-            Text(message)
-        }
+// スワイプ削除時の処理（handleDeleteTask）をCustomListに渡す
+CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+    ToDoListItem(
+        title: task.title,
+        isCompleted: task.isCompleted
+    ) {
+        toggleTaskCompletion(task)
     }
 }
 ```
 
-### 2. 編集用の状態
+`CustomList` の初期化パラメータ `onDelete` に次のステップで説明する削除メソッド `handleDeleteTask` を渡すことで、スワイプ操作による行の削除機能が有効になります。
+
+### 2. 削除処理
 
 ```swift
-// 編集ダイアログを表示するかどうかのフラグ
-@State private var showEditDialog = false
-// 編集中のタスク名
-@State private var editTaskTitle = ""
-// 現在編集しようとしているタスクオブジェクト
-@State private var editingTask: ToDoTask?
-```
-
-タスク名の編集機能を実現するために、「ダイアログの表示状態」「編集中の文字列」「編集対象のタスク自体」という3つの情報を管理します。
-
-### 3. 長押しで編集開始
-
-```swift
-// 長押しジェスチャーを検知
-.onLongPressGesture {
-    // 長押しされたら編集モードを開始
-    startEdit(task)
-}
-```
-
-`.onLongPressGesture` を使うことで、ユーザーがタスクを長押しした時に編集処理（`startEdit`）を呼び出すように設定しています。  
-これにより、タップ（完了切り替え）とは別の操作として編集機能を割り当てています。
-// 自作した textFieldAlert を呼び出して編集画面を表示
-.textFieldAlert(
-isPresented: $showEditDialog,
-title: "タスクの編集",
-message: "新しいタイトルを入力してください。",
-text: $editTaskTitle, // 入力内容を binding
-placeholder: "例: 牛乳を買う",
-actionButtonTitle: "保存", // ボタン名を変更
-action: {
-// 保存ボタンが押されたら編集内容を反映
-applyEdit()
-}
-)
-
-```
-
-
-ステップ6で作成した `textFieldAlert` を使って、タスク名の変更フォームを表示します。入力されたテキストは `$editTaskTitle` に同期され、保存ボタンを押すと `applyEdit` メソッドが実行されます。 action: {
-        applyEdit()
+// スワイプ削除イベントを受け取るメソッド
+private func handleDeleteTask(_ offsets: IndexSet) {
+    // 選択された行のインデックス（番号）をループ処理
+    for index in offsets {
+        // インデックスから削除対象のタスクを特定
+        let taskToDelete = tasks[index]
+        // データベースから削除
+        ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
     }
-)
-```
-
-// 編集内容をデータベースへ保存するメソッド
-private func applyEdit() {
-// 編集対象のタスクが存在することを確認
-guard let editingTask = editingTask else { return }
-
-    // タイトルを書き換え
-    editingTask.title = editTaskTitle
-    // データベースに変更を通知・保存
-    ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
-    // リストの表示を更新
-    loadTasks()
-
-}
-
-```
-
-
-編集ダイアログで入力された新しいタイトルを対象のタスクオブジェクトに代入し、Serviceを通じてデータベースに保存します。最後にリストを再読み込みして、画面上のタスク名を更新します。 editingTask.title = editTaskTitle
-    ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
+    // リスト表示を更新
     loadTasks()
 }
 ```
+
+リストでスワイプ削除が行われると、削除対象の行番号（インデックス）の集合が `offsets` として渡されてきます。  
+これを使って対象の `ToDoTask` を特定し、データベースから削除します。
 
 ---
 
@@ -117,138 +50,106 @@ import SwiftUI
 import SwiftData
 
 struct HomeView: View {
-   @Environment(\.modelContext) private var modelContext
-   @State private var tabs: [ToDoTab] = []
-   @State private var tasks: [ToDoTask] = []
-   @State private var selectedTabId: UUID?
-   @State private var newTaskTitle = ""
-   @State private var showEditDialog = false
-   @State private var editTaskTitle = ""
-   @State private var editingTask: ToDoTask?
-   @Binding var navigationPath: [NavigationItem]
+    @Environment(\.modelContext) private var modelContext
+    @State private var tabs: [ToDoTab] = []
+    @State private var tasks: [ToDoTask] = []
+    @State private var selectedTabId: UUID?
+    @State private var newTaskTitle = ""
+    @Binding var navigationPath: [NavigationItem]
 
-   var body: some View {
-      ZStack {
-         VStack {
-            if tabs.isEmpty {
-               Text("タブがありません")
-                  .padding()
-            } else {
-               TabHeaderView(
-                  tabs: tabs,
-                  selectedTabId: $selectedTabId,
-                  onManageTabs: {
-                     navigationPath.append(NavigationItem(id: .tabManage))
-                  }
-               )
-               .onChange(of: selectedTabId) { _, _ in
-                  loadTasks()
-               }
+    var body: some View {
+        ZStack {
+            VStack {
+                if tabs.isEmpty {
+                    Text("タブがありません")
+                        .padding()
+                } else {
+                    TabHeaderView(
+                        tabs: tabs,
+                        selectedTabId: $selectedTabId,
+                        onManageTabs: {
+                            navigationPath.append(NavigationItem(id: .tabManage))
+                        }
+                    )
+                    .onChange(of: selectedTabId) { _, _ in
+                        loadTasks()
+                    }
 
-               if selectedTabId != nil && !tasks.isEmpty {
-                  CustomList(items: tasks, onDelete: handleDeleteTask) { task in
-                     ToDoListItem(
-                        title: task.title,
-                        isCompleted: task.isCompleted
-                     ) {
-                        toggleTaskCompletion(task)
-                     }
-                     .onLongPressGesture {
-                        startEdit(task)
-                     }
-                  }
-               } else {
-                  EmptyStateView(hasSelectedTab: selectedTabId != nil)
-               }
+                    if selectedTabId != nil && !tasks.isEmpty {
+                        CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+                            ToDoListItem(
+                                title: task.title,
+                                isCompleted: task.isCompleted
+                            ) {
+                                toggleTaskCompletion(task)
+                            }
+                        }
+                    } else {
+                        EmptyStateView(hasSelectedTab: selectedTabId != nil)
+                    }
+                }
+
             }
+            .padding()
+            .navigationTitle("ToDoリスト")
+            .onAppear {
+                loadTabs()
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            if selectedTabId != nil {
+                TaskInputView(text: $newTaskTitle, onAdd: addTask)
+            }
+        }
+    }
 
-         }
-         .padding()
-         .navigationTitle("ToDoリスト")
-         .onAppear {
-            loadTabs()
-         }
-      }
-      .safeAreaInset(edge: .bottom) {
-         if selectedTabId != nil {
-            TaskInputView(text: $newTaskTitle, onAdd: addTask)
-         }
-      }
-      .textFieldAlert(
-         isPresented: $showEditDialog,
-         title: "タスクの編集",
-         message: "新しいタイトルを入力してください。",
-         text: $editTaskTitle,
-         placeholder: "例: 牛乳を買う",
-         actionButtonTitle: "保存",
-         action: {
-            applyEdit()
-         }
-      )
-   }
+    private func loadTabs() {
+        let descriptor = FetchDescriptor<ToDoTab>()
+        tabs = (try? modelContext.fetch(descriptor)) ?? []
+        if let selectedTabId = selectedTabId {
+            // 現在の選択が削除済みの場合は先頭タブに戻す
+            if !tabs.contains(where: { $0.id == selectedTabId }) {
+                self.selectedTabId = tabs.first?.id
+            }
+        } else {
+            selectedTabId = tabs.first?.id
+        }
+        loadTasks()
+    }
 
+    private func loadTasks() {
+        guard let selectedTabId = selectedTabId else {
+            tasks = []
+            return
+        }
 
+        let descriptor = FetchDescriptor<ToDoTask>(
+            predicate: #Predicate { $0.tabId == selectedTabId }
+        )
+        tasks = (try? modelContext.fetch(descriptor)) ?? []
+    }
 
-   private func loadTabs() {
-      let descriptor = FetchDescriptor<ToDoTab>()
-      tabs = (try? modelContext.fetch(descriptor)) ?? []
-      if let selectedTabId = selectedTabId {
-         // 現在の選択が削除済みの場合は先頭タブに戻す
-         if !tabs.contains(where: { $0.id == selectedTabId }) {
-            self.selectedTabId = tabs.first?.id
-         }
-      } else {
-         selectedTabId = tabs.first?.id
-      }
-      loadTasks()
-   }
+    private func toggleTaskCompletion(_ task: ToDoTask) {
+        ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
+        loadTasks()
+    }
 
-   private func loadTasks() {
-      guard let selectedTabId = selectedTabId else {
-         tasks = []
-         return
-      }
+    private func addTask() {
+        guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
 
-      let descriptor = FetchDescriptor<ToDoTask>(
-         predicate: #Predicate { $0.tabId == selectedTabId }
-      )
-      tasks = (try? modelContext.fetch(descriptor)) ?? []
-   }
+        let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
+        ToDoTaskService.addTask(newTask, to: modelContext)
 
-   private func toggleTaskCompletion(_ task: ToDoTask) {
-      ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
-      loadTasks()
-   }
+        newTaskTitle = ""
+        loadTasks()
+    }
 
-   private func addTask() {
-      guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
-
-      let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
-      ToDoTaskService.addTask(newTask, to: modelContext)
-
-      newTaskTitle = ""
-      loadTasks()
-   }
-
-   private func handleDeleteTask(_ offsets: IndexSet) {
-      for index in offsets {
-         let taskToDelete = tasks[index]
-         ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
-      }
-      loadTasks()
-   }
-
-   private func startEdit(_ task: ToDoTask) {
-      editingTask = task
-      editTaskTitle = task.title
-      showEditDialog = true
-   }
-
-   private func applyEdit() {
-      guard let editingTask = editingTask else { return }
-      editingTask.title = editTaskTitle
-      ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
-      loadTasks()
-   }
+    private func handleDeleteTask(_ offsets: IndexSet) {
+        for index in offsets {
+            let taskToDelete = tasks[index]
+            ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
+        }
+        loadTasks()
+    }
 }
 ```

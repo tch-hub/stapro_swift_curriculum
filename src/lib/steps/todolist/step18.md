@@ -1,36 +1,65 @@
-# ステップ17: 完了切り替えを実装する
+# ステップ16: タブとタスクを表示する
 
-タスクをタップした時に完了/未完了を切り替えます。
+ホーム画面でタブ選択とタスク表示を行います。
 
-### 1. 切り替え処理を追加
+### 1. 状態の準備
 
 ```swift
-// タスクの完了状態を切り替えるメソッド
-private func toggleTaskCompletion(_ task: ToDoTask) {
-    // Serviceクラスを使ってデータベースの値を更新
-    ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
-    // 更新後のリストを再読み込みして表示に反映
+// データベース操作用コンテキスト
+@Environment(\.modelContext) private var modelContext
+// 全タブのリスト
+@State private var tabs: [ToDoTab] = []
+// 現在選択されているタブ内のタスクリスト（ロードして更新）
+@State private var tasks: [ToDoTask] = []
+// 現在選択されているタブのID（初期状態は nil で未選択）
+@State private var selectedTabId: UUID?
+```
+
+ホーム画面でデータを表示・管理するために必要な状態変数です。  
+`tabs` と `tasks` はデータベースから読み込まれた配列を保持し、`selectedTabId` は現在ユーザーがどのタブ（カテゴリー）を見ているかを管理します。
+
+### 2. タブの選択UI
+
+```swift
+// TabHeaderViewコンポーネントを使ってヘッダーを表示
+TabHeaderView(
+    tabs: tabs,
+    selectedTabId: $selectedTabId,
+    onManageTabs: {
+        // タブ管理画面への遷移
+        navigationPath.append(NavigationItem(id: .tabManage))
+    }
+)
+// タブが変更されたらタスクを再読み込み
+.onChange(of: selectedTabId) { _, _ in
     loadTasks()
 }
 ```
 
-`ToDoTaskService` に定義した `toggleTaskCompletion` を呼び出してデータベースを更新し、直後に `loadTasks` を呼ぶことで画面上のタスク一覧も最新の状態（チェックマークの有無など）に更新します。
+ステップ6で作った `TabHeaderView` を配置します。  
+`.onChange` をつけることで、ヘッダー内でタブが切り替えられたタイミングを検知し、`loadTasks()` を実行して表示を更新します。
 
-### 2. ToDoListItem に処理を渡す
+### 3. タスク一覧と空状態
 
 ```swift
-// リスト内の各行を作成
-ToDoListItem(
-    title: task.title,
-    isCompleted: task.isCompleted
-) {
-    // タップされた時に呼ばれるクロージャ
-    toggleTaskCompletion(task)
+if selectedTabId != nil && !tasks.isEmpty {
+    // 1. タブが選択され、かつタスクがある場合：リストを表示
+    CustomList(items: tasks) { task in
+        ToDoListItem(
+            title: task.title,
+            isCompleted: task.isCompleted
+        ) {
+            // 完了切り替えは次のステップで実装します
+        }
+    }
+} else {
+    // 2. それ以外の場合：EmptyStateViewを表示
+    // タブが選択されているかどうかを渡して、表示内容（タスクなし or タブ未選択）を切り替え
+    EmptyStateView(hasSelectedTab: selectedTabId != nil)
 }
 ```
 
-`ToDoListItem` コンポーネントの初期化時に、タップ時の動作として先ほど作成した `toggleTaskCompletion` メソッドを実行するように設定しています。  
-これにより、行をタップするとタスクの完了状態が切り替わるようになります。
+リスト部分の条件分岐です。タスクがある場合はリストを表示し、それ以外の場合はステップ4で作った `EmptyStateView` を利用して「タスクなし」または「タブ未選択」の画面を表示します。
 
 ---
 
@@ -73,7 +102,7 @@ struct HomeView: View {
                             title: task.title,
                             isCompleted: task.isCompleted
                         ) {
-                            toggleTaskCompletion(task)
+                            // 完了切り替えは次のステップで実装します
                         }
                     }
                 } else {
@@ -82,10 +111,10 @@ struct HomeView: View {
             }
 
         }
-        .padding()
         .navigationTitle("ToDoリスト")
         .onAppear {
             loadTabs()
+            loadTasks()
         }
     }
 
@@ -115,9 +144,5 @@ struct HomeView: View {
         tasks = (try? modelContext.fetch(descriptor)) ?? []
     }
 
-    private func toggleTaskCompletion(_ task: ToDoTask) {
-        ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
-        loadTasks()
-    }
 }
 ```
