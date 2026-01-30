@@ -37,7 +37,6 @@ ToDoList/
 │   ├── ToDoTaskService.swift
 │   └── ToDoTabService.swift
 └── Components/
-    ├── CustomAlert.swift
     ├── List.swift
     ├── ListItem.swift
     ├── EmptyStateView.swift

@@ -9,7 +9,7 @@
 ```swift
 import SwiftUI
 
-struct RefinedTabHeaderView: View {
+struct TabHeaderView: View {
     struct ToDoTab: Identifiable, Hashable { // Hashableを追加（Picker/Menuの制御に有利）
         let id: UUID
         let name: String
@@ -84,9 +84,9 @@ struct RefinedTabHeaderView: View {
 #Preview {
     struct PreviewWrapper: View {
         let tabs = [
-            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
-            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "買い物"),
-            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "プロジェクトA")
+            TabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
+            TabHeaderView.ToDoTab(id: UUID(), name: "買い物"),
+            TabHeaderView.ToDoTab(id: UUID(), name: "プロジェクトA")
         ]
         @State var selectedId: UUID?
 
@@ -96,7 +96,7 @@ struct RefinedTabHeaderView: View {
 
         var body: some View {
             VStack(spacing: 0) {
-                RefinedTabHeaderView(
+                TabHeaderView(
                     tabs: tabs,
                     selectedTabId: $selectedId,
                     onManageTabs: { print("管理画面へ") }
@@ -127,7 +127,7 @@ struct RefinedTabHeaderView: View {
 ```swift
 import SwiftUI
 
-struct RefinedTabHeaderView: View {
+struct TabHeaderView: View {
     struct ToDoTab: Identifiable, Hashable { // Hashableを追加（Picker/Menuの制御に有利）
         let id: UUID
         let name: String
@@ -202,9 +202,9 @@ struct RefinedTabHeaderView: View {
 #Preview {
     struct PreviewWrapper: View {
         let tabs = [
-            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
-            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "買い物"),
-            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "プロジェクトA")
+            TabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
+            TabHeaderView.ToDoTab(id: UUID(), name: "買い物"),
+            TabHeaderView.ToDoTab(id: UUID(), name: "プロジェクトA")
         ]
         @State var selectedId: UUID?
 
@@ -214,7 +214,7 @@ struct RefinedTabHeaderView: View {
 
         var body: some View {
             VStack(spacing: 0) {
-                RefinedTabHeaderView(
+                TabHeaderView(
                     tabs: tabs,
                     selectedTabId: $selectedId,
                     onManageTabs: { print("管理画面へ") }

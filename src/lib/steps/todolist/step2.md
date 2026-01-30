@@ -115,7 +115,7 @@ struct ToDoListItem: View {}の下に追加
 ```swift
 import SwiftUI
 
-struct RefinedToDoListItem: View {
+struct ToDoListItem: View {
     let title: String
     let isCompleted: Bool
     let onToggle: () -> Void
@@ -191,7 +191,7 @@ struct RefinedToDoListItem: View {
         var body: some View {
             List {
                 ForEach(items.indices, id: \.self) { index in
-                    RefinedToDoListItem(
+                    ToDoListItem(
                         title: items[index].title,
                         isCompleted: items[index].isCompleted
                     ) {
