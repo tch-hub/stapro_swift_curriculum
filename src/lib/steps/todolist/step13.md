@@ -55,32 +55,20 @@ VStack {
 
 ```swift
 .safeAreaInset(edge: .bottom) {
-    // 画面下部でタブを追加
-    HStack(spacing: 12) {
-        // タブ名の入力欄
-        TextField("新しいタブ", text: $newTabName)
-            .textFieldStyle(.roundedBorder)
-            .submitLabel(.done) // キーボードの改行キーを「完了」にする
-            .onSubmit {
-                addTab() // Enterキーで追加
-            }
-
-        // 追加ボタン
-        Button("追加") {
-            addTab()
-        }
-        .buttonStyle(.borderedProminent)
-        // 名前が空（スペースのみも含む）の場合はボタンを押せないようにする
-        .disabled(newTabName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+    // RefinedTaskInputViewを使用してタブを追加
+    RefinedTaskInputView(
+        text: $newTabName,
+        placeholder: "新しいタブ",
+        buttonIcon: "plus.circle.fill"
+    ) {
+        addTab()
     }
-    .padding(.horizontal, 16)
-    .padding(.vertical, 12)
-    .background(.ultraThinMaterial)
 }
 ```
 
-テキストフィールドと追加ボタンを `HStack` で横に並べています。誤操作を防ぐため、タブ名が空欄やスペースのみの場合には `.disabled(...)` を使って追加ボタンを無効化しています。  
-`.safeAreaInset(edge: .bottom)` を使用して画面下部に固定して配置しています。
+ステップ5で作成した汎用的な `RefinedTaskInputView` コンポーネントを再利用しています。  
+`placeholder` パラメータで「新しいタブ」というプレースホルダーを指定し、`buttonIcon` パラメータで追加ボタンのアイコンをカスタマイズしています。  
+これにより、タスク入力とタブ入力で同じコンポーネントを使いまわせるようになります。
 
 ### 4. 画面表示時の処理と削除アラート
 
@@ -193,24 +181,14 @@ struct TabManageView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            // 画面下部でタブを追加
-            HStack(spacing: 12) {
-                TextField("新しいタブ", text: $newTabName)
-                    .textFieldStyle(.roundedBorder)
-                    .submitLabel(.done)
-                    .onSubmit {
-                        addTab()
-                    }
-
-                Button("追加") {
-                    addTab()
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(newTabName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            // RefinedTaskInputViewを使用してタブを追加
+            RefinedTaskInputView(
+                text: $newTabName,
+                placeholder: "新しいタブ",
+                buttonIcon: "plus.circle.fill"
+            ) {
+                addTab()
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(.ultraThinMaterial)
         }
     }
 

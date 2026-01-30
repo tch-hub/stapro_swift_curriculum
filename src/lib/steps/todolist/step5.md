@@ -2,69 +2,7 @@
 
 画面下部に、新しいタスクを追加するための入力フィールドとボタンをまとめたコンポーネントを作成します。
 
-### 1. TaskInputView.swift の作成
-
-`Components` フォルダ内に `TaskInputView` というファイルを作成し、以下のコードを記述します。
-
-```swift
-import SwiftUI
-
-struct TaskInputView: View {
-    // 入力中のテキスト（親ビューと共有するのでBinding）
-    @Binding var text: String
-    // 追加ボタンが押された時のアクション
-    let onAdd: () -> Void
-
-    var body: some View {
-        HStack(spacing: 12) {
-            // テキスト入力フィールド
-            TextField("新しいタスク", text: $text)
-                .textFieldStyle(.roundedBorder)
-                .submitLabel(.done) // キーボードの改行ボタンを「完了」にする
-                .onSubmit {
-                    // キーボードで完了を押した時も追加を実行
-                    if !text.isEmpty {
-                        onAdd()
-                    }
-                }
-
-            // 追加ボタン
-            Button("追加") {
-                onAdd()
-            }
-            .buttonStyle(.borderedProminent)
-            // 空白のみや空文字の場合はボタンを押せないようにする
-            .disabled(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(.ultraThinMaterial) // すりガラスのような背景
-    }
-}
-
-#Preview {
-    // プレビュー用のダミー変数
-    struct PreviewWrapper: View {
-        @State var text = ""
-        var body: some View {
-            ZStack {
-                Color.white.ignoresSafeArea()
-                VStack {
-                    Spacer()
-                    TaskInputView(text: $text) {
-                        print("追加ボタンが押されました")
-                        text = "" // 追加後にクリアする動作のシミュレーション
-                    }
-                }
-            }
-        }
-    }
-    return PreviewWrapper()
-}
-```
-
-`@Binding` を使って、入力されたテキストの状態管理を親ビュー（呼び出し元）に任せています。これにより、HomeView などの親側で「追加ボタンが押されたらデータベースに保存してテキストをクリアする」といった制御が可能になります。
-`.background(.ultraThinMaterial)` を使うことで、背景が少し透けて見えるモダンなデザインに仕上げています。
+このコンポーネントは汎用的に設計されており、タスク追加だけでなくタブ追加など、様々な入力シーンで使用できます。
 
 ---
 
@@ -75,30 +13,117 @@ struct TaskInputView: View {
 ```swift
 import SwiftUI
 
-struct TaskInputView: View {
+struct RefinedTaskInputView: View {
     @Binding var text: String
     let onAdd: () -> Void
+    
+    // カスタマイズ可能なプロパティ
+    let placeholder: String
+    let buttonIcon: String
+    
+    // デフォルト値を持つイニシャライザ
+    init(
+        text: Binding<String>,
+        placeholder: String = "新しいタスクを追加...",
+        buttonIcon: String = "arrow.up.circle.fill",
+        onAdd: @escaping () -> Void
+    ) {
+        self._text = text
+        self.placeholder = placeholder
+        self.buttonIcon = buttonIcon
+        self.onAdd = onAdd
+    }
+
+    // キーボードのフォーカス制御
+    @FocusState private var isFocused: Bool
+
+    // 入力値が空でないかどうかの判定（トリミング済み）
+    private var isValid: Bool {
+        !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
 
     var body: some View {
-        HStack(spacing: 12) {
-            TextField("新しいタスク", text: $text)
-                .textFieldStyle(.roundedBorder)
-                .submitLabel(.done)
+        HStack(alignment: .bottom, spacing: 12) {
+            // MARK: - テキスト入力エリア
+            TextField(placeholder, text: $text, axis: .vertical) // axis: .verticalで複数行対応
+                .focused($isFocused)
+                .padding(.vertical, 10)
+                .padding(.horizontal, 16)
+                .background(
+                    Capsule() // 丸みを帯びた背景
+                        .fill(Color(.secondarySystemBackground))
+                )
+                // キーボードの改行で追加する場合
                 .onSubmit {
-                    if !text.isEmpty {
-                        onAdd()
-                    }
+                    handleSubmit()
                 }
+                // 送信ボタンのラベル（青い「完了」など）
+                .submitLabel(.send)
 
-            Button("追加") {
-                onAdd()
+            // MARK: - 送信ボタン（アイコン化）
+            Button(action: handleSubmit) {
+                Image(systemName: buttonIcon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 32, height: 32)
+                    // 入力状態に応じて色と透明度を変更
+                    .foregroundStyle(isValid ? Color.accentColor : Color(.systemGray4))
+                    // 少しアニメーションさせる
+                    .scaleEffect(isValid ? 1.0 : 0.9)
+                    .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isValid)
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .disabled(!isValid)
+            .padding(.bottom, 4) // テキストフィールドとの高さ合わせ
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        // 背景素材（Material）
         .background(.ultraThinMaterial)
+        // 上部に境界線を追加（コンテンツとの分離）
+        .overlay(alignment: .top) {
+            Divider()
+        }
     }
+
+    // 追加処理のロジック
+    private func handleSubmit() {
+        guard isValid else { return }
+        
+        onAdd()
+        
+        // 追加後も入力を続けたい場合はコメントアウトを外す
+        // isFocused = true 
+    }
+}
+
+// MARK: - Preview
+#Preview {
+    struct PreviewWrapper: View {
+        @State var text = ""
+        // リスト表示のダミーデータ
+        @State var tasks: [String] = ["牛乳を買う", "メールを返す"]
+
+        var body: some View {
+            ZStack(alignment: .bottom) {
+                // 背景のリスト部分
+                List {
+                    ForEach(tasks, id: \.self) { task in
+                        Text(task)
+                    }
+                }
+                .contentMargins(.bottom, 80, for: .scrollContent) // 入力欄の下に隠れないように余白確保
+
+                // 入力コンポーネント
+                RefinedTaskInputView(text: $text) {
+                    print("追加: \(text)")
+                    withAnimation {
+                        tasks.append(text)
+                        text = ""
+                    }
+                }
+            }
+        }
+    }
+    return PreviewWrapper()
 }
 ```
