@@ -68,7 +68,7 @@ struct HomeView: View {
                 }
 
                 if selectedTabId != nil && !tasks.isEmpty {
-                    CustomList(items: tasks) { task in
+                    CustomList(items: tasks, onDelete: nil) { task in
                         ToDoListItem(
                             title: task.title,
                             isCompleted: task.isCompleted
