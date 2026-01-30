@@ -52,12 +52,47 @@ NavigationStack(path: $navigationPath) {
 
 ---
 
+### 4. HomeView の引数を追加
+
+`MainStack` から `navigationPath` を渡すので、`HomeView` 側に `@Binding` を追加します。  
+プレビューでは `.constant([])` を使ってエラーを回避します。
+
+```swift
+// HomeView.swift
+import SwiftUI
+
+/// ホーム画面（枠だけ作成）
+struct HomeView: View {
+    @Binding var navigationPath: [NavigationItem]
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Text("ここにタスク一覧を表示します")
+                .foregroundColor(.gray)
+        }
+        .padding()
+        .navigationTitle("ToDoリスト")
+    }
+}
+
+// MARK: - Preview
+
+#Preview {
+    NavigationStack {
+        HomeView(navigationPath: .constant([]))
+    }
+}
+```
+
+---
+
 ## コード全体
 
 <img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
 ```swift
 import SwiftUI
+import SwiftData
 // MainStack.swift
 
 /// 画面ID
