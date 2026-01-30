@@ -89,8 +89,12 @@ struct HomeView: View {
     private func loadTabs() {
         let descriptor = FetchDescriptor<ToDoTab>()
         tabs = (try? modelContext.fetch(descriptor)) ?? []
-
-        if selectedTabId == nil {
+        if let selectedTabId = selectedTabId {
+            // 現在の選択が削除済みの場合は先頭タブに戻す
+            if !tabs.contains(where: { $0.id == selectedTabId }) {
+                self.selectedTabId = tabs.first?.id
+            }
+        } else {
             selectedTabId = tabs.first?.id
         }
         loadTasks()
