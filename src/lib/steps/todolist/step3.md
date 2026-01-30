@@ -18,40 +18,51 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
 struct CustomList: View {} 内に追加
 
 ```swift
+// 表示するデータの一覧
 let items: [T]
+// スワイプ削除時の処理（削除機能が不要な場合は nil）
 let onDelete: ((IndexSet) -> Void)?
+// 各行の表示内容を作るためのクロージャ（ViewBuilder属性付き）
 @ViewBuilder let rowContent: (T) -> RowContent
 ```
 
-- `items` は表示する配列です。
-- `onDelete` がある時はスワイプ削除を有効にします。
-- `rowContent` で各行の見た目を外から渡します。
+`items` はジェネリクス `T` 型の配列で、リストに表示するデータを保持します。  
+`onDelete` はオプション型で定義されており、削除機能が必要な場合のみ関数を渡せるようにしています。  
+`rowContent` は各行のビューを生成するためのクロージャで、`@ViewBuilder` をつけることで SwiftUI の View を柔軟に記述できるようにしています。
 
 ### 3. UIの作成
 
 var body: some View {} 内に追加
 
 ```swift
+// 標準的なリスト表示を作成
 List {
+    // 削除機能が有効（onDelete が存在する）かどうかで分岐
     if let onDelete = onDelete {
+        // データごとの行を作成
         ForEach(items) { item in
+            // 行の中身を表示
             rowContent(item)
+                // 各行の区切り線を表示する設定
                 .listRowSeparator(.visible)
         }
+        // スワイプ削除アクションを設定
         .onDelete(perform: onDelete)
     } else {
+        // 削除機能がない場合
         ForEach(items) { item in
             rowContent(item)
                 .listRowSeparator(.visible)
         }
     }
 }
+// リストの見た目をプレーンなスタイルに設定
 .listStyle(.plain)
-```
+```  
+`onDelete` が渡されている場合は `.onDelete(perform: onDelete)` を適用してスワイプ削除を有効にし、渡されていない場合は単にリスト表示のみを行います。  
 
-- `List` で標準のリスト表示を作ります。
-- `onDelete` がある場合だけスワイプ削除を追加します。
-- どの行も `rowContent(item)` で描画します。
+
+`List` コンポーネントを使用してデータを一覧表示します。`onDelete` が渡されている場合は `.onDelete(perform: onDelete)` を適用してスワイプ削除を有効にし、渡されていない場合は単にリスト表示のみを行います。各行の表示内容は `rowContent(item)` を呼び出すことで生成し、`.listRowSeparator(.visible)` で明示的に区切り線を表示しています。
 
 ---
 

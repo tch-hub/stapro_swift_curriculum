@@ -5,30 +5,45 @@
 ### 1. 状態の準備
 
 ```swift
+// データベース操作用コンテキスト
 @Environment(\.modelContext) private var modelContext
+// 全タブのリスト
 @State private var tabs: [ToDoTab] = []
+// 現在選択されているタブ内のタスクリスト（ロードして更新）
 @State private var tasks: [ToDoTask] = []
+// 現在選択されているタブのID（初期状態は nil で未選択）
 @State private var selectedTabId: UUID?
 ```
+
+ホーム画面でデータを表示・管理するために必要な状態変数です。  
+`tabs` と `tasks` はデータベースから読み込まれた配列を保持し、`selectedTabId` は現在ユーザーがどのタブ（カテゴリー）を見ているかを管理します。
 
 ### 2. タブの選択UI
 
 ```swift
+// ドロップダウンメニューのようなピッカーを表示
 Picker("タブを選択", selection: $selectedTabId) {
+    // タブの数だけ選択肢を作成
     ForEach(tabs) { tab in
+        // タグ付けすることで、選択された時に selectedTabId に tab.id が入る
         Text(tab.name).tag(Optional(tab.id))
     }
 }
-.pickerStyle(.menu)
+.pickerStyle(.menu) // メニュースタイル（ポップアップボタンのような見た目）
 .onChange(of: selectedTabId) { _, _ in
+    // タブが変更されたら、そのタブのタスクを再読み込みする
     loadTasks()
 }
 ```
+  
+
+SwiftUIの `Picker` を使ってタブ切り替え機能を作っています。`.onChange(of: selectedTabId)` を使うことで、ユーザーがタブを変更するたびに `loadTasks()` が呼び出され、表示されるタスク一覧が更新される仕組みです。
 
 ### 3. タスク一覧と空状態
 
 ```swift
 if selectedTabId != nil && !tasks.isEmpty {
+    // 1. タブが選択され、かつタスクがある場合：リストを表示
     CustomList(items: tasks) { task in
         ToDoListItem(
             title: task.title,
@@ -38,6 +53,7 @@ if selectedTabId != nil && !tasks.isEmpty {
         }
     }
 } else if selectedTabId != nil {
+    // 2. タブは選択されているが、タスクがない場合：空っぽ表示
     VStack {
         Image(systemName: "checkmark.circle")
             .font(.system(size: 48))
@@ -47,6 +63,7 @@ if selectedTabId != nil && !tasks.isEmpty {
             .padding(.top, 8)
     }
 } else {
+    // 3. タブがまだ選択されていない場合（初期状態など）
     VStack {
         Image(systemName: "list.bullet")
             .font(.system(size: 48))
@@ -57,6 +74,9 @@ if selectedTabId != nil && !tasks.isEmpty {
     }
 }
 ```
+  
+
+画面の状態に応じて3パターンの表示を切り替えています。タスクがある場合はリストを表示し、データがない場合やタブ未選択の場合は、それぞれユーザーに状況を伝えるためのアイコンとテキストを表示しています。
 
 ---
 
@@ -110,26 +130,8 @@ struct HomeView: View {
                             // 完了切り替えは次のステップで実装します
                         }
                     }
-                } else if selectedTabId != nil {
-                    VStack {
-                        Image(systemName: "checkmark.circle")
-                            .font(.system(size: 48))
-                            .foregroundColor(.gray)
-                        Text("タスクはまだありません")
-                            .foregroundColor(.gray)
-                            .padding(.top, 8)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    VStack {
-                        Image(systemName: "list.bullet")
-                            .font(.system(size: 48))
-                            .foregroundColor(.gray)
-                        Text("タブを選択してください")
-                            .foregroundColor(.gray)
-                            .padding(.top, 8)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    emptyStateView
                 }
             }
 
@@ -138,6 +140,31 @@ struct HomeView: View {
         .onAppear {
             loadTabs()
             loadTasks()
+        }
+    }
+
+    @ViewBuilder
+    private var emptyStateView: some View {
+        if selectedTabId != nil {
+            VStack {
+                Image(systemName: "checkmark.circle")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タスクはまだありません")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+            VStack {
+                Image(systemName: "list.bullet")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タブを選択してください")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 

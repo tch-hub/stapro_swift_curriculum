@@ -7,30 +7,37 @@
 ```swift
 import SwiftUI
 
+// Viewを拡張して、どこからでも呼び出せるメソッドを追加
 extension View {
+    // 削除確認アラートを表示するメソッド
+    // デフォルト引数を使って、呼び出し時は必要な項目だけ指定すれば良いようにする
     func deleteAlert(
-        isPresented: Binding<Bool>,
-        title: String = "削除確認",
-        message: String = "このタスクを完全に削除しますか？",
-        deleteText: String = "削除",
-        cancelText: String = "キャンセル",
-        onDelete: @escaping () -> Void
+        isPresented: Binding<Bool>, // アラートの表示状態を紐付ける
+        title: String = "削除確認", // タイトルの初期値
+        message: String = "このタスクを完全に削除しますか？", // メッセージの初期値
+        deleteText: String = "削除", // 削除ボタンの文言
+        cancelText: String = "キャンセル", // キャンセルボタンの文言
+        onDelete: @escaping () -> Void // 削除実行時の処理（クロージャ）
     ) -> some View {
+        // 標準のalertモディファイアを使用
         self.alert(title, isPresented: isPresented) {
+            // 削除ボタン（赤字になる.destructiveスタイル）
             Button(deleteText, role: .destructive) {
                 onDelete()
             }
+            // キャンセルボタン（.cancelスタイル）
             Button(cancelText, role: .cancel) {}
         } message: {
+            // アラートのメッセージ部分
             Text(message)
         }
     }
 }
 ```
 
-- どの画面でも使えるように `View` を拡張します。
-- `deleteText` は削除ボタンの文字を変更できます。
-- `onDelete` に削除の実処理を渡します。
+SwiftUIの `View` プロトコルを拡張（`extension`）することで、アプリ内のどのビューからでも `.deleteAlert(...)` として呼び出せるようにしています。  
+引数にはデフォルト値（`= "削除確認"` など）を設定しているため、利用する際は必要なパラメータだけを指定すれば動作します。  
+`isPresented` でアラートの表示・非表示を管理し、削除ボタンが押された時には `onDelete` クロージャが実行される仕組みです。
 
 ---
 

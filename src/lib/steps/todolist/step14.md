@@ -5,19 +5,24 @@
 ### 1. 画面遷移用の `Binding`
 
 ```swift
+// 親画面（MainStack）と画面遷移の状態を共有するための変数
 @Binding var navigationPath: [NavigationItem]
 ```
 
-`MainStack` から渡される `navigationPath` を更新することで画面遷移します。
+`MainStack` から渡される `navigationPath` と接続（Binding）しています。  
+この配列に新しい画面の情報を追加する（append）ことで、次の画面への遷移を実現します。
 
 ### 2. 画面の中身
 
 ```swift
 VStack(spacing: 12) {
+    // 仮のテキスト表示
     Text("ここにタスク一覧を表示します")
         .foregroundColor(.gray)
 
+    // タブ管理画面へ移動するボタン
     Button(action: {
+        // ナビゲーションパスに「タブ管理画面」を追加して遷移
         navigationPath.append(NavigationItem(id: .tabManage))
     }) {
         Text("タブ管理")
@@ -25,8 +30,8 @@ VStack(spacing: 12) {
 }
 ```
 
-- まだタスク一覧は作らず、説明テキストだけ置きます。
-- ボタンでタブ管理画面へ遷移します。
+現時点ではまだタスクリストの機能は実装せず、仮のテキストと画面遷移のテスト用ボタンだけを配置しています。  
+ボタンを押すと `navigationPath` が更新され、タブ管理画面へと自動的に切り替わります。
 
 ---
 

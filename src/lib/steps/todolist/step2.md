@@ -1,6 +1,6 @@
-# ステップ2: タスク行コンポーネントを作る
+## タスクコンポーネントを作る
 
-ここでは、1つのタスク行を表示するための `ToDoListItem` を作成します。
+ここでは、タスクを表示するための `ToDoListItem` を作成します。
 タップで完了/未完了を切り替えられるようにします。
 
 ### 1. swiftUIの基本構造
@@ -19,44 +19,96 @@ struct ToDoListItem: View {
 struct ToDoListItem: View {} 内に追加
 
 ```swift
+// タスク名
 let title: String
+// 完了状態（trueなら完了、falseなら未完了）
 let isCompleted: Bool
+// タップされた時に実行する処理
 let onToggle: () -> Void
 ```
 
-- `title` はタスク名です。
-- `isCompleted` は完了状態を表します。
-- `onToggle` はタップ時に呼び出す処理です。
+ここでは、タスクのタイトルとなる `title`、完了しているかどうかを管理する `isCompleted`、そしてタップされた時の動作を決める `onToggle` を定義しています。
 
 ### 3. UIの作成
 
 var body: some View {} 内に追加
 
 ```swift
+// タップした時の動作を指定してボタンを作成
 Button(action: onToggle) {
+    // 部品を横並びにする（間隔を12空ける）
     HStack(spacing: 12) {
+        // 完了状態に応じてアイコンを切り替え
         Image(systemName: isCompleted
-              ? "checkmark.circle.fill"
-              : "circle")
+              ? "checkmark.circle.fill" // 完了時：チェックマーク付きの丸
+              : "circle")              // 未完了時：空の丸
+            // 完了時はグレー、未完了時はアクセントカラー（青など）にする
             .foregroundColor(isCompleted ? .gray : .accentColor)
 
+        // タスク名を表示
         Text(title)
+            // 完了時に打ち消し線を引く
             .strikethrough(isCompleted)
+            // 完了時は文字色をグレーにする
             .foregroundColor(isCompleted ? .gray : .primary)
 
+        // 右側に余白を作り、要素を左寄せにする
         Spacer()
     }
+    // 上下の余白を少し追加
     .padding(.vertical, 8)
 }
+// iOS標準のリストスタイルに馴染むボタンスタイルを適用
 .buttonStyle(.plain)
 ```
 
-- `Button` でタップ可能にします。
-- `Image(systemName: ...)` で完了アイコンを切り替えます。
-- `strikethrough` で完了時に打ち消し線を表示します。
-- `Spacer()` で右側に余白を作ります。
+全体を `Button` で囲むことで行全体をタップ可能にしています。  
+`HStack` を使ってアイコンとテキストを横並びに配置し、`Spacer()` を最後に入れることで左寄せのレイアウトを作っています。  
+また、アイコンやテキストは三項演算子（`条件 ? 真の場合 : 偽の場合`）を使って、完了状態 (`isCompleted`) に応じて見た目が変わるようにしています。
+
+
+
+### Canvasプレビューの設定
+struct ToDoListItem: View {}の下に追加
+
+```swift
+// Xcodeのプレビュー機能用コード
+#Preview {
+    // プレビュー用に一時的なビュー構造体を作る
+    struct PreviewWrapper: View {
+        // プレビュー内での状態変化を管理する変数
+        @State private var completed = false
+
+        var body: some View {
+            // 本番と同じようにリスト形式で表示
+            List {
+                // 作成したコンポーネントを表示テスト
+                ToDoListItem(
+                    title: "タップで状態切り替え",
+                    isCompleted: completed
+                ) {
+                    // タップされたら状態を反転させる
+                    completed.toggle()
+                }
+            }
+            // リストのスタイルを標準的なものに設定
+            .listStyle(.plain)
+        }
+    }
+
+    // 作成したプレビュー用ビューを返す
+    return PreviewWrapper()
+}
+```
+
+`#Preview` は、いま作っている画面を確認するための特別なブロックです。  
+ここでは `PreviewWrapper` という仮の入れ物を作り、その中で `@State` を使って変数を管理することで、プレビュー画面上でもタップしてチェックマークが付くかどうかの動作確認ができるようにしています。  
+`List` で囲っているのは、実際の画面と同じような見た目で確認するためです。  
+`#Preview`を書かなくてもアプリは動きますが、こまめに確認することでミスに早く気づけるようになります。  
+もしCanvasが表示されていない場合は、Xcode右上の「Canvas」ボタンを押して表示してください。
 
 ---
+
 
 ## コード全体
 
@@ -89,7 +141,6 @@ struct ToDoListItem: View {
         .buttonStyle(.plain)
     }
 }
-
 
 #Preview {
     struct PreviewWrapper: View {

@@ -5,51 +5,69 @@
 ### 1. 入力用の状態
 
 ```swift
+// 新しく作成するタスクのタイトルを保持する変数
 @State private var newTaskTitle = ""
 ```
+
+タスク追加フォームに入力された文字を一時的に保存しておくための変数を定義しています。
 
 ### 2. safeAreaInset で下部に固定
 
 ```swift
+// 画面の下部に入力エリアを固定表示
 .safeAreaInset(edge: .bottom) {
+    // タブが選択されている場合のみ表示（どのタブに追加するか分からないため）
     if selectedTabId != nil {
         HStack(spacing: 12) {
+            // タスク名入力フィールド
             TextField("新しいタスク", text: $newTaskTitle)
                 .textFieldStyle(.roundedBorder)
-                .submitLabel(.done)
+                .submitLabel(.done) // キーボードの決定キーを「完了」にする
                 .onSubmit {
-                    addTask()
+                    addTask() // Enterキーで追加処理を実行
                 }
 
+            // 追加ボタン
             Button("追加") {
                 addTask()
             }
             .buttonStyle(.borderedProminent)
+            // 空白のみ、または未入力の場合はボタンを押せないようにする
             .disabled(newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
+        // 以下、見た目の調整
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(.ultraThinMaterial)
+        .background(.ultraThinMaterial) // すりガラスのような背景
     }
 }
 ```
 
-- タブ選択中だけ入力欄を表示します。
-- 入力が空ならボタンを無効化します。
+`.safeAreaInset(edge: .bottom)` を使うことで、リストの最下部と重ならないように、画面下部に常に入力エリアを表示させています。  
+タブが選択されていない時は追加先が不明なため、`if selectedTabId != nil` で非表示にしています。
 
 ### 3. 追加処理
 
 ```swift
+// 新しいタスクをデータベースに追加するメソッド
 private func addTask() {
+    // タイトルが空でないか、タブが選択されているかを確認（ガード節）
     guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
 
+    // タスクモデルを作成
     let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
+    // データベースに保存
     ToDoTaskService.addTask(newTask, to: modelContext)
 
+    // 入力欄をクリア
     newTaskTitle = ""
+    // リストを更新して新しいタスクを表示
     loadTasks()
 }
 ```
+
+入力されたタイトルと現在選択されているタブIDを使って新しい `ToDoTask` を作成し、Service経由で保存します。  
+保存後は続けて入力できるように入力欄をクリアし、一覧を再読み込みしています。
 
 ---
 
@@ -105,26 +123,8 @@ struct HomeView: View {
                                 toggleTaskCompletion(task)
                             }
                         }
-                    } else if selectedTabId != nil {
-                        VStack {
-                            Image(systemName: "checkmark.circle")
-                                .font(.system(size: 48))
-                                .foregroundColor(.gray)
-                            Text("タスクはまだありません")
-                                .foregroundColor(.gray)
-                                .padding(.top, 8)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else {
-                        VStack {
-                            Image(systemName: "list.bullet")
-                                .font(.system(size: 48))
-                                .foregroundColor(.gray)
-                            Text("タブを選択してください")
-                                .foregroundColor(.gray)
-                                .padding(.top, 8)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        emptyStateView
                     }
                 }
 
@@ -155,6 +155,31 @@ struct HomeView: View {
                 .padding(.vertical, 12)
                 .background(.ultraThinMaterial)
             }
+        }
+    }
+
+    @ViewBuilder
+    private var emptyStateView: some View {
+        if selectedTabId != nil {
+            VStack {
+                Image(systemName: "checkmark.circle")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タスクはまだありません")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+            VStack {
+                Image(systemName: "list.bullet")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タブを選択してください")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 

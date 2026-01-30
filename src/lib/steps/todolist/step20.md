@@ -5,41 +5,65 @@
 ### 1. 編集用の状態
 
 ```swift
+// 編集ダイアログを表示するかどうかのフラグ
 @State private var showEditDialog = false
+// 編集中のタスク名
 @State private var editTaskTitle = ""
+// 現在編集しようとしているタスクオブジェクト
 @State private var editingTask: ToDoTask?
 ```
+
+タスク名の編集機能を実現するために、「ダイアログの表示状態」「編集中の文字列」「編集対象のタスク自体」という3つの情報を管理します。
 
 ### 2. 長押しで編集開始
 
 ```swift
+// 長押しジェスチャーを検知
 .onLongPressGesture {
+    // 長押しされたら編集モードを開始
     startEdit(task)
 }
 ```
 
-### 3. 編集ダイアログ
-
-```swift
+`.onLongPressGesture` を使うことで、ユーザーがタスクを長押しした時に編集処理（`startEdit`）を呼び出すように設定しています。  
+これにより、タップ（完了切り替え）とは別の操作として編集機能を割り当てています。
+// 自作した textFieldAlert を呼び出して編集画面を表示
 .textFieldAlert(
     isPresented: $showEditDialog,
     title: "タスクの編集",
     message: "新しいタイトルを入力してください。",
-    text: $editTaskTitle,
+    text: $editTaskTitle,      // 入力内容を binding
     placeholder: "例: 牛乳を買う",
-    actionButtonTitle: "保存",
+    actionButtonTitle: "保存", // ボタン名を変更
     action: {
+        // 保存ボタンが押されたら編集内容を反映
         applyEdit()
     }
 )
 ```
+  
 
-### 4. 編集反映
-
-```swift
+ステップ6で作成した `textFieldAlert` を使って、タスク名の変更フォームを表示します。入力されたテキストは `$editTaskTitle` に同期され、保存ボタンを押すと `applyEdit` メソッドが実行されます。 action: {
+        applyEdit()
+    }
+)
+```
+// 編集内容をデータベースへ保存するメソッド
 private func applyEdit() {
+    // 編集対象のタスクが存在することを確認
     guard let editingTask = editingTask else { return }
+
+    // タイトルを書き換え
     editingTask.title = editTaskTitle
+    // データベースに変更を通知・保存
+    ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
+    // リストの表示を更新
+    loadTasks()
+}
+```
+  
+
+編集ダイアログで入力された新しいタイトルを対象のタスクオブジェクトに代入し、Serviceを通じてデータベースに保存します。最後にリストを再読み込みして、画面上のタスク名を更新します。 editingTask.title = editTaskTitle
     ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
     loadTasks()
 }
@@ -105,26 +129,8 @@ struct HomeView: View {
                         startEdit(task)
                      }
                   }
-               } else if selectedTabId != nil {
-                  VStack {
-                     Image(systemName: "checkmark.circle")
-                        .font(.system(size: 48))
-                        .foregroundColor(.gray)
-                     Text("タスクはまだありません")
-                        .foregroundColor(.gray)
-                        .padding(.top, 8)
-                  }
-                  .frame(maxWidth: .infinity, maxHeight: .infinity)
                } else {
-                  VStack {
-                     Image(systemName: "list.bullet")
-                        .font(.system(size: 48))
-                        .foregroundColor(.gray)
-                     Text("タブを選択してください")
-                        .foregroundColor(.gray)
-                        .padding(.top, 8)
-                  }
-                  .frame(maxWidth: .infinity, maxHeight: .infinity)
+                  emptyStateView
                }
             }
 
@@ -167,6 +173,31 @@ struct HomeView: View {
             applyEdit()
          }
       )
+   }
+
+   @ViewBuilder
+   private var emptyStateView: some View {
+      if selectedTabId != nil {
+         VStack {
+            Image(systemName: "checkmark.circle")
+               .font(.system(size: 48))
+               .foregroundColor(.gray)
+            Text("タスクはまだありません")
+               .foregroundColor(.gray)
+               .padding(.top, 8)
+         }
+         .frame(maxWidth: .infinity, maxHeight: .infinity)
+      } else {
+         VStack {
+            Image(systemName: "list.bullet")
+               .font(.system(size: 48))
+               .foregroundColor(.gray)
+            Text("タブを選択してください")
+               .foregroundColor(.gray)
+               .padding(.top, 8)
+         }
+         .frame(maxWidth: .infinity, maxHeight: .infinity)
+      }
    }
 
    private func loadTabs() {

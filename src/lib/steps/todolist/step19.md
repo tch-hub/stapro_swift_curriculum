@@ -5,6 +5,7 @@
 ### 1. onDelete を渡す
 
 ```swift
+// スワイプ削除時の処理（handleDeleteTask）をCustomListに渡す
 CustomList(items: tasks, onDelete: handleDeleteTask) { task in
     ToDoListItem(
         title: task.title,
@@ -15,17 +16,27 @@ CustomList(items: tasks, onDelete: handleDeleteTask) { task in
 }
 ```
 
+`CustomList` の初期化パラメータ `onDelete` に次のステップで説明する削除メソッド `handleDeleteTask` を渡すことで、スワイプ操作による行の削除機能が有効になります。
+
 ### 2. 削除処理
 
 ```swift
+// スワイプ削除イベントを受け取るメソッド
 private func handleDeleteTask(_ offsets: IndexSet) {
+    // 選択された行のインデックス（番号）をループ処理
     for index in offsets {
+        // インデックスから削除対象のタスクを特定
         let taskToDelete = tasks[index]
+        // データベースから削除
         ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
     }
+    // リスト表示を更新
     loadTasks()
 }
 ```
+
+リストでスワイプ削除が行われると、削除対象の行番号（インデックス）の集合が `offsets` として渡されてきます。  
+これを使って対象の `ToDoTask` を特定し、データベースから削除します。
 
 ---
 
@@ -81,26 +92,8 @@ struct HomeView: View {
                                 toggleTaskCompletion(task)
                             }
                         }
-                    } else if selectedTabId != nil {
-                        VStack {
-                            Image(systemName: "checkmark.circle")
-                                .font(.system(size: 48))
-                                .foregroundColor(.gray)
-                            Text("タスクはまだありません")
-                                .foregroundColor(.gray)
-                                .padding(.top, 8)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else {
-                        VStack {
-                            Image(systemName: "list.bullet")
-                                .font(.system(size: 48))
-                                .foregroundColor(.gray)
-                            Text("タブを選択してください")
-                                .foregroundColor(.gray)
-                                .padding(.top, 8)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        emptyStateView
                     }
                 }
 
@@ -131,6 +124,31 @@ struct HomeView: View {
                 .padding(.vertical, 12)
                 .background(.ultraThinMaterial)
             }
+        }
+    }
+
+    @ViewBuilder
+    private var emptyStateView: some View {
+        if selectedTabId != nil {
+            VStack {
+                Image(systemName: "checkmark.circle")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タスクはまだありません")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+            VStack {
+                Image(systemName: "list.bullet")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タブを選択してください")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 

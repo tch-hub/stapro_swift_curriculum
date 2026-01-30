@@ -5,22 +5,32 @@
 ### 1. 切り替え処理を追加
 
 ```swift
+// タスクの完了状態を切り替えるメソッド
 private func toggleTaskCompletion(_ task: ToDoTask) {
+    // Serviceクラスを使ってデータベースの値を更新
     ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
+    // 更新後のリストを再読み込みして表示に反映
     loadTasks()
 }
 ```
 
+`ToDoTaskService` に定義した `toggleTaskCompletion` を呼び出してデータベースを更新し、直後に `loadTasks` を呼ぶことで画面上のタスク一覧も最新の状態（チェックマークの有無など）に更新します。
+
 ### 2. ToDoListItem に処理を渡す
 
 ```swift
+// リスト内の各行を作成
 ToDoListItem(
     title: task.title,
     isCompleted: task.isCompleted
 ) {
+    // タップされた時に呼ばれるクロージャ
     toggleTaskCompletion(task)
 }
 ```
+
+`ToDoListItem` コンポーネントの初期化時に、タップ時の動作として先ほど作成した `toggleTaskCompletion` メソッドを実行するように設定しています。  
+これにより、行をタップするとタスクの完了状態が切り替わるようになります。
 
 ---
 
@@ -75,26 +85,8 @@ struct HomeView: View {
                                 toggleTaskCompletion(task)
                             }
                         }
-                    } else if selectedTabId != nil {
-                        VStack {
-                            Image(systemName: "checkmark.circle")
-                                .font(.system(size: 48))
-                                .foregroundColor(.gray)
-                            Text("タスクはまだありません")
-                                .foregroundColor(.gray)
-                                .padding(.top, 8)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else {
-                        VStack {
-                            Image(systemName: "list.bullet")
-                                .font(.system(size: 48))
-                                .foregroundColor(.gray)
-                            Text("タブを選択してください")
-                                .foregroundColor(.gray)
-                                .padding(.top, 8)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        emptyStateView
                     }
                 }
 
@@ -104,6 +96,31 @@ struct HomeView: View {
             .onAppear {
                 loadTabs()
             }
+        }
+    }
+
+    @ViewBuilder
+    private var emptyStateView: some View {
+        if selectedTabId != nil {
+            VStack {
+                Image(systemName: "checkmark.circle")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タスクはまだありません")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+            VStack {
+                Image(systemName: "list.bullet")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タブを選択してください")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 

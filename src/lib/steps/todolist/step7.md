@@ -8,38 +8,46 @@ SwiftData を使ってタスク情報を保存するためのモデルを作成�
 import Foundation
 import SwiftData
 
+// @Modelをつけることで、このクラスのデータがデータベースに保存できるようになる
 @Model
 final class ToDoTask: Identifiable {
 }
 ```
 
-`@Model` を付けることで、SwiftData の保存対象になります。
+クラス定義の前に `@Model` マクロを記述するだけで、SwiftData がこのクラスをデータベースのテーブル定義として認識し、保存や読み込みができるようになります。
 
 ### 2. 変数の定義
 
 ```swift
+// タスクごとに一意のID（識別子）
 var id: UUID = UUID()
+// タスクのタイトル
 var title: String = ""
+// タスクの詳細メモ
 var detail: String = ""
+// 完了したかどうか
 var isCompleted: Bool = false
+// どのタブ（リスト）に属しているかを紐付けるID
 var tabId: UUID = UUID()
+// 作成日時
 var createdAt: Date = Date()
 ```
 
-- `id` は一意のIDです。
-- `title` はタスク名です。
-- `detail` は詳細説明です。
-- `isCompleted` は完了状態です。
-- `tabId` は所属タブのIDです。
-- `createdAt` は作成日時です。
+タスク管理に必要な情報をプロパティ（変数）として定義しています。  
+それぞれの変数には初期値を設定しておくのが一般的です。  
+`tabId` は、後で作成する「タブ（カテゴリー）」とタスクを紐付けるために使います。
 
 ### 3. 初期化
 
 ```swift
+// 新しいタスクを作成する時の初期設定
 init(title: String, detail: String, tabId: UUID) {
     self.title = title
     self.detail = detail
+    // 作成時は未完了状態にする
     self.isCompleted = false
+    self.tabId = tabId
+    // 作成日時を現在時刻に設定 false
     self.tabId = tabId
     self.createdAt = Date()
 }

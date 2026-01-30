@@ -10,7 +10,8 @@
 // Constants.swift
 import Foundation
 
-// 初期タブデータ
+// 初期データの定義：タブ名と、それに紐づくタスク名のリスト
+// ("タブ名", ["タスク1", "タスク2", ...]) という形式で記述
 let INITIAL_TODO_TABS = [
     ("仕事", [
         "プロジェクト企画書を作成",
@@ -40,35 +41,47 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    // アプリのデータ準備ができたかどうかを管理するフラグ
     @State private var isInitialized = false
+    // データベース操作用のコンテキスト（環境変数から取得）
     @Environment(\.modelContext) private var modelContext
 
     var body: some View {
         if isInitialized {
+            // 準備完了ならメイン画面を表示
             MainStack()
         } else {
+            // 準備中はローディング画面を表示
             VStack {
                 Text("アプリを準備中...")
-                ProgressView()
+                ProgressView() // グルグル回るインジケーター
             }
             .onAppear {
+                // 画面が表示されたら実行（1秒待ってから処理開始）
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     initializeAppIfNeeded()
+                    // 準備完了フラグを立てる -> メイン画面へ切り替わる
                     isInitialized = true
                 }
             }
         }
     }
 
+    // 必要であれば初期データを投入するメソッド
     private func initializeAppIfNeeded() {
+        // 保存されているタブ情報を検索するための記述子
         let descriptor = FetchDescriptor<ToDoTab>()
+        // 既存のデータを取得（失敗した場合は空配列）
         let existingTabs = (try? modelContext.fetch(descriptor)) ?? []
 
+        // データが一件もなければ初期データを投入
         if existingTabs.isEmpty {
             for (tabName, taskNames) in INITIAL_TODO_TABS {
+                // 新しいタブを作成して保存
                 let newTab = ToDoTab(name: tabName)
                 ToDoTabService.addTab(newTab, to: modelContext)
 
+                // そのタブに紐づくタスクを作成して保存
                 for taskName in taskNames {
                     let newTask = ToDoTask(title: taskName, detail: "", tabId: newTab.id)
                     ToDoTaskService.addTask(newTask, to: modelContext)
