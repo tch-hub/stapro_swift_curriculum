@@ -101,7 +101,7 @@ struct InputView: View {
     struct PreviewWrapper: View {
         @State var text = ""
         // リスト表示のダミーデータ
-        @State var tasks: [String] = ["牛乳を買う", "メールを返す"]
+        @State var tasks: [String] = ["リストにアイテムを追加できます"]
 
         var body: some View {
             ZStack(alignment: .bottom) {
