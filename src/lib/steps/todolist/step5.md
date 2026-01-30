@@ -1,53 +1,70 @@
-# ステップ5: フローティングボタンを作る
+# ステップ5: タスク入力バーを作る
 
-画面右下に固定表示する丸いボタンを作成します。
+画面下部に、新しいタスクを追加するための入力フィールドとボタンをまとめたコンポーネントを作成します。
 
-### 1. 変数の定義
+### 1. TaskInputView.swift の作成
 
-```swift
-// ボタンを押した時のアクション
-let action: () -> Void
-// 表示するアイコンの名前（SF Symbols）
-let icon: String
-// ボタンの背景色
-let backgroundColor: Color
-```
-
-ボタンが押された時の処理を受け取るための `action`、表示するアイコン（SF Symbols）を指定するための `icon`、そしてボタンの色を決める `backgroundColor` を定義しています。  
-これにより、場所や用途に合わせて見た目や動作を変えられる再利用可能なボタンになります。
-
-### 2. UIの作成
+`Components` フォルダ内に `TaskInputView` というファイルを作成し、以下のコードを記述します。
 
 ```swift
-// 画面全体に対する配置制御
-VStack {
-    // 上部の余白を埋めて、要素を下に押し下げる
-    Spacer()
+import SwiftUI
 
-    // 横方向の配置制御
-    HStack {
-        // 左側の余白を埋めて、要素を右に押しやる
-        Spacer()
+struct TaskInputView: View {
+    // 入力中のテキスト（親ビューと共有するのでBinding）
+    @Binding var text: String
+    // 追加ボタンが押された時のアクション
+    let onAdd: () -> Void
 
-        // アクション付きボタンの作成
-        Button(action: action) {
-            Image(systemName: icon)
-                .font(.system(size: 24))       // アイコンのサイズ
-                .foregroundColor(.white)       // アイコンの色（白）
-                .frame(width: 60, height: 60)  // ボタン自体の大きさ
-                .background(backgroundColor)   // 背景色を設定
-                .clipShape(Circle())           // 丸型に切り抜く
-                .shadow(radius: 5)             // 影をつけて浮いているように見せる
+    var body: some View {
+        HStack(spacing: 12) {
+            // テキスト入力フィールド
+            TextField("新しいタスク", text: $text)
+                .textFieldStyle(.roundedBorder)
+                .submitLabel(.done) // キーボードの改行ボタンを「完了」にする
+                .onSubmit {
+                    // キーボードで完了を押した時も追加を実行
+                    if !text.isEmpty {
+                        onAdd()
+                    }
+                }
+
+            // 追加ボタン
+            Button("追加") {
+                onAdd()
+            }
+            .buttonStyle(.borderedProminent)
+            // 空白のみや空文字の場合はボタンを押せないようにする
+            .disabled(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
-        // 画面端からの余白
-        .padding(20)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.ultraThinMaterial) // すりガラスのような背景
     }
+}
+
+#Preview {
+    // プレビュー用のダミー変数
+    struct PreviewWrapper: View {
+        @State var text = ""
+        var body: some View {
+            ZStack {
+                Color.gray.ignoresSafeArea()
+                VStack {
+                    Spacer()
+                    TaskInputView(text: $text) {
+                        print("追加ボタンが押されました")
+                        text = "" // 追加後にクリアする動作のシミュレーション
+                    }
+                }
+            }
+        }
+    }
+    return PreviewWrapper()
 }
 ```
 
-`VStack` 内で上部に `Spacer()` を入れることで下揃えにし、さらに `HStack` 内で左側に `Spacer()` を入れることで右揃えにしています。  
-これらを組み合わせることで「画面の右下」への配置を実現しています。  
-ボタン自体は指定されたサイズの正方形（60x60）を作り、`.clipShape(Circle())` で丸く切り抜くことで円形のフローティングアクションボタン（FAB）のようなデザインにしています。
+`@Binding` を使って、入力されたテキストの状態管理を親ビュー（呼び出し元）に任せています。これにより、HomeView などの親側で「追加ボタンが押されたらデータベースに保存してテキストをクリアする」といった制御が可能になります。
+`.background(.ultraThinMaterial)` を使うことで、背景が少し透けて見えるモダンなデザインに仕上げています。
 
 ---
 
@@ -58,38 +75,30 @@ VStack {
 ```swift
 import SwiftUI
 
-struct FloatingButton: View {
-    let action: () -> Void
-    let icon: String
-    let backgroundColor: Color
+struct TaskInputView: View {
+    @Binding var text: String
+    let onAdd: () -> Void
 
     var body: some View {
-        VStack {
-            Spacer()
-
-            HStack {
-                Spacer()
-
-                Button(action: action) {
-                    Image(systemName: icon)
-                        .font(.system(size: 24))
-                        .foregroundColor(.white)
-                        .frame(width: 60, height: 60)
-                        .background(backgroundColor)
-                        .clipShape(Circle())
-                        .shadow(radius: 5)
+        HStack(spacing: 12) {
+            TextField("新しいタスク", text: $text)
+                .textFieldStyle(.roundedBorder)
+                .submitLabel(.done)
+                .onSubmit {
+                    if !text.isEmpty {
+                        onAdd()
+                    }
                 }
-                .padding(20)
-            }
-        }
-    }
-}
 
-#Preview {
-    FloatingButton(
-        action: { },
-        icon: "plus",
-        backgroundColor: .blue
-    )
+            Button("追加") {
+                onAdd()
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.ultraThinMaterial)
+    }
 }
 ```

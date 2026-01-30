@@ -1,51 +1,61 @@
-# ステップ6: 入力付きアラートを作る
+# ステップ6: タブ選択ヘッダーを作る
 
-タスク名の編集などで使える、テキスト入力付きアラートを作成します。
+タブの切り替えと管理画面への移動ボタンをまとめたヘッダーコンポーネントを作成します。
 
-### 1. 拡張メソッドの作成
+### 1. TabHeaderView.swift の作成
+
+`Components` フォルダ内に `TabHeaderView` というファイルを作成し、以下のコードを記述します。
 
 ```swift
 import SwiftUI
 
-// Viewを拡張して、テキスト入力付きのアラートを使えるようにする
-extension View {
-    // テキストフィールド付きアラートを表示するメソッド
-    func textFieldAlert(
-        isPresented: Binding<Bool>,  // アラートの表示/非表示の管理
-        title: String,               // アラートのタイトル
-        message: String,             // アラートの説明文
-        text: Binding<String>,       // 入力されたテキストを紐付ける変数
-        placeholder: String = "",    // プレースホルダー（入力のヒント）
-        actionButtonTitle: String = "確認", // 実行ボタンのラベル
-        action: @escaping () -> Void // 実行ボタンを押した時の処理
-    ) -> some View {
-        // 標準のalertの中にTextFieldを配置する
-        self.alert(title, isPresented: isPresented) {
-            // テキスト入力フィールド
-            TextField(placeholder, text: text)
+struct TabHeaderView: View {
+    // 表示するタブのデータ一覧
+    let tabs: [ToDoTab]
+    // 選択中のタブID（親ビューと共有するのでBinding）
+    @Binding var selectedTabId: UUID?
+    // 「タブ管理」ボタンが押された時のアクション
+    let onManageTabs: () -> Void
 
-            // キャンセルボタン（role: .cancelを指定すると左側に配置される）
-            Button("キャンセル", role: .cancel) {
-                // キャンセル時は何もしない（自動的に閉じる）
+    var body: some View {
+        HStack(spacing: 12) {
+            // タブを選択するピッカー
+            Picker("タブを選択", selection: $selectedTabId) {
+                // タブ一覧をループして選択肢を作成
+                ForEach(tabs) { tab in
+                    // tag には Optional(tab.id) を渡す必要がある点に注意
+                    Text(tab.name).tag(Optional(tab.id))
+                }
             }
+            .pickerStyle(.menu) // メニュースタイルで表示
 
-            // 実行ボタン
-            Button(actionButtonTitle) {
-                action()
+            // タブ管理画面へ移動するボタン
+            Button(action: onManageTabs) {
+                Label("タブ管理", systemImage: "folder")
             }
-            // 入力が空っぽの場合はボタンを押せないように無効化する
-            .disabled(text.wrappedValue.isEmpty)
+        }
+        .padding(.bottom, 8) // 下に少し余白を開ける
+    }
+}
 
-        } message: {
-            // メッセージ本文
-            Text(message)
+#Preview {
+    // プレビュー用のダミー変数
+    struct PreviewWrapper: View {
+        @State var selectedId: UUID?
+        var body: some View {
+            TabHeaderView(
+                tabs: [], // ダミーなので空配列
+                selectedTabId: $selectedId,
+                onManageTabs: { print("管理画面へ") }
+            )
         }
     }
+    return PreviewWrapper()
 }
 ```
 
-通常の `.alert` モディファイアの中に `TextField` を配置することで、OS標準のスタイルに沿ったテキスト入力付きアラートを作成しています。  
-バインディングされた `text` 変数を通じて入力内容を受け取り、`.disabled(text.wrappedValue.isEmpty)` を設定することで、何も入力されていない状態では実行ボタンが押せないように制御しています。
+`Picker` を使うことで、複数のタブから1つを選択するUIを簡単に作れます。選択されたIDは `$selectedTabId` を通じて親ビューに伝わります。
+右側には「タブ管理」ボタンを配置し、押されたら `onManageTabs` クロージャを実行します。
 
 ---
 
@@ -56,48 +66,28 @@ extension View {
 ```swift
 import SwiftUI
 
-extension View {
-    func textFieldAlert(
-        isPresented: Binding<Bool>,
-        title: String,
-        message: String,
-        text: Binding<String>,
-        placeholder: String = "",
-        actionButtonTitle: String = "確認",
-        action: @escaping () -> Void
-    ) -> some View {
-        self.alert(title, isPresented: isPresented) {
-            // ここにTextFieldを配置するだけで、OS標準の入力付きアラートになる
-            TextField(placeholder, text: text)
+struct TabHeaderView: View {
+    let tabs: [ToDoTab]
+    @Binding var selectedTabId: UUID?
+    let onManageTabs: () -> Void
 
-            // キャンセルボタン（自動的に閉じる）
-            Button("キャンセル", role: .cancel) {
-                // キャンセル時の処理があればここに書く
-                // text.wrappedValue = "" // 必要ならクリアする
+    var body: some View {
+        HStack(spacing: 12) {
+            Picker("タブを選択", selection: $selectedTabId) {
+                ForEach(tabs) { tab in
+                    Text(tab.name).tag(Optional(tab.id))
+                }
             }
+            .pickerStyle(.menu)
 
-            // 実行ボタン
-            Button(actionButtonTitle) {
-                action()
+            Button(action: onManageTabs) {
+                Label("タブ管理", systemImage: "folder")
             }
-            .disabled(text.wrappedValue.isEmpty) // 入力が空なら押せないようにする
-
-        } message: {
-            Text(message)
         }
+        .padding(.bottom, 8)
     }
 }
-
-// --- 使い方 ---
-
-#Preview {
-    struct PreviewWrapper: View {
-        @State private var showDialog = false
-        @State private var inputText = ""
-        @State private var displayString = "ここが変わります"
-
-        var body: some View {
-            VStack(spacing: 20) {
+```
                 Text(displayString)
                     .font(.title)
 

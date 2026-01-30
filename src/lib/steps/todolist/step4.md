@@ -1,43 +1,54 @@
-# ステップ4: 削除確認アラートを共通化する
+# ステップ4: 空の状態を表示するコンポーネントを作る
 
-削除前に確認を出せるように、`deleteAlert` という拡張メソッドを作ります。
+タスクがない時や、タブが選択されていない時に表示する「空の状態（Empty State）」の画面を作成します。リストが空っぽの時に真っ白な画面を表示する代わりに、ユーザーに状況を伝えるアイコンやテキストを表示します。
 
-### 1. 拡張メソッドの作成
+### 1. EmptyStateView.swift の作成
+
+`Components` フォルダ内に `EmptyStateView` というファイルを作成し、以下のコードを記述します。
 
 ```swift
 import SwiftUI
 
-// Viewを拡張して、どこからでも呼び出せるメソッドを追加
-extension View {
-    // 削除確認アラートを表示するメソッド
-    // デフォルト引数を使って、呼び出し時は必要な項目だけ指定すれば良いようにする
-    func deleteAlert(
-        isPresented: Binding<Bool>, // アラートの表示状態を紐付ける
-        title: String = "削除確認", // タイトルの初期値
-        message: String = "このタスクを完全に削除しますか？", // メッセージの初期値
-        deleteText: String = "削除", // 削除ボタンの文言
-        cancelText: String = "キャンセル", // キャンセルボタンの文言
-        onDelete: @escaping () -> Void // 削除実行時の処理（クロージャ）
-    ) -> some View {
-        // 標準のalertモディファイアを使用
-        self.alert(title, isPresented: isPresented) {
-            // 削除ボタン（赤字になる.destructiveスタイル）
-            Button(deleteText, role: .destructive) {
-                onDelete()
+struct EmptyStateView: View {
+    // 選択中のタブがあるかどうかを確認するフラグ
+    // trueなら「タスクなし」、falseなら「タブ未選択」を表示
+    let hasSelectedTab: Bool
+
+    var body: some View {
+        if hasSelectedTab {
+            // タブは選ばれているが、タスクがない場合
+            VStack {
+                Image(systemName: "checkmark.circle") // チェックマークアイコン
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タスクはまだありません")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
             }
-            // キャンセルボタン（.cancelスタイル）
-            Button(cancelText, role: .cancel) {}
-        } message: {
-            // アラートのメッセージ部分
-            Text(message)
+            .frame(maxWidth: .infinity, maxHeight: .infinity) // 画面いっぱいに広げる
+        } else {
+            // タブ自体が選ばれていない場合
+            VStack {
+                Image(systemName: "list.bullet") // リストアイコン
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タブを選択してください")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
+
+#Preview {
+    // プレビューで見た目を確認
+    EmptyStateView(hasSelectedTab: true)
+}
 ```
 
-SwiftUIの `View` プロトコルを拡張（`extension`）することで、アプリ内のどのビューからでも `.deleteAlert(...)` として呼び出せるようにしています。  
-引数にはデフォルト値（`= "削除確認"` など）を設定しているため、利用する際は必要なパラメータだけを指定すれば動作します。  
-`isPresented` でアラートの表示・非表示を管理し、削除ボタンが押された時には `onDelete` クロージャが実行される仕組みです。
+`hasSelectedTab` という変数を受け取り、その値によって表示内容を切り替えます。
+`ViewBuilder` などを使わず、シンプルな条件分岐で実装しています。アイコンとテキストを `VStack` で縦に並べ、`.frame(maxWidth: .infinity, maxHeight: .infinity)` をつけることで、親ビューの空きスペース全体に中央揃えで表示されるようにしています。
 
 ---
 
@@ -48,45 +59,31 @@ SwiftUIの `View` プロトコルを拡張（`extension`）することで、ア
 ```swift
 import SwiftUI
 
-extension View {
-    func deleteAlert(
-        isPresented: Binding<Bool>,
-        title: String = "削除確認",
-        message: String = "このタスクを完全に削除しますか？",
-        deleteText: String = "削除",
-        cancelText: String = "キャンセル",
-        onDelete: @escaping () -> Void
-    ) -> some View {
-        self.alert(title, isPresented: isPresented) {
-            Button(deleteText, role: .destructive) {
-                onDelete()
+struct EmptyStateView: View {
+    let hasSelectedTab: Bool
+
+    var body: some View {
+        if hasSelectedTab {
+            VStack {
+                Image(systemName: "checkmark.circle")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タスクはまだありません")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
             }
-            Button(cancelText, role: .cancel) {}
-        } message: {
-            Text(message)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+            VStack {
+                Image(systemName: "list.bullet")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タブを選択してください")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
-}
-
-// --- 使い方 ---
-
-#Preview {
-    struct PreviewWrapper: View {
-        @State private var showAlert = false
-
-        var body: some View {
-            VStack(spacing: 40) {
-                Button("パターンB: アラートで確認") { showAlert = true }
-                    .deleteAlert(
-                        isPresented: $showAlert,
-                        deleteText: "実行",
-                        onDelete: {
-                            print("アラートで削除")
-                        }
-                    )
-            }
-        }
-    }
-    return PreviewWrapper()
 }
 ```

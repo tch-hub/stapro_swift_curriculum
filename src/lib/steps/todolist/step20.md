@@ -2,7 +2,39 @@
 
 長押しでタスク名を編集できるようにします。
 
-### 1. 編集用の状態
+### 1. 入力付きアラートの拡張機能を追加
+
+タスク名の編集にはテキスト入力が必要ですが、標準のアラートだけでは入力欄を作れません。そこで、便利な拡張機能を追加します。
+`View+Extensions.swift` （または `Extensions.swift`）という新しいファイルを作成し、以下のコードを追加してください。
+
+```swift
+import SwiftUI
+
+extension View {
+    func textFieldAlert(
+        isPresented: Binding<Bool>,
+        title: String,
+        message: String,
+        text: Binding<String>,
+        placeholder: String = "",
+        actionButtonTitle: String = "保存",
+        action: @escaping () -> Void
+    ) -> some View {
+        self.alert(title, isPresented: isPresented) {
+            TextField(placeholder, text: text)
+            Button("キャンセル", role: .cancel) {}
+            Button(actionButtonTitle) {
+                action()
+            }
+            .disabled(text.wrappedValue.isEmpty)
+        } message: {
+            Text(message)
+        }
+    }
+}
+```
+
+### 2. 編集用の状態
 
 ```swift
 // 編集ダイアログを表示するかどうかのフラグ
@@ -15,7 +47,7 @@
 
 タスク名の編集機能を実現するために、「ダイアログの表示状態」「編集中の文字列」「編集対象のタスク自体」という3つの情報を管理します。
 
-### 2. 長押しで編集開始
+### 3. 長押しで編集開始
 
 ```swift
 // 長押しジェスチャーを検知
@@ -98,24 +130,16 @@ struct HomeView: View {
                Text("タブがありません")
                   .padding()
             } else {
-               HStack(spacing: 12) {
-                  Picker("タブを選択", selection: $selectedTabId) {
-                     ForEach(tabs) { tab in
-                        Text(tab.name).tag(Optional(tab.id))
-                     }
-                  }
-                  .pickerStyle(.menu)
-                  .onChange(of: selectedTabId) { _, _ in
-                     loadTasks()
-                  }
-
-                  Button(action: {
+               TabHeaderView(
+                  tabs: tabs,
+                  selectedTabId: $selectedTabId,
+                  onManageTabs: {
                      navigationPath.append(NavigationItem(id: .tabManage))
-                  }) {
-                     Label("タブ管理", systemImage: "folder")
                   }
+               )
+               .onChange(of: selectedTabId) { _, _ in
+                  loadTasks()
                }
-               .padding(.bottom, 8)
 
                if selectedTabId != nil && !tasks.isEmpty {
                   CustomList(items: tasks, onDelete: handleDeleteTask) { task in
@@ -130,7 +154,7 @@ struct HomeView: View {
                      }
                   }
                } else {
-                  emptyStateView
+                  EmptyStateView(hasSelectedTab: selectedTabId != nil)
                }
             }
 
@@ -143,23 +167,7 @@ struct HomeView: View {
       }
       .safeAreaInset(edge: .bottom) {
          if selectedTabId != nil {
-            HStack(spacing: 12) {
-               TextField("新しいタスク", text: $newTaskTitle)
-                  .textFieldStyle(.roundedBorder)
-                  .submitLabel(.done)
-                  .onSubmit {
-                     addTask()
-                  }
-
-               Button("追加") {
-                  addTask()
-               }
-               .buttonStyle(.borderedProminent)
-               .disabled(newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(.ultraThinMaterial)
+            TaskInputView(text: $newTaskTitle, onAdd: addTask)
          }
       }
       .textFieldAlert(
@@ -175,30 +183,7 @@ struct HomeView: View {
       )
    }
 
-   @ViewBuilder
-   private var emptyStateView: some View {
-      if selectedTabId != nil {
-         VStack {
-            Image(systemName: "checkmark.circle")
-               .font(.system(size: 48))
-               .foregroundColor(.gray)
-            Text("タスクはまだありません")
-               .foregroundColor(.gray)
-               .padding(.top, 8)
-         }
-         .frame(maxWidth: .infinity, maxHeight: .infinity)
-      } else {
-         VStack {
-            Image(systemName: "list.bullet")
-               .font(.system(size: 48))
-               .foregroundColor(.gray)
-            Text("タブを選択してください")
-               .foregroundColor(.gray)
-               .padding(.top, 8)
-         }
-         .frame(maxWidth: .infinity, maxHeight: .infinity)
-      }
-   }
+
 
    private func loadTabs() {
       let descriptor = FetchDescriptor<ToDoTab>()

@@ -11,40 +11,18 @@
 
 タスク追加フォームに入力された文字を一時的に保存しておくための変数を定義しています。
 
-### 2. safeAreaInset で下部に固定
-
+### 2. コンポーネントの配置
 ```swift
 // 画面の下部に入力エリアを固定表示
 .safeAreaInset(edge: .bottom) {
-    // タブが選択されている場合のみ表示（どのタブに追加するか分からないため）
     if selectedTabId != nil {
-        HStack(spacing: 12) {
-            // タスク名入力フィールド
-            TextField("新しいタスク", text: $newTaskTitle)
-                .textFieldStyle(.roundedBorder)
-                .submitLabel(.done) // キーボードの決定キーを「完了」にする
-                .onSubmit {
-                    addTask() // Enterキーで追加処理を実行
-                }
-
-            // 追加ボタン
-            Button("追加") {
-                addTask()
-            }
-            .buttonStyle(.borderedProminent)
-            // 空白のみ、または未入力の場合はボタンを押せないようにする
-            .disabled(newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-        }
-        // 以下、見た目の調整
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(.ultraThinMaterial) // すりガラスのような背景
+        TaskInputView(text: $newTaskTitle, onAdd: addTask)
     }
 }
 ```
 
-`.safeAreaInset(edge: .bottom)` を使うことで、リストの最下部と重ならないように、画面下部に常に入力エリアを表示させています。  
-タブが選択されていない時は追加先が不明なため、`if selectedTabId != nil` で非表示にしています。
+`.safeAreaInset(edge: .bottom)` を使って、ステップ5で作成した `TaskInputView` コンポーネントを画面下部に配置します。  
+`text: $newTaskTitle` で入力値をバインディングし、`onAdd: addTask` で追加ボタンが押された時の処理を渡しています。
 
 ### 3. 追加処理
 
@@ -95,24 +73,16 @@ struct HomeView: View {
                     Text("タブがありません")
                         .padding()
                 } else {
-                    HStack(spacing: 12) {
-                        Picker("タブを選択", selection: $selectedTabId) {
-                            ForEach(tabs) { tab in
-                                Text(tab.name).tag(Optional(tab.id))
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: selectedTabId) { _, _ in
-                            loadTasks()
-                        }
-
-                        Button(action: {
+                    TabHeaderView(
+                        tabs: tabs,
+                        selectedTabId: $selectedTabId,
+                        onManageTabs: {
                             navigationPath.append(NavigationItem(id: .tabManage))
-                        }) {
-                            Label("タブ管理", systemImage: "folder")
                         }
+                    )
+                    .onChange(of: selectedTabId) { _, _ in
+                        loadTasks()
                     }
-                    .padding(.bottom, 8)
 
                     if selectedTabId != nil && !tasks.isEmpty {
                         CustomList(items: tasks) { task in
@@ -124,7 +94,7 @@ struct HomeView: View {
                             }
                         }
                     } else {
-                        emptyStateView
+                        EmptyStateView(hasSelectedTab: selectedTabId != nil)
                     }
                 }
 
@@ -137,49 +107,8 @@ struct HomeView: View {
         }
         .safeAreaInset(edge: .bottom) {
             if selectedTabId != nil {
-                HStack(spacing: 12) {
-                    TextField("新しいタスク", text: $newTaskTitle)
-                        .textFieldStyle(.roundedBorder)
-                        .submitLabel(.done)
-                        .onSubmit {
-                            addTask()
-                        }
-
-                    Button("追加") {
-                        addTask()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .background(.ultraThinMaterial)
+                TaskInputView(text: $newTaskTitle, onAdd: addTask)
             }
-        }
-    }
-
-    @ViewBuilder
-    private var emptyStateView: some View {
-        if selectedTabId != nil {
-            VStack {
-                Image(systemName: "checkmark.circle")
-                    .font(.system(size: 48))
-                    .foregroundColor(.gray)
-                Text("タスクはまだありません")
-                    .foregroundColor(.gray)
-                    .padding(.top, 8)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else {
-            VStack {
-                Image(systemName: "list.bullet")
-                    .font(.system(size: 48))
-                    .foregroundColor(.gray)
-                Text("タブを選択してください")
-                    .foregroundColor(.gray)
-                    .padding(.top, 8)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 

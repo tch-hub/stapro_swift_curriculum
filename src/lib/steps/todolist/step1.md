@@ -25,20 +25,25 @@
 ```
 ToDoList/
 ├── ToDoListApp.swift  # アプリのエントリーポイント
-├── Screens/
-│   ├── Views
-    │   ├── MainStack.swift
-    │   └── ContentView.swift
-│   └── Navigation/
-│       │── ScreenID.swift
-│       └── NavigationItem.swift
+├── Views
+│   ├── ContentView.swift
+│   ├── HomeView.swift
+│   ├── MainStack.swift
+│   └── TabmanageView.swift
 ├── SwiftData/
+│   ├── Constants.swift
 │   ├── ToDoTask.swift
 │   └── ToDoTab.swift
 ├── Services/
 │   ├── ToDoTaskService.swift
 │   └── ToDoTabService.swift
 └── Components/
+    ├── CustomAlert.swift
+    ├── List.swift
+    ├── ListItem.swift
+    ├── EmptyStateView.swift
+    ├── TabHeaderView.swift
+    └── TaskInputView.swift
 ```
 
 Xcodeで新しいフォルダを作る手順

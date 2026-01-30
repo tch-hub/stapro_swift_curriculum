@@ -51,76 +51,41 @@ struct HomeView: View {
     @Binding var navigationPath: [NavigationItem]
 
     var body: some View {
-        ZStack {
-            VStack {
-                if tabs.isEmpty {
-                    Text("タブがありません")
-                        .padding()
-                } else {
-                    HStack(spacing: 12) {
-                        Picker("タブを選択", selection: $selectedTabId) {
-                            ForEach(tabs) { tab in
-                                Text(tab.name).tag(Optional(tab.id))
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: selectedTabId) { _, _ in
-                            loadTasks()
-                        }
-
-                        Button(action: {
-                            navigationPath.append(NavigationItem(id: .tabManage))
-                        }) {
-                            Label("タブ管理", systemImage: "folder")
-                        }
+        VStack {
+            if tabs.isEmpty {
+                Text("タブがありません")
+                    .padding()
+            } else {
+                TabHeaderView(
+                    tabs: tabs,
+                    selectedTabId: $selectedTabId,
+                    onManageTabs: {
+                        navigationPath.append(NavigationItem(id: .tabManage))
                     }
-                    .padding(.bottom, 8)
-
-                    if selectedTabId != nil && !tasks.isEmpty {
-                        CustomList(items: tasks) { task in
-                            ToDoListItem(
-                                title: task.title,
-                                isCompleted: task.isCompleted
-                            ) {
-                                toggleTaskCompletion(task)
-                            }
-                        }
-                    } else {
-                        emptyStateView
-                    }
+                )
+                .onChange(of: selectedTabId) { _, _ in
+                    loadTasks()
                 }
 
+                if selectedTabId != nil && !tasks.isEmpty {
+                    CustomList(items: tasks) { task in
+                        ToDoListItem(
+                            title: task.title,
+                            isCompleted: task.isCompleted
+                        ) {
+                            toggleTaskCompletion(task)
+                        }
+                    }
+                } else {
+                    EmptyStateView(hasSelectedTab: selectedTabId != nil)
+                }
             }
-            .padding()
-            .navigationTitle("ToDoリスト")
-            .onAppear {
-                loadTabs()
-            }
-        }
-    }
 
-    @ViewBuilder
-    private var emptyStateView: some View {
-        if selectedTabId != nil {
-            VStack {
-                Image(systemName: "checkmark.circle")
-                    .font(.system(size: 48))
-                    .foregroundColor(.gray)
-                Text("タスクはまだありません")
-                    .foregroundColor(.gray)
-                    .padding(.top, 8)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else {
-            VStack {
-                Image(systemName: "list.bullet")
-                    .font(.system(size: 48))
-                    .foregroundColor(.gray)
-                Text("タブを選択してください")
-                    .foregroundColor(.gray)
-                    .padding(.top, 8)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .padding()
+        .navigationTitle("ToDoリスト")
+        .onAppear {
+            loadTabs()
         }
     }
 

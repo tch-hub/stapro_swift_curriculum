@@ -21,23 +21,23 @@
 ### 2. タブの選択UI
 
 ```swift
-// ドロップダウンメニューのようなピッカーを表示
-Picker("タブを選択", selection: $selectedTabId) {
-    // タブの数だけ選択肢を作成
-    ForEach(tabs) { tab in
-        // タグ付けすることで、選択された時に selectedTabId に tab.id が入る
-        Text(tab.name).tag(Optional(tab.id))
+// TabHeaderViewコンポーネントを使ってヘッダーを表示
+TabHeaderView(
+    tabs: tabs,
+    selectedTabId: $selectedTabId,
+    onManageTabs: {
+        // タブ管理画面への遷移
+        navigationPath.append(NavigationItem(id: .tabManage))
     }
-}
-.pickerStyle(.menu) // メニュースタイル（ポップアップボタンのような見た目）
+)
+// タブが変更されたらタスクを再読み込み
 .onChange(of: selectedTabId) { _, _ in
-    // タブが変更されたら、そのタブのタスクを再読み込みする
     loadTasks()
 }
 ```
-  
 
-SwiftUIの `Picker` を使ってタブ切り替え機能を作っています。`.onChange(of: selectedTabId)` を使うことで、ユーザーがタブを変更するたびに `loadTasks()` が呼び出され、表示されるタスク一覧が更新される仕組みです。
+ステップ6で作った `TabHeaderView` を配置します。  
+`.onChange` をつけることで、ヘッダー内でタブが切り替えられたタイミングを検知し、`loadTasks()` を実行して表示を更新します。
 
 ### 3. タスク一覧と空状態
 
@@ -52,31 +52,14 @@ if selectedTabId != nil && !tasks.isEmpty {
             // 完了切り替えは次のステップで実装します
         }
     }
-} else if selectedTabId != nil {
-    // 2. タブは選択されているが、タスクがない場合：空っぽ表示
-    VStack {
-        Image(systemName: "checkmark.circle")
-            .font(.system(size: 48))
-            .foregroundColor(.gray)
-        Text("タスクはまだありません")
-            .foregroundColor(.gray)
-            .padding(.top, 8)
-    }
 } else {
-    // 3. タブがまだ選択されていない場合（初期状態など）
-    VStack {
-        Image(systemName: "list.bullet")
-            .font(.system(size: 48))
-            .foregroundColor(.gray)
-        Text("タブを選択してください")
-            .foregroundColor(.gray)
-            .padding(.top, 8)
-    }
+    // 2. それ以外の場合：EmptyStateViewを表示
+    // タブが選択されているかどうかを渡して、表示内容（タスクなし or タブ未選択）を切り替え
+    EmptyStateView(hasSelectedTab: selectedTabId != nil)
 }
 ```
-  
 
-画面の状態に応じて3パターンの表示を切り替えています。タスクがある場合はリストを表示し、データがない場合やタブ未選択の場合は、それぞれユーザーに状況を伝えるためのアイコンとテキストを表示しています。
+リスト部分の条件分岐です。タスクがある場合はリストを表示し、それ以外の場合はステップ4で作った `EmptyStateView` を利用して「タスクなし」または「タブ未選択」の画面を表示します。
 
 ---
 
@@ -102,24 +85,16 @@ struct HomeView: View {
                 Text("タブがありません")
                     .padding()
             } else {
-                HStack(spacing: 12) {
-                    Picker("タブを選択", selection: $selectedTabId) {
-                        ForEach(tabs) { tab in
-                            Text(tab.name).tag(Optional(tab.id))
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .onChange(of: selectedTabId) { _, _ in
-                        loadTasks()
-                    }
-
-                    Button(action: {
+                TabHeaderView(
+                    tabs: tabs,
+                    selectedTabId: $selectedTabId,
+                    onManageTabs: {
                         navigationPath.append(NavigationItem(id: .tabManage))
-                    }) {
-                        Text("タブ管理")
                     }
+                )
+                .onChange(of: selectedTabId) { _, _ in
+                    loadTasks()
                 }
-                .padding(.bottom, 8)
 
                 if selectedTabId != nil && !tasks.isEmpty {
                     CustomList(items: tasks) { task in
@@ -131,7 +106,7 @@ struct HomeView: View {
                         }
                     }
                 } else {
-                    emptyStateView
+                    EmptyStateView(hasSelectedTab: selectedTabId != nil)
                 }
             }
 
@@ -140,31 +115,6 @@ struct HomeView: View {
         .onAppear {
             loadTabs()
             loadTasks()
-        }
-    }
-
-    @ViewBuilder
-    private var emptyStateView: some View {
-        if selectedTabId != nil {
-            VStack {
-                Image(systemName: "checkmark.circle")
-                    .font(.system(size: 48))
-                    .foregroundColor(.gray)
-                Text("タスクはまだありません")
-                    .foregroundColor(.gray)
-                    .padding(.top, 8)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else {
-            VStack {
-                Image(systemName: "list.bullet")
-                    .font(.system(size: 48))
-                    .foregroundColor(.gray)
-                Text("タブを選択してください")
-                    .foregroundColor(.gray)
-                    .padding(.top, 8)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 
