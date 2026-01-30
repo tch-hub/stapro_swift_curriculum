@@ -23,7 +23,7 @@
 ```swift
 // TabHeaderViewコンポーネントを使ってヘッダーを表示
 TabHeaderView(
-    tabs: tabs,
+    tabs: tabs.map { .init(id: $0.id, name: $0.name) },
     selectedTabId: $selectedTabId,
     onManageTabs: {
         // タブ管理画面への遷移
@@ -37,6 +37,8 @@ TabHeaderView(
 ```
 
 ステップ6で作った `TabHeaderView` を配置します。  
+`TabHeaderView` 側で `ToDoTab` を独自定義しているため、SwiftDataの `ToDoTab` をそのまま渡すと型が合わずにエラーになります。  
+そのため、`tabs` は `id` と `name` だけを使って `TabHeaderView.ToDoTab` に変換して渡します。  
 `.onChange` をつけることで、ヘッダー内でタブが切り替えられたタイミングを検知し、`loadTasks()` を実行して表示を更新します。
 
 ### 3. タスク一覧と空状態
@@ -86,7 +88,7 @@ struct HomeView: View {
                     .padding()
             } else {
                 TabHeaderView(
-                    tabs: tabs,
+                    tabs: tabs.map { .init(id: $0.id, name: $0.name) },
                     selectedTabId: $selectedTabId,
                     onManageTabs: {
                         navigationPath.append(NavigationItem(id: .tabManage))
