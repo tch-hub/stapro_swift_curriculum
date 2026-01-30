@@ -72,7 +72,6 @@ tic func toggleTaskCompletion(_ task: ToDoTask, modelContext: ModelContext) {
     }
 }
 ```
-  
 
 特定のタブに含まれるタスクを一括削除する機能です。`#Predicate` を使って「`tabId` が一致するタスク」という検索条件を作り、該当するデータを全て取得してから削除しています。
 

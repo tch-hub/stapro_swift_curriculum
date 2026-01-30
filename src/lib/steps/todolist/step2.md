@@ -66,9 +66,8 @@ Button(action: onToggle) {
 `HStack` を使ってアイコンとテキストを横並びに配置し、`Spacer()` を最後に入れることで左寄せのレイアウトを作っています。  
 また、アイコンやテキストは三項演算子（`条件 ? 真の場合 : 偽の場合`）を使って、完了状態 (`isCompleted`) に応じて見た目が変わるようにしています。
 
-
-
 ### Canvasプレビューの設定
+
 struct ToDoListItem: View {}の下に追加
 
 ```swift
@@ -108,7 +107,6 @@ struct ToDoListItem: View {}の下に追加
 もしCanvasが表示されていない場合は、Xcode右上の「Canvas」ボタンを押して表示してください。
 
 ---
-
 
 ## コード全体
 

@@ -61,8 +61,7 @@ HStack(spacing: 12) {
     // 名前が空（スペースのみも含む）の場合はボタンを押せないようにする
     .disabled(newTabName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
-```  
-
+```
 
 テキストフィールドと追加ボタンを `HStack` で横に並べています。誤操作を防ぐため、タブ名が空欄やスペースのみの場合には `.disabled(...)` を使って追加ボタンを無効化しています。
 

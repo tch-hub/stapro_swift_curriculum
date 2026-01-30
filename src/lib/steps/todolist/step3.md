@@ -58,9 +58,9 @@ List {
 }
 // リストの見た目をプレーンなスタイルに設定
 .listStyle(.plain)
-```  
-`onDelete` が渡されている場合は `.onDelete(perform: onDelete)` を適用してスワイプ削除を有効にし、渡されていない場合は単にリスト表示のみを行います。  
+```
 
+`onDelete` が渡されている場合は `.onDelete(perform: onDelete)` を適用してスワイプ削除を有効にし、渡されていない場合は単にリスト表示のみを行います。
 
 `List` コンポーネントを使用してデータを一覧表示します。`onDelete` が渡されている場合は `.onDelete(perform: onDelete)` を適用してスワイプ削除を有効にし、渡されていない場合は単にリスト表示のみを行います。各行の表示内容は `rowContent(item)` を呼び出すことで生成し、`.listRowSeparator(.visible)` で明示的に区切り線を表示しています。
 

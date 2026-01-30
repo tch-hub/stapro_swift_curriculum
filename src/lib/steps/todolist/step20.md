@@ -61,29 +61,31 @@ extension View {
 これにより、タップ（完了切り替え）とは別の操作として編集機能を割り当てています。
 // 自作した textFieldAlert を呼び出して編集画面を表示
 .textFieldAlert(
-    isPresented: $showEditDialog,
-    title: "タスクの編集",
-    message: "新しいタイトルを入力してください。",
-    text: $editTaskTitle,      // 入力内容を binding
-    placeholder: "例: 牛乳を買う",
-    actionButtonTitle: "保存", // ボタン名を変更
-    action: {
-        // 保存ボタンが押されたら編集内容を反映
-        applyEdit()
-    }
+isPresented: $showEditDialog,
+title: "タスクの編集",
+message: "新しいタイトルを入力してください。",
+text: $editTaskTitle, // 入力内容を binding
+placeholder: "例: 牛乳を買う",
+actionButtonTitle: "保存", // ボタン名を変更
+action: {
+// 保存ボタンが押されたら編集内容を反映
+applyEdit()
+}
 )
+
 ```
-  
+
 
 ステップ6で作成した `textFieldAlert` を使って、タスク名の変更フォームを表示します。入力されたテキストは `$editTaskTitle` に同期され、保存ボタンを押すと `applyEdit` メソッドが実行されます。 action: {
         applyEdit()
     }
 )
 ```
+
 // 編集内容をデータベースへ保存するメソッド
 private func applyEdit() {
-    // 編集対象のタスクが存在することを確認
-    guard let editingTask = editingTask else { return }
+// 編集対象のタスクが存在することを確認
+guard let editingTask = editingTask else { return }
 
     // タイトルを書き換え
     editingTask.title = editTaskTitle
@@ -91,9 +93,11 @@ private func applyEdit() {
     ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
     // リストの表示を更新
     loadTasks()
+
 }
+
 ```
-  
+
 
 編集ダイアログで入力された新しいタイトルを対象のタスクオブジェクトに代入し、Serviceを通じてデータベースに保存します。最後にリストを再読み込みして、画面上のタスク名を更新します。 editingTask.title = editTaskTitle
     ToDoTaskService.updateTask(editingTask, modelContext: modelContext)

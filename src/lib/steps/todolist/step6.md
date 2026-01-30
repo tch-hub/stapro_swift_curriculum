@@ -88,6 +88,7 @@ struct TabHeaderView: View {
     }
 }
 ```
+
                 Text(displayString)
                     .font(.title)
 
@@ -110,5 +111,9 @@ struct TabHeaderView: View {
         }
     }
     return PreviewWrapper()
+
 }
+
+```
+
 ```

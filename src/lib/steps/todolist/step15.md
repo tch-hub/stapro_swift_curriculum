@@ -114,4 +114,3 @@ struct MainStack: View {
     return PreviewWrapper()
 }
 ```
-
