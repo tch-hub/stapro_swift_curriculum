@@ -11,16 +11,23 @@ import SwiftUI
 
 struct CustomList<T: Identifiable, RowContent: View>: View {
     let items: [T]
-    let onDelete: (IndexSet) -> Void
+    let onDelete: ((IndexSet) -> Void)?
     @ViewBuilder let rowContent: (T) -> RowContent
 
     var body: some View {
         List {
-            ForEach(items) { item in
-                rowContent(item)
-                    .listRowSeparator(.visible)
+            if let onDelete = onDelete {
+                ForEach(items) { item in
+                    rowContent(item)
+                        .listRowSeparator(.visible)
+                }
+                .onDelete(perform: onDelete)
+            } else {
+                ForEach(items) { item in
+                    rowContent(item)
+                        .listRowSeparator(.visible)
+                }
             }
-            .onDelete(perform: onDelete)
         }
         .listStyle(.plain)
     }
@@ -60,3 +67,5 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
 }
 
 ```
+
+`onDelete`を渡さない場合は削除UIが表示されません。
