@@ -1,4 +1,4 @@
-# ステップ12: タスク完了機能の実装
+# ステップ12: タスク追加機能の実装
 
 <script>
     import {base} from '$app/paths';
@@ -6,36 +6,50 @@
 
 ## HomeView.swift の修正
 
-タスク行をタップして完了状態を切り替える機能を追加します：
+タスクを追加するための入力アラートと「+」ボタンを追加します：
 
 ```swift
-CustomList(items: tasks, onDelete: handleDeleteTask) { task in
-    ToDoListItem(
-        title: task.title,
-        isCompleted: task.isCompleted
-    ) {
-        toggleTaskCompletion(task)
-    }
+@State private var showingAddTask = false
+@State private var newTaskTitle = ""
+
+// 既存のZStack内に追加
+.textFieldAlert(
+    isPresented: $showingAddTask,
+    title: "新しいタスクを追加",
+    message: "タスクの内容を入力してください",
+    text: $newTaskTitle,
+    placeholder: "例: 買い物に行く",
+    actionButtonTitle: "追加",
+    action: addTask
+)
+
+if selectedTabId != nil {
+    FloatingButton(
+        action: { showingAddTask = true },
+        icon: "plus",
+        backgroundColor: .green
+    )
 }
 
-private func toggleTaskCompletion(_ task: ToDoTask) {
-    ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
+private func addTask() {
+    guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
+
+    let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
+    ToDoTaskService.addTask(newTask, to: modelContext)
+
+    newTaskTitle = ""
+    showingAddTask = false
     loadTasks()
 }
 ```
 
-## 重要な修正点
+## 新しい要素
 
-1. `ToDoListItem`のタップで完了状態が切り替わります
-2. 完了したタスクはチェック表示になります
-
-## toggleTaskCompletion メソッド
-
-このメソッドは：
-
-1. サービスを通じてタスクの完了状態を反転させます
-2. データベースに変更を保存します
-3. UI更新のためにタスク一覧を再度読み込みます
+- `@State private var showingAddTask`: 入力アラートの表示状態を管理します
+- `@State private var newTaskTitle`: 入力されたタスクのタイトルを保持します
+- `.textFieldAlert()`: テキスト入力アラートを表示します
+- `FloatingButton`: 画面右下の追加ボタンを表示します
+- `addTask()`: 新しいタスクをデータベースに保存します
 
 ## 次のステップへ
 

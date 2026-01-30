@@ -1,4 +1,4 @@
-# ステップ11: タスク追加機能の実装
+# ステップ11: タスク完了機能の実装
 
 <script>
     import {base} from '$app/paths';
@@ -6,7 +6,7 @@
 
 ## HomeView.swift の修正
 
-タスクを追加するための入力アラートと「+」ボタンを追加します：
+タスク行をタップして完了状態を切り替える機能を追加します：
 
 ```swift
 import SwiftUI
@@ -17,8 +17,6 @@ struct HomeView: View {
     @State private var tabs: [ToDoTab] = []
     @State private var tasks: [ToDoTask] = []
     @State private var selectedTabId: UUID?
-    @State private var showingAddTask = false
-    @State private var newTaskTitle = ""
     @Binding var navigationPath: [NavigationItem]
 
     var body: some View {
@@ -51,7 +49,7 @@ struct HomeView: View {
                             title: task.title,
                             isCompleted: task.isCompleted
                         ) {
-                            // 完了切り替えは次のステップで実装します
+                            toggleTaskCompletion(task)
                         }
                     }
                 } else if selectedTabId != nil {
@@ -82,23 +80,6 @@ struct HomeView: View {
             .onAppear {
                 loadTabs()
             }
-            .textFieldAlert(
-                isPresented: $showingAddTask,
-                title: "新しいタスクを追加",
-                message: "タスクの内容を入力してください",
-                text: $newTaskTitle,
-                placeholder: "例: 買い物に行く",
-                actionButtonTitle: "追加",
-                action: addTask
-            )
-
-            if selectedTabId != nil {
-                FloatingButton(
-                    action: { showingAddTask = true },
-                    icon: "plus",
-                    backgroundColor: .green
-                )
-            }
         }
     }
 
@@ -124,14 +105,8 @@ struct HomeView: View {
         tasks = (try? modelContext.fetch(descriptor)) ?? []
     }
 
-    private func addTask() {
-        guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
-
-        let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
-        ToDoTaskService.addTask(newTask, to: modelContext)
-
-        newTaskTitle = ""
-        showingAddTask = false
+    private func toggleTaskCompletion(_ task: ToDoTask) {
+        ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
         loadTasks()
     }
 
@@ -143,11 +118,8 @@ struct HomeView: View {
 
 ## 新しい要素
 
-- `@State private var showingAddTask`: 入力アラートの表示状態を管理します
-- `@State private var newTaskTitle`: 入力されたタスクのタイトルを保持します
-- `.textFieldAlert()`: テキスト入力アラートを表示します
-- `FloatingButton`: 画面右下の追加ボタンを表示します
-- `addTask()`: 新しいタスクをデータベースに保存します
+- `toggleTaskCompletion()`: タスクの完了状態を切り替えます
+- `ToDoListItem`のタップ: 完了・未完了を切り替えます
 
 
 ## ビルドと実行
@@ -190,7 +162,7 @@ let schema = Schema([
 
 ## 次のステップへ
 
-次は、タスクの完了状態を切り替える機能を実装します。
+次は、タスクを追加する機能を実装します。
 
 
 
