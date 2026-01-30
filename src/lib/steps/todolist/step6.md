@@ -9,91 +9,106 @@
 ```swift
 import SwiftUI
 
-struct TabHeaderView: View {
-    // コンポーネント内で使うタブモデル
-    struct ToDoTab: Identifiable {
+struct RefinedTabHeaderView: View {
+    struct ToDoTab: Identifiable, Hashable { // Hashableを追加（Picker/Menuの制御に有利）
         let id: UUID
         let name: String
     }
 
-    // 表示するタブのデータ一覧
     let tabs: [ToDoTab]
-    // 選択中のタブID（親ビューと共有するのでBinding）
     @Binding var selectedTabId: UUID?
-    // 「タブ管理」ボタンが押された時のアクション
     let onManageTabs: () -> Void
 
-    var body: some View {
-        HStack(spacing: 12) {
-            // タブを選択するピッカー
-            HStack(spacing: 8) {
-                Image(systemName: "list.bullet")
-                    .foregroundStyle(.secondary)
+    // 現在選択されているタブの名前を取得するヘルパー
+    private var selectedTabName: String {
+        tabs.first(where: { $0.id == selectedTabId })?.name ?? "タブを選択"
+    }
 
-                Picker("タブを選択", selection: $selectedTabId) {
-                    // タブ一覧をループして選択肢を作成
+    var body: some View {
+        HStack(alignment: .center, spacing: 16) {
+            // MARK: - タブ切り替えエリア (メインアクション)
+            Menu {
+                // セクション分けすることで、選択肢と管理機能を分離することも可能
+                Picker("タブ", selection: $selectedTabId) {
                     ForEach(tabs) { tab in
-                        // tag には Optional(tab.id) を渡す必要がある点に注意
-                        Text(tab.name).tag(Optional(tab.id))
+                        HStack {
+                            Text(tab.name)
+                            // 選択中の項目にチェックマークが付くのはシステムの標準挙動
+                        }
+                        .tag(Optional(tab.id))
                     }
                 }
-                .pickerStyle(.menu) // メニュースタイルで表示
+            } label: {
+                // カスタムラベルでタップ領域を明確化
+                HStack(spacing: 6) {
+                    Text(selectedTabName)
+                        .font(.title3) // サイズを大きくして見出しらしく
+                        .fontWeight(.bold)
+                        .foregroundStyle(.primary)
+                    
+                    Image(systemName: "chevron.down")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .contentShape(Rectangle()) // タップ領域を確保
             }
-            .padding(.vertical, 8)
-            .padding(.horizontal, 12)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.secondarySystemBackground))
-            )
+            .accessibilityLabel("タブを選択: 現在は\(selectedTabName)")
 
-            Spacer(minLength: 0)
+            Spacer()
 
-            // タブ管理画面へ移動するボタン
+            // MARK: - 管理ボタン (サブアクション)
+            // 視覚的な重みを減らし、アイコンメインにする
             Button(action: onManageTabs) {
-                Label("タブ管理", systemImage: "folder")
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
+                Image(systemName: "slider.horizontal.3") // または "folder.badge.gear" など
+                    .font(.system(size: 20))
+                    .foregroundStyle(.primary)
+                    .padding(8)
+                    .background(
+                        Circle()
+                            .fill(Color(.secondarySystemBackground))
+                    )
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.accentColor)
+            .accessibilityLabel("タブの管理")
         }
-        .padding(12)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.08), radius: 6, x: 0, y: 2)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color(.separator), lineWidth: 1)
-        )
-        .padding(.bottom, 8) // 下に少し余白を開ける
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        // 外枠を削除し、背景色やDividerで区切るスタイルへ変更
+        .background(Color(.systemBackground))
+        .overlay(alignment: .bottom) {
+             Divider() // コンテンツとの境界線
+        }
     }
 }
 
+// MARK: - Preview
 #Preview {
-    // プレビュー用のダミー変数
     struct PreviewWrapper: View {
-        let tabs: [TabHeaderView.ToDoTab]
+        let tabs = [
+            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
+            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "買い物"),
+            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "プロジェクトA")
+        ]
         @State var selectedId: UUID?
 
         init() {
-            let previewTabs = [
-                TabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
-                TabHeaderView.ToDoTab(id: UUID(), name: "やること"),
-                TabHeaderView.ToDoTab(id: UUID(), name: "趣味")
-            ]
-            tabs = previewTabs
-            _selectedId = State(initialValue: previewTabs.first?.id)
+            _selectedId = State(initialValue: tabs.first?.id)
         }
 
         var body: some View {
-            TabHeaderView(
-                tabs: tabs,
-                selectedTabId: $selectedId,
-                onManageTabs: { print("管理画面へ") }
-            )
-            .padding()
+            VStack(spacing: 0) {
+                RefinedTabHeaderView(
+                    tabs: tabs,
+                    selectedTabId: $selectedId,
+                    onManageTabs: { print("管理画面へ") }
+                )
+                
+                // 下部のコンテンツエリア（ダミー）
+                Color(.secondarySystemBackground)
+                    .overlay {
+                        Text("リストの中身")
+                            .foregroundStyle(.secondary)
+                    }
+            }
         }
     }
     return PreviewWrapper()
@@ -112,8 +127,8 @@ struct TabHeaderView: View {
 ```swift
 import SwiftUI
 
-struct TabHeaderView: View {
-    struct ToDoTab: Identifiable {
+struct RefinedTabHeaderView: View {
+    struct ToDoTab: Identifiable, Hashable { // Hashableを追加（Picker/Menuの制御に有利）
         let id: UUID
         let name: String
     }
@@ -122,73 +137,96 @@ struct TabHeaderView: View {
     @Binding var selectedTabId: UUID?
     let onManageTabs: () -> Void
 
-    var body: some View {
-        HStack(spacing: 12) {
-            // タブを選択するピッカー
-            HStack(spacing: 8) {
-                Image(systemName: "list.bullet")
-                    .foregroundStyle(.secondary)
+    // 現在選択されているタブの名前を取得するヘルパー
+    private var selectedTabName: String {
+        tabs.first(where: { $0.id == selectedTabId })?.name ?? "タブを選択"
+    }
 
-                Picker("タブを選択", selection: $selectedTabId) {
+    var body: some View {
+        HStack(alignment: .center, spacing: 16) {
+            // MARK: - タブ切り替えエリア (メインアクション)
+            Menu {
+                // セクション分けすることで、選択肢と管理機能を分離することも可能
+                Picker("タブ", selection: $selectedTabId) {
                     ForEach(tabs) { tab in
-                        Text(tab.name).tag(Optional(tab.id))
+                        HStack {
+                            Text(tab.name)
+                            // 選択中の項目にチェックマークが付くのはシステムの標準挙動
+                        }
+                        .tag(Optional(tab.id))
                     }
                 }
-                .pickerStyle(.menu)
+            } label: {
+                // カスタムラベルでタップ領域を明確化
+                HStack(spacing: 6) {
+                    Text(selectedTabName)
+                        .font(.title3) // サイズを大きくして見出しらしく
+                        .fontWeight(.bold)
+                        .foregroundStyle(.primary)
+                    
+                    Image(systemName: "chevron.down")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .contentShape(Rectangle()) // タップ領域を確保
             }
-            .padding(.vertical, 8)
-            .padding(.horizontal, 12)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.secondarySystemBackground))
-            )
+            .accessibilityLabel("タブを選択: 現在は\(selectedTabName)")
 
-            Spacer(minLength: 0)
+            Spacer()
 
+            // MARK: - 管理ボタン (サブアクション)
+            // 視覚的な重みを減らし、アイコンメインにする
             Button(action: onManageTabs) {
-                Label("タブ管理", systemImage: "folder")
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
+                Image(systemName: "slider.horizontal.3") // または "folder.badge.gear" など
+                    .font(.system(size: 20))
+                    .foregroundStyle(.primary)
+                    .padding(8)
+                    .background(
+                        Circle()
+                            .fill(Color(.secondarySystemBackground))
+                    )
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.accentColor)
+            .accessibilityLabel("タブの管理")
         }
-        .padding(12)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.08), radius: 6, x: 0, y: 2)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color(.separator), lineWidth: 1)
-        )
-        .padding(.bottom, 8)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        // 外枠を削除し、背景色やDividerで区切るスタイルへ変更
+        .background(Color(.systemBackground))
+        .overlay(alignment: .bottom) {
+             Divider() // コンテンツとの境界線
+        }
     }
 }
 
+// MARK: - Preview
 #Preview {
     struct PreviewWrapper: View {
-        let tabs: [TabHeaderView.ToDoTab]
+        let tabs = [
+            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
+            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "買い物"),
+            RefinedTabHeaderView.ToDoTab(id: UUID(), name: "プロジェクトA")
+        ]
         @State var selectedId: UUID?
 
         init() {
-            let previewTabs = [
-                TabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
-                TabHeaderView.ToDoTab(id: UUID(), name: "やること"),
-                TabHeaderView.ToDoTab(id: UUID(), name: "趣味")
-            ]
-            tabs = previewTabs
-            _selectedId = State(initialValue: previewTabs.first?.id)
+            _selectedId = State(initialValue: tabs.first?.id)
         }
 
         var body: some View {
-            TabHeaderView(
-                tabs: tabs,
-                selectedTabId: $selectedId,
-                onManageTabs: { print("管理画面へ") }
-            )
-            .padding()
+            VStack(spacing: 0) {
+                RefinedTabHeaderView(
+                    tabs: tabs,
+                    selectedTabId: $selectedId,
+                    onManageTabs: { print("管理画面へ") }
+                )
+                
+                // 下部のコンテンツエリア（ダミー）
+                Color(.secondarySystemBackground)
+                    .overlay {
+                        Text("リストの中身")
+                            .foregroundStyle(.secondary)
+                    }
+            }
         }
     }
     return PreviewWrapper()
