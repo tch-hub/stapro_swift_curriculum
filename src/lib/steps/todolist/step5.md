@@ -48,7 +48,7 @@ struct TaskInputView: View {
         @State var text = ""
         var body: some View {
             ZStack {
-                Color.gray.ignoresSafeArea()
+                Color.white.ignoresSafeArea()
                 VStack {
                     Spacer()
                     TaskInputView(text: $text) {

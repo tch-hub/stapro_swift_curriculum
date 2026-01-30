@@ -10,6 +10,12 @@
 import SwiftUI
 
 struct TabHeaderView: View {
+    // コンポーネント内で使うタブモデル
+    struct ToDoTab: Identifiable {
+        let id: UUID
+        let name: String
+    }
+
     // 表示するタブのデータ一覧
     let tabs: [ToDoTab]
     // 選択中のタブID（親ビューと共有するのでBinding）
@@ -20,20 +26,47 @@ struct TabHeaderView: View {
     var body: some View {
         HStack(spacing: 12) {
             // タブを選択するピッカー
-            Picker("タブを選択", selection: $selectedTabId) {
-                // タブ一覧をループして選択肢を作成
-                ForEach(tabs) { tab in
-                    // tag には Optional(tab.id) を渡す必要がある点に注意
-                    Text(tab.name).tag(Optional(tab.id))
+            HStack(spacing: 8) {
+                Image(systemName: "list.bullet")
+                    .foregroundStyle(.secondary)
+
+                Picker("タブを選択", selection: $selectedTabId) {
+                    // タブ一覧をループして選択肢を作成
+                    ForEach(tabs) { tab in
+                        // tag には Optional(tab.id) を渡す必要がある点に注意
+                        Text(tab.name).tag(Optional(tab.id))
+                    }
                 }
+                .pickerStyle(.menu) // メニュースタイルで表示
             }
-            .pickerStyle(.menu) // メニュースタイルで表示
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(.secondarySystemBackground))
+            )
+
+            Spacer(minLength: 0)
 
             // タブ管理画面へ移動するボタン
             Button(action: onManageTabs) {
                 Label("タブ管理", systemImage: "folder")
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
             }
+            .buttonStyle(.borderedProminent)
+            .tint(.accentColor)
         }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.08), radius: 6, x: 0, y: 2)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(.separator), lineWidth: 1)
+        )
         .padding(.bottom, 8) // 下に少し余白を開ける
     }
 }
@@ -41,13 +74,26 @@ struct TabHeaderView: View {
 #Preview {
     // プレビュー用のダミー変数
     struct PreviewWrapper: View {
+        let tabs: [TabHeaderView.ToDoTab]
         @State var selectedId: UUID?
+
+        init() {
+            let previewTabs = [
+                TabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
+                TabHeaderView.ToDoTab(id: UUID(), name: "やること"),
+                TabHeaderView.ToDoTab(id: UUID(), name: "趣味")
+            ]
+            tabs = previewTabs
+            _selectedId = State(initialValue: previewTabs.first?.id)
+        }
+
         var body: some View {
             TabHeaderView(
-                tabs: [], // ダミーなので空配列
+                tabs: tabs,
                 selectedTabId: $selectedId,
                 onManageTabs: { print("管理画面へ") }
             )
+            .padding()
         }
     }
     return PreviewWrapper()
@@ -67,53 +113,85 @@ struct TabHeaderView: View {
 import SwiftUI
 
 struct TabHeaderView: View {
+    struct ToDoTab: Identifiable {
+        let id: UUID
+        let name: String
+    }
+
     let tabs: [ToDoTab]
     @Binding var selectedTabId: UUID?
     let onManageTabs: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
-            Picker("タブを選択", selection: $selectedTabId) {
-                ForEach(tabs) { tab in
-                    Text(tab.name).tag(Optional(tab.id))
+            // タブを選択するピッカー
+            HStack(spacing: 8) {
+                Image(systemName: "list.bullet")
+                    .foregroundStyle(.secondary)
+
+                Picker("タブを選択", selection: $selectedTabId) {
+                    ForEach(tabs) { tab in
+                        Text(tab.name).tag(Optional(tab.id))
+                    }
                 }
+                .pickerStyle(.menu)
             }
-            .pickerStyle(.menu)
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(.secondarySystemBackground))
+            )
+
+            Spacer(minLength: 0)
 
             Button(action: onManageTabs) {
                 Label("タブ管理", systemImage: "folder")
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
             }
+            .buttonStyle(.borderedProminent)
+            .tint(.accentColor)
         }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.08), radius: 6, x: 0, y: 2)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(.separator), lineWidth: 1)
+        )
         .padding(.bottom, 8)
     }
 }
-```
 
-                Text(displayString)
-                    .font(.title)
+#Preview {
+    struct PreviewWrapper: View {
+        let tabs: [TabHeaderView.ToDoTab]
+        @State var selectedId: UUID?
 
-                Button("名前を変更") {
-                    inputText = "" // 開く前に初期化
-                    showDialog = true
-                }
-                .buttonStyle(.borderedProminent)
-            }
-            .textFieldAlert(
-                isPresented: $showDialog,
-                title: "名前の変更",
-                message: "新しい名前を入力してください。",
-                text: $inputText,
-                placeholder: "例: タスクA",
-                action: {
-                    displayString = inputText
-                }
+        init() {
+            let previewTabs = [
+                TabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
+                TabHeaderView.ToDoTab(id: UUID(), name: "やること"),
+                TabHeaderView.ToDoTab(id: UUID(), name: "趣味")
+            ]
+            tabs = previewTabs
+            _selectedId = State(initialValue: previewTabs.first?.id)
+        }
+
+        var body: some View {
+            TabHeaderView(
+                tabs: tabs,
+                selectedTabId: $selectedId,
+                onManageTabs: { print("管理画面へ") }
             )
+            .padding()
         }
     }
     return PreviewWrapper()
-
 }
-
-```
 
 ```
