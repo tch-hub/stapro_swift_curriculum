@@ -1,4 +1,4 @@
-# ステップ10: SwiftData の設定を行う
+# ステップ?: SwiftData の設定を行う
 
 アプリ全体で SwiftData を使えるように `ModelContainer` を設定します。
 

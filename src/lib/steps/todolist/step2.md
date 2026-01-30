@@ -183,7 +183,7 @@ struct RefinedToDoListItem: View {
 #Preview {
     struct PreviewWrapper: View {
         @State private var items = [
-            (id: UUID(), title: "牛乳を買う", isCompleted: false),
+            (id: UUID(), title: "タップで状態切り替え", isCompleted: false),
             (id: UUID(), title: "開発チームに連絡する", isCompleted: true),
             (id: UUID(), title: "ジムに行く", isCompleted: false)
         ]

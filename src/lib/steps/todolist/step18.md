@@ -1,55 +1,36 @@
-# ステップ18: タスク追加フォームを作る
+# ステップ17: 完了切り替えを実装する
 
-画面下部にタスク追加欄を表示します。
+タスクをタップした時に完了/未完了を切り替えます。
 
-### 1. 入力用の状態
-
-```swift
-// 新しく作成するタスクのタイトルを保持する変数
-@State private var newTaskTitle = ""
-```
-
-タスク追加フォームに入力された文字を一時的に保存しておくための変数を定義しています。
-
-### 2. コンポーネントの配置
+### 1. 切り替え処理を追加
 
 ```swift
-// 画面の下部に入力エリアを固定表示
-.safeAreaInset(edge: .bottom) {
-    if selectedTabId != nil {
-        InputView(text: $newTaskTitle) {
-            addTask()
-        }
-    }
-}
-```
-
-`.safeAreaInset(edge: .bottom)` を使って、ステップ5で作成した `InputView` コンポーネントを画面下部に配置します。  
-`text: $newTaskTitle` で入力値をバインディングし、クロージャで追加処理を渡しています。  
-デフォルトのプレースホルダー（「新しいタスクを追加...」）とアイコン（上向き矢印）が使用されます。
-
-### 3. 追加処理
-
-```swift
-// 新しいタスクをデータベースに追加するメソッド
-private func addTask() {
-    // タイトルが空でないか、タブが選択されているかを確認（ガード節）
-    guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
-
-    // タスクモデルを作成
-    let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
-    // データベースに保存
-    ToDoTaskService.addTask(newTask, to: modelContext)
-
-    // 入力欄をクリア
-    newTaskTitle = ""
-    // リストを更新して新しいタスクを表示
+// タスクの完了状態を切り替えるメソッド
+private func toggleTaskCompletion(_ task: ToDoTask) {
+    // Serviceクラスを使ってデータベースの値を更新
+    ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
+    // 更新後のリストを再読み込みして表示に反映
     loadTasks()
 }
 ```
 
-入力されたタイトルと現在選択されているタブIDを使って新しい `ToDoTask` を作成し、Service経由で保存します。  
-保存後は続けて入力できるように入力欄をクリアし、一覧を再読み込みしています。
+`ToDoTaskService` に定義した `toggleTaskCompletion` を呼び出してデータベースを更新し、直後に `loadTasks` を呼ぶことで画面上のタスク一覧も最新の状態（チェックマークの有無など）に更新します。
+
+### 2. ToDoListItem に処理を渡す
+
+```swift
+// リスト内の各行を作成
+ToDoListItem(
+    title: task.title,
+    isCompleted: task.isCompleted
+) {
+    // タップされた時に呼ばれるクロージャ
+    toggleTaskCompletion(task)
+}
+```
+
+`ToDoListItem` コンポーネントの初期化時に、タップ時の動作として先ほど作成した `toggleTaskCompletion` メソッドを実行するように設定しています。  
+これにより、行をタップするとタスクの完了状態が切り替わるようになります。
 
 ---
 
@@ -67,54 +48,44 @@ struct HomeView: View {
     @State private var tabs: [ToDoTab] = []
     @State private var tasks: [ToDoTask] = []
     @State private var selectedTabId: UUID?
-    @State private var newTaskTitle = ""
     @Binding var navigationPath: [NavigationItem]
 
     var body: some View {
-        ZStack {
-            VStack {
-                if tabs.isEmpty {
-                    Text("タブがありません")
-                        .padding()
+        VStack {
+            if tabs.isEmpty {
+                Text("タブがありません")
+                    .padding()
+            } else {
+                TabHeaderView(
+                    tabs: tabs,
+                    selectedTabId: $selectedTabId,
+                    onManageTabs: {
+                        navigationPath.append(NavigationItem(id: .tabManage))
+                    }
+                )
+                .onChange(of: selectedTabId) { _, _ in
+                    loadTasks()
+                }
+
+                if selectedTabId != nil && !tasks.isEmpty {
+                    CustomList(items: tasks) { task in
+                        ToDoListItem(
+                            title: task.title,
+                            isCompleted: task.isCompleted
+                        ) {
+                            toggleTaskCompletion(task)
+                        }
+                    }
                 } else {
-                    TabHeaderView(
-                        tabs: tabs,
-                        selectedTabId: $selectedTabId,
-                        onManageTabs: {
-                            navigationPath.append(NavigationItem(id: .tabManage))
-                        }
-                    )
-                    .onChange(of: selectedTabId) { _, _ in
-                        loadTasks()
-                    }
-
-                    if selectedTabId != nil && !tasks.isEmpty {
-                        CustomList(items: tasks) { task in
-                            ToDoListItem(
-                                title: task.title,
-                                isCompleted: task.isCompleted
-                            ) {
-                                toggleTaskCompletion(task)
-                            }
-                        }
-                    } else {
-                        EmptyStateView(hasSelectedTab: selectedTabId != nil)
-                    }
+                    EmptyStateView(hasSelectedTab: selectedTabId != nil)
                 }
+            }
 
-            }
-            .padding()
-            .navigationTitle("ToDoリスト")
-            .onAppear {
-                loadTabs()
-            }
         }
-        .safeAreaInset(edge: .bottom) {
-            if selectedTabId != nil {
-                InputView(text: $newTaskTitle) {
-                    addTask()
-                }
-            }
+        .padding()
+        .navigationTitle("ToDoリスト")
+        .onAppear {
+            loadTabs()
         }
     }
 
@@ -146,16 +117,6 @@ struct HomeView: View {
 
     private func toggleTaskCompletion(_ task: ToDoTask) {
         ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
-        loadTasks()
-    }
-
-    private func addTask() {
-        guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
-
-        let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
-        ToDoTaskService.addTask(newTask, to: modelContext)
-
-        newTaskTitle = ""
         loadTasks()
     }
 }

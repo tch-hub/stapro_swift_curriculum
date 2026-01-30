@@ -1,42 +1,55 @@
-# ステップ19: スワイプ削除を追加する
+# ステップ18: タスク追加フォームを作る
 
-タスクを左にスワイプして削除できるようにします。
+画面下部にタスク追加欄を表示します。
 
-### 1. onDelete を渡す
+### 1. 入力用の状態
 
 ```swift
-// スワイプ削除時の処理（handleDeleteTask）をCustomListに渡す
-CustomList(items: tasks, onDelete: handleDeleteTask) { task in
-    ToDoListItem(
-        title: task.title,
-        isCompleted: task.isCompleted
-    ) {
-        toggleTaskCompletion(task)
+// 新しく作成するタスクのタイトルを保持する変数
+@State private var newTaskTitle = ""
+```
+
+タスク追加フォームに入力された文字を一時的に保存しておくための変数を定義しています。
+
+### 2. コンポーネントの配置
+
+```swift
+// 画面の下部に入力エリアを固定表示
+.safeAreaInset(edge: .bottom) {
+    if selectedTabId != nil {
+        InputView(text: $newTaskTitle) {
+            addTask()
+        }
     }
 }
 ```
 
-`CustomList` の初期化パラメータ `onDelete` に次のステップで説明する削除メソッド `handleDeleteTask` を渡すことで、スワイプ操作による行の削除機能が有効になります。
+`.safeAreaInset(edge: .bottom)` を使って、ステップ5で作成した `InputView` コンポーネントを画面下部に配置します。  
+`text: $newTaskTitle` で入力値をバインディングし、クロージャで追加処理を渡しています。  
+デフォルトのプレースホルダー（「新しいタスクを追加...」）とアイコン（上向き矢印）が使用されます。
 
-### 2. 削除処理
+### 3. 追加処理
 
 ```swift
-// スワイプ削除イベントを受け取るメソッド
-private func handleDeleteTask(_ offsets: IndexSet) {
-    // 選択された行のインデックス（番号）をループ処理
-    for index in offsets {
-        // インデックスから削除対象のタスクを特定
-        let taskToDelete = tasks[index]
-        // データベースから削除
-        ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
-    }
-    // リスト表示を更新
+// 新しいタスクをデータベースに追加するメソッド
+private func addTask() {
+    // タイトルが空でないか、タブが選択されているかを確認（ガード節）
+    guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
+
+    // タスクモデルを作成
+    let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
+    // データベースに保存
+    ToDoTaskService.addTask(newTask, to: modelContext)
+
+    // 入力欄をクリア
+    newTaskTitle = ""
+    // リストを更新して新しいタスクを表示
     loadTasks()
 }
 ```
 
-リストでスワイプ削除が行われると、削除対象の行番号（インデックス）の集合が `offsets` として渡されてきます。  
-これを使って対象の `ToDoTask` を特定し、データベースから削除します。
+入力されたタイトルと現在選択されているタブIDを使って新しい `ToDoTask` を作成し、Service経由で保存します。  
+保存後は続けて入力できるように入力欄をクリアし、一覧を再読み込みしています。
 
 ---
 
@@ -76,7 +89,7 @@ struct HomeView: View {
                     }
 
                     if selectedTabId != nil && !tasks.isEmpty {
-                        CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+                        CustomList(items: tasks) { task in
                             ToDoListItem(
                                 title: task.title,
                                 isCompleted: task.isCompleted
@@ -98,7 +111,9 @@ struct HomeView: View {
         }
         .safeAreaInset(edge: .bottom) {
             if selectedTabId != nil {
-                TaskInputView(text: $newTaskTitle, onAdd: addTask)
+                InputView(text: $newTaskTitle) {
+                    addTask()
+                }
             }
         }
     }
@@ -141,14 +156,6 @@ struct HomeView: View {
         ToDoTaskService.addTask(newTask, to: modelContext)
 
         newTaskTitle = ""
-        loadTasks()
-    }
-
-    private func handleDeleteTask(_ offsets: IndexSet) {
-        for index in offsets {
-            let taskToDelete = tasks[index]
-            ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
-        }
         loadTasks()
     }
 }
