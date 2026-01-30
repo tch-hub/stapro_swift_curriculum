@@ -1,3 +1,46 @@
+# ステップ15: 画面遷移の土台を作る
+
+`NavigationStack` を使って画面遷移をまとめます。
+
+### 1. 画面IDを定義
+
+```swift
+enum ScreenID: String {
+    case home
+    case tabManage
+}
+```
+
+### 2. 遷移情報の型を作成
+
+```swift
+struct NavigationItem: Hashable {
+    let id: ScreenID
+}
+```
+
+### 3. NavigationStack を構成
+
+```swift
+NavigationStack(path: $navigationPath) {
+    HomeView(navigationPath: $navigationPath)
+        .navigationDestination(for: NavigationItem.self) { item in
+            switch item.id {
+            case .tabManage:
+                TabManageView()
+            default:
+                EmptyView()
+            }
+        }
+}
+```
+
+---
+
+## コード全体
+
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
 ```swift
 import SwiftUI
 // MainStack.swift

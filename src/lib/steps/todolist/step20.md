@@ -1,3 +1,56 @@
+# ステップ20: タスク編集を実装する
+
+長押しでタスク名を編集できるようにします。
+
+### 1. 編集用の状態
+
+```swift
+@State private var showEditDialog = false
+@State private var editTaskTitle = ""
+@State private var editingTask: ToDoTask?
+```
+
+### 2. 長押しで編集開始
+
+```swift
+.onLongPressGesture {
+    startEdit(task)
+}
+```
+
+### 3. 編集ダイアログ
+
+```swift
+.textFieldAlert(
+    isPresented: $showEditDialog,
+    title: "タスクの編集",
+    message: "新しいタイトルを入力してください。",
+    text: $editTaskTitle,
+    placeholder: "例: 牛乳を買う",
+    actionButtonTitle: "保存",
+    action: {
+        applyEdit()
+    }
+)
+```
+
+### 4. 編集反映
+
+```swift
+private func applyEdit() {
+    guard let editingTask = editingTask else { return }
+    editingTask.title = editTaskTitle
+    ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
+    loadTasks()
+}
+```
+
+---
+
+## コード全体
+
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
 ```swift
 // HomeView.swift
 import SwiftUI

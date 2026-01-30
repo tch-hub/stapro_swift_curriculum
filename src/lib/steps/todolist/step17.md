@@ -1,3 +1,33 @@
+# ステップ17: 完了切り替えを実装する
+
+タスクをタップした時に完了/未完了を切り替えます。
+
+### 1. 切り替え処理を追加
+
+```swift
+private func toggleTaskCompletion(_ task: ToDoTask) {
+    ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
+    loadTasks()
+}
+```
+
+### 2. ToDoListItem に処理を渡す
+
+```swift
+ToDoListItem(
+    title: task.title,
+    isCompleted: task.isCompleted
+) {
+    toggleTaskCompletion(task)
+}
+```
+
+---
+
+## コード全体
+
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
 ```swift
 // HomeView.swift
 import SwiftUI

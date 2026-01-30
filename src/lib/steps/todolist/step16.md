@@ -1,3 +1,69 @@
+# ステップ16: タブとタスクを表示する
+
+ホーム画面でタブ選択とタスク表示を行います。
+
+### 1. 状態の準備
+
+```swift
+@Environment(\.modelContext) private var modelContext
+@State private var tabs: [ToDoTab] = []
+@State private var tasks: [ToDoTask] = []
+@State private var selectedTabId: UUID?
+```
+
+### 2. タブの選択UI
+
+```swift
+Picker("タブを選択", selection: $selectedTabId) {
+    ForEach(tabs) { tab in
+        Text(tab.name).tag(Optional(tab.id))
+    }
+}
+.pickerStyle(.menu)
+.onChange(of: selectedTabId) { _, _ in
+    loadTasks()
+}
+```
+
+### 3. タスク一覧と空状態
+
+```swift
+if selectedTabId != nil && !tasks.isEmpty {
+    CustomList(items: tasks) { task in
+        ToDoListItem(
+            title: task.title,
+            isCompleted: task.isCompleted
+        ) {
+            // 完了切り替えは次のステップで実装します
+        }
+    }
+} else if selectedTabId != nil {
+    VStack {
+        Image(systemName: "checkmark.circle")
+            .font(.system(size: 48))
+            .foregroundColor(.gray)
+        Text("タスクはまだありません")
+            .foregroundColor(.gray)
+            .padding(.top, 8)
+    }
+} else {
+    VStack {
+        Image(systemName: "list.bullet")
+            .font(.system(size: 48))
+            .foregroundColor(.gray)
+        Text("タブを選択してください")
+            .foregroundColor(.gray)
+            .padding(.top, 8)
+    }
+}
+```
+
+---
+
+## コード全体
+
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
 ```swift
 // HomeView.swift
 import SwiftUI

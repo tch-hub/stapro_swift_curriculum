@@ -1,3 +1,38 @@
+# ステップ19: スワイプ削除を追加する
+
+タスクを左にスワイプして削除できるようにします。
+
+### 1. onDelete を渡す
+
+```swift
+CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+    ToDoListItem(
+        title: task.title,
+        isCompleted: task.isCompleted
+    ) {
+        toggleTaskCompletion(task)
+    }
+}
+```
+
+### 2. 削除処理
+
+```swift
+private func handleDeleteTask(_ offsets: IndexSet) {
+    for index in offsets {
+        let taskToDelete = tasks[index]
+        ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
+    }
+    loadTasks()
+}
+```
+
+---
+
+## コード全体
+
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
 ```swift
 // HomeView.swift
 import SwiftUI

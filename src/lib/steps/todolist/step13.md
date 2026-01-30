@@ -1,3 +1,59 @@
+# ステップ13: タブ管理画面を作る
+
+タブの追加や削除ができる画面を作成します。
+
+### 1. 状態の準備
+
+```swift
+@State private var tabs: [ToDoTab] = []
+@State private var newTabName = ""
+@State private var showDeleteAlert = false
+@State private var tabToDelete: ToDoTab?
+```
+
+- `tabs` は現在のタブ一覧です。
+- `newTabName` は入力中のタブ名です。
+- `showDeleteAlert` は削除確認の表示用です。
+
+### 2. タブ一覧表示
+
+```swift
+CustomList(items: tabs, onDelete: handleDelete) { tab in
+    VStack(alignment: .leading, spacing: 4) {
+        Text(tab.name)
+            .font(.headline)
+        Text("作成日: \(tab.createdAt.formatted(date: .abbreviated, time: .omitted))")
+            .font(.caption)
+            .foregroundColor(.gray)
+    }
+}
+```
+
+### 3. 追加エリア
+
+```swift
+HStack(spacing: 12) {
+    TextField("新しいタブ", text: $newTabName)
+        .textFieldStyle(.roundedBorder)
+        .submitLabel(.done)
+        .onSubmit {
+            addTab()
+        }
+
+    Button("追加") {
+        addTab()
+    }
+    .buttonStyle(.borderedProminent)
+    .disabled(newTabName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+}
+```
+
+---
+
+## コード全体
+
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
 ```swift
 // TabManageView.swift
 import SwiftUI

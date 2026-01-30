@@ -1,3 +1,62 @@
+# ステップ18: タスク追加フォームを作る
+
+画面下部にタスク追加欄を表示します。
+
+### 1. 入力用の状態
+
+```swift
+@State private var newTaskTitle = ""
+```
+
+### 2. safeAreaInset で下部に固定
+
+```swift
+.safeAreaInset(edge: .bottom) {
+    if selectedTabId != nil {
+        HStack(spacing: 12) {
+            TextField("新しいタスク", text: $newTaskTitle)
+                .textFieldStyle(.roundedBorder)
+                .submitLabel(.done)
+                .onSubmit {
+                    addTask()
+                }
+
+            Button("追加") {
+                addTask()
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.ultraThinMaterial)
+    }
+}
+```
+
+- タブ選択中だけ入力欄を表示します。
+- 入力が空ならボタンを無効化します。
+
+### 3. 追加処理
+
+```swift
+private func addTask() {
+    guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
+
+    let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
+    ToDoTaskService.addTask(newTask, to: modelContext)
+
+    newTaskTitle = ""
+    loadTasks()
+}
+```
+
+---
+
+## コード全体
+
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
 ```swift
 // HomeView.swift
 import SwiftUI

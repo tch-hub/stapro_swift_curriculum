@@ -1,3 +1,48 @@
+# ステップ6: 入力付きアラートを作る
+
+タスク名の編集などで使える、テキスト入力付きアラートを作成します。
+
+### 1. 拡張メソッドの作成
+
+```swift
+import SwiftUI
+
+extension View {
+    func textFieldAlert(
+        isPresented: Binding<Bool>,
+        title: String,
+        message: String,
+        text: Binding<String>,
+        placeholder: String = "",
+        actionButtonTitle: String = "確認",
+        action: @escaping () -> Void
+    ) -> some View {
+        self.alert(title, isPresented: isPresented) {
+            TextField(placeholder, text: text)
+
+            Button("キャンセル", role: .cancel) {
+            }
+
+            Button(actionButtonTitle) {
+                action()
+            }
+            .disabled(text.wrappedValue.isEmpty)
+
+        } message: {
+            Text(message)
+        }
+    }
+}
+```
+
+- `TextField` を alert の中に置くと入力付きアラートになります。
+- 入力が空の時はボタンを押せないようにします。
+
+---
+
+## コード全体
+
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 ```swift
 import SwiftUI
 
