@@ -12,8 +12,14 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var isInitialized = false
+    @State private var isInitialized: Bool
+    private let autoInitialize: Bool
     @Environment(\.modelContext) private var modelContext
+
+    init(isInitialized: Bool = false, autoInitialize: Bool = true) {
+        _isInitialized = State(initialValue: isInitialized)
+        self.autoInitialize = autoInitialize
+    }
 
     var body: some View {
         if isInitialized {
@@ -24,6 +30,9 @@ struct ContentView: View {
                 ProgressView()
             }
             .onAppear {
+                if !autoInitialize {
+                    return
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     initializeAppIfNeeded()
                     isInitialized = true
@@ -51,5 +60,9 @@ struct ContentView: View {
             }
         }
     }
+}
+
+#Preview {
+    ContentView(isInitialized: false, autoInitialize: false)
 }
 ```
