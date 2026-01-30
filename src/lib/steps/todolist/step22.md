@@ -1,254 +1,174 @@
-# ステップ20: タスク編集を実装する
+# ステップ21: 発展課題（もっと便利にするアイデア）
 
-長押しでタスク名を編集できるようにします。
+ここからは発展課題です。必要に応じて追加してください。
 
-### 1. 入力付きアラートの拡張機能を追加
+---
 
-タスク名の編集にはテキスト入力が必要ですが、標準のアラートだけでは入力欄を作れません。そこで、便利な拡張機能を追加します。
-`View+Extensions.swift` （または `Extensions.swift`）という新しいファイルを作成し、以下のコードを追加してください。
+## 1. 検索機能
+
+タスクを検索できるようにします。
 
 ```swift
 import SwiftUI
 
-extension View {
-    func textFieldAlert(
-        isPresented: Binding<Bool>,
-        title: String,
-        message: String,
-        text: Binding<String>,
-        placeholder: String = "",
-        actionButtonTitle: String = "保存",
-        action: @escaping () -> Void
-    ) -> some View {
-        self.alert(title, isPresented: isPresented) {
-            TextField(placeholder, text: text)
-            Button("キャンセル", role: .cancel) {}
-            Button(actionButtonTitle) {
-                action()
+struct HomeView: View {
+   // タスク一覧（データベースから読み込んだ全件）
+   @State private var tasks: [ToDoTask] = []
+   // 検索ボックスに入力された文字列
+   @State private var searchText = ""
+
+   // 検索条件に基づいてフィルタリングされたタスクリスト
+   var filteredTasks: [ToDoTask] {
+      // 検索ワードが空なら全件を表示
+      if searchText.isEmpty {
+         return tasks
+      }
+      // タイトルに検索ワードが含まれているタスクだけを抽出（大文字小文字を区別しない）
+      return tasks.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+   }
+
+   var body: some View {
+      VStack(spacing: 12) {
+         // 検索窓の表示
+         TextField("検索", text: $searchText)
+            .textFieldStyle(.roundedBorder)
+
+         // フィルタリング済みのタスクをリスト表示
+         CustomList(items: filteredTasks) { task in
+            ToDoListItem(
+               title: task.title,
+               isCompleted: task.isCompleted
+            ) {
+               // 完了切り替えは既存の処理を使う
             }
-            .disabled(text.wrappedValue.isEmpty)
-        } message: {
-            Text(message)
-        }
-    }
+         }
+      }
+      .padding()
+   }
 }
 ```
 
-### 2. 編集用の状態
+検索欄に入力された文字を使って、タスクリストをフィルタリングする方法です。  
+`filteredTasks` という計算プロパティ（Computed Property）を作ることで、入力が変わるたびに自動的に絞り込み結果がリストに反映されるようになります。
+
+---
+
+## 2. ソート機能（完了/未完了の順）
 
 ```swift
-// 編集ダイアログを表示するかどうかのフラグ
-@State private var showEditDialog = false
-// 編集中のタスク名
-@State private var editTaskTitle = ""
-// 現在編集しようとしているタスクオブジェクト
-@State private var editingTask: ToDoTask?
+import SwiftUI
+
+struct HomeView: View {
+   @State private var tasks: [ToDoTask] = []
+   // ソート順を切り替えるフラグ
+   @State private var sortCompletedFirst = false
+
+   // フラグに応じて並び替えたタスクリスト
+   var sortedTasks: [ToDoTask] {
+      if sortCompletedFirst {
+         // 完了しているものを先頭に持ってくる並び替えロジック
+         return tasks.sorted { $0.isCompleted && !$1.isCompleted }
+      }
+      // フラグがオフなら元の順序のまま
+      return tasks
+   }
+
+   var body: some View {
+      VStack(spacing: 12) {
+         // ソート機能のオンオフ切り替えスイッチ
+         Toggle("完了を先に表示", isOn: $sortCompletedFirst)
+
+         // 並び替えたタスクをリスト表示
+         CustomList(items: sortedTasks) { task in
+            ToDoListItem(
+               title: task.title,
+               isCompleted: task.isCompleted
+            ) {
+               // 完了切り替えは既存の処理を使う
+            }
+         }
+      }
+      .padding()
+   }
+}
 ```
 
-タスク名の編集機能を実現するために、「ダイアログの表示状態」「編集中の文字列」「編集対象のタスク自体」という3つの情報を管理します。
+`Toggle` スイッチを使って並び替えモードを切り替える例です。  
+`.sorted` メソッドを使うことで、自分好みの順序（完了済みが上、日付順など）でリストを表示することができます。
 
-### 3. 長押しで編集開始
+---
+
+## 3. 期限日の表示（簡易版）
 
 ```swift
-// 長押しジェスチャーを検知
-.onLongPressGesture {
-    // 長押しされたら編集モードを開始
-    startEdit(task)
-}
-```
+import SwiftUI
 
-`.onLongPressGesture` を使うことで、ユーザーがタスクを長押しした時に編集処理（`startEdit`）を呼び出すように設定しています。  
-これにより、タップ（完了切り替え）とは別の操作として編集機能を割り当てています。
-// 自作した textFieldAlert を呼び出して編集画面を表示
-.textFieldAlert(
-isPresented: $showEditDialog,
-title: "タスクの編集",
-message: "新しいタイトルを入力してください。",
-text: $editTaskTitle, // 入力内容を binding
-placeholder: "例: 牛乳を買う",
-actionButtonTitle: "保存", // ボタン名を変更
-action: {
-// 保存ボタンが押されたら編集内容を反映
-applyEdit()
-}
-)
+struct ToDoListItem: View {
+   let title: String
+   let isCompleted: Bool
+   // 追加：期限日を表示するためのテキスト
+   let dueDateText: String
+   let onToggle: () -> Void
 
-```
+   var body: some View {
+      HStack {
+         // タイトルと日付を縦に並べる
+         VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+               .font(.headline)
+            // 日付を小さくグレーで表示
+            Text(dueDateText)
+               .font(.caption)
+               .foregroundColor(.gray)
+         }
 
+         Spacer()
 
-ステップ6で作成した `textFieldAlert` を使って、タスク名の変更フォームを表示します。入力されたテキストは `$editTaskTitle` に同期され、保存ボタンを押すと `applyEdit` メソッドが実行されます。 action: {
-        applyEdit()
-    }
-)
-```
-
-// 編集内容をデータベースへ保存するメソッド
-private func applyEdit() {
-// 編集対象のタスクが存在することを確認
-guard let editingTask = editingTask else { return }
-
-    // タイトルを書き換え
-    editingTask.title = editTaskTitle
-    // データベースに変更を通知・保存
-    ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
-    // リストの表示を更新
-    loadTasks()
-
-}
-
-```
-
-
-編集ダイアログで入力された新しいタイトルを対象のタスクオブジェクトに代入し、Serviceを通じてデータベースに保存します。最後にリストを再読み込みして、画面上のタスク名を更新します。 editingTask.title = editTaskTitle
-    ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
-    loadTasks()
+         Button(action: {
+            onToggle()
+         }) {
+            Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
+               .font(.title2)
+         }
+      }
+   }
 }
 ```
 
 ---
 
-## コード全体
-
-<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+## 4. タブにアイコンを付ける
 
 ```swift
-// HomeView.swift
 import SwiftUI
-import SwiftData
 
-struct HomeView: View {
-   @Environment(\.modelContext) private var modelContext
-   @State private var tabs: [ToDoTab] = []
-   @State private var tasks: [ToDoTask] = []
-   @State private var selectedTabId: UUID?
-   @State private var newTaskTitle = ""
-   @State private var showEditDialog = false
-   @State private var editTaskTitle = ""
-   @State private var editingTask: ToDoTask?
-   @Binding var navigationPath: [NavigationItem]
+struct TabLabel: View {
+   let name: String
+   let systemImageName: String
 
    var body: some View {
-      ZStack {
-         VStack {
-            if tabs.isEmpty {
-               Text("タブがありません")
-                  .padding()
-            } else {
-               TabHeaderView(
-                  tabs: tabs,
-                  selectedTabId: $selectedTabId,
-                  onManageTabs: {
-                     navigationPath.append(NavigationItem(id: .tabManage))
-                  }
-               )
-               .onChange(of: selectedTabId) { _, _ in
-                  loadTasks()
-               }
+      Label(name, systemImage: systemImageName)
+   }
+}
+```
 
-               if selectedTabId != nil && !tasks.isEmpty {
-                  CustomList(items: tasks, onDelete: handleDeleteTask) { task in
-                     ToDoListItem(
-                        title: task.title,
-                        isCompleted: task.isCompleted
-                     ) {
-                        toggleTaskCompletion(task)
-                     }
-                     .onLongPressGesture {
-                        startEdit(task)
-                     }
-                  }
-               } else {
-                  EmptyStateView(hasSelectedTab: selectedTabId != nil)
-               }
-            }
+---
 
-         }
-         .padding()
-         .navigationTitle("ToDoリスト")
-         .onAppear {
-            loadTabs()
-         }
+## 5. ダークモード対応（色の使い分け）
+
+```swift
+import SwiftUI
+
+struct ThemeSampleView: View {
+   var body: some View {
+      VStack(spacing: 12) {
+         Text("ダークモード対応")
+            .font(.title2)
+         RoundedRectangle(cornerRadius: 12)
+            .fill(Color.primary.opacity(0.1))
+            .frame(height: 80)
       }
-      .safeAreaInset(edge: .bottom) {
-         if selectedTabId != nil {
-            TaskInputView(text: $newTaskTitle, onAdd: addTask)
-         }
-      }
-      .textFieldAlert(
-         isPresented: $showEditDialog,
-         title: "タスクの編集",
-         message: "新しいタイトルを入力してください。",
-         text: $editTaskTitle,
-         placeholder: "例: 牛乳を買う",
-         actionButtonTitle: "保存",
-         action: {
-            applyEdit()
-         }
-      )
-   }
-
-
-
-   private func loadTabs() {
-      let descriptor = FetchDescriptor<ToDoTab>()
-      tabs = (try? modelContext.fetch(descriptor)) ?? []
-      if let selectedTabId = selectedTabId {
-         // 現在の選択が削除済みの場合は先頭タブに戻す
-         if !tabs.contains(where: { $0.id == selectedTabId }) {
-            self.selectedTabId = tabs.first?.id
-         }
-      } else {
-         selectedTabId = tabs.first?.id
-      }
-      loadTasks()
-   }
-
-   private func loadTasks() {
-      guard let selectedTabId = selectedTabId else {
-         tasks = []
-         return
-      }
-
-      let descriptor = FetchDescriptor<ToDoTask>(
-         predicate: #Predicate { $0.tabId == selectedTabId }
-      )
-      tasks = (try? modelContext.fetch(descriptor)) ?? []
-   }
-
-   private func toggleTaskCompletion(_ task: ToDoTask) {
-      ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
-      loadTasks()
-   }
-
-   private func addTask() {
-      guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
-
-      let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
-      ToDoTaskService.addTask(newTask, to: modelContext)
-
-      newTaskTitle = ""
-      loadTasks()
-   }
-
-   private func handleDeleteTask(_ offsets: IndexSet) {
-      for index in offsets {
-         let taskToDelete = tasks[index]
-         ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
-      }
-      loadTasks()
-   }
-
-   private func startEdit(_ task: ToDoTask) {
-      editingTask = task
-      editTaskTitle = task.title
-      showEditDialog = true
-   }
-
-   private func applyEdit() {
-      guard let editingTask = editingTask else { return }
-      editingTask.title = editTaskTitle
-      ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
-      loadTasks()
+      .padding()
    }
 }
 ```

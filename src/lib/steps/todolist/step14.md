@@ -1,48 +1,64 @@
-# ステップ14: ホーム画面の枠を作る
+# ステップ?: SwiftData の設定を行う
 
-このステップでは、ホーム画面の土台だけを作ります。  
-まずはシンプルな画面として作成し、後のステップで画面遷移機能を追加します。
+アプリ全体で SwiftData を使えるように `ModelContainer` を設定します。
 
-### 1. 画面の中身
+### 1. スキーマの作成
 
 ```swift
-VStack(spacing: 12) {
-    // 仮のテキスト表示
-    Text("ここにタスク一覧を表示します")
-        .foregroundColor(.gray)
-}
+// 保存対象のデータモデル（ToDoTaskとToDoTab）を定義
+let schema = Schema([
+    ToDoTask.self,
+    ToDoTab.self
+])
 ```
 
-現時点ではまだタスクリストの機能は実装せず、仮のテキストだけを配置しています。  
-`.navigationTitle()` モディファイアでナビゲーションバーのタイトルを設定しています。
+SwiftData で扱うデータモデルのクラス（`ToDoTask` と `ToDoTab`）を `Schema` に登録して、データベースの構造を定義しています。
+
+### 2. ModelContainer の初期化
+
+```swift
+// モデルの設定（永続的に保存するため、メモリ内のみの保存は false に設定）
+let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+// 設定に基づいて ModelContainer を作成
+modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+```
+
+`ModelConfiguration` でデータベースの動作設定を行います。  
+`isStoredInMemoryOnly: false` に設定することで、アプリを終了してもデータが消えずにファイルとして保存されるようにしています。  
+最後に、この設定を使って `ModelContainer`（データベースの実体）を初期化します。
 
 ---
 
 ## コード全体
 
-<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
-
-```swift
-// HomeView.swift
+```swift title="ToDoListApp.swift"
+// ToDoListApp.swift
 import SwiftUI
+import SwiftData
 
-/// ホーム画面（枠だけ作成）
-struct HomeView: View {
-    var body: some View {
-        VStack(spacing: 12) {
-            Text("ここにタスク一覧を表示します")
-                .foregroundColor(.gray)
+@main
+struct ToDoListApp: App {
+    let modelContainer: ModelContainer
+
+    init() {
+        let schema = Schema([
+            ToDoTask.self,
+            ToDoTab.self
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not initialize ModelContainer: \(error)")
         }
-        .padding()
-        .navigationTitle("ToDoリスト")
     }
-}
 
-// MARK: - Preview
-
-#Preview {
-    NavigationStack {
-        HomeView()
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+        .modelContainer(modelContainer)
     }
 }
 ```

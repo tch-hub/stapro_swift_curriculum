@@ -1,54 +1,3 @@
-# ステップ15: 画面遷移の土台を作る
-
-`NavigationStack` を使って画面遷移をまとめます。
-
-### 1. 画面IDを定義
-
-```swift
-// アプリ内の画面を識別するためのID
-enum ScreenID: String {
-    case home      // ホーム画面
-    case tabManage // タブ管理画面
-}
-```
-
-画面遷移の行き先を管理しやすくするために、列挙型（enum）を使って画面のリストを定義しています。
-
-### 2. 遷移情報の型を作成
-
-```swift
-// NavigationStackで扱うためのデータ型（Hashable準拠が必要）
-struct NavigationItem: Hashable {
-    let id: ScreenID
-}
-```
-
-`NavigationStack` のパス（履歴）として保存できるデータ型を作成しています。  
-`Hashable` プロトコルに準拠させることで、一意な遷移先として扱えるようになります。
-
-### 3. NavigationStack を構成
-
-```swift
-// パス（履歴）と紐づいたナビゲーションスタック
-NavigationStack(path: $navigationPath) {
-    // 最初に表示する画面（ルートビュー）
-    HomeView(navigationPath: $navigationPath)
-        // NavigationItem 型のデータがパスに追加された時の遷移先を定義
-        .navigationDestination(for: NavigationItem.self) { item in
-            switch item.id {
-            case .tabManage:
-                // .tabManage の場合はタブ管理画面を表示
-                TabManageView()
-            default:
-                EmptyView()
-            }
-        }
-}
-```
-
-`NavigationStack` を使って、画面遷移のルートを管理します。  
-`path: $navigationPath` を指定することで、プログラムから `navigationPath` 配列を操作して画面遷移ができるようになります。  
-`.navigationDestination` で、どのIDが指定されたらどの画面を表示するかを定義しています。
 
 ---
 
@@ -56,61 +5,51 @@ NavigationStack(path: $navigationPath) {
 
 <img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
+
 ```swift
+// ContentView.swift
 import SwiftUI
-// MainStack.swift
+import SwiftData
 
-/// 画面ID
-enum ScreenID: String {
-    case home // ホーム画面
-    case tabManage // タブ管理画面
-}
-
-/// 画面遷移の情報
-struct NavigationItem: Hashable {
-    let id: ScreenID
-}
-
-// MARK: - Main View
-
-/// メインスタック
-struct MainStack: View {
-    @State private var navigationPath: [NavigationItem] = []
+struct ContentView: View {
+    @State private var isInitialized = false
+    @Environment(\.modelContext) private var modelContext
 
     var body: some View {
-        NavigationStack(path: $navigationPath) {
-            // ホーム画面を表示
-            HomeView(navigationPath: $navigationPath)
-
-                // 画面遷移定義
-                .navigationDestination(for: NavigationItem.self) { item in
-                    switch item.id {
-                    // タブ管理画面へ遷移
-                    case .tabManage:
-                        TabManageView()
-
-                    default:
-                        // 将来的に他の画面が増えた場合はここに追加します
-                        EmptyView()
-                    }
-                }
-        }
-    }
-}
-
-#Preview {
-    struct PreviewWrapper: View {
-        var body: some View {
+        if isInitialized {
             MainStack()
-                .modelContainer(
-                    try! ModelContainer(
-                        for: ToDoTab.self, ToDoTask.self,
-                        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-                    )
-                )
+        } else {
+            VStack {
+                Text("アプリを準備中...")
+                ProgressView()
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    initializeAppIfNeeded()
+                    isInitialized = true
+                }
+            }
         }
     }
 
-    return PreviewWrapper()
+    private func initializeAppIfNeeded() {
+        // 既存データをチェック
+        let descriptor = FetchDescriptor<ToDoTab>()
+        let existingTabs = (try? modelContext.fetch(descriptor)) ?? []
+
+        // 初期データがなければ作成
+        if existingTabs.isEmpty {
+            for (tabName, taskNames) in INITIAL_TODO_TABS {
+                let newTab = ToDoTab(name: tabName)
+                ToDoTabService.addTab(newTab, to: modelContext)
+
+                // タブに属するタスクを追加
+                for taskName in taskNames {
+                    let newTask = ToDoTask(title: taskName, detail: "", tabId: newTab.id)
+                    ToDoTaskService.addTask(newTask, to: modelContext)
+                }
+            }
+        }
+    }
 }
 ```
