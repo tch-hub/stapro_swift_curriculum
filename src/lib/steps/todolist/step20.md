@@ -98,7 +98,7 @@ struct HomeView: View {
         }
         .safeAreaInset(edge: .bottom) {
             if selectedTabId != nil {
-                TaskInputView(text: $newTaskTitle, onAdd: addTask)
+                InputView(text: $newTaskTitle, onAdd: addTask)
             }
         }
     }
