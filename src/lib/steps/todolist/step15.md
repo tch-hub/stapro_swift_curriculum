@@ -21,43 +21,43 @@ struct HomeView: View {
 
     var body: some View {
         VStack {
-            // タブ選択とタブ管理を近くに配置
-            if !tabs.isEmpty {
-                HStack(spacing: 12) {
-                    Picker("タブを選択", selection: $selectedTabId) {
-                        ForEach(tabs) { tab in
-                            Text(tab.name).tag(Optional(tab.id))
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .onChange(of: selectedTabId) { _, _ in
-                        loadTasks()
-                    }
-
-                    Button(action: {
-                        navigationPath.append(NavigationItem(id: .tabManage))
-                    }) {
-                        Text("タブ管理")
-                    }
-                }
-                .padding(.bottom, 8)
-            }
-
-            // タスク一覧を表示するだけのシンプルなList
-            if !tasks.isEmpty {
-                List {
-                    ForEach(tasks) { task in
-                        Text(task.title)
-                    }
-                }
-            } else if selectedTabId != nil {
-                Text("タスクはまだありません")
+            // タブがない場合は案内のみ表示
+            if tabs.isEmpty {
+                Text("タブがありません")
                     .foregroundColor(.gray)
                     .padding()
             } else {
-                Text("タブを選択してください")
-                    .foregroundColor(.gray)
-                    .padding()
+                // タブ選択
+                Picker("タブを選択", selection: $selectedTabId) {
+                    ForEach(tabs) { tab in
+                        Text(tab.name).tag(Optional(tab.id))
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: selectedTabId) { _, _ in
+                    loadTasks()
+                }
+
+                // タブ管理へ移動
+                Button(action: {
+                    navigationPath.append(NavigationItem(id: .tabManage))
+                }) {
+                    Text("タブ管理")
+                }
+                .padding(.bottom, 8)
+
+                // タスク一覧
+                if !tasks.isEmpty {
+                    List {
+                        ForEach(tasks) { task in
+                            Text(task.title)
+                        }
+                    }
+                } else {
+                    Text("タスクはまだありません")
+                        .foregroundColor(.gray)
+                        .padding()
+                }
             }
 
         }
