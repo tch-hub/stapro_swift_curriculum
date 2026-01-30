@@ -121,47 +121,61 @@ struct RefinedToDoListItem: View {
     let onToggle: () -> Void
 
     var body: some View {
-        Button(action: onToggle) {
-            HStack(alignment: .firstTextBaseline, spacing: 12) {
-                // MARK: - チェックボックスアイコン
+        Button(action: {
+            // アクション実行
+            triggerHapticFeedback()
+            // アニメーション付きでトグルを実行
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                onToggle()
+            }
+        }) {
+            HStack(spacing: 12) {
+                // MARK: - チェックボックス
                 ZStack {
-                    // 未完了時の枠円
-                    Image(systemName: "circle")
-                        .font(.title2) // 少し大きめにして押しやすく
-                        .foregroundStyle(.tertiary)
-                        .opacity(isCompleted ? 0 : 1)
-                        .scaleEffect(isCompleted ? 0.5 : 1)
+                    // 未完了時の枠
+                    Circle()
+                        .stroke(
+                            isCompleted ? Color.accentColor : Color.secondary,
+                            lineWidth: 2
+                        )
+                        .frame(width: 24, height: 24)
 
-                    // 完了時のチェックマーク
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.title2)
-                        // 完了時はアクセントカラー（例: 青）か、控えめなグレーにするか選択
-                        // ここでは「完了したから薄くする」スタイルを採用
-                        .foregroundStyle(isCompleted ? .secondary : .accentColor)
-                        .opacity(isCompleted ? 1 : 0)
-                        .scaleEffect(isCompleted ? 1 : 0.5)
+                    // 完了時の塗りつぶし（アニメーション用）
+                    if isCompleted {
+                        Image(systemName: "checkmark.circle.fill")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundStyle(Color.accentColor)
+                            // 完了時に少し拡大してから戻る「弾む」アニメーション
+                            .transition(.scale.combined(with: .opacity))
+                    }
                 }
-                // アニメーションのバネ設定
-                .animation(.spring(response: 0.4, dampingFraction: 0.6), value: isCompleted)
+                .padding(.leading, 4) // 左端の余白調整
 
-                // MARK: - タスク名
+                // MARK: - テキスト
                 Text(title)
                     .font(.body)
-                    // 完了時は取り消し線 + 文字色を薄く
-                    .strikethrough(isCompleted, color: .secondary)
+                    // 完了時は文字色を薄くする
                     .foregroundStyle(isCompleted ? .secondary : .primary)
-                    // 長文対応：左揃え、複数行許可
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(nil)
-                    // テキストの変更時にも少しアニメーションさせる
-                    .animation(.default, value: isCompleted)
+                    // 打ち消し線のアニメーション
+                    .strikethrough(isCompleted, color: .secondary)
+                    // コンテンツの変更を滑らかに
+                    .contentTransition(.opacity)
 
                 Spacer()
             }
-            .padding(.vertical, 12) // タップ領域を広めに確保
-            .contentShape(Rectangle()) // 空白部分もタップ反応させる
+            .padding(.vertical, 12)
+            // 行のどこをタップしても反応するようにする（重要）
+            .contentShape(Rectangle())
         }
-        .buttonStyle(.plain) // リスト標準のハイライトを無効化
+        .buttonStyle(.plain) // リスト内でのデフォルトのハイライト効果を消す
+    }
+
+    // MARK: - 触覚フィードバックのヘルパー
+    private func triggerHapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.prepare() // 遅延を減らすための事前準備
+        generator.impactOccurred()
     }
 }
 
@@ -169,9 +183,9 @@ struct RefinedToDoListItem: View {
 #Preview {
     struct PreviewWrapper: View {
         @State private var items = [
-            (title: "牛乳を買う", completed: false),
-            (title: "非常に長いタスク名のテスト。テキストが複数行に渡った場合、チェックボックスの位置がどうなるかを確認する必要があります。", completed: true),
-            (title: "ジムに行く", completed: false)
+            (id: UUID(), title: "牛乳を買う", isCompleted: false),
+            (id: UUID(), title: "開発チームに連絡する", isCompleted: true),
+            (id: UUID(), title: "ジムに行く", isCompleted: false)
         ]
 
         var body: some View {
@@ -179,10 +193,9 @@ struct RefinedToDoListItem: View {
                 ForEach(items.indices, id: \.self) { index in
                     RefinedToDoListItem(
                         title: items[index].title,
-                        isCompleted: items[index].completed
+                        isCompleted: items[index].isCompleted
                     ) {
-                        // 状態を反転
-                        items[index].completed.toggle()
+                        items[index].isCompleted.toggle()
                     }
                 }
             }
