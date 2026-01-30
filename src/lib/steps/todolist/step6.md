@@ -24,19 +24,19 @@ extension View {
         self.alert(title, isPresented: isPresented) {
             // ここにTextFieldを配置するだけで、OS標準の入力付きアラートになる
             TextField(placeholder, text: text)
-            
+
             // キャンセルボタン（自動的に閉じる）
             Button("キャンセル", role: .cancel) {
                 // キャンセル時の処理があればここに書く
                 // text.wrappedValue = "" // 必要ならクリアする
             }
-            
+
             // 実行ボタン
             Button(actionButtonTitle) {
                 action()
             }
             .disabled(text.wrappedValue.isEmpty) // 入力が空なら押せないようにする
-            
+
         } message: {
             Text(message)
         }
@@ -55,7 +55,7 @@ extension View {
             VStack(spacing: 20) {
                 Text(displayString)
                     .font(.title)
-                
+
                 Button("名前を変更") {
                     inputText = "" // 開く前に初期化
                     showDialog = true

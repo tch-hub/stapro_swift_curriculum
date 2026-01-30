@@ -14,7 +14,7 @@ import SwiftData
 
 struct TabManageView: View {
     @Environment(\.modelContext) private var modelContext
-    
+
     @State private var tabs: [ToDoTab] = []
     @State private var showingAddTab = false
     @State private var newTabName = ""
@@ -58,7 +58,7 @@ struct TabManageView: View {
                 cancelText: "キャンセル",
                 onDelete: confirmDelete
             )
-            
+
             // FloatingButtonでタブ追加機能を実装
             FloatingButton(
                 action: { showingAddTab = true },
@@ -77,10 +77,10 @@ struct TabManageView: View {
 
     private func addTab() {
         guard !newTabName.isEmpty else { return }
-        
+
         let newTab = ToDoTab(name: newTabName)
         ToDoTabService.addTab(newTab, to: modelContext)
-        
+
         newTabName = ""
         showingAddTab = false
         loadTabs()
@@ -138,6 +138,7 @@ struct TabManageView: View {
 ### 使用コンポーネント
 
 #### 1. **CustomList** (Step 3)
+
 - `items`: タブのリスト
 - `onDelete`: スワイプで削除された時の処理
 - `rowContent`: タブ情報を表示する行コンテンツ
@@ -155,6 +156,7 @@ CustomList(items: tabs, onDelete: handleDelete) { tab in
 ```
 
 #### 2. **TextFieldAlert Modifier** (Step 6)
+
 - テキスト入力が必要な場合にアラートを使用
 - キャンセルボタンと実行ボタンが自動で配置される
 - 入力が空の場合は実行ボタンが無効化される
@@ -172,6 +174,7 @@ CustomList(items: tabs, onDelete: handleDelete) { tab in
 ```
 
 #### 3. **deleteAlert Modifier** (Step 4)
+
 - 削除確認用アラート
 - タップで削除ボタンをタップした場合に表示
 - タブ削除時に関連するすべてのタスクも削除されることをユーザーに通知
@@ -188,6 +191,7 @@ CustomList(items: tabs, onDelete: handleDelete) { tab in
 ```
 
 #### 4. **FloatingButton** (Step 5)
+
 - 画面右下に配置される丸いボタン
 - タブを追加する際に使用
 - アイコンと背景色をカスタマイズ可能

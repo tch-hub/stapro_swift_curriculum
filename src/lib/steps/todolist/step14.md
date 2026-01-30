@@ -42,7 +42,7 @@ struct MainStack: View {
                     // タブ管理画面へ遷移
                     case .tabManage:
                         TabManageView()
-                        
+
                     default:
                         // 将来的に他の画面が増えた場合はここに追加します
                         EmptyView()

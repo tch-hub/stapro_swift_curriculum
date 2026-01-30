@@ -1,5 +1,5 @@
 <script>
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 </script>
 
 <div class="container mx-auto px-4 py-8">
@@ -10,8 +10,8 @@
 
 	<!-- ナビゲーション -->
 	<div class="mb-8 flex justify-between">
-		<a href="{base}/project/original-app/step3" class="btn btn-outline">← 前のステップ</a>
-		<a href="{base}/project/original-app/step5" class="btn btn-primary">次のステップ →</a>
+		<a href={resolve('/project/original-app/step3')} class="btn btn-outline">← 前のステップ</a>
+		<a href={resolve('/project/original-app/step5')} class="btn btn-primary">次のステップ →</a>
 	</div>
 
 	<!-- プログレスバー -->

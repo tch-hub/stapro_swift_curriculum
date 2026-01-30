@@ -41,7 +41,7 @@
 			<!-- iOS Segmented Control -->
 			<div class="mb-4 px-4">
 				<div class="relative flex rounded-lg bg-gray-200 p-1">
-					{#each tabs as tab}
+					{#each tabs as tab (tab.id)}
 						<button
 							class="flex-1 rounded-md py-1.5 text-sm font-medium transition-all duration-200 {selectedTabId ===
 							tab.id

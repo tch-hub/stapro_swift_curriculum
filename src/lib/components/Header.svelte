@@ -1,5 +1,5 @@
 <script>
-	import { base } from '$app/paths';
+	import { base, resolve } from '$app/paths';
 	import { browser } from '$app/environment';
 	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
@@ -62,9 +62,9 @@
 			pathname = pathname.slice(base.length);
 		}
 		const segments = pathname.split('/').filter(Boolean);
-		const breadcrumbs = [{ label: 'ホーム', href: base + '/' }];
+		const breadcrumbs = [{ label: 'ホーム', href: '/' }];
 
-		let currentPath = base + '/';
+		let currentPath = '/';
 		for (const segment of segments) {
 			currentPath += segment + '/';
 			let label = routeLabels[segment] || segment;
@@ -109,23 +109,23 @@
 				</svg>
 			</div>
 			<ul class="dropdown-content menu z-[1] mt-3 w-52 menu-sm rounded-box bg-base-100 p-2 shadow">
-				<li><a href="{base}/">ホーム</a></li>
-				<li><a href="{base}/setup">環境構築</a></li>
-				<li><a href="{base}/cheatsheet">swift基本構文</a></li>
-				<li><a href="{base}/quiz">練習問題</a></li>
-				<li><a href="{base}/tutorial">チュートリアル</a></li>
-				<li><a href="{base}/project">プロジェクト</a></li>
+				<li><a href={resolve('/')}>ホーム</a></li>
+				<li><a href={resolve('/setup')}>環境構築</a></li>
+				<li><a href={resolve('/cheatsheet')}>swift基本構文</a></li>
+				<li><a href={resolve('/quiz')}>練習問題</a></li>
+				<li><a href={resolve('/tutorial')}>チュートリアル</a></li>
+				<li><a href={resolve('/project')}>プロジェクト</a></li>
 				{#if dev}
-					<li><a href="{base}/editor">JSONエディタ</a></li>
+					<li><a href={resolve('/editor')}>JSONエディタ</a></li>
 				{/if}
 			</ul>
 		</div>
 		<!-- Breadcrumb -->
 		<div class="breadcrumbs ml-4">
 			<ul>
-				{#each breadcrumbs as crumb, index}
+				{#each breadcrumbs as crumb, index (crumb.href)}
 					{#if index < breadcrumbs.length - 1}
-						<li><a href={crumb.href}>{crumb.label}</a></li>
+						<li><a href={resolve(crumb.href)}>{crumb.label}</a></li>
 					{:else}
 						<li class="font-semibold text-primary">{crumb.label}</li>
 					{/if}
@@ -136,13 +136,13 @@
 	<div class="navbar-end">
 		<!-- ナビゲーションメニュー -->
 		<ul class="menu menu-horizontal hidden px-1 lg:flex">
-			<li><a href="{base}/setup">環境構築</a></li>
-			<li><a href="{base}/cheatsheet">swift基本構文</a></li>
-			<li><a href="{base}/quiz">練習問題</a></li>
-			<li><a href="{base}/tutorial">チュートリアル</a></li>
-			<li><a href="{base}/project">プロジェクト</a></li>
+			<li><a href={resolve('/setup')}>環境構築</a></li>
+			<li><a href={resolve('/cheatsheet')}>swift基本構文</a></li>
+			<li><a href={resolve('/quiz')}>練習問題</a></li>
+			<li><a href={resolve('/tutorial')}>チュートリアル</a></li>
+			<li><a href={resolve('/project')}>プロジェクト</a></li>
 			{#if dev}
-				<li><a href="{base}/editor">JSONエディタ</a></li>
+				<li><a href={resolve('/editor')}>JSONエディタ</a></li>
 			{/if}
 		</ul>
 		<!-- テーマ切り替えドロップダウン -->
@@ -159,8 +159,8 @@
 					<path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
 				</svg>
 			</div>
-			<ul tabindex="0" class="dropdown-content z-20 w-52 rounded-box bg-base-300 p-2 shadow-2xl">
-				{#each themes as theme}
+			<ul class="dropdown-content z-20 w-52 rounded-box bg-base-300 p-2 shadow-2xl">
+				{#each themes as theme (theme)}
 					<li>
 						<input
 							type="radio"

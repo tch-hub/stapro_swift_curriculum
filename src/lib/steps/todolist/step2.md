@@ -4,8 +4,6 @@
     import {base} from '$app/paths';
 </script>
 
-
-
 ```swift
 struct ToDoListItem: View {
     let title: String

@@ -1,15 +1,14 @@
 <script>
-	import { base } from '$app/paths';
+	import { base, resolve } from '$app/paths';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
-	import Header from '$lib/components/Header.svelte';
 	import PhoneMockup from '$lib/components/PhoneMockup.svelte';
 	import tutorialData from '$lib/data/tutorial.json';
 	import { marked } from 'marked';
 
-	$: id = $page.params.id;
-	$: section = tutorialData.sections.find((s) => s.id === id);
+	let id = $derived($page.params.id);
+	let section = $derived(tutorialData.sections.find((s) => s.id === id));
 
 	// Markdownをパースしてテキストとコードブロックを分ける関数
 	function parseMarkdown(source) {
@@ -65,17 +64,17 @@
 	}
 
 	let prevPage = async () => {
-		await goto(`${base}/tutorial?prev=${parseInt(id) - 1}`);
+		await goto(resolve('/tutorial?prev=' + (parseInt(id) - 1)));
 	};
 
 	let nextPage = async () => {
-		await goto(`${base}/tutorial?next=${parseInt(id) + 1}`);
+		await goto(resolve('/tutorial?next=' + (parseInt(id) + 1)));
 	};
 </script>
 
 {#if section}
-	<div class="container mx-auto pb-24">
-		{#each section.codeBlocks as codeBlock}
+	<div class="container mx-auto pb-24" data-base={base}>
+		{#each section.codeBlocks as codeBlock (codeBlock.title)}
 			<div class="card mb-4 bg-base-100 shadow-xl">
 				<div class="card-body">
 					<div class="flex flex-col gap-6 lg:flex-row">
@@ -92,8 +91,9 @@
 							/>
 							{#if codeBlock.description}
 								<div class="prose prose-sm mt-4 max-w-none text-sm text-base-content opacity-80">
-									{#each parseMarkdown(codeBlock.description.replace(/\n/g, '  \n')) as part}
+									{#each parseMarkdown(codeBlock.description.replace(/\n/g, '  \n')) as part, index (part.type + '-' + index)}
 										{#if part.type === 'text'}
+											<!-- eslint-disable-next-line svelte/no-at-html-tags -- マークダウンを表示するため -->
 											{@html part.content}
 										{:else if part.type === 'code'}
 											<CodeBlock
@@ -137,6 +137,6 @@
 	<div class="container mx-auto px-4 py-8">
 		<h1 class="text-3xl font-bold">ページが見つかりません</h1>
 		<p>指定されたチュートリアル項目は存在しません。</p>
-		<a href="{base}/tutorial" class="btn btn-primary">チュートリアル一覧に戻る</a>
+		<a href={resolve('/tutorial')} class="btn btn-primary">チュートリアル一覧に戻る</a>
 	</div>
 {/if}

@@ -1,5 +1,5 @@
 <script>
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 </script>
 
 <div class="container mx-auto px-4 py-8">
@@ -10,8 +10,8 @@
 
 	<!-- ナビゲーション -->
 	<div class="mb-8 flex justify-between">
-		<a href="{base}/project/original-app/step4" class="btn btn-outline">← 前のステップ</a>
-		<a href="{base}/project/original-app" class="btn btn-primary">プロジェクト完了！</a>
+		<a href={resolve('/project/original-app/step4')} class="btn btn-outline">← 前のステップ</a>
+		<a href={resolve('/project/original-app')} class="btn btn-primary">プロジェクト完了！</a>
 	</div>
 
 	<!-- プログレスバー -->
@@ -58,22 +58,28 @@
 				<ul class="mt-4 list-inside list-disc space-y-2">
 					<li>
 						<strong>タイマーを実装したい：</strong>
-						<a href="{base}/project/timer" class="link-primary">タイマーアプリプロジェクト</a>
+						<a href={resolve('/project/timer')} class="link-primary">タイマーアプリプロジェクト</a>
 						のステップ6「タイマーロジックの追加」やステップ4「タイマー表示ビューの実装」が参考になります。
 					</li>
 					<li>
 						<strong>リストでデータを表示したい：</strong>
-						<a href="{base}/project/todolist" class="link-primary">Todoリストアプリプロジェクト</a>
+						<a href={resolve('/project/todolist')} class="link-primary"
+							>Todoリストアプリプロジェクト</a
+						>
 						のステップ4「Todo項目を表示する」やステップ8「リストの見た目を整える」を見てみましょう。
 					</li>
 					<li>
 						<strong>データを保存したい：</strong>
-						<a href="{base}/project/todolist" class="link-primary">Todoリストアプリプロジェクト</a>
+						<a href={resolve('/project/todolist')} class="link-primary"
+							>Todoリストアプリプロジェクト</a
+						>
 						のステップ14「SwiftDataの導入」からステップ16「データの永続化」までが役に立ちます。
 					</li>
 					<li>
 						<strong>画面を切り替えたい：</strong>
-						<a href="{base}/project/todolist" class="link-primary">Todoリストアプリプロジェクト</a>
+						<a href={resolve('/project/todolist')} class="link-primary"
+							>Todoリストアプリプロジェクト</a
+						>
 						のステップ12「シートを使ってタスク追加画面を表示する」がヒントになるはずです。
 					</li>
 				</ul>

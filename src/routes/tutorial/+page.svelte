@@ -1,5 +1,5 @@
 <script>
-	import { base } from '$app/paths';
+	import { base, resolve } from '$app/paths';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
@@ -13,7 +13,7 @@
 		if (next || prev) {
 			loading = true;
 			setTimeout(() => {
-				goto(`${base}/tutorial/${next || prev}`);
+				goto(resolve('/tutorial/' + (next || prev)));
 			}, 500);
 		}
 	});
@@ -25,9 +25,9 @@
 		<p class="ml-4">ページ移動中...</p>
 	</div>
 {:else}
-	<div class="container mx-auto px-4 py-8">
+	<div class="container mx-auto px-4 py-8" data-base={base}>
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{#each tutorialData.sections as section, index}
+			{#each tutorialData.sections as section, index (section.id)}
 				<div
 					class="card border border-base-300 bg-base-100 shadow-xl transition-shadow duration-300 hover:shadow-2xl"
 				>
@@ -39,7 +39,7 @@
 								{index + 1}
 							</div>
 							<h2 class="card-title text-lg">
-								<a href="{base}/tutorial/{section.id}" class="  hover:link-accent">
+								<a href={resolve('/tutorial/' + section.id)} class="hover:link-accent">
 									{section.title}
 								</a>
 							</h2>
@@ -49,7 +49,9 @@
 							<span class="badge badge-outline badge-primary"
 								>コード例: {section.codeBlocks.length}個</span
 							>
-							<a href="{base}/tutorial/{section.id}" class="btn btn-sm btn-primary">学習する</a>
+							<a href={resolve('/tutorial/' + section.id)} class="btn btn-sm btn-primary"
+								>学習する</a
+							>
 						</div>
 					</div>
 				</div>

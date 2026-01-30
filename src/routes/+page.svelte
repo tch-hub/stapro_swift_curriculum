@@ -1,7 +1,6 @@
 <script>
-	import { base } from '$app/paths';
+	import { base, resolve } from '$app/paths';
 	import { onMount } from 'svelte';
-	import CodeBlock from '$lib/components/CodeBlock.svelte';
 
 	// 24回の授業データを定義（第0回を追加）
 	let lessons = $state([
@@ -284,10 +283,14 @@
 		lessons = lessons.map((lesson) => ({ ...lesson, checked: false }));
 		localStorage.removeItem('lessonProgress');
 	}
+
+	function splitDescription(text) {
+		return text.split('<br>').map((part) => part.trim());
+	}
 </script>
 
 <!-- 学習の流れ説明 -->
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-8" data-base={base}>
 	<div class="mb-8 text-center">
 		<h2 class="mb-4 text-3xl font-bold">学習の流れ</h2>
 		<p class="mb-6 text-lg">
@@ -307,7 +310,8 @@
 			<button class="btn btn-error" onclick={resetProgress}>進捗をリセット</button>
 		</div>
 		<div class="flex flex-col space-y-4">
-			{#each sortedLessons as lesson}
+			{#each sortedLessons as lesson (lesson.id)}
+				{@const parts = splitDescription(lesson.description)}
 				<div class="card bg-base-100 shadow-md">
 					<div class="card-body">
 						<div class="mb-2 flex items-center">
@@ -318,22 +322,29 @@
 							/>
 							<h3 class="card-title">{lesson.title}</h3>
 						</div>
-						<p class="mb-4">{@html lesson.description}</p>
+						<p class="mb-4">
+							{#each parts as part, index (part + index)}
+								{part}
+								{#if index < parts.length - 1}
+									<br />
+								{/if}
+							{/each}
+						</p>
 						<div class="card-actions justify-end">
 							{#if lesson.tutorialUrl}
-								<a href="{base}{lesson.tutorialUrl}" class="btn btn-primary">
+								<a href={resolve(lesson.tutorialUrl)} class="btn btn-primary">
 									{lesson.id === 0 ? '環境構築' : 'チュートリアル'}
 								</a>
 							{/if}
 							{#if lesson.cheatsheetUrl}
-								<a href="{base}{lesson.cheatsheetUrl}" class="btn btn-primary">Swift基本構文</a>
+								<a href={resolve(lesson.cheatsheetUrl)} class="btn btn-primary">Swift基本構文</a>
 							{/if}
 							{#if lesson.quizUrl}
-								<a href="{base}{lesson.quizUrl}" class="btn btn-secondary">練習問題</a>
+								<a href={resolve(lesson.quizUrl)} class="btn btn-secondary">練習問題</a>
 							{/if}
 							{#if lesson.projectSteps}
-								{#each lesson.projectSteps as step, i}
-									<a href="{base}{step}" class="btn btn-primary"
+								{#each lesson.projectSteps as step (step)}
+									<a href={resolve(step)} class="btn btn-primary"
 										>{lesson.projectName} ステップ{step.split('/').pop().replace('step', '')}</a
 									>
 								{/each}

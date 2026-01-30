@@ -1,5 +1,5 @@
 <script>
-	import { base } from '$app/paths';
+	import { base, resolve } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import { marked } from 'marked';
 	import Step1 from '$lib/components/projects/original-app/steps/Step1.svelte';
@@ -8,7 +8,7 @@
 	import Step4 from '$lib/components/projects/original-app/steps/Step4.svelte';
 	import Step5 from '$lib/components/projects/original-app/steps/Step5.svelte';
 
-	export let data;
+	let { data } = $props();
 
 	const parserOptions = { headerIds: false };
 
@@ -20,9 +20,8 @@
 		step5: Step5
 	};
 
-	$: projectPath = `${base}/project/${data.projectId}`;
-	$: parsedTokens = data.content ? marked.lexer(data.content, parserOptions) : [];
-	$: tokensWithoutTitle = (() => {
+	let parsedTokens = $derived(data.content ? marked.lexer(data.content, parserOptions) : []);
+	let tokensWithoutTitle = $derived.by(() => {
 		if (!parsedTokens.length) return parsedTokens;
 		const [firstToken, ...restTokens] = parsedTokens;
 		if (
@@ -33,63 +32,74 @@
 			return restTokens;
 		}
 		return parsedTokens;
-	})();
-	$: renderedBlocks = tokensWithoutTitle
-		.filter((token) => token.type !== 'space')
-		.map((token) => {
-			if (token.type === 'code') {
-				let fileName = '';
-				if (token.meta) {
-					const titleMatch = token.meta.match(/title="([^"]+)"/);
-					if (titleMatch) {
-						fileName = titleMatch[1];
+	});
+	let renderedBlocks = $derived.by(() =>
+		tokensWithoutTitle
+			.filter((token) => token.type !== 'space')
+			.map((token) => {
+				if (token.type === 'code') {
+					let fileName = '';
+					if (token.meta) {
+						const titleMatch = token.meta.match(/title="([^"]+)"/);
+						if (titleMatch) {
+							fileName = titleMatch[1];
+						}
 					}
+
+					return {
+						type: 'code',
+						code: token.text,
+						language: token.lang || 'swift',
+						fileName
+					};
+				}
+
+				let html = marked.parser([token], parserOptions);
+
+				if (base) {
+					const normalizedBase = (base || '').replace(/\/$/, '');
+					html = html.replace(/(src|href)=(['"])\/(?!\/)([^'"]*)/g, (m, attr, q, rest) => {
+						return `${attr}=${q}${normalizedBase}/${rest}`;
+					});
+					html = html.replace(/url\((['"]?)\/(?!\/)([^)'"]*)\)/g, (m, q, rest) => {
+						return `url(${q}${normalizedBase}/${rest})`;
+					});
 				}
 
 				return {
-					type: 'code',
-					code: token.text,
-					language: token.lang || 'swift',
-					fileName
+					type: 'html',
+					html
 				};
-			}
-
-			let html = marked.parser([token], parserOptions);
-
-			if (base) {
-				const normalizedBase = (base || '').replace(/\/$/, '');
-				html = html.replace(/(src|href)=(['"])\/(?!\/)([^'\"]*)/g, (m, attr, q, rest) => {
-					return `${attr}=${q}${normalizedBase}/${rest}`;
-				});
-				html = html.replace(/url\((['"]?)\/(?!\/)([^)'\"]*)\)/g, (m, q, rest) => {
-					return `url(${q}${normalizedBase}/${rest})`;
-				});
-			}
-
-			return {
-				type: 'html',
-				html
-			};
-		});
+			})
+	);
 </script>
 
 {#if data.projectId === 'original-app'}
-	<svelte:component this={originalAppStepComponents[data.stepId]} />
+	{@const StepComponent = originalAppStepComponents[data.stepId]}
+	<StepComponent />
 {:else}
 	<div class="container mx-auto px-4 py-8">
 		<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
 			<div class="flex flex-wrap gap-3">
 				{#if data.stepId === 'step1'}
-					<a href={projectPath} class="btn btn-outline btn-sm">← プロジェクト概要</a>
+					<a href={resolve('/project/' + data.projectId)} class="btn btn-outline btn-sm">
+						← プロジェクト概要
+					</a>
 				{/if}
 				{#if data.prevStep}
-					<a href="{projectPath}/{data.prevStep.id}" class="btn btn-outline btn-sm">
+					<a
+						href={resolve('/project/' + data.projectId + '/' + data.prevStep.id)}
+						class="btn btn-outline btn-sm"
+					>
 						← {data.prevStep.title}
 					</a>
 				{/if}
 			</div>
 			{#if data.nextStep}
-				<a href="{projectPath}/{data.nextStep.id}" class="btn btn-sm btn-primary">
+				<a
+					href={resolve('/project/' + data.projectId + '/' + data.nextStep.id)}
+					class="btn btn-sm btn-primary"
+				>
 					{data.nextStep.title} →
 				</a>
 			{/if}
@@ -101,7 +111,7 @@
 		</header>
 
 		<section class="prose prose-sm max-w-none">
-			{#each renderedBlocks as block}
+			{#each renderedBlocks as block, index (block.type + '-' + index)}
 				{#if block.type === 'code'}
 					<div class="mb-6">
 						{#key block.code}
@@ -110,6 +120,7 @@
 					</div>
 				{:else}
 					<div class="mb-4">
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -- マークダウンを表示するため -->
 						{@html block.html}
 					</div>
 				{/if}
@@ -118,15 +129,23 @@
 
 		<div class="mt-10 flex flex-wrap items-center justify-center gap-4">
 			{#if data.prevStep}
-				<a href="{projectPath}/{data.prevStep.id}" class="btn btn-outline btn-sm">
+				<a
+					href={resolve('/project/' + data.projectId + '/' + data.prevStep.id)}
+					class="btn btn-outline btn-sm"
+				>
 					← {data.prevStep.title}
 				</a>
 			{/if}
 			{#if data.stepId === 'step1'}
-				<a href={projectPath} class="btn btn-sm btn-secondary">ステップ一覧に戻る</a>
+				<a href={resolve('/project/' + data.projectId)} class="btn btn-sm btn-secondary">
+					ステップ一覧に戻る
+				</a>
 			{/if}
 			{#if data.nextStep}
-				<a href="{projectPath}/{data.nextStep.id}" class="btn btn-sm btn-primary">
+				<a
+					href={resolve('/project/' + data.projectId + '/' + data.nextStep.id)}
+					class="btn btn-sm btn-primary"
+				>
 					{data.nextStep.title} →
 				</a>
 			{/if}

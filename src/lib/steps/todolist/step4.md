@@ -68,4 +68,3 @@ extension View {
 | `secondaryButtonText` | キャンセルボタンのテキスト           |
 | `primaryAction`       | メインボタンをタップした時の処理     |
 | `secondaryAction`     | キャンセルボタンをタップした時の処理 |
-

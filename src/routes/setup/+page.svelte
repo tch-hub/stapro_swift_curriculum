@@ -1,5 +1,5 @@
 <script>
-	import { base } from '$app/paths';
+	import { base, resolve } from '$app/paths';
 
 	// 現在のステップを管理する変数
 	let currentStep = 0;
@@ -13,10 +13,10 @@
 	];
 </script>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-8" data-base={base}>
 	<!-- 進行状況表示 -->
 	<div class="steps steps-vertical mb-8 w-full lg:steps-horizontal">
-		{#each steps as step, index}
+		{#each steps as step, index (step.title + '-' + index)}
 			<div class="step {index <= currentStep ? 'step-primary' : ''}">{step.title}</div>
 		{/each}
 	</div>
@@ -249,9 +249,9 @@
 		<div class="mb-4 flex justify-between">
 			<button class="btn btn-outline" onclick={() => currentStep--}>前のステップ</button>
 			<div class="flex gap-2">
-				<a href="{base}/tutorial" class="btn btn-primary">チュートリアルを始める</a>
+				<a href={resolve('/tutorial')} class="btn btn-primary">チュートリアルを始める</a>
 			</div>
 		</div>
 	{/if}
-	<a href="{base}/help" class="btn btn-outline">ヘルプ</a>
+	<a href={resolve('/help')} class="btn btn-outline">ヘルプ</a>
 </div>

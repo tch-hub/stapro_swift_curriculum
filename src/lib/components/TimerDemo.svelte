@@ -204,15 +204,14 @@
 
 			oscillator.start(audioContext.currentTime);
 			oscillator.stop(audioContext.currentTime + 0.5);
-		} catch (e) {
+		} catch (error) {
 			// Audio APIが利用できない場合は何もしない
-			console.log('Audio not available');
+			console.log('Audio not available', error);
 		}
 	}
 
 	function initializeWheelPicker(picker) {
 		const container = picker.querySelector('.wheel-container');
-		const items = picker.querySelectorAll('.wheel-item');
 		let selectedIndex = 0;
 		let startY = 0;
 		let currentY = 0;

@@ -1,16 +1,16 @@
 <script>
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 
 	export let steps = [];
 	export let projectId = ''; // 'timer', 'todolist', etc.
 </script>
 
 <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-	{#each steps as step}
+	{#each steps as step (step.id)}
 		<a
-			href="{base}/project/{projectId}/{step.id}"
+			href={resolve('/project/' + projectId + '/' + step.id)}
 			class="card h-full bg-base-100 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl focus:ring-2 focus:ring-primary focus:outline-none"
-			aria-label="{step.title}へ移動"
+			aria-label={step.title + 'へ移動'}
 		>
 			<div class="card-body p-6">
 				<div class="mb-2 flex items-center justify-between">

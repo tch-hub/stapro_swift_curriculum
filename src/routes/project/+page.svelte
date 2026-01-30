@@ -1,23 +1,23 @@
 <script>
-	import { base } from '$app/paths';
+	import { base, resolve } from '$app/paths';
 	import { projects } from '$lib/data/projects';
 </script>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-8" data-base={base}>
 	<h1 class="mb-8 text-center text-4xl font-bold">プロジェクト</h1>
 	<p class="mb-12 text-center text-lg">学習した内容を活かして、実際にiOSアプリを作成しましょう！</p>
 
 	<!-- プロジェクト一覧 -->
 	<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-		{#each projects as project}
+		{#each projects as project (project.id)}
 			<div class="card bg-base-100 shadow-xl">
 				<div class="card-body">
 					<h2 class="card-title text-2xl">{project.title}</h2>
 					<p class="mb-4">{project.summary}</p>
 					<div class="card-actions justify-between">
-						<a href="{base}/project/{project.id}" class="btn btn-primary">詳細を見る</a>
+						<a href={resolve('/project/' + project.id)} class="btn btn-primary">詳細を見る</a>
 						{#if project.downloadUrl}
-							<a href="{base}{project.downloadUrl}" download class="btn btn-outline">
+							<a href={resolve(project.downloadUrl)} download class="btn btn-outline">
 								ダウンロード
 							</a>
 						{:else}

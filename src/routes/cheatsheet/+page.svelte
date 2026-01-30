@@ -2,7 +2,6 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
-	import Header from '$lib/components/Header.svelte';
 
 	// ローディング状態の管理
 	let isLoading = true;
@@ -50,7 +49,7 @@
 	}
 </script>
 
-<div class="flex">
+<div class="flex" data-base={base}>
 	<!-- サイドバー（デスクトップのみ固定表示） -->
 	<aside
 		class="fixed top-0 left-0 hidden h-[calc(100vh)] w-80 overflow-y-auto bg-base-200 p-4 shadow-lg lg:block"

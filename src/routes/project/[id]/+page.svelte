@@ -15,11 +15,13 @@
 	$: ProjectComponent = projectComponents[data.projectId];
 </script>
 
-{#if ProjectComponent}
-	<svelte:component this={ProjectComponent} />
-{:else}
-	<div class="container mx-auto px-4 py-8">
-		<h1 class="mb-4 text-3xl font-bold">プロジェクトが見つかりません</h1>
-		<p>URLが正しいか確認してください。</p>
-	</div>
-{/if}
+<div data-base={base}>
+	{#if ProjectComponent}
+		<svelte:component this={ProjectComponent} />
+	{:else}
+		<div class="container mx-auto px-4 py-8">
+			<h1 class="mb-4 text-3xl font-bold">プロジェクトが見つかりません</h1>
+			<p>URLが正しいか確認してください。</p>
+		</div>
+	{/if}
+</div>

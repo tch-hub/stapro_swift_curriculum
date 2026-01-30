@@ -38,7 +38,7 @@ final class ToDoTask: Identifiable {
 | ------------- | ------ | -------------------------- |
 | `id`          | UUID   | タスクの一意な識別子       |
 | `title`       | String | タスクのタイトル           |
-| `detail` | String | タスクの説明               |
+| `detail`      | String | タスクの説明               |
 | `isCompleted` | Bool   | タスクが完了したかどうか   |
 | `tabId`       | UUID   | このタスクが属するタブのID |
 | `createdAt`   | Date   | タスクが作成された日時     |
