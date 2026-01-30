@@ -6,29 +6,32 @@
 
 ## HomeView.swift の修正
 
-タスクを追加するための入力アラートと「+」ボタンを追加します：
+タスクを追加するための画面下部の入力欄を追加します：
 
 ```swift
-@State private var showingAddTask = false
 @State private var newTaskTitle = ""
 
-// 既存のZStack内に追加
-.textFieldAlert(
-    isPresented: $showingAddTask,
-    title: "新しいタスクを追加",
-    message: "タスクの内容を入力してください",
-    text: $newTaskTitle,
-    placeholder: "例: 買い物に行く",
-    actionButtonTitle: "追加",
-    action: addTask
-)
+// 既存のZStackの外側に追加
+.safeAreaInset(edge: .bottom) {
+    if selectedTabId != nil {
+        HStack(spacing: 12) {
+            TextField("新しいタスク", text: $newTaskTitle)
+                .textFieldStyle(.roundedBorder)
+                .submitLabel(.done)
+                .onSubmit {
+                    addTask()
+                }
 
-if selectedTabId != nil {
-    FloatingButton(
-        action: { showingAddTask = true },
-        icon: "plus",
-        backgroundColor: .green
-    )
+            Button("追加") {
+                addTask()
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.ultraThinMaterial)
+    }
 }
 
 private func addTask() {
@@ -38,17 +41,14 @@ private func addTask() {
     ToDoTaskService.addTask(newTask, to: modelContext)
 
     newTaskTitle = ""
-    showingAddTask = false
     loadTasks()
 }
 ```
 
 ## 新しい要素
 
-- `@State private var showingAddTask`: 入力アラートの表示状態を管理します
 - `@State private var newTaskTitle`: 入力されたタスクのタイトルを保持します
-- `.textFieldAlert()`: テキスト入力アラートを表示します
-- `FloatingButton`: 画面右下の追加ボタンを表示します
+- `.safeAreaInset()`: 画面下部に入力エリアを固定表示します
 - `addTask()`: 新しいタスクをデータベースに保存します
 
 ## 次のステップへ

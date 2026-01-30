@@ -16,7 +16,6 @@ struct TabManageView: View {
     @Environment(\.modelContext) private var modelContext
 
     @State private var tabs: [ToDoTab] = []
-    @State private var showingAddTab = false
     @State private var newTabName = ""
     @State private var showDeleteAlert = false
     @State private var tabToDelete: ToDoTab?
@@ -39,16 +38,6 @@ struct TabManageView: View {
             .onAppear {
                 loadTabs()
             }
-            // テキスト入力アラートを使用してタブ名を入力
-            .textFieldAlert(
-                isPresented: $showingAddTab,
-                title: "新しいタブを追加",
-                message: "タブの名前を入力してください",
-                text: $newTabName,
-                placeholder: "例: 仕事、買い物など",
-                actionButtonTitle: "追加",
-                action: addTab
-            )
             // 削除確認アラート
             .deleteAlert(
                 isPresented: $showDeleteAlert,
@@ -58,13 +47,26 @@ struct TabManageView: View {
                 cancelText: "キャンセル",
                 onDelete: confirmDelete
             )
+        }
+        .safeAreaInset(edge: .bottom) {
+            // 画面下部でタブを追加
+            HStack(spacing: 12) {
+                TextField("新しいタブ", text: $newTabName)
+                    .textFieldStyle(.roundedBorder)
+                    .submitLabel(.done)
+                    .onSubmit {
+                        addTab()
+                    }
 
-            // FloatingButtonでタブ追加機能を実装
-            FloatingButton(
-                action: { showingAddTab = true },
-                icon: "plus",
-                backgroundColor: .blue
-            )
+                Button("追加") {
+                    addTab()
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(newTabName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(.ultraThinMaterial)
         }
     }
 
@@ -82,7 +84,6 @@ struct TabManageView: View {
         ToDoTabService.addTab(newTab, to: modelContext)
 
         newTabName = ""
-        showingAddTab = false
         loadTabs()
     }
 
@@ -127,7 +128,7 @@ struct TabManageView: View {
 このプレビューでは、以下のことができます：
 
 - **タブの表示**: 初期状態でデータベースにあるタブを表示
-- **タブの追加**: FloatingButtonをタップすると、タブ追加アラートが表示され、タブ名を入力して追加できます
+- **タブの追加**: 画面下部の入力欄でタブ名を入力して追加できます
 - **タブの削除**: リスト行をスワイプすると削除アラートが表示され、確認後にタブが削除されます
 - **リアルタイム更新**: タブ追加・削除後、自動的にリストが更新されます
 
@@ -155,22 +156,28 @@ CustomList(items: tabs, onDelete: handleDelete) { tab in
 }
 ```
 
-#### 2. **TextFieldAlert Modifier** (Step 6)
+#### 2. **画面下部の追加エリア**
 
-- テキスト入力が必要な場合にアラートを使用
-- キャンセルボタンと実行ボタンが自動で配置される
-- 入力が空の場合は実行ボタンが無効化される
+- 画面下部の入力欄から直接タブを追加
+- Enterで追加できる
+- 入力が空の場合は追加ボタンが無効化される
 
 ```swift
-.textFieldAlert(
-    isPresented: $showingAddTab,
-    title: "新しいタブを追加",
-    message: "タブの名前を入力してください",
-    text: $newTabName,
-    placeholder: "例: 仕事、買い物など",
-    actionButtonTitle: "追加",
-    action: addTab
-)
+.safeAreaInset(edge: .bottom) {
+    HStack(spacing: 12) {
+        TextField("新しいタブ", text: $newTabName)
+            .textFieldStyle(.roundedBorder)
+            .submitLabel(.done)
+            .onSubmit { addTab() }
+
+        Button("追加") { addTab() }
+            .buttonStyle(.borderedProminent)
+            .disabled(newTabName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+    }
+    .padding(.horizontal, 16)
+    .padding(.vertical, 12)
+    .background(.ultraThinMaterial)
+}
 ```
 
 #### 3. **deleteAlert Modifier** (Step 4)
@@ -192,17 +199,7 @@ CustomList(items: tabs, onDelete: handleDelete) { tab in
 
 #### 4. **FloatingButton** (Step 5)
 
-- 画面右下に配置される丸いボタン
-- タブを追加する際に使用
-- アイコンと背景色をカスタマイズ可能
-
-```swift
-FloatingButton(
-    action: { showingAddTab = true },
-    icon: "plus",
-    backgroundColor: .blue
-)
-```
+- 今回は使用しません
 
 ### メソッドの説明
 
@@ -218,7 +215,6 @@ FloatingButton(
 | State変数         | 説明                                 |
 | ----------------- | ------------------------------------ |
 | `tabs`            | 現在のタブリスト                     |
-| `showingAddTab`   | タブ追加アラートの表示/非表示        |
 | `newTabName`      | タブ追加時の入力フィールド           |
 | `showDeleteAlert` | 削除確認アラートの表示/非表示        |
 | `tabToDelete`     | 削除予定のタブ（確認後に実際に削除） |
