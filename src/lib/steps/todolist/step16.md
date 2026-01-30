@@ -21,7 +21,10 @@ struct HomeView: View {
 
     var body: some View {
         VStack {
-            if !tabs.isEmpty {
+            if tabs.isEmpty {
+                Text("タブがありません")
+                    .padding()
+            } else {
                 HStack(spacing: 12) {
                     Picker("タブを選択", selection: $selectedTabId) {
                         ForEach(tabs) { tab in
@@ -40,37 +43,37 @@ struct HomeView: View {
                     }
                 }
                 .padding(.bottom, 8)
-            }
 
-            if let selectedTabId = selectedTabId, !tasks.isEmpty {
-                CustomList(items: tasks, onDelete: handleDeleteTask) { task in
-                    ToDoListItem(
-                        title: task.title,
-                        isCompleted: task.isCompleted
-                    ) {
-                        // 完了切り替えは次のステップで実装します
+                if selectedTabId != nil && !tasks.isEmpty {
+                    CustomList(items: tasks) { task in
+                        ToDoListItem(
+                            title: task.title,
+                            isCompleted: task.isCompleted
+                        ) {
+                            // 完了切り替えは次のステップで実装します
+                        }
                     }
+                } else if selectedTabId != nil {
+                    VStack {
+                        Image(systemName: "checkmark.circle")
+                            .font(.system(size: 48))
+                            .foregroundColor(.gray)
+                        Text("タスクはまだありません")
+                            .foregroundColor(.gray)
+                            .padding(.top, 8)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    VStack {
+                        Image(systemName: "list.bullet")
+                            .font(.system(size: 48))
+                            .foregroundColor(.gray)
+                        Text("タブを選択してください")
+                            .foregroundColor(.gray)
+                            .padding(.top, 8)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-            } else if selectedTabId != nil {
-                VStack {
-                    Image(systemName: "checkmark.circle")
-                        .font(.system(size: 48))
-                        .foregroundColor(.gray)
-                    Text("タスクはまだありません")
-                        .foregroundColor(.gray)
-                        .padding(.top, 8)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else {
-                VStack {
-                    Image(systemName: "list.bullet")
-                        .font(.system(size: 48))
-                        .foregroundColor(.gray)
-                    Text("タブを選択してください")
-                        .foregroundColor(.gray)
-                        .padding(.top, 8)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
 
         }
@@ -102,9 +105,6 @@ struct HomeView: View {
         tasks = (try? modelContext.fetch(descriptor)) ?? []
     }
 
-    private func handleDeleteTask(_ offsets: IndexSet) {
-        // 削除処理は次のステップで実装します
-    }
 }
 ```
 

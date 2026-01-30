@@ -24,7 +24,6 @@ struct HomeView: View {
             // タブがない場合は案内のみ表示
             if tabs.isEmpty {
                 Text("タブがありません")
-                    .foregroundColor(.gray)
                     .padding()
             } else {
                 // タブ選択
@@ -55,7 +54,6 @@ struct HomeView: View {
                     }
                 } else {
                     Text("タスクはまだありません")
-                        .foregroundColor(.gray)
                         .padding()
                 }
             }
