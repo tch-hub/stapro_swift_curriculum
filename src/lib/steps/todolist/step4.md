@@ -1,12 +1,7 @@
-# ステップ4: Alert コンポーネントの実装
 
 <script>
     import {base} from '$app/paths';
 </script>
-
-## Alert.swift の作成
-
-`Components/`フォルダに`Alert.swift`を作成します：
 
 ```swift
 import SwiftUI
@@ -57,14 +52,3 @@ extension View {
 }
 
 ```
-
-## 各プロパティの説明
-
-| プロパティ            | 説明                                 |
-| --------------------- | ------------------------------------ |
-| `title`               | アラートのタイトル                   |
-| `message`             | アラートの説明メッセージ             |
-| `primaryButtonText`   | メインボタンのテキスト               |
-| `secondaryButtonText` | キャンセルボタンのテキスト           |
-| `primaryAction`       | メインボタンをタップした時の処理     |
-| `secondaryAction`     | キャンセルボタンをタップした時の処理 |

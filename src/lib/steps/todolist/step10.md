@@ -1,14 +1,8 @@
-# ステップ2: SwiftData環境の準備
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## SwiftDataとは
-
-SwiftDataは、iOSアプリ内でデータを永続化するための仕組みです。データベースのようなもので、アプリを再起動してもデータが保存されます。
-
-## ToDoListApp.swiftの基本構造
 
 ```swift
 import SwiftUI

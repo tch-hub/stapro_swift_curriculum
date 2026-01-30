@@ -1,95 +1,185 @@
-# ステップ21: 最終調整とテスト
-
 <script>
-    import {base} from '$app/paths';
+   import {base} from '$app/paths';
 </script>
 
-## プロジェクト全体の確認
 
-これまで実装した機能をすべて確認します：
+```swift
+import SwiftUI
+import SwiftData
 
-### 実装済み機能の確認リスト
+struct HomeView: View {
+   @Environment(\.modelContext) private var modelContext
+   @State private var tabs: [ToDoTab] = []
+   @State private var tasks: [ToDoTask] = []
+   @State private var selectedTabId: UUID?
+   @State private var newTaskTitle = ""
+   @State private var showEditDialog = false
+   @State private var editTaskTitle = ""
+   @State private var editingTask: ToDoTask?
+   @Binding var navigationPath: [NavigationItem]
 
-- [x] プロジェクト構造の作成
-- [x] SwiftDataのセットアップ
-- [x] データモデル（ToDoTask, ToDoTab）の作成
-- [x] サービスクラス（ToDoTaskService, ToDoTabService）の実装
-- [x] ナビゲーション定義（ScreenID, NavigationItem）
-- [x] ContentView の実装
-- [x] MainStack の実装
-- [x] HomeView の実装（タブ選択、タスク表示、追加、完了、削除）
-- [x] TabManageView の実装
-- [x] コンポーネント化（ListItem）
-- [x] カスタムコンポーネント（Alert, FloatingButton, TextFieldAlert, List）
-- [x] 初期データの設定
+   var body: some View {
+      ZStack {
+         VStack {
+            if tabs.isEmpty {
+               Text("タブがありません")
+                  .padding()
+            } else {
+               HStack(spacing: 12) {
+                  Picker("タブを選択", selection: $selectedTabId) {
+                     ForEach(tabs) { tab in
+                        Text(tab.name).tag(Optional(tab.id))
+                     }
+                  }
+                  .pickerStyle(.menu)
+                  .onChange(of: selectedTabId) { _, _ in
+                     loadTasks()
+                  }
 
-## テストケース
+                  Button(action: {
+                     navigationPath.append(NavigationItem(id: .tabManage))
+                  }) {
+                     Label("タブ管理", systemImage: "folder")
+                  }
+               }
+               .padding(.bottom, 8)
 
-アプリを起動して、以下をテストしてください：
+               if selectedTabId != nil && !tasks.isEmpty {
+                  CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+                     ToDoListItem(
+                        title: task.title,
+                        isCompleted: task.isCompleted
+                     ) {
+                        toggleTaskCompletion(task)
+                     }
+                     .onLongPressGesture {
+                        startEdit(task)
+                     }
+                  }
+               } else if selectedTabId != nil {
+                  VStack {
+                     Image(systemName: "checkmark.circle")
+                        .font(.system(size: 48))
+                        .foregroundColor(.gray)
+                     Text("タスクはまだありません")
+                        .foregroundColor(.gray)
+                        .padding(.top, 8)
+                  }
+                  .frame(maxWidth: .infinity, maxHeight: .infinity)
+               } else {
+                  VStack {
+                     Image(systemName: "list.bullet")
+                        .font(.system(size: 48))
+                        .foregroundColor(.gray)
+                     Text("タブを選択してください")
+                        .foregroundColor(.gray)
+                        .padding(.top, 8)
+                  }
+                  .frame(maxWidth: .infinity, maxHeight: .infinity)
+               }
+            }
 
-1. **アプリ起動**
-   - [ ] アプリが正常に起動する
-   - [ ] 初期データが表示される
+         }
+         .padding()
+         .navigationTitle("ToDoリスト")
+         .onAppear {
+            loadTabs()
+         }
+      }
+      .safeAreaInset(edge: .bottom) {
+         if selectedTabId != nil {
+            HStack(spacing: 12) {
+               TextField("新しいタスク", text: $newTaskTitle)
+                  .textFieldStyle(.roundedBorder)
+                  .submitLabel(.done)
+                  .onSubmit {
+                     addTask()
+                  }
 
-2. **タブ操作**
-   - [ ] タブを選択できる
-   - [ ] 選択したタブのタスクが表示される
+               Button("追加") {
+                  addTask()
+               }
+               .buttonStyle(.borderedProminent)
+               .disabled(newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(.ultraThinMaterial)
+         }
+      }
+      .textFieldAlert(
+         isPresented: $showEditDialog,
+         title: "タスクの編集",
+         message: "新しいタイトルを入力してください。",
+         text: $editTaskTitle,
+         placeholder: "例: 牛乳を買う",
+         actionButtonTitle: "保存",
+         action: {
+            applyEdit()
+         }
+      )
+   }
 
-3. **タスク操作**
-   - [ ] 新しいタスクを追加できる
-   - [ ] タスクの完了状態を切り替えられる
-   - [ ] タスクを削除できる
+   private func loadTabs() {
+      let descriptor = FetchDescriptor<ToDoTab>()
+      tabs = (try? modelContext.fetch(descriptor)) ?? []
+      if let selectedTabId = selectedTabId {
+         // 現在の選択が削除済みの場合は先頭タブに戻す
+         if !tabs.contains(where: { $0.id == selectedTabId }) {
+            self.selectedTabId = tabs.first?.id
+         }
+      } else {
+         selectedTabId = tabs.first?.id
+      }
+      loadTasks()
+   }
 
-4. **タブ管理**
-   - [ ] 「タブ管理」画面へ遷移できる
-   - [ ] 新しいタブを追加できる
-   - [ ] タブを削除できる
+   private func loadTasks() {
+      guard let selectedTabId = selectedTabId else {
+         tasks = []
+         return
+      }
 
-5. **データの永続化**
-   - [ ] アプリを再起動してもデータが保存されている
+      let descriptor = FetchDescriptor<ToDoTask>(
+         predicate: #Predicate { $0.tabId == selectedTabId }
+      )
+      tasks = (try? modelContext.fetch(descriptor)) ?? []
+   }
 
-## 最終チェックリスト
+   private func toggleTaskCompletion(_ task: ToDoTask) {
+      ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
+      loadTasks()
+   }
 
-### コード品質
+   private func addTask() {
+      guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
 
-- [ ] コメントが日本語で記述されている
-- [ ] 文字列がダブルクォートで囲まれている
-- [ ] 変数名が分かりやすい
-- [ ] 適切にコンポーネント化されている
+      let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
+      ToDoTaskService.addTask(newTask, to: modelContext)
 
-### UI/UX
+      newTaskTitle = ""
+      loadTasks()
+   }
 
-- [ ] ボタンが押しやすい大きさ
-- [ ] テキストが読みやすい
-- [ ] エラーメッセージが明確
-- [ ] 画面遷移がスムーズ
+   private func handleDeleteTask(_ offsets: IndexSet) {
+      for index in offsets {
+         let taskToDelete = tasks[index]
+         ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
+      }
+      loadTasks()
+   }
 
-### パフォーマンス
+   private func startEdit(_ task: ToDoTask) {
+      editingTask = task
+      editTaskTitle = task.title
+      showEditDialog = true
+   }
 
-- [ ] タスク数が多くてもスムーズに動作
-- [ ] メモリリークがない
-- [ ] 不要なリロードがない
-
-## 追加実装の提案
-
-以下の機能を実装すると、さらに便利になります：
-
-1. **タスク編集機能**: 既存タスクのタイトルを編集できる
-2. **検索機能**: タスク名で検索できる
-3. **ソート機能**: 完了日時やタイトルでソートできる
-4. **日付機能**: タスクに期限日を設定できる
-5. **カテゴリアイコン**: タブごとに異なるアイコンを表示
-6. **ダークモード対応**: 暗いテーマに対応
-
-## まとめ
-
-このプロジェクトを通じて、以下を学習しました：
-
-- SwiftUIでのUI構築
-- SwiftDataでのデータ永続化
-- 状態管理と再レンダリング
-- コンポーネント設計とモジュール化
-- サービスクラスでのデータ操作
-- ナビゲーション管理
-
-おめでとうございます！これで、本格的なToDoリストアプリが完成しました。
+   private func applyEdit() {
+      guard let editingTask = editingTask else { return }
+      editingTask.title = editTaskTitle
+      ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
+      loadTasks()
+   }
+}
+```

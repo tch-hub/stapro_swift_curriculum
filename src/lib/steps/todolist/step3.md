@@ -1,10 +1,8 @@
-# ステップ3: List コンポーネントの実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## List.swift の作成
 
 ```swift
 import SwiftUI
@@ -67,5 +65,3 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
 }
 
 ```
-
-`onDelete`を渡さない場合は削除UIが表示されません。

@@ -1,5 +1,3 @@
-# ステップ2: ListItemの作成
-
 <script>
     import {base} from '$app/paths';
 </script>

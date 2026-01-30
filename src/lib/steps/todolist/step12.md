@@ -1,12 +1,6 @@
-# ステップ6: ToDoTabServiceの実装
-
 <script>
     import {base} from '$app/paths';
 </script>
-
-## ToDoTabService.swift の作成
-
-`Services/`フォルダに`ToDoTabService.swift`を作成し、以下のコードを記述します：
 
 ```swift
 import Foundation
@@ -40,20 +34,3 @@ class ToDoTabService {
     }
 }
 ```
-
-## 各メソッドの説明
-
-| メソッド     | 説明                                     |
-| ------------ | ---------------------------------------- |
-| `addTab`     | 新しいタブを追加します                   |
-| `updateTab`  | タブを更新します                         |
-| `deleteTab`  | タブを削除します（関連するタスクも削除） |
-| `getAllTabs` | すべてのタブを取得します                 |
-
-## deleteTab の重要な処理
-
-タブを削除する際には、そのタブに属するすべてのタスクも削除する必要があります。そのため、`ToDoTaskService.deleteAllTasks`を呼び出して、関連するタスクも削除しています。
-
-## 次のステップへ
-
-次は、ビュー（画面）の基本構造を作成します。ナビゲーションと初期画面を実装します。

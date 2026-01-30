@@ -1,12 +1,7 @@
-# ステップ5: FloatingButton コンポーネントの実装
-
 <script>
     import {base} from '$app/paths';
 </script>
 
-## FloatingButton.swift の作成
-
-`Components/`フォルダに`FloatingButton.swift`を作成します：
 
 ```swift
 import SwiftUI

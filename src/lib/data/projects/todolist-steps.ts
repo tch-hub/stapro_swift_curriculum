@@ -102,8 +102,8 @@ export const todolistSteps: TodolistStep[] = [
 	},
 	{
 		id: 'step20',
-		title: 'ステップ20: README.mdの作成',
-		summary: 'プロジェクトの説明書を作成します。'
+		title: 'ステップ20: タスク編集機能の実装',
+		summary: 'タスクのタイトルを編集できるようにします。'
 	},
 	{
 		id: 'step21',

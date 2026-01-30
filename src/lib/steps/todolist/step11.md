@@ -1,16 +1,6 @@
-# ステップ5: ToDoTaskServiceの実装
-
 <script>
     import {base} from '$app/paths';
 </script>
-
-## サービスクラスとは
-
-データの追加、更新、削除などの操作をまとめるクラスです。ビューから直接データベースにアクセスするのではなく、サービスを通して操作することで、コードを整理します。
-
-## ToDoTaskService.swift の作成
-
-`Services/`フォルダに`ToDoTaskService.swift`を作成し、以下のコードを記述します：
 
 ```swift
 import Foundation
@@ -50,21 +40,3 @@ class ToDoTaskService {
     }
 }
 ```
-
-## 各メソッドの説明
-
-| メソッド               | 説明                             |
-| ---------------------- | -------------------------------- |
-| `addTask`              | 新しいタスクを追加します         |
-| `updateTask`           | タスクを更新します               |
-| `deleteTask`           | タスクを削除します               |
-| `toggleTaskCompletion` | タスクの完了状態を切り替えます   |
-| `deleteAllTasks`       | 特定のタブの全タスクを削除します |
-
-## @MainActor について
-
-SwiftUIでUI更新を行う際には、メインスレッドで実行する必要があります。`@MainActor`はメインスレッドで実行することを指定します。
-
-## 次のステップへ
-
-次は、タブを操作するためのサービス`ToDoTabService`を作成します。

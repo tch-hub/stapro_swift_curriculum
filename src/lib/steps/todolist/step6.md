@@ -1,12 +1,8 @@
-# ステップ6: TextFieldAlertModifier の実装
 
 <script>
     import {base} from '$app/paths';
 </script>
 
-## TextFieldAlertModifier.swift の作成
-
-`Components/`フォルダに`TextFieldAlertModifier.swift`を作成します：
 
 ```swift
 import SwiftUI
