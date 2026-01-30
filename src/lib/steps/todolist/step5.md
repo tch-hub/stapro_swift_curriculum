@@ -13,7 +13,7 @@
 ```swift
 import SwiftUI
 
-struct RefinedTaskInputView: View {
+struct InputView: View {
     @Binding var text: String
     let onAdd: () -> Void
     
@@ -114,7 +114,7 @@ struct RefinedTaskInputView: View {
                 .contentMargins(.bottom, 80, for: .scrollContent) // 入力欄の下に隠れないように余白確保
 
                 // 入力コンポーネント
-                RefinedTaskInputView(text: $text) {
+                InputView(text: $text) {
                     print("追加: \(text)")
                     withAnimation {
                         tasks.append(text)

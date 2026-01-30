@@ -17,13 +17,16 @@
 // 画面の下部に入力エリアを固定表示
 .safeAreaInset(edge: .bottom) {
     if selectedTabId != nil {
-        TaskInputView(text: $newTaskTitle, onAdd: addTask)
+        InputView(text: $newTaskTitle) {
+            addTask()
+        }
     }
 }
 ```
 
-`.safeAreaInset(edge: .bottom)` を使って、ステップ5で作成した `TaskInputView` コンポーネントを画面下部に配置します。  
-`text: $newTaskTitle` で入力値をバインディングし、`onAdd: addTask` で追加ボタンが押された時の処理を渡しています。
+`.safeAreaInset(edge: .bottom)` を使って、ステップ5で作成した `InputView` コンポーネントを画面下部に配置します。  
+`text: $newTaskTitle` で入力値をバインディングし、クロージャで追加処理を渡しています。  
+デフォルトのプレースホルダー（「新しいタスクを追加...」）とアイコン（上向き矢印）が使用されます。
 
 ### 3. 追加処理
 
@@ -108,7 +111,9 @@ struct HomeView: View {
         }
         .safeAreaInset(edge: .bottom) {
             if selectedTabId != nil {
-                TaskInputView(text: $newTaskTitle, onAdd: addTask)
+                InputView(text: $newTaskTitle) {
+                    addTask()
+                }
             }
         }
     }

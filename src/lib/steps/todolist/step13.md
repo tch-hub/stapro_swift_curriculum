@@ -55,8 +55,8 @@ VStack {
 
 ```swift
 .safeAreaInset(edge: .bottom) {
-    // RefinedTaskInputViewを使用してタブを追加
-    RefinedTaskInputView(
+    // InputViewを使用してタブを追加
+    InputView(
         text: $newTabName,
         placeholder: "新しいタブ",
         buttonIcon: "plus.circle.fill"
@@ -66,7 +66,7 @@ VStack {
 }
 ```
 
-ステップ5で作成した汎用的な `RefinedTaskInputView` コンポーネントを再利用しています。  
+ステップ5で作成した汎用的な `InputView` コンポーネントを再利用しています。  
 `placeholder` パラメータで「新しいタブ」というプレースホルダーを指定し、`buttonIcon` パラメータで追加ボタンのアイコンをカスタマイズしています。  
 これにより、タスク入力とタブ入力で同じコンポーネントを使いまわせるようになります。
 
@@ -181,8 +181,8 @@ struct TabManageView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            // RefinedTaskInputViewを使用してタブを追加
-            RefinedTaskInputView(
+            // InputViewを使用してタブを追加
+            InputView(
                 text: $newTabName,
                 placeholder: "新しいタブ",
                 buttonIcon: "plus.circle.fill"
