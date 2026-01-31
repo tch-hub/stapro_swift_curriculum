@@ -1,11 +1,12 @@
----
+# ステップ16: 起動時の初期化を行う
 
+アプリ起動時の初期化処理とローディング表示を追加します。
+
+---
 
 ## コード全体
 
-
 <img src="/images/todolist/ContentView16.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
-
 
 ```swift
 // ContentView.swift
