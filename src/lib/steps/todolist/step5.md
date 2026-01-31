@@ -8,7 +8,7 @@
 
 ## コード全体
 
-<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/TaskInputView.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
 ```swift
 import SwiftUI
@@ -16,11 +16,11 @@ import SwiftUI
 struct InputView: View {
     @Binding var text: String
     let onAdd: () -> Void
-    
+
     // カスタマイズ可能なプロパティ
     let placeholder: String
     let buttonIcon: String
-    
+
     // デフォルト値を持つイニシャライザ
     init(
         text: Binding<String>,
@@ -88,11 +88,11 @@ struct InputView: View {
     // 追加処理のロジック
     private func handleSubmit() {
         guard isValid else { return }
-        
+
         onAdd()
-        
+
         // 追加後も入力を続けたい場合はコメントアウトを外す
-        // isFocused = true 
+        // isFocused = true
     }
 }
 

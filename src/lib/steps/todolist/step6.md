@@ -45,7 +45,7 @@ struct TabHeaderView: View {
                         .font(.title3) // サイズを大きくして見出しらしく
                         .fontWeight(.bold)
                         .foregroundStyle(.primary)
-                    
+
                     Image(systemName: "chevron.down")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -101,7 +101,7 @@ struct TabHeaderView: View {
                     selectedTabId: $selectedId,
                     onManageTabs: { print("管理画面へ") }
                 )
-                
+
                 // 下部のコンテンツエリア（ダミー）
                 Color(.secondarySystemBackground)
                     .overlay {
@@ -122,7 +122,7 @@ struct TabHeaderView: View {
 
 ## コード全体
 
-<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/TabHeaderView.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
 ```swift
 import SwiftUI
@@ -163,7 +163,7 @@ struct TabHeaderView: View {
                         .font(.title3) // サイズを大きくして見出しらしく
                         .fontWeight(.bold)
                         .foregroundStyle(.primary)
-                    
+
                     Image(systemName: "chevron.down")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -219,7 +219,7 @@ struct TabHeaderView: View {
                     selectedTabId: $selectedId,
                     onManageTabs: { print("管理画面へ") }
                 )
-                
+
                 // 下部のコンテンツエリア（ダミー）
                 Color(.secondarySystemBackground)
                     .overlay {
