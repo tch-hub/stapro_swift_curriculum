@@ -1,5 +1,4 @@
 <script>
-	import { base } from '$app/paths';
 	import OriginalAppDemo from '$lib/components/OriginalAppDemo.svelte';
 	import ProjectSteps from './ProjectSteps.svelte';
 

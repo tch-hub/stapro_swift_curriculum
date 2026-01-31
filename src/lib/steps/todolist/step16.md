@@ -1,107 +1,68 @@
-# ステップ16: CustomAlert コンポーネントの実装
 
-<script>
-    import {base} from '$app/paths';
-</script>
+---
 
-## CustomAlert.swift の作成
+## コード全体
 
-`Components/`フォルダに`CustomAlert.swift`を作成します：
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
 
 ```swift
+// ContentView.swift
 import SwiftUI
+import SwiftData
 
-struct CustomAlert: View {
-    let title: String
-    let message: String
-    let primaryButtonText: String
-    let secondaryButtonText: String?
-    let primaryAction: () -> Void
-    let secondaryAction: (() -> Void)?
+struct ContentView: View {
+    @State private var isInitialized: Bool
+    private let autoInitialize: Bool
+    @Environment(\.modelContext) private var modelContext
+
+    init(isInitialized: Bool = false, autoInitialize: Bool = true) {
+        _isInitialized = State(initialValue: isInitialized)
+        self.autoInitialize = autoInitialize
+    }
 
     var body: some View {
-        VStack(spacing: 16) {
-            Text(title)
-                .font(.headline)
-                .fontWeight(.bold)
-
-            Text(message)
-                .font(.body)
-                .foregroundColor(.gray)
-
-            HStack(spacing: 12) {
-                if let secondaryButtonText = secondaryButtonText, let secondaryAction = secondaryAction {
-                    Button(action: secondaryAction) {
-                        Text(secondaryButtonText)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .border(Color.blue)
-                    }
-                    .foregroundColor(.blue)
+        if isInitialized {
+            MainStack()
+        } else {
+            VStack {
+                Text("アプリを準備中...")
+                ProgressView()
+            }
+            .onAppear {
+                if !autoInitialize {
+                    return
                 }
-
-                Button(action: primaryAction) {
-                    Text(primaryButtonText)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    initializeAppIfNeeded()
+                    isInitialized = true
                 }
             }
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(12)
-        .shadow(radius: 10)
+    }
+
+    private func initializeAppIfNeeded() {
+        // 既存データをチェック
+        let descriptor = FetchDescriptor<ToDoTab>()
+        let existingTabs = (try? modelContext.fetch(descriptor)) ?? []
+
+        // 初期データがなければ作成
+        if existingTabs.isEmpty {
+            for (tabName, taskNames) in INITIAL_TODO_TABS {
+                let newTab = ToDoTab(name: tabName)
+                ToDoTabService.addTab(newTab, to: modelContext)
+
+                // タブに属するタスクを追加
+                for taskName in taskNames {
+                    let newTask = ToDoTask(title: taskName, detail: "", tabId: newTab.id)
+                    ToDoTaskService.addTask(newTask, to: modelContext)
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    CustomAlert(
-        title: "確認",
-        message: "このタスクを削除しますか？",
-        primaryButtonText: "削除",
-        secondaryButtonText: "キャンセル",
-        primaryAction: { },
-        secondaryAction: { }
-    )
+    ContentView(isInitialized: false, autoInitialize: false)
 }
 ```
-
-## CustomAlert の使用例
-
-```swift
-@State private var showConfirmAlert = false
-
-// ビュー内
-if showConfirmAlert {
-    CustomAlert(
-        title: "削除確認",
-        message: "このタスクを削除してもよろしいですか？",
-        primaryButtonText: "削除",
-        secondaryButtonText: "キャンセル",
-        primaryAction: {
-            // 削除処理
-            showConfirmAlert = false
-        },
-        secondaryAction: {
-            showConfirmAlert = false
-        }
-    )
-}
-```
-
-## 各プロパティの説明
-
-| プロパティ            | 説明                                 |
-| --------------------- | ------------------------------------ |
-| `title`               | アラートのタイトル                   |
-| `message`             | アラートの説明メッセージ             |
-| `primaryButtonText`   | メインボタンのテキスト               |
-| `secondaryButtonText` | キャンセルボタンのテキスト           |
-| `primaryAction`       | メインボタンをタップした時の処理     |
-| `secondaryAction`     | キャンセルボタンをタップした時の処理 |
-
-## 次のステップへ
-
-次は、FloatingButton（フローティングアクションボタン）を実装します。

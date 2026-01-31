@@ -1,117 +1,208 @@
-# ステップ2: SwiftData環境の準備
+## タスクコンポーネントを作る
 
-<script>
-    import {base} from '$app/paths';
-</script>
+ここでは、タスクを表示するための `ToDoListItem` を作成します。
+タップで完了/未完了を切り替えられるようにします。
 
-## SwiftDataとは
-
-SwiftDataは、iOSアプリ内でデータを永続化するための仕組みです。データベースのようなもので、アプリを再起動してもデータが保存されます。
-
-## ToDoListApp.swiftの基本構造
+### 1. swiftUIの基本構造
 
 ```swift
 import SwiftUI
-import SwiftData
 
-@main
-struct ToDoListApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+struct ToDoListItem: View {
+    var body: some View {
     }
 }
 ```
 
-このコードは、SwiftDataを使うための最小構成です。アプリのエントリーポイントを定義しています。
+### 2. 変数の定義
 
-### 1. スキーマ（Schema）の定義
-
-`struct ToDoListApp: App {`の下、`var body: some Scene {`の上に追加
+struct ToDoListItem: View {} 内に追加
 
 ```swift
-let modelContainer: ModelContainer
+// タスク名
+let title: String
+// 完了状態（trueなら完了、falseなら未完了）
+let isCompleted: Bool
+// タップされた時に実行する処理
+let onToggle: () -> Void
+```
 
-init() {
-    let schema = Schema([
-        // ToDoTask.self,
-        // ToDoTab.self
-    ])
+ここでは、タスクのタイトルとなる `title`、完了しているかどうかを管理する `isCompleted`、そしてタップされた時の動作を決める `onToggle` を定義しています。
+
+### 3. UIの作成
+
+var body: some View {} 内に追加
+
+```swift
+// タップした時の動作を指定してボタンを作成
+Button(action: onToggle) {
+    // 部品を横並びにする（間隔を12空ける）
+    HStack(spacing: 12) {
+        // 完了状態に応じてアイコンを切り替え
+        Image(systemName: isCompleted
+              ? "checkmark.circle.fill" // 完了時：チェックマーク付きの丸
+              : "circle")              // 未完了時：空の丸
+            // 完了時はグレー、未完了時はアクセントカラー（青など）にする
+            .foregroundColor(isCompleted ? .gray : .accentColor)
+
+        // タスク名を表示
+        Text(title)
+            // 完了時に打ち消し線を引く
+            .strikethrough(isCompleted)
+            // 完了時は文字色をグレーにする
+            .foregroundColor(isCompleted ? .gray : .primary)
+
+        // 右側に余白を作り、要素を左寄せにする
+        Spacer()
+    }
+    // 上下の余白を少し追加
+    .padding(.vertical, 8)
+}
+// iOS標準のリストスタイルに馴染むボタンスタイルを適用
+.buttonStyle(.plain)
+```
+
+全体を `Button` で囲むことで行全体をタップ可能にしています。  
+`HStack` を使ってアイコンとテキストを横並びに配置し、`Spacer()` を最後に入れることで左寄せのレイアウトを作っています。  
+また、アイコンやテキストは三項演算子（`条件 ? 真の場合 : 偽の場合`）を使って、完了状態 (`isCompleted`) に応じて見た目が変わるようにしています。
+
+### Canvasプレビューの設定
+
+struct ToDoListItem: View {}の下に追加
+
+```swift
+// Xcodeのプレビュー機能用コード
+#Preview {
+    // プレビュー用に一時的なビュー構造体を作る
+    struct PreviewWrapper: View {
+        // プレビュー内での状態変化を管理する変数
+        @State private var completed = false
+
+        var body: some View {
+            // 本番と同じようにリスト形式で表示
+            List {
+                // 作成したコンポーネントを表示テスト
+                ToDoListItem(
+                    title: "タップで状態切り替え",
+                    isCompleted: completed
+                ) {
+                    // タップされたら状態を反転させる
+                    completed.toggle()
+                }
+            }
+            // リストのスタイルを標準的なものに設定
+            .listStyle(.plain)
+        }
+    }
+
+    // 作成したプレビュー用ビューを返す
+    return PreviewWrapper()
 }
 ```
 
-スキーマは、アプリで保存するデータの種類を指定します。ここでは`ToDoTask`と`ToDoTab`という2つのデータモデルを保存することを宣言しています。
+`#Preview` は、いま作っている画面を確認するための特別なブロックです。  
+ここでは `PreviewWrapper` という仮の入れ物を作り、その中で `@State` を使って変数を管理することで、プレビュー画面上でもタップしてチェックマークが付くかどうかの動作確認ができるようにしています。  
+`List` で囲っているのは、実際の画面と同じような見た目で確認するためです。  
+`#Preview`を書かなくてもアプリは動きますが、こまめに確認することでミスに早く気づけるようになります。  
+もしCanvasが表示されていない場合は、Xcode右上の「Canvas」ボタンを押して表示してください。
 
-### 2. モデル設定（ModelConfiguration）
+---
 
-`let schema = Schema([...])`の下に追加
+## コード全体
 
-```swift
-let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-```
-
-`ModelConfiguration`はデータベースの設定を行います。
-
-- `schema`: 上で定義したスキーマを指定
-- `isStoredInMemoryOnly: false`: ディスク（ストレージ）に保存することを指定します。`true`だとメモリのみで、アプリを閉じるとデータが消えます
-
-### 3. モデルコンテナ（ModelContainer）の初期化
-
-`let modelConfiguration = ...`の下に追加
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
 ```swift
-do {
-    modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-} catch {
-    fatalError("Could not initialize ModelContainer: \(error)")
-}
-```
-
-`ModelContainer`はSwiftDataのデータベース接続を管理します。
-
-- `try`と`catch`で、初期化に失敗した場合のエラー処理をしています
-- `fatalError`で、エラーが発生したらアプリを停止して原因を通知します
-
-### 4. アプリ全体への適用
-
-`var body: some Scene {}`内の`WindowGroup { ... }`に追加
-
-```swift
-.modelContainer(modelContainer)
-```
-
-`WindowGroup`に`.modelContainer()`を追加することで、アプリ全体でSwiftDataが使えるようになります
-
-### コード全体 - ToDoListApp.swift
-
-```swift title="ToDoListApp.swift"
 import SwiftUI
-import SwiftData
 
-@main
-struct ToDoListApp: App {
-    let modelContainer: ModelContainer
+struct ToDoListItem: View {
+    let title: String
+    let isCompleted: Bool
+    let onToggle: () -> Void
 
-    init() {
-        let schema = Schema([
-            // ToDoTask.self,
-            // ToDoTab.self
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+    var body: some View {
+        Button(action: {
+            // アクション実行
+            triggerHapticFeedback()
+            // アニメーション付きでトグルを実行
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                onToggle()
+            }
+        }) {
+            HStack(spacing: 12) {
+                // MARK: - チェックボックス
+                ZStack {
+                    // 未完了時の枠
+                    Circle()
+                        .stroke(
+                            isCompleted ? Color.accentColor : Color.secondary,
+                            lineWidth: 2
+                        )
+                        .frame(width: 24, height: 24)
 
-        do {
-            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not initialize ModelContainer: \(error)")
+                    // 完了時の塗りつぶし（アニメーション用）
+                    if isCompleted {
+                        Image(systemName: "checkmark.circle.fill")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundStyle(Color.accentColor)
+                            // 完了時に少し拡大してから戻る「弾む」アニメーション
+                            .transition(.scale.combined(with: .opacity))
+                    }
+                }
+                .padding(.leading, 4) // 左端の余白調整
+
+                // MARK: - テキスト
+                Text(title)
+                    .font(.body)
+                    // 完了時は文字色を薄くする
+                    .foregroundStyle(isCompleted ? .secondary : .primary)
+                    // 打ち消し線のアニメーション
+                    .strikethrough(isCompleted, color: .secondary)
+                    // コンテンツの変更を滑らかに
+                    .contentTransition(.opacity)
+
+                Spacer()
+            }
+            .padding(.vertical, 12)
+            // 行のどこをタップしても反応するようにする（重要）
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain) // リスト内でのデフォルトのハイライト効果を消す
+    }
+
+    // MARK: - 触覚フィードバックのヘルパー
+    private func triggerHapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.prepare() // 遅延を減らすための事前準備
+        generator.impactOccurred()
+    }
+}
+
+// MARK: - Preview
+#Preview {
+    struct PreviewWrapper: View {
+        @State private var items = [
+            (id: UUID(), title: "タップで状態切り替え", isCompleted: false),
+            (id: UUID(), title: "開発チームに連絡する", isCompleted: true),
+            (id: UUID(), title: "ジムに行く", isCompleted: false)
+        ]
+
+        var body: some View {
+            List {
+                ForEach(items.indices, id: \.self) { index in
+                    ToDoListItem(
+                        title: items[index].title,
+                        isCompleted: items[index].isCompleted
+                    ) {
+                        items[index].isCompleted.toggle()
+                    }
+                }
+            }
+            .listStyle(.plain)
         }
     }
 
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-        .modelContainer(modelContainer)
-    }
+    return PreviewWrapper()
 }
 ```

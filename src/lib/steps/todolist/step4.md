@@ -1,48 +1,89 @@
-# ステップ4: ToDoタブモデルの作成
+# ステップ4: 空の状態を表示するコンポーネントを作る
 
-<script>
-    import {base} from '$app/paths';
-</script>
+タスクがない時や、タブが選択されていない時に表示する「空の状態（Empty State）」の画面を作成します。リストが空っぽの時に真っ白な画面を表示する代わりに、ユーザーに状況を伝えるアイコンやテキストを表示します。
 
-## タブとは
+### 1. EmptyStateView.swift の作成
 
-ToDoリストを複数のカテゴリに分類するために「タブ」を使います。例えば、「仕事」「プライベート」「買い物」など、異なるカテゴリでやることをまとめます。
-
-## ToDoTab.swift の作成
-
-`SwiftData/Models/`フォルダに`ToDoTab.swift`を作成し、以下のコードを記述します：
+`Components` フォルダ内に `EmptyStateView` というファイルを作成し、以下のコードを記述します。
 
 ```swift
-import Foundation
-import SwiftData
+import SwiftUI
 
-@Model
-final class ToDoTab: Identifiable {
-    var id: UUID = UUID()
-    var name: String = ""
-    var createdAt: Date = Date()
+struct EmptyStateView: View {
+    // 選択中のタブがあるかどうかを確認するフラグ
+    // trueなら「タスクなし」、falseなら「タブ未選択」を表示
+    let hasSelectedTab: Bool
 
-    init(name: String) {
-        self.name = name
-        self.createdAt = Date()
+    var body: some View {
+        if hasSelectedTab {
+            // タブは選ばれているが、タスクがない場合
+            VStack {
+                Image(systemName: "checkmark.circle") // チェックマークアイコン
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タスクはまだありません")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity) // 画面いっぱいに広げる
+        } else {
+            // タブ自体が選ばれていない場合
+            VStack {
+                Image(systemName: "list.bullet") // リストアイコン
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タブを選択してください")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
     }
+}
+
+#Preview {
+    // プレビューで見た目を確認
+    EmptyStateView(hasSelectedTab: true)
 }
 ```
 
-## 各プロパティの説明
+`hasSelectedTab` という変数を受け取り、その値によって表示内容を切り替えます。
+`ViewBuilder` などを使わず、シンプルな条件分岐で実装しています。アイコンとテキストを `VStack` で縦に並べ、`.frame(maxWidth: .infinity, maxHeight: .infinity)` をつけることで、親ビューの空きスペース全体に中央揃えで表示されるようにしています。
 
-| プロパティ  | 型     | 説明                                 |
-| ----------- | ------ | ------------------------------------ |
-| `id`        | UUID   | タブの一意な識別子                   |
-| `name`      | String | タブの名前（例：「仕事」「買い物」） |
-| `createdAt` | Date   | タブが作成された日時                 |
+---
 
-## タスクとタブの関係
+## コード全体
 
-- 1つのタブに複数のタスクが属することができます
-- 各タスク（`ToDoTask`）は`tabId`プロパティで、どのタブに属するかを指定しています
-- これによって、タブごとにタスクを管理することができます
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
-## 次のステップへ
+```swift
+import SwiftUI
 
-次は、これらのモデルを操作するための「サービス」を作成します。
+struct EmptyStateView: View {
+    let hasSelectedTab: Bool
+
+    var body: some View {
+        if hasSelectedTab {
+            VStack {
+                Image(systemName: "checkmark.circle")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タスクはまだありません")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+            VStack {
+                Image(systemName: "list.bullet")
+                    .font(.system(size: 48))
+                    .foregroundColor(.gray)
+                Text("タブを選択してください")
+                    .foregroundColor(.gray)
+                    .padding(.top, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+}
+```

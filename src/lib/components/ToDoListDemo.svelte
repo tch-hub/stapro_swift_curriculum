@@ -13,7 +13,9 @@
 	];
 
 	let newTaskText = '';
+	let newTabName = '';
 	let nextTaskId = 5;
+	let nextTabId = 3;
 
 	function addTask() {
 		if (newTaskText.trim() === '') return;
@@ -22,6 +24,14 @@
 			{ id: nextTaskId++, tabId: selectedTabId, text: newTaskText, completed: false }
 		];
 		newTaskText = '';
+	}
+
+	function addTab() {
+		if (newTabName.trim() === '') return;
+		const newTab = { id: nextTabId++, name: newTabName };
+		tabs = [...tabs, newTab];
+		selectedTabId = newTab.id;
+		newTabName = '';
 	}
 
 	function deleteTask(taskId) {
@@ -41,13 +51,13 @@
 			<!-- iOS Segmented Control -->
 			<div class="mb-4 px-4">
 				<div class="relative flex rounded-lg bg-gray-200 p-1">
-					{#each tabs as tab}
+					{#each tabs as tab (tab.id)}
 						<button
 							class="flex-1 rounded-md py-1.5 text-sm font-medium transition-all duration-200 {selectedTabId ===
 							tab.id
 								? 'bg-white text-black shadow-sm'
 								: 'text-gray-500 hover:text-gray-900'}"
-							on:click={() => (selectedTabId = tab.id)}
+							onclick={() => (selectedTabId = tab.id)}
 						>
 							{tab.name}
 						</button>
@@ -56,7 +66,7 @@
 			</div>
 
 			<!-- Task List (Inset Grouped) -->
-			<div class="flex-1 overflow-y-auto px-4 pb-24">
+			<div class="flex-1 overflow-y-auto px-4 pb-28">
 				<div class="space-y-3">
 					{#each filteredTasks as task (task.id)}
 						<div class="flex items-center gap-3 rounded-xl bg-white p-3 shadow-sm">
@@ -64,7 +74,7 @@
 								class="flex h-6 w-6 flex-none items-center justify-center rounded-full border-2 transition-colors {task.completed
 									? 'border-blue-500 bg-blue-500'
 									: 'border-gray-300'}"
-								on:click={() => (task.completed = !task.completed)}
+								onclick={() => (task.completed = !task.completed)}
 							>
 								{#if task.completed}
 									<svg
@@ -91,7 +101,7 @@
 							<button
 								class="text-gray-400 hover:text-red-500"
 								aria-label="タスクを削除"
-								on:click={() => deleteTask(task.id)}
+								onclick={() => deleteTask(task.id)}
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -114,18 +124,51 @@
 			</div>
 
 			<!-- Input Area -->
-			<div class="absolute right-0 bottom-0 left-0 border-t border-gray-200 p-4">
+			<div class="absolute right-0 bottom-0 left-0 border-t border-gray-200 bg-[#F2F2F7] p-4">
+				<!-- タブ追加エリア -->
+				<div class="mb-2 flex gap-2">
+					<input
+						type="text"
+						placeholder="新しいタブ"
+						class="flex-1 rounded-full border-none bg-white px-4 py-2 text-black shadow-sm outline-none focus:ring-2 focus:ring-blue-500"
+						bind:value={newTabName}
+						onkeydown={(e) => e.key === 'Enter' && addTab()}
+					/>
+					<button
+						class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 text-white shadow-md transition-colors hover:bg-blue-600 disabled:bg-blue-300"
+						onclick={addTab}
+						disabled={!newTabName.trim()}
+						aria-label="タブを追加"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M12 4v16m8-8H4"
+							/>
+						</svg>
+					</button>
+				</div>
+
+				<!-- タスク追加エリア -->
 				<div class="flex gap-2">
 					<input
 						type="text"
 						placeholder="新しいタスク"
-						class="flex-1 rounded-full border-none bg-white px-4 py-2 text-black shadow-sm outline-none focus:ring-2 focus:ring-blue-500"
+						class="flex-1 rounded-full border-none bg-white px-4 py-2 text-black shadow-sm outline-none focus:ring-2 focus:ring-green-500"
 						bind:value={newTaskText}
-						on:keydown={(e) => e.key === 'Enter' && addTask()}
+						onkeydown={(e) => e.key === 'Enter' && addTask()}
 					/>
 					<button
-						class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 text-white shadow-md transition-colors hover:bg-blue-600 disabled:bg-blue-300"
-						on:click={addTask}
+						class="flex h-10 w-10 items-center justify-center rounded-full bg-green-500 text-white shadow-md transition-colors hover:bg-green-600 disabled:bg-green-300"
+						onclick={addTask}
 						disabled={!newTaskText.trim()}
 						aria-label="タスクを追加"
 					>

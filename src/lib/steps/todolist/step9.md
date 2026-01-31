@@ -1,78 +1,62 @@
-# ステップ9: HomeView の作成（タブ選択）
+# ステップ9: 初期データを投入する
 
-<script>
-    import {base} from '$app/paths';
-</script>
+アプリ起動時にタブとタスクが空なら、初期データを作成します。
 
-## HomeView.swift の作成
+### 1. 初期データの定義
 
-`Screens/Views/Main/`フォルダに`HomeView.swift`を作成します：
+`Constants.swift` に初期タブとタスクを定義します。
 
 ```swift
-import SwiftUI
-import SwiftData
+// Constants.swift
+import Foundation
 
-struct HomeView: View {
-    @Environment(\.modelContext) private var modelContext
-    @State private var tabs: [ToDoTab] = []
-    @State private var selectedTabId: UUID?
-    @Binding var navigationPath: [NavigationItem]
-
-    var body: some View {
-        VStack {
-            if !tabs.isEmpty {
-                Picker("タブを選択", selection: $selectedTabId) {
-                    ForEach(tabs) { tab in
-                        Text(tab.name).tag(Optional(tab.id))
-                    }
-                }
-                .pickerStyle(.menu)
-            }
-
-            VStack {
-                Text("タスク一覧がここに表示されます")
-                    .foregroundColor(.gray)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            HStack {
-                Button(action: {
-                    navigationPath.append(NavigationItem(id: .tabManage))
-                }) {
-                    Text("タブ管理")
-                }
-                .padding()
-            }
-        }
-        .padding()
-        .navigationTitle("ToDoリスト")
-        .onAppear {
-            loadTabs()
-        }
-    }
-
-    private func loadTabs() {
-        let descriptor = FetchDescriptor<ToDoTab>()
-        tabs = (try? modelContext.fetch(descriptor)) ?? []
-        selectedTabId = tabs.first?.id
-    }
-}
-
-#Preview {
-    HomeView(navigationPath: .constant([]))
-}
+// 初期データの定義：タブ名と、それに紐づくタスク名のリスト
+// ("タブ名", ["タスク1", "タスク2", ...]) という形式で記述
+let INITIAL_TODO_TABS = [
+    ("リスト", [
+        "アイテムA",
+        "アイテムB",
+        "アイテムC"
+    ]),
+    ("宿題", [
+        "作文",
+        "テスト勉強",
+        "レポート"
+    ]),
+    ("買い物", [
+        "食料品",
+        "日用品",
+        "衣類"
+    ])
+]
 ```
 
-## コードの説明
+---
 
-- `@Environment(\.modelContext)`: SwiftDataのコンテキストを取得して、データベースにアクセスします
-- `Picker`: タブを選択するドロップダウンメニューです
-- `loadTabs()`: アプリ起動時にデータベースからタブを読み込みます
+## コード全体
 
-## Pickerの説明
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
-`Picker`は選択肢を提示するUIコンポーネントです。`pickerStyle(.menu)`でメニュー形式で表示されます。
+```swift
+// Constants.swift
+import Foundation
 
-## 次のステップへ
-
-次は、タスク一覧を表示する部分を実装します。
+// 初期タブデータ
+let INITIAL_TODO_TABS = [
+    ("仕事", [
+        "プロジェクト企画書を作成",
+        "メール返信",
+        "会議資料準備"
+    ]),
+    ("プライベート", [
+        "映画を見る",
+        "友人に連絡",
+        "運動する"
+    ]),
+    ("買い物", [
+        "食料品",
+        "日用品",
+        "衣類"
+    ])
+]
+```

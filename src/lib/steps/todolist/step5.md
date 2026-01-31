@@ -1,70 +1,129 @@
-# ステップ5: ToDoTaskServiceの実装
+# ステップ5: タスク入力バーを作る
 
-<script>
-    import {base} from '$app/paths';
-</script>
+画面下部に、新しいタスクを追加するための入力フィールドとボタンをまとめたコンポーネントを作成します。
 
-## サービスクラスとは
+このコンポーネントは汎用的に設計されており、タスク追加だけでなくタブ追加など、様々な入力シーンで使用できます。
 
-データの追加、更新、削除などの操作をまとめるクラスです。ビューから直接データベースにアクセスするのではなく、サービスを通して操作することで、コードを整理します。
+---
 
-## ToDoTaskService.swift の作成
+## コード全体
 
-`Services/`フォルダに`ToDoTaskService.swift`を作成し、以下のコードを記述します：
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
 ```swift
-import Foundation
-import SwiftData
+import SwiftUI
 
-class ToDoTaskService {
-    @MainActor
-    static func addTask(_ task: ToDoTask, to modelContext: ModelContext) {
-        modelContext.insert(task)
-        try? modelContext.save()
+struct InputView: View {
+    @Binding var text: String
+    let onAdd: () -> Void
+    
+    // カスタマイズ可能なプロパティ
+    let placeholder: String
+    let buttonIcon: String
+    
+    // デフォルト値を持つイニシャライザ
+    init(
+        text: Binding<String>,
+        placeholder: String = "新しいタスクを追加...",
+        buttonIcon: String = "arrow.up.circle.fill",
+        onAdd: @escaping () -> Void
+    ) {
+        self._text = text
+        self.placeholder = placeholder
+        self.buttonIcon = buttonIcon
+        self.onAdd = onAdd
     }
 
-    @MainActor
-    static func updateTask(_ task: ToDoTask, modelContext: ModelContext) {
-        try? modelContext.save()
+    // キーボードのフォーカス制御
+    @FocusState private var isFocused: Bool
+
+    // 入力値が空でないかどうかの判定（トリミング済み）
+    private var isValid: Bool {
+        !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
-    @MainActor
-    static func deleteTask(_ task: ToDoTask, from modelContext: ModelContext) {
-        modelContext.delete(task)
-        try? modelContext.save()
-    }
+    var body: some View {
+        HStack(alignment: .bottom, spacing: 12) {
+            // MARK: - テキスト入力エリア
+            TextField(placeholder, text: $text, axis: .vertical) // axis: .verticalで複数行対応
+                .focused($isFocused)
+                .padding(.vertical, 10)
+                .padding(.horizontal, 16)
+                .background(
+                    Capsule() // 丸みを帯びた背景
+                        .fill(Color(.secondarySystemBackground))
+                )
+                // キーボードの改行で追加する場合
+                .onSubmit {
+                    handleSubmit()
+                }
+                // 送信ボタンのラベル（青い「完了」など）
+                .submitLabel(.send)
 
-    @MainActor
-    static func toggleTaskCompletion(_ task: ToDoTask, modelContext: ModelContext) {
-        task.isCompleted.toggle()
-        try? modelContext.save()
-    }
-
-    @MainActor
-    static func deleteAllTasks(for tabId: UUID, from modelContext: ModelContext) {
-        let descriptor = FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })
-        if let tasks = try? modelContext.fetch(descriptor) {
-            tasks.forEach { modelContext.delete($0) }
-            try? modelContext.save()
+            // MARK: - 送信ボタン（アイコン化）
+            Button(action: handleSubmit) {
+                Image(systemName: buttonIcon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 32, height: 32)
+                    // 入力状態に応じて色と透明度を変更
+                    .foregroundStyle(isValid ? Color.accentColor : Color(.systemGray4))
+                    // 少しアニメーションさせる
+                    .scaleEffect(isValid ? 1.0 : 0.9)
+                    .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isValid)
+            }
+            .disabled(!isValid)
+            .padding(.bottom, 4) // テキストフィールドとの高さ合わせ
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        // 背景素材（Material）
+        .background(.ultraThinMaterial)
+        // 上部に境界線を追加（コンテンツとの分離）
+        .overlay(alignment: .top) {
+            Divider()
         }
     }
+
+    // 追加処理のロジック
+    private func handleSubmit() {
+        guard isValid else { return }
+        
+        onAdd()
+        
+        // 追加後も入力を続けたい場合はコメントアウトを外す
+        // isFocused = true 
+    }
+}
+
+// MARK: - Preview
+#Preview {
+    struct PreviewWrapper: View {
+        @State var text = ""
+        // リスト表示のダミーデータ
+        @State var tasks: [String] = ["リストにアイテムを追加できます"]
+
+        var body: some View {
+            ZStack(alignment: .bottom) {
+                // 背景のリスト部分
+                List {
+                    ForEach(tasks, id: \.self) { task in
+                        Text(task)
+                    }
+                }
+                .contentMargins(.bottom, 80, for: .scrollContent) // 入力欄の下に隠れないように余白確保
+
+                // 入力コンポーネント
+                InputView(text: $text) {
+                    print("追加: \(text)")
+                    withAnimation {
+                        tasks.append(text)
+                        text = ""
+                    }
+                }
+            }
+        }
+    }
+    return PreviewWrapper()
 }
 ```
-
-## 各メソッドの説明
-
-| メソッド               | 説明                             |
-| ---------------------- | -------------------------------- |
-| `addTask`              | 新しいタスクを追加します         |
-| `updateTask`           | タスクを更新します               |
-| `deleteTask`           | タスクを削除します               |
-| `toggleTaskCompletion` | タスクの完了状態を切り替えます   |
-| `deleteAllTasks`       | 特定のタブの全タスクを削除します |
-
-## @MainActor について
-
-SwiftUIでUI更新を行う際には、メインスレッドで実行する必要があります。`@MainActor`はメインスレッドで実行することを指定します。
-
-## 次のステップへ
-
-次は、タブを操作するためのサービス`ToDoTabService`を作成します。

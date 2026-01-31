@@ -1,94 +1,99 @@
-# ステップ10: タスク一覧の表示
+# ステップ12: タブ操作のサービスを作る
 
-<script>
-    import {base} from '$app/paths';
-</script>
+タブの追加・更新・削除をまとめた `ToDoTabService` を作ります。
 
-## HomeView.swift の修正
-
-前のステップで作成した`HomeView`を以下のように修正します：
+### 1. 追加
 
 ```swift
-import SwiftUI
-import SwiftData
-
-struct HomeView: View {
-    @Environment(\.modelContext) private var modelContext
-    @State private var tabs: [ToDoTab] = []
-    @State private var tasks: [ToDoTask] = []
-    @State private var selectedTabId: UUID?
-    @Binding var navigationPath: [NavigationItem]
-
-    var filteredTasks: [ToDoTask] {
-        guard let selectedTabId else { return [] }
-        return tasks.filter { $0.tabId == selectedTabId }
-    }
-
-    var body: some View {
-        VStack {
-            if !tabs.isEmpty {
-                Picker("タブを選択", selection: $selectedTabId) {
-                    ForEach(tabs) { tab in
-                        Text(tab.name).tag(Optional(tab.id))
-                    }
-                }
-                .pickerStyle(.menu)
-                .onChange(of: selectedTabId) { _, _ in
-                    loadTasks()
-                }
-            }
-
-            List {
-                ForEach(filteredTasks) { task in
-                    HStack {
-                        Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                        Text(task.title)
-                            .strikethrough(task.isCompleted)
-                    }
-                }
-            }
-
-            HStack {
-                Button(action: {
-                    navigationPath.append(NavigationItem(id: .tabManage))
-                }) {
-                    Text("タブ管理")
-                }
-                .padding()
-            }
-        }
-        .navigationTitle("ToDoリスト")
-        .onAppear {
-            loadTabs()
-            loadTasks()
-        }
-    }
-
-    private func loadTabs() {
-        let descriptor = FetchDescriptor<ToDoTab>()
-        tabs = (try? modelContext.fetch(descriptor)) ?? []
-        selectedTabId = tabs.first?.id
-    }
-
-    private func loadTasks() {
-        let descriptor = FetchDescriptor<ToDoTask>()
-        tasks = (try? modelContext.fetch(descriptor)) ?? []
-    }
+// メインスレッドで実行することを保証
+@MainActor
+static func addTab(_ tab: ToDoTab, to modelContext: ModelContext) {
+    // データベースに追加
+    modelContext.insert(tab)
+    // 変更を保存
+    try? modelContext.save()
 }
 ```
 
-## 新しい要素
+`modelContext.insert` を使って新しいタブをデータベースの管理下に置き、`save()` で保存します。
 
-- `filteredTasks`: 選択されたタブに属するタスクのみをフィルタリングします
-- `List`: タスクを一覧表示するUIコンポーネントです
-- `onChange`: タブが変更されたときに自動的にタスク一覧を更新します
-- `strikethrough`: 完了したタスクに取り消し線を表示します
+### 2. 更新
 
-## チェックボックスの表示
+```swift
+@MainActor
+static func updateTab(_ tab: ToDoTab, modelContext: ModelContext) {
+    // データの内容は変更済みなので、保存処理だけを行う
+    try? modelContext.save()
+}
+```
 
-- 完了していないタスク: `circle`（空の円）
-- 完了したタスク: `checkmark.circle.fill`（チェック付き円）
+タスクの更新と同様、オブジェクトのプロパティを変更した後に `save()` を呼び出して変更を確定させます。
 
-## 次のステップへ
+### 3. 削除（関連タスクも削除）
 
-次は、新しいタスクを追加する機能を実装します。
+```swift
+@MainActor
+static func deleteTab(_ tab: ToDoTab, from modelContext: ModelContext) {
+    // まず、そのタブに含まれる全てのタスクを削除
+    ToDoTaskService.deleteAllTasks(for: tab.id, from: modelContext)
+    // その後でタブ自体を削除
+    modelContext.delete(tab)
+    // 変更を保存
+    try? modelContext.save()
+}
+```
+
+タブを削除する際、その中にあるタスクが残ってしまう（ゴミデータになる）のを防ぐため、先に `ToDoTaskService.deleteAllTasks` を呼び出して関連するタスクを全て削除してから、タブ本体を削除します。
+
+### 4. 取得
+
+```swift
+@MainActor
+static func getAllTabs(from modelContext: ModelContext) -> [ToDoTab] {
+    // 全てのタブを取得するための検索条件（条件なし＝全件）
+    let descriptor = FetchDescriptor<ToDoTab>()
+    // 検索を実行し、失敗した場合は空の配列を返す
+    return (try? modelContext.fetch(descriptor)) ?? []
+}
+```
+
+データベースに保存されている全てのタブを取得します。  
+`FetchDescriptor` に条件（predicate）を指定していないため、登録されている全データが取得されます。
+
+---
+
+## コード全体
+
+```swift
+// ToDoTabService.swift
+import Foundation
+import SwiftData
+
+class ToDoTabService {
+    @MainActor
+    static func addTab(_ tab: ToDoTab, to modelContext: ModelContext) {
+        modelContext.insert(tab)
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func updateTab(_ tab: ToDoTab, modelContext: ModelContext) {
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func deleteTab(_ tab: ToDoTab, from modelContext: ModelContext) {
+        // タブに属するタスクをすべて削除
+        ToDoTaskService.deleteAllTasks(for: tab.id, from: modelContext)
+        // タブを削除
+        modelContext.delete(tab)
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func getAllTabs(from modelContext: ModelContext) -> [ToDoTab] {
+        let descriptor = FetchDescriptor<ToDoTab>()
+        return (try? modelContext.fetch(descriptor)) ?? []
+    }
+}
+```

@@ -1,56 +1,64 @@
-# ステップ13: タスク削除機能の実装
+# ステップ?: SwiftData の設定を行う
 
-<script>
-    import {base} from '$app/paths';
-</script>
+アプリ全体で SwiftData を使えるように `ModelContainer` を設定します。
 
-## HomeView.swift の修正
-
-リスト内でスワイプして削除できるようにします：
+### 1. スキーマの作成
 
 ```swift
-List {
-    ForEach(filteredTasks) { task in
-        HStack {
-            Button(action: {
-                toggleTaskCompletion(task)
-            }) {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(task.isCompleted ? .green : .gray)
-            }
-            .buttonStyle(PlainButtonStyle())
-
-            Text(task.title)
-                .strikethrough(task.isCompleted)
-        }
-    }
-    .onDelete(perform: deleteTask)
-}
-
-private func deleteTask(offsets: IndexSet) {
-    for index in offsets {
-        let taskToDelete = filteredTasks[index]
-        ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
-    }
-    loadTasks()
-}
+// 保存対象のデータモデル（ToDoTaskとToDoTab）を定義
+let schema = Schema([
+    ToDoTask.self,
+    ToDoTab.self
+])
 ```
 
-## .onDelete モディファイア
+SwiftData で扱うデータモデルのクラス（`ToDoTask` と `ToDoTab`）を `Schema` に登録して、データベースの構造を定義しています。
 
-- `.onDelete(perform:)`: リスト内でスワイプして削除できるようにします
-- `offsets`: 削除対象の行のインデックスを示します
-- 削除後は`loadTasks()`でUI更新します
+### 2. ModelContainer の初期化
 
-## 削除の流れ
+```swift
+// モデルの設定（永続的に保存するため、メモリ内のみの保存は false に設定）
+let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+// 設定に基づいて ModelContainer を作成
+modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+```
 
-1. ユーザーがタスクをスワイプします
-2. 削除ボタンが表示されます
-3. ユーザーが削除ボタンをタップします
-4. `deleteTask()`メソッドが呼び出されます
-5. サービスを通じてタスクをデータベースから削除します
-6. UI更新のためにタスク一覧を再度読み込みます
+`ModelConfiguration` でデータベースの動作設定を行います。  
+`isStoredInMemoryOnly: false` に設定することで、アプリを終了してもデータが消えずにファイルとして保存されるようにしています。  
+最後に、この設定を使って `ModelContainer`（データベースの実体）を初期化します。
 
-## 次のステップへ
+---
 
-次は、タブを管理するための画面`TabManageView`を作成します。
+## コード全体
+
+```swift title="ToDoListApp.swift"
+// ToDoListApp.swift
+import SwiftUI
+import SwiftData
+
+@main
+struct ToDoListApp: App {
+    let modelContainer: ModelContainer
+
+    init() {
+        let schema = Schema([
+            ToDoTask.self,
+            ToDoTab.self
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not initialize ModelContainer: \(error)")
+        }
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+        .modelContainer(modelContainer)
+    }
+}
+```

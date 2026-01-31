@@ -1,51 +1,48 @@
-# ステップ12: タスク完了機能の実装
+# ステップ14: ホーム画面の枠を作る
 
-<script>
-    import {base} from '$app/paths';
-</script>
+このステップでは、ホーム画面の土台だけを作ります。  
+まずはシンプルな画面として作成し、後のステップで画面遷移機能を追加します。
 
-## HomeView.swift の修正
-
-リスト内のタスク行をタップして完了状態を切り替える機能を追加します：
+### 1. 画面の中身
 
 ```swift
-List {
-    ForEach(filteredTasks) { task in
-        HStack {
-            Button(action: {
-                toggleTaskCompletion(task)
-            }) {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(task.isCompleted ? .green : .gray)
-            }
-            .buttonStyle(PlainButtonStyle())
-
-            Text(task.title)
-                .strikethrough(task.isCompleted)
-        }
-    }
-}
-
-private func toggleTaskCompletion(_ task: ToDoTask) {
-    ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
-    loadTasks()
+VStack(spacing: 12) {
+    // 仮のテキスト表示
+    Text("ここにタスク一覧を表示します")
+        .foregroundColor(.gray)
 }
 ```
 
-## 重要な修正点
+現時点ではまだタスクリストの機能は実装せず、仮のテキストだけを配置しています。  
+`.navigationTitle()` モディファイアでナビゲーションバーのタイトルを設定しています。
 
-1. `ToDoTask`は`Identifiable`なので、`ForEach`に`id`指定は不要です
-2. Button内の画像をタップすると完了状態が切り替わります
-3. 完了したタスクは緑色で表示されます
+---
 
-## toggleTaskCompletion メソッド
+## コード全体
 
-このメソッドは：
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
-1. サービスを通じてタスクの完了状態を反転させます
-2. データベースに変更を保存します
-3. UI更新のためにタスク一覧を再度読み込みます
+```swift
+// HomeView.swift
+import SwiftUI
 
-## 次のステップへ
+/// ホーム画面（枠だけ作成）
+struct HomeView: View {
+    var body: some View {
+        VStack(spacing: 12) {
+            Text("ここにタスク一覧を表示します")
+                .foregroundColor(.gray)
+        }
+        .padding()
+        .navigationTitle("ToDoリスト")
+    }
+}
 
-次は、タスクを削除する機能を実装します。
+// MARK: - Preview
+
+#Preview {
+    NavigationStack {
+        HomeView()
+    }
+}
+```

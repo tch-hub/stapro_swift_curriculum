@@ -23,6 +23,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<meta name="base-path" content={base} />
 </svelte:head>
 
 <Header {breadcrumbTitle} />

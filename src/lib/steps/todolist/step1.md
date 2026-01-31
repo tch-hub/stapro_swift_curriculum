@@ -1,9 +1,5 @@
 # ステップ1: プロジェクトの作成とセットアップ
 
-<script>
-    import {base} from '$app/paths';
-</script>
-
 ### 1. Xcodeで新規プロジェクトを作成
 
 1. Xcodeを起動し、「Create a new Xcode project」を選択する。
@@ -28,20 +24,24 @@
 ```
 ToDoList/
 ├── ToDoListApp.swift  # アプリのエントリーポイント
-├── Screens/
-│   ├── Views
-    │   ├── MainStack.swift
-    │   └── ContentView.swift
-│   └── Navigation/
-│       │── ScreenID.swift
-│       └── NavigationItem.swift
+├── Views
+│   ├── ContentView.swift
+│   ├── HomeView.swift
+│   ├── MainStack.swift
+│   └── TabmanageView.swift
 ├── SwiftData/
+│   ├── Constants.swift
 │   ├── ToDoTask.swift
 │   └── ToDoTab.swift
 ├── Services/
 │   ├── ToDoTaskService.swift
 │   └── ToDoTabService.swift
 └── Components/
+    ├── List.swift
+    ├── ListItem.swift
+    ├── EmptyStateView.swift
+    ├── TabHeaderView.swift
+    └── TaskInputView.swift
 ```
 
 Xcodeで新しいフォルダを作る手順
@@ -78,4 +78,19 @@ SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使え
 ContentViewという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。  
 `WindowGroup {ContentView()}`は、コードを書くたびに画面をすぐに見られる機能です。これで、アプリの見た目をすぐに確認できます。
 
-#### ※ここまでの状態では画面に何も表示されないので次のステップに進んでください。
+### 3. ContentView.swiftに以下のコードを追加する
+
+```swift
+import SwiftUI
+import SwiftData
+
+struct ContentView: View {
+    var body: some View {
+        Text("ToDoList")
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```

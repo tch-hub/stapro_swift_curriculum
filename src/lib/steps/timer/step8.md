@@ -56,6 +56,7 @@ Text(text)
 
 ColorButton使用イメージ
 <img src="/images/timer/download.jpg" alt="ColorButtonの使用イメージ" width="360" style=" margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
 ---
 
 ## 2. ContentViewの編集
@@ -72,6 +73,7 @@ Text("タイマーアプリ")
     .font(.largeTitle)
     .padding()
 ```
+
 `VStack(spacing: 24)`を`VStack`に変更します
 
 ### 2. 操作ボタンエリア

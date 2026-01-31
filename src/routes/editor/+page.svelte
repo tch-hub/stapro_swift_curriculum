@@ -1,6 +1,5 @@
 <script>
 	import { dev } from '$app/environment';
-	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 
@@ -198,10 +197,11 @@
 									<h2 class="card-title">セクション情報</h2>
 									<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 										<div class="form-control">
-											<label class="label">
+											<label class="label" for={'section-id-' + selectedSection.id}>
 												<span class="label-text font-semibold">ID</span>
 											</label>
 											<input
+												id={'section-id-' + selectedSection.id}
 												type="text"
 												value={selectedSection.id}
 												class="input-bordered input"
@@ -209,10 +209,11 @@
 											/>
 										</div>
 										<div class="form-control">
-											<label class="label">
+											<label class="label" for={'section-title-' + selectedSection.id}>
 												<span class="label-text font-semibold">タイトル</span>
 											</label>
 											<input
+												id={'section-title-' + selectedSection.id}
 												type="text"
 												bind:value={selectedSection.title}
 												oninput={(e) =>
@@ -223,10 +224,11 @@
 										</div>
 									</div>
 									<div class="form-control">
-										<label class="label">
+										<label class="label" for={'section-description-' + selectedSection.id}>
 											<span class="label-text font-semibold">説明</span>
 										</label>
 										<textarea
+											id={'section-description-' + selectedSection.id}
 											bind:value={selectedSection.description}
 											oninput={(e) =>
 												updateSection(selectedSection.id, { description: e.target.value })}
@@ -263,10 +265,20 @@
 											<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
 												<div class="space-y-4">
 													<div class="form-control">
-														<label class="label">
+														<label
+															class="label"
+															for={'codeblock-title-' +
+																selectedSection.id +
+																'-' +
+																selectedCodeBlockIndex}
+														>
 															<span class="label-text font-semibold">タイトル</span>
 														</label>
 														<input
+															id={'codeblock-title-' +
+																selectedSection.id +
+																'-' +
+																selectedCodeBlockIndex}
 															type="text"
 															value={selectedCodeBlock.title || ''}
 															oninput={(e) =>
@@ -279,10 +291,20 @@
 													</div>
 
 													<div class="form-control">
-														<label class="label">
+														<label
+															class="label"
+															for={'codeblock-preview-' +
+																selectedSection.id +
+																'-' +
+																selectedCodeBlockIndex}
+														>
 															<span class="label-text font-semibold">プレビュー画像</span>
 														</label>
 														<input
+															id={'codeblock-preview-' +
+																selectedSection.id +
+																'-' +
+																selectedCodeBlockIndex}
 															type="text"
 															value={selectedCodeBlock.previewImage || ''}
 															oninput={(e) =>
@@ -297,10 +319,20 @@
 
 												<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
 													<div class="form-control">
-														<label class="label">
+														<label
+															class="label"
+															for={'codeblock-code-' +
+																selectedSection.id +
+																'-' +
+																selectedCodeBlockIndex}
+														>
 															<span class="label-text font-semibold">Swiftコード</span>
 														</label>
 														<textarea
+															id={'codeblock-code-' +
+																selectedSection.id +
+																'-' +
+																selectedCodeBlockIndex}
 															value={selectedCodeBlock.code || ''}
 															oninput={(e) =>
 																updateCodeBlock(selectedSection.id, selectedCodeBlockIndex, {
@@ -313,9 +345,9 @@
 
 													<!-- Swiftコードのプレビュー -->
 													<div class="form-control">
-														<label class="label">
+														<div class="label">
 															<span class="label-text font-semibold">プレビュー</span>
-														</label>
+														</div>
 														<div
 															class="h-96 overflow-y-auto rounded-lg border border-base-300 bg-base-200 p-4"
 														>
@@ -333,10 +365,20 @@
 
 											<!-- 説明部分をフル幅で配置 -->
 											<div class="form-control mt-6">
-												<label class="label">
+												<label
+													class="label"
+													for={'codeblock-description-' +
+														selectedSection.id +
+														'-' +
+														selectedCodeBlockIndex}
+												>
 													<span class="label-text font-semibold">説明</span>
 												</label>
 												<textarea
+													id={'codeblock-description-' +
+														selectedSection.id +
+														'-' +
+														selectedCodeBlockIndex}
 													value={selectedCodeBlock.description || ''}
 													oninput={(e) =>
 														updateCodeBlock(selectedSection.id, selectedCodeBlockIndex, {

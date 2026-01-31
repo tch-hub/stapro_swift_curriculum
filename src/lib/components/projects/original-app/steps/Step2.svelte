@@ -1,5 +1,5 @@
 <script>
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 
 	let screens = $state([{ elements: '' }, { elements: '' }, { elements: '' }]);
@@ -33,8 +33,8 @@
 
 	<!-- ナビゲーション -->
 	<div class="mb-8 flex justify-between">
-		<a href="{base}/project/original-app/step1" class="btn btn-outline">← 前のステップ</a>
-		<a href="{base}/project/original-app/step3" class="btn btn-primary">次のステップ →</a>
+		<a href={resolve('/project/original-app/step1')} class="btn btn-outline">← 前のステップ</a>
+		<a href={resolve('/project/original-app/step3')} class="btn btn-primary">次のステップ →</a>
 	</div>
 
 	<!-- プログレスバー -->

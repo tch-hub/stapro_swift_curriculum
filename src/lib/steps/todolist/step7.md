@@ -1,57 +1,82 @@
-# ステップ7: ScreenID と NavigationItemの定義
+# ステップ7: タスクのデータモデルを作る
 
-<script>
-    import {base} from '$app/paths';
-</script>
+SwiftData を使ってタスク情報を保存するためのモデルを作成します。
 
-## ナビゲーションの仕組み
-
-SwiftUIでは、複数の画面を切り替える際に、どの画面に遷移するかを管理する必要があります。そのために、画面を識別するための定義を作成します。
-
-## ScreenID.swift の作成
-
-`Screens/Navigation/`フォルダに`ScreenID.swift`を作成し、以下のコードを記述します：
+### 1. モデルの基本構造
 
 ```swift
 import Foundation
+import SwiftData
 
-enum ScreenID: Hashable {
-    case home
-    case tabManage
+// @Modelをつけることで、このクラスのデータがデータベースに保存できるようになる
+@Model
+final class ToDoTask: Identifiable {
 }
 ```
 
-## NavigationItem.swift の作成
+クラス定義の前に `@Model` マクロを記述するだけで、SwiftData がこのクラスをデータベースのテーブル定義として認識し、保存や読み込みができるようになります。
 
-`Screens/Navigation/`フォルダに`NavigationItem.swift`を作成し、以下のコードを記述します：
+### 2. 変数の定義
+
+```swift
+// タスクごとに一意のID（識別子）
+var id: UUID = UUID()
+// タスクのタイトル
+var title: String = ""
+// タスクの詳細メモ
+var detail: String = ""
+// 完了したかどうか
+var isCompleted: Bool = false
+// どのタブ（リスト）に属しているかを紐付けるID
+var tabId: UUID = UUID()
+// 作成日時
+var createdAt: Date = Date()
+```
+
+タスク管理に必要な情報をプロパティ（変数）として定義しています。  
+それぞれの変数には初期値を設定しておくのが一般的です。  
+`tabId` は、後で作成する「タブ（カテゴリー）」とタスクを紐付けるために使います。
+
+### 3. 初期化
+
+```swift
+// 新しいタスクを作成する時の初期設定
+init(title: String, detail: String, tabId: UUID) {
+    self.title = title
+    self.detail = detail
+    // 作成時は未完了状態にする
+    self.isCompleted = false
+    self.tabId = tabId
+    // 作成日時を現在時刻に設定 false
+    self.tabId = tabId
+    self.createdAt = Date()
+}
+```
+
+---
+
+## コード全体
 
 ```swift
 import Foundation
+import SwiftData
 
-struct NavigationItem: Hashable {
-    let id: ScreenID
+// データモデルとしてマークするデコレータ
+@Model
+final class ToDoTask: Identifiable {
+    var id: UUID = UUID()
+    var title: String = ""
+    var detail: String = ""
+    var isCompleted: Bool = false
+    var tabId: UUID = UUID()
+    var createdAt: Date = Date()
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-
-    static func == (lhs: NavigationItem, rhs: NavigationItem) -> Bool {
-        lhs.id == rhs.id
+    init(title: String, detail: String, tabId: UUID) {
+        self.title = title
+        self.detail = detail
+        self.isCompleted = false
+        self.tabId = tabId
+        self.createdAt = Date()
     }
 }
 ```
-
-## Hashable について
-
-NavigationStackで画面遷移を管理するには、ナビゲーション情報が`Hashable`である必要があります。`Hashable`は、オブジェクトを一意に識別できるプロトコルです。
-
-## 各ScreenIDの説明
-
-| ScreenID    | 説明                         |
-| ----------- | ---------------------------- |
-| `home`      | ホーム画面（タスク一覧表示） |
-| `tabManage` | タブ管理画面                 |
-
-## 次のステップへ
-
-次は、アプリの初期画面`ContentView`を作成します。

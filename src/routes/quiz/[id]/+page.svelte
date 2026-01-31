@@ -1,6 +1,5 @@
 <script>
-	import { base } from '$app/paths';
-	import { page } from '$app/stores';
+	import { base, resolve } from '$app/paths';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -72,7 +71,7 @@
 	}
 </script>
 
-<div class="container mx-auto p-4">
+<div class="container mx-auto p-4" data-base={base}>
 	<div class="card bg-base-100 shadow-xl">
 		<div class="card-body">
 			<h2 class="card-title">問題 {currentQuestionIndex + 1} / {data.quizData.length}</h2>
@@ -81,7 +80,7 @@
 				{showHint ? currentQuestion.hint : 'ヒントを表示'}
 			</button>
 			<div class="grid grid-cols-1 gap-2">
-				{#each shuffledOptions as option, index}
+				{#each shuffledOptions as option, index (option + '-' + index)}
 					<button
 						class="btn w-full"
 						class:justify-between={showAnswer}
@@ -114,7 +113,7 @@
 				</div>
 				<div class="mt-4 flex gap-2">
 					<a
-						href="{base}/cheatsheet#{currentCheatsheetSection}"
+						href={resolve('/cheatsheet#' + currentCheatsheetSection)}
 						class="btn btn-outline btn-info"
 						target="_blank"
 					>
@@ -131,6 +130,6 @@
 		<p>スコア: {score} / {data.quizData.length}</p>
 	</div>
 	<div class="mt-4">
-		<a href="{base}/quiz" class="btn btn-secondary">戻る</a>
+		<a href={resolve('/quiz')} class="btn btn-secondary">戻る</a>
 	</div>
 </div>

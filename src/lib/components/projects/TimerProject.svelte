@@ -1,5 +1,5 @@
 <script>
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import TimerDemo from '$lib/components/TimerDemo.svelte';
 	import { timerSteps } from '$lib/data/projects/timer-steps';
 	import ProjectSteps from './ProjectSteps.svelte';
@@ -407,7 +407,7 @@ struct TimePicker: View {
 							</li>
 						</ul>
 						<div>
-							<a href="{base}/source/Timer.zip" download class="btn btn-primary">
+							<a href={resolve('/source/Timer.zip')} download class="btn btn-primary">
 								<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path
 										stroke-linecap="round"

@@ -1,8 +1,8 @@
 <script>
-	import { base } from '$app/paths';
+	import { base, resolve } from '$app/paths';
 </script>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-8" data-base={base}>
 	<div class="card bg-base-100 shadow-xl">
 		<div class="card-body">
 			<h1 class="mb-6 card-title text-3xl">🔧 トラブルシューティング</h1>
@@ -62,6 +62,6 @@
 	</div>
 
 	<div class="mt-6 text-center">
-		<a href="{base}/setup" class="btn btn-outline">セットアップに戻る</a>
+		<a href={resolve('/setup')} class="btn btn-outline">セットアップに戻る</a>
 	</div>
 </div>

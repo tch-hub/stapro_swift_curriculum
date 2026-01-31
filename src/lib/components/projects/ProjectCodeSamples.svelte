@@ -9,7 +9,7 @@
 
 <div class="flex flex-col gap-4">
 	<div role="tablist" class="tabs-boxed tabs overflow-x-auto bg-base-200 p-2">
-		{#each codeSamples as sample, index}
+		{#each codeSamples as sample, index (sample.fileName || sample.title || index)}
 			<button
 				role="tab"
 				class="tab-md tab whitespace-nowrap {activeIndex === index

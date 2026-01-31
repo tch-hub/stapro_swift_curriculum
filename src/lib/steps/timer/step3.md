@@ -56,8 +56,8 @@ Text("\(value) \(title)").tag(value)
 
 - `Text("\(value) \(title)")` で表示テキストを構成し、`.tag(value)` によってその行が選択されたときに `selection` に対応する値が設定されます。
 
-
 ## コード全体
+
 <img src="/images/timer/picker.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
 ```swift
@@ -81,6 +81,7 @@ struct TimePicker: View {
 ```
 
 ---
+
 ## 2. TimeSelectionView
 
 `TimePicker`を使って時間選択画面を作ります。
@@ -148,13 +149,14 @@ struct TimeSelectionView: View {
 ```
 
 ---
+
 ## 3. コンポーネントの組み合わせ(ContentView.swift)
 
 ### 1. 時間選択画面
 
 Text("タイマーアプリ")  
-                .font(.largeTitle)  
-                .padding()  
+ .font(.largeTitle)  
+ .padding()  
 の1行下に追加
 
 ```

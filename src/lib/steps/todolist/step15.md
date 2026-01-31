@@ -1,70 +1,151 @@
-# ステップ15: コンポーネント化（ToDoListItem）
+# ステップ15: 画面遷移の土台を作る
 
-<script>
-    import {base} from '$app/paths';
-</script>
+`NavigationStack` を使って画面遷移をまとめます。
 
-## コンポーネント化とは
+### 1. 画面IDを定義
 
-コードの重複を減らすために、よく使う部品を独立した「コンポーネント」として分割することです。
+```swift
+// アプリ内の画面を識別するためのID
+enum ScreenID: String {
+    case home      // ホーム画面
+    case tabManage // タブ管理画面
+}
+```
 
-## ToDoListItem.swift の作成
+画面遷移の行き先を管理しやすくするために、列挙型（enum）を使って画面のリストを定義しています。
 
-`Components/`フォルダに`ToDoListItem.swift`を作成します：
+### 2. 遷移情報の型を作成
+
+```swift
+// NavigationStackで扱うためのデータ型（Hashable準拠が必要）
+struct NavigationItem: Hashable {
+    let id: ScreenID
+}
+```
+
+`NavigationStack` のパス（履歴）として保存できるデータ型を作成しています。  
+`Hashable` プロトコルに準拠させることで、一意な遷移先として扱えるようになります。
+
+### 3. NavigationStack を構成
+
+```swift
+// パス（履歴）と紐づいたナビゲーションスタック
+NavigationStack(path: $navigationPath) {
+    // 最初に表示する画面（ルートビュー）
+    HomeView(navigationPath: $navigationPath)
+        // NavigationItem 型のデータがパスに追加された時の遷移先を定義
+        .navigationDestination(for: NavigationItem.self) { item in
+            switch item.id {
+            case .tabManage:
+                // .tabManage の場合はタブ管理画面を表示
+                TabManageView()
+            default:
+                EmptyView()
+            }
+        }
+}
+```
+
+`NavigationStack` を使って、画面遷移のルートを管理します。  
+`path: $navigationPath` を指定することで、プログラムから `navigationPath` 配列を操作して画面遷移ができるようになります。  
+`.navigationDestination` で、どのIDが指定されたらどの画面を表示するかを定義しています。
+
+---
+
+### 4. HomeView の引数を追加
+
+`MainStack` から `navigationPath` を渡すので、`HomeView` 側に `@Binding` を追加します。  
+プレビューでは `.constant([])` を使ってエラーを回避します。
+
+```swift
+// HomeView.swift
+import SwiftUI
+
+/// ホーム画面（枠だけ作成）
+struct HomeView: View {
+    @Binding var navigationPath: [NavigationItem]
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Text("ここにタスク一覧を表示します")
+                .foregroundColor(.gray)
+        }
+        .padding()
+        .navigationTitle("ToDoリスト")
+    }
+}
+
+// MARK: - Preview
+
+#Preview {
+    NavigationStack {
+        HomeView(navigationPath: .constant([]))
+    }
+}
+```
+
+---
+
+## コード全体
+
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
 ```swift
 import SwiftUI
+import SwiftData
+// MainStack.swift
 
-struct ToDoListItem: View {
-    let task: ToDoTask
-    let onToggleCompletion: (ToDoTask) -> Void
+/// 画面ID
+enum ScreenID: String {
+    case home // ホーム画面
+    case tabManage // タブ管理画面
+}
+
+/// 画面遷移の情報
+struct NavigationItem: Hashable {
+    let id: ScreenID
+}
+
+// MARK: - Main View
+
+/// メインスタック
+struct MainStack: View {
+    @State private var navigationPath: [NavigationItem] = []
 
     var body: some View {
-        HStack {
-            Button(action: {
-                onToggleCompletion(task)
-            }) {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(task.isCompleted ? .green : .gray)
-            }
-            .buttonStyle(PlainButtonStyle())
+        NavigationStack(path: $navigationPath) {
+            // ホーム画面を表示
+            HomeView(navigationPath: $navigationPath)
 
-            Text(task.title)
-                .strikethrough(task.isCompleted)
-                .foregroundColor(task.isCompleted ? .gray : .black)
+                // 画面遷移定義
+                .navigationDestination(for: NavigationItem.self) { item in
+                    switch item.id {
+                    // タブ管理画面へ遷移
+                    case .tabManage:
+                        TabManageView()
 
-            Spacer()
+                    default:
+                        // 将来的に他の画面が増えた場合はここに追加します
+                        EmptyView()
+                    }
+                }
         }
     }
 }
 
 #Preview {
-    ToDoListItem(
-        task: ToDoTask(title: "サンプルタスク", detail: "", tabId: UUID()),
-        onToggleCompletion: { _ in }
-    )
-}
-```
-
-## HomeView での使用
-
-`HomeView`のリスト部分を以下のように修正します：
-
-```swift
-List {
-    ForEach(filteredTasks) { task in
-        ToDoListItem(task: task, onToggleCompletion: toggleTaskCompletion)
+    struct PreviewWrapper: View {
+        var body: some View {
+            MainStack()
+                .modelContainer(
+                    try! ModelContainer(
+                        for: ToDoTab.self, ToDoTask.self,
+                        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+                    )
+                )
+        }
     }
-    .onDelete(perform: deleteTask)
+
+    return PreviewWrapper()
 }
 ```
-
-## コンポーネント化の利点
-
-1. **再利用性**: 同じコンポーネントを複数の場所で使えます
-2. **可読性**: コードが短くて読みやすくなります
-3. **保守性**: 修正が必要な場合、1箇所だけ修正すればよいです
-
-## 次のステップへ
-
-次は、カスタムアラートなどの追加コンポーネントを実装します。

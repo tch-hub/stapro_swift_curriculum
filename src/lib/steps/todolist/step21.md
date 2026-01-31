@@ -1,95 +1,248 @@
-# ステップ21: 最終調整とテスト
+# ステップ20: タスク編集を実装する
 
-<script>
-    import {base} from '$app/paths';
-</script>
+長押しでタスク名を編集できるようにします。
 
-## プロジェクト全体の確認
+### 1. 入力付きアラートの拡張機能を追加
 
-これまで実装した機能をすべて確認します：
+タスク名の編集にはテキスト入力が必要ですが、標準のアラートだけでは入力欄を作れません。そこで、便利な拡張機能を追加します。
+`View+Extensions.swift` （または `Extensions.swift`）という新しいファイルを作成し、以下のコードを追加してください。
 
-### 実装済み機能の確認リスト
+```swift
+import SwiftUI
 
-- [x] プロジェクト構造の作成
-- [x] SwiftDataのセットアップ
-- [x] データモデル（ToDoTask, ToDoTab）の作成
-- [x] サービスクラス（ToDoTaskService, ToDoTabService）の実装
-- [x] ナビゲーション定義（ScreenID, NavigationItem）
-- [x] ContentView の実装
-- [x] MainStack の実装
-- [x] HomeView の実装（タブ選択、タスク表示、追加、完了、削除）
-- [x] TabManageView の実装
-- [x] コンポーネント化（ToDoListItem）
-- [x] カスタムコンポーネント（CustomAlert, FloatingButton, TextFieldAlert, CustomList）
-- [x] 初期データの設定
+extension View {
+    func textFieldAlert(
+        isPresented: Binding<Bool>,
+        title: String,
+        message: String,
+        text: Binding<String>,
+        placeholder: String = "",
+        actionButtonTitle: String = "保存",
+        action: @escaping () -> Void
+    ) -> some View {
+        self.alert(title, isPresented: isPresented) {
+            TextField(placeholder, text: text)
+            Button("キャンセル", role: .cancel) {}
+            Button(actionButtonTitle) {
+                action()
+            }
+            .disabled(text.wrappedValue.isEmpty)
+        } message: {
+            Text(message)
+        }
+    }
+}
+```
 
-## テストケース
+### 2. 編集用の状態
 
-アプリを起動して、以下をテストしてください：
+```swift
+// 編集ダイアログを表示するかどうかのフラグ
+@State private var showEditDialog = false
+// 編集中のタスク名
+@State private var editTaskTitle = ""
+// 現在編集しようとしているタスクオブジェクト
+@State private var editingTask: ToDoTask?
+```
 
-1. **アプリ起動**
-   - [ ] アプリが正常に起動する
-   - [ ] 初期データが表示される
+タスク名の編集機能を実現するために、「ダイアログの表示状態」「編集中の文字列」「編集対象のタスク自体」という3つの情報を管理します。
 
-2. **タブ操作**
-   - [ ] タブを選択できる
-   - [ ] 選択したタブのタスクが表示される
+### 3. 長押しで編集開始
 
-3. **タスク操作**
-   - [ ] 新しいタスクを追加できる
-   - [ ] タスクの完了状態を切り替えられる
-   - [ ] タスクを削除できる
+```swift
+// 長押しジェスチャーを検知
+.onLongPressGesture {
+    // 長押しされたら編集モードを開始
+    startEdit(task)
+}
+```
 
-4. **タブ管理**
-   - [ ] 「タブ管理」画面へ遷移できる
-   - [ ] 新しいタブを追加できる
-   - [ ] タブを削除できる
+`.onLongPressGesture` を使うことで、ユーザーがタスクを長押しした時に編集処理（`startEdit`）を呼び出すように設定しています。  
+これにより、タップ（完了切り替え）とは別の操作として編集機能を割り当てています。
 
-5. **データの永続化**
-   - [ ] アプリを再起動してもデータが保存されている
+### 4. 編集用アラートを表示
 
-## 最終チェックリスト
+```swift
+// 自作した textFieldAlert を呼び出して編集画面を表示
+.textFieldAlert(
+   isPresented: $showEditDialog,
+   title: "タスクの編集",
+   message: "新しいタイトルを入力してください。",
+   text: $editTaskTitle,
+   placeholder: "例: 牛乳を買う",
+   actionButtonTitle: "保存",
+   action: {
+      // 保存ボタンが押されたら編集内容を反映
+      applyEdit()
+   }
+)
+```
 
-### コード品質
+このステップで作成した `textFieldAlert` を使って、タスク名の変更フォームを表示します。入力されたテキストは `$editTaskTitle` に同期され、保存ボタンを押すと `applyEdit` メソッドが実行されます。
 
-- [ ] コメントが日本語で記述されている
-- [ ] 文字列がダブルクォートで囲まれている
-- [ ] 変数名が分かりやすい
-- [ ] 適切にコンポーネント化されている
+### 5. 編集内容を保存
 
-### UI/UX
+```swift
+// 編集内容をデータベースへ保存するメソッド
+private func applyEdit() {
+   // 編集対象のタスクが存在することを確認
+   guard let editingTask = editingTask else { return }
 
-- [ ] ボタンが押しやすい大きさ
-- [ ] テキストが読みやすい
-- [ ] エラーメッセージが明確
-- [ ] 画面遷移がスムーズ
+   // タイトルを書き換え
+   editingTask.title = editTaskTitle
+   // データベースに変更を通知・保存
+   ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
+   // リストの表示を更新
+   loadTasks()
+}
+```
 
-### パフォーマンス
+編集ダイアログで入力された新しいタイトルを対象のタスクオブジェクトに代入し、Serviceを通じてデータベースに保存します。最後にリストを再読み込みして、画面上のタスク名を更新します。
 
-- [ ] タスク数が多くてもスムーズに動作
-- [ ] メモリリークがない
-- [ ] 不要なリロードがない
+---
 
-## 追加実装の提案
+## コード全体
 
-以下の機能を実装すると、さらに便利になります：
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
 
-1. **タスク編集機能**: 既存タスクのタイトルを編集できる
-2. **検索機能**: タスク名で検索できる
-3. **ソート機能**: 完了日時やタイトルでソートできる
-4. **日付機能**: タスクに期限日を設定できる
-5. **カテゴリアイコン**: タブごとに異なるアイコンを表示
-6. **ダークモード対応**: 暗いテーマに対応
+```swift
+// HomeView.swift
+import SwiftUI
+import SwiftData
 
-## まとめ
+struct HomeView: View {
+   @Environment(\.modelContext) private var modelContext
+   @State private var tabs: [ToDoTab] = []
+   @State private var tasks: [ToDoTask] = []
+   @State private var selectedTabId: UUID?
+   @State private var newTaskTitle = ""
+   @State private var showEditDialog = false
+   @State private var editTaskTitle = ""
+   @State private var editingTask: ToDoTask?
+   @Binding var navigationPath: [NavigationItem]
 
-このプロジェクトを通じて、以下を学習しました：
+   var body: some View {
+      ZStack {
+         VStack {
+            if tabs.isEmpty {
+               Text("タブがありません")
+                  .padding()
+            } else {
+               TabHeaderView(
+                  tabs: tabs.map { .init(id: $0.id, name: $0.name) },
+                  selectedTabId: $selectedTabId,
+                  onManageTabs: {
+                     navigationPath.append(NavigationItem(id: .tabManage))
+                  }
+               )
+               .onChange(of: selectedTabId) { _, _ in
+                  loadTasks()
+               }
 
-- SwiftUIでのUI構築
-- SwiftDataでのデータ永続化
-- 状態管理と再レンダリング
-- コンポーネント設計とモジュール化
-- サービスクラスでのデータ操作
-- ナビゲーション管理
+               if selectedTabId != nil && !tasks.isEmpty {
+                  CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+                     ToDoListItem(
+                        title: task.title,
+                        isCompleted: task.isCompleted
+                     ) {
+                        toggleTaskCompletion(task)
+                     }
+                     .onLongPressGesture {
+                        startEdit(task)
+                     }
+                  }
+               } else {
+                  EmptyStateView(hasSelectedTab: selectedTabId != nil)
+               }
+            }
 
-おめでとうございます！これで、本格的なToDoリストアプリが完成しました。
+         }
+         .padding()
+         .navigationTitle("ToDoリスト")
+         .onAppear {
+            loadTabs()
+         }
+      }
+      .safeAreaInset(edge: .bottom) {
+         if selectedTabId != nil {
+            InputView(text: $newTaskTitle, onAdd: addTask)
+         }
+      }
+      .textFieldAlert(
+         isPresented: $showEditDialog,
+         title: "タスクの編集",
+         message: "新しいタイトルを入力してください。",
+         text: $editTaskTitle,
+         placeholder: "例: 牛乳を買う",
+         actionButtonTitle: "保存",
+         action: {
+            applyEdit()
+         }
+      )
+   }
+
+
+
+   private func loadTabs() {
+      let descriptor = FetchDescriptor<ToDoTab>()
+      tabs = (try? modelContext.fetch(descriptor)) ?? []
+      if let selectedTabId = selectedTabId {
+         // 現在の選択が削除済みの場合は先頭タブに戻す
+         if !tabs.contains(where: { $0.id == selectedTabId }) {
+            self.selectedTabId = tabs.first?.id
+         }
+      } else {
+         selectedTabId = tabs.first?.id
+      }
+      loadTasks()
+   }
+
+   private func loadTasks() {
+      guard let selectedTabId = selectedTabId else {
+         tasks = []
+         return
+      }
+
+      let descriptor = FetchDescriptor<ToDoTask>(
+         predicate: #Predicate { $0.tabId == selectedTabId }
+      )
+      tasks = (try? modelContext.fetch(descriptor)) ?? []
+   }
+
+   private func toggleTaskCompletion(_ task: ToDoTask) {
+      ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
+      loadTasks()
+   }
+
+   private func addTask() {
+      guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
+
+      let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
+      ToDoTaskService.addTask(newTask, to: modelContext)
+
+      newTaskTitle = ""
+      loadTasks()
+   }
+
+   private func handleDeleteTask(_ offsets: IndexSet) {
+      for index in offsets {
+         let taskToDelete = tasks[index]
+         ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
+      }
+      loadTasks()
+   }
+
+   private func startEdit(_ task: ToDoTask) {
+      editingTask = task
+      editTaskTitle = task.title
+      showEditDialog = true
+   }
+
+   private func applyEdit() {
+      guard let editingTask = editingTask else { return }
+      editingTask.title = editTaskTitle
+      ToDoTaskService.updateTask(editingTask, modelContext: modelContext)
+      loadTasks()
+   }
+}
+```

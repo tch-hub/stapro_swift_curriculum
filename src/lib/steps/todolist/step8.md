@@ -1,105 +1,61 @@
-# ステップ14: TabManageView の作成（基本構造）
+# ステップ8: タブのデータモデルを作る
 
-<script>
-    import {base} from '$app/paths';
-</script>
+タブ情報を保存するためのモデルを作成します。
 
-## TabManageView.swift の作成
-
-`Screens/Views/Main/`フォルダに`TabManageView.swift`を作成します：
+### 1. モデルの基本構造
 
 ```swift
-import SwiftUI
+import Foundation
 import SwiftData
 
-struct TabManageView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) var dismiss
-    @State private var tabs: [ToDoTab] = []
-    @State private var showingAddTab = false
-    @State private var newTabName = ""
-
-    var body: some View {
-        VStack {
-            List {
-                ForEach(tabs) { tab in
-                    Text(tab.name)
-                }
-                .onDelete(perform: deleteTab)
-            }
-
-            HStack {
-                Button(action: { showingAddTab = true }) {
-                    Label("タブを追加", systemImage: "plus")
-                }
-                .padding()
-
-                Button("戻る") {
-                    dismiss()
-                }
-                .padding()
-            }
-        }
-        .navigationTitle("タブ管理")
-        .sheet(isPresented: $showingAddTab) {
-            VStack {
-                TextField("タブ名を入力", text: $newTabName)
-                    .textFieldStyle(.roundedBorder)
-                    .padding()
-
-                HStack {
-                    Button("キャンセル") {
-                        showingAddTab = false
-                        newTabName = ""
-                    }
-
-                    Button("追加") {
-                        addTab()
-                    }
-                    .disabled(newTabName.isEmpty)
-                }
-                .padding()
-            }
-        }
-        .onAppear {
-            loadTabs()
-        }
-    }
-
-    private func loadTabs() {
-        let descriptor = FetchDescriptor<ToDoTab>()
-        tabs = (try? modelContext.fetch(descriptor)) ?? []
-    }
-
-    private func addTab() {
-        let newTab = ToDoTab(name: newTabName)
-        ToDoTabService.addTab(newTab, to: modelContext)
-        newTabName = ""
-        showingAddTab = false
-        loadTabs()
-    }
-
-    private func deleteTab(offsets: IndexSet) {
-        for index in offsets {
-            let tabToDelete = tabs[index]
-            ToDoTabService.deleteTab(tabToDelete, from: modelContext)
-        }
-        loadTabs()
-    }
-}
-
-#Preview {
-    TabManageView()
+// @Modelをつけることで、タブの情報もデータベースに保存できるようにする
+@Model
+final class ToDoTab: Identifiable {
 }
 ```
 
-## 各要素の説明
+### 2. 変数の定義
 
-- `loadTabs()`: データベースからすべてのタブを読み込みます
-- `addTab()`: 新しいタブを追加します
-- `deleteTab()`: タブを削除します（関連するタスクも削除されます）
-- `@Environment(\.dismiss)`: 前の画面に戻るために使用します
+```swift
+// タブごとの一意のID
+var id: UUID = UUID()
+// タブの名前
+var name: String = ""
+// 作成日時
+var createdAt: Date = Date()
+```
 
-## 次のステップへ
+タブを管理するために必要な ID と 名前、作成日時を定義しています。  
+`@Model` がついているため、これらのプロパティは自動的にデータベースのカラムとして扱われます。
 
-次は、このビューをより整えて、エラーハンドリングを追加します。
+### 3. 初期化
+
+```swift
+// 新しいタブを作成する時の初期設定
+init(name: String) {
+    self.name = name
+    // 作成日時を現在時刻に設定
+    self.createdAt = Date()
+}
+```
+
+---
+
+## コード全体
+
+```swift
+import Foundation
+import SwiftData
+
+@Model
+final class ToDoTab: Identifiable {
+    var id: UUID = UUID()
+    var name: String = ""
+    var createdAt: Date = Date()
+
+    init(name: String) {
+        self.name = name
+        self.createdAt = Date()
+    }
+}
+```

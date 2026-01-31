@@ -51,7 +51,9 @@
 	$effect(() => {
 		// 依存として code / language / showLineNumbers を参照することで
 		// これらが変化したときにこの effect が再実行されるようにする
-		const __dep = `${code}|${language}|${showLineNumbers}`;
+		void code;
+		void language;
+		void showLineNumbers;
 		if (typeof window !== 'undefined' && window.Prism) {
 			window.Prism.highlightAll();
 		}

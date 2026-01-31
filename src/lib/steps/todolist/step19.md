@@ -1,62 +1,162 @@
-# ステップ19: CustomList コンポーネントの実装
+# ステップ18: タスク追加フォームを作る
 
-<script>
-    import {base} from '$app/paths';
-</script>
+画面下部にタスク追加欄を表示します。
 
-## CustomList.swift の作成
-
-`Components/`フォルダに`CustomList.swift`を作成します。このコンポーネントは、スタイルをカスタマイズしたリストを提供します：
+### 1. 入力用の状態
 
 ```swift
-import SwiftUI
+// 新しく作成するタスクのタイトルを保持する変数
+@State private var newTaskTitle = ""
+```
 
-struct CustomList<Content: View>: View {
-    @ViewBuilder let content: Content
+タスク追加フォームに入力された文字を一時的に保存しておくための変数を定義しています。
+
+### 2. コンポーネントの配置
+
+```swift
+// 画面の下部に入力エリアを固定表示
+.safeAreaInset(edge: .bottom) {
+    if selectedTabId != nil {
+        InputView(text: $newTaskTitle) {
+            addTask()
+        }
+    }
+}
+```
+
+`.safeAreaInset(edge: .bottom)` を使って、ステップ5で作成した `InputView` コンポーネントを画面下部に配置します。  
+`text: $newTaskTitle` で入力値をバインディングし、クロージャで追加処理を渡しています。  
+デフォルトのプレースホルダー（「新しいタスクを追加...」）とアイコン（上向き矢印）が使用されます。
+
+### 3. 追加処理
+
+```swift
+// 新しいタスクをデータベースに追加するメソッド
+private func addTask() {
+    // タイトルが空でないか、タブが選択されているかを確認（ガード節）
+    guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
+
+    // タスクモデルを作成
+    let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
+    // データベースに保存
+    ToDoTaskService.addTask(newTask, to: modelContext)
+
+    // 入力欄をクリア
+    newTaskTitle = ""
+    // リストを更新して新しいタスクを表示
+    loadTasks()
+}
+```
+
+入力されたタイトルと現在選択されているタブIDを使って新しい `ToDoTask` を作成し、Service経由で保存します。  
+保存後は続けて入力できるように入力欄をクリアし、一覧を再読み込みしています。
+
+---
+
+## コード全体
+
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
+```swift
+// HomeView.swift
+import SwiftUI
+import SwiftData
+
+struct HomeView: View {
+    @Environment(\.modelContext) private var modelContext
+    @State private var tabs: [ToDoTab] = []
+    @State private var tasks: [ToDoTask] = []
+    @State private var selectedTabId: UUID?
+    @State private var newTaskTitle = ""
+    @Binding var navigationPath: [NavigationItem]
 
     var body: some View {
-        List {
-            content
-        }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
-    }
-}
+        ZStack {
+            VStack {
+                if tabs.isEmpty {
+                    Text("タブがありません")
+                        .padding()
+                } else {
+                    TabHeaderView(
+                        tabs: tabs.map { .init(id: $0.id, name: $0.name) },
+                        selectedTabId: $selectedTabId,
+                        onManageTabs: {
+                            navigationPath.append(NavigationItem(id: .tabManage))
+                        }
+                    )
+                    .onChange(of: selectedTabId) { _, _ in
+                        loadTasks()
+                    }
 
-#Preview {
-    CustomList {
-        ForEach(0..<5, id: \.self) { index in
-            Text("アイテム \(index)")
+                    if selectedTabId != nil && !tasks.isEmpty {
+                        CustomList(items: tasks, onDelete: nil) { task in
+                            ToDoListItem(
+                                title: task.title,
+                                isCompleted: task.isCompleted
+                            ) {
+                                toggleTaskCompletion(task)
+                            }
+                        }
+                    } else {
+                        EmptyStateView(hasSelectedTab: selectedTabId != nil)
+                    }
+                }
+
+            }
+            .padding()
+            .navigationTitle("ToDoリスト")
+            .onAppear {
+                loadTabs()
+            }
         }
+        .safeAreaInset(edge: .bottom) {
+            if selectedTabId != nil {
+                InputView(text: $newTaskTitle) {
+                    addTask()
+                }
+            }
+        }
+    }
+
+    private func loadTabs() {
+        let descriptor = FetchDescriptor<ToDoTab>()
+        tabs = (try? modelContext.fetch(descriptor)) ?? []
+        if let selectedTabId = selectedTabId {
+            // 現在の選択が削除済みの場合は先頭タブに戻す
+            if !tabs.contains(where: { $0.id == selectedTabId }) {
+                self.selectedTabId = tabs.first?.id
+            }
+        } else {
+            selectedTabId = tabs.first?.id
+        }
+        loadTasks()
+    }
+
+    private func loadTasks() {
+        guard let selectedTabId = selectedTabId else {
+            tasks = []
+            return
+        }
+
+        let descriptor = FetchDescriptor<ToDoTask>(
+            predicate: #Predicate { $0.tabId == selectedTabId }
+        )
+        tasks = (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    private func toggleTaskCompletion(_ task: ToDoTask) {
+        ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
+        loadTasks()
+    }
+
+    private func addTask() {
+        guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
+
+        let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
+        ToDoTaskService.addTask(newTask, to: modelContext)
+
+        newTaskTitle = ""
+        loadTasks()
     }
 }
 ```
-
-## CustomListの特徴
-
-- `@ViewBuilder`: 複数の子ビューを受け入れるための仕組みです
-- `.listStyle(.plain)`: デフォルトのListスタイルを削除
-- `.scrollContentBackground(.hidden)`: スクロール背景を非表示
-
-## HomeView の修正
-
-`List`を`CustomList`に置き換えます：
-
-```swift
-CustomList {
-    ForEach(filteredTasks) { task in
-        ToDoListItem(task: task, onToggleCompletion: toggleTaskCompletion)
-    }
-    .onDelete(perform: deleteTask)
-}
-```
-
-## 利点
-
-1. **統一されたスタイル**: アプリ全体で同じリストスタイルを使用
-2. **カスタマイズが容易**: 見た目の変更が必要な場合、1箇所だけ修正すればよい
-3. **再利用性**: 複数の画面でリストを使う際に便利
-
-## 次のステップへ
-
-次は、アプリの初期データ設定と最終調整を行います。

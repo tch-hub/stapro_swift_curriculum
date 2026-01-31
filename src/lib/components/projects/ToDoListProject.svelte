@@ -1,5 +1,5 @@
 <script>
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import ToDoListDemo from '$lib/components/ToDoListDemo.svelte';
 	import { todolistSteps } from '$lib/data/projects/todolist-steps';
 	import ProjectSteps from './ProjectSteps.svelte';
@@ -293,7 +293,7 @@ class ToDoTabService {
 							</li>
 						</ul>
 						<div>
-							<a href="{base}/source/ToDoList.zip" download class="btn btn-primary">
+							<a href={resolve('/source/ToDoList.zip')} download class="btn btn-primary">
 								<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path
 										stroke-linecap="round"
@@ -336,10 +336,10 @@ class ToDoTabService {
 │       ├── ScreenID.swift
 │       └── NavigationItem.swift
 ├── Components/
-│   ├── CustomAlert.swift
+│   ├── Alert.swift
 │   ├── FloatingButton.swift
-│   ├── ToDoListItem.swift
-│   ├── CustomList.swift
+│   ├── ListItem.swift
+│   ├── List.swift
 │   └── TextFieldAlertModifier.swift
 ├── Services/
 │   ├── ToDoTaskService.swift

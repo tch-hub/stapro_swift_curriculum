@@ -1,99 +1,155 @@
-# ステップ20: 初期データの設定
+# ステップ19: スワイプ削除を追加する
 
-<script>
-    import {base} from '$app/paths';
-</script>
+タスクを左にスワイプして削除できるようにします。
 
-## 初期データとは
-
-アプリ初回起動時に、サンプルのタブやタスクを自動で作成して、ユーザーがすぐにアプリを試せるようにします。
-
-## Constants.swift の作成
-
-`SwiftData/`フォルダに`Constants.swift`を作成します：
+### 1. onDelete を渡す
 
 ```swift
-import Foundation
-
-// 初期タブデータ
-let INITIAL_TODO_TABS = [
-    ("仕事", [
-        "プロジェクト企画書を作成",
-        "メール返信",
-        "会議資料準備"
-    ]),
-    ("プライベート", [
-        "映画を見る",
-        "友人に連絡",
-        "運動する"
-    ]),
-    ("買い物", [
-        "食料品",
-        "日用品",
-        "衣類"
-    ])
-]
-```
-
-## ContentView.swift の修正
-
-アプリ初回起動時に初期データを作成します：
-
-```swift
-import SwiftUI
-import SwiftData
-
-struct ContentView: View {
-    @State private var isInitialized = false
-    @Environment(\.modelContext) private var modelContext
-
-    var body: some View {
-        if isInitialized {
-            MainStack()
-        } else {
-            VStack {
-                Text("アプリを準備中...")
-                ProgressView()
-            }
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    initializeAppIfNeeded()
-                    isInitialized = true
-                }
-            }
-        }
-    }
-
-    private func initializeAppIfNeeded() {
-        // 既存データをチェック
-        let descriptor = FetchDescriptor<ToDoTab>()
-        let existingTabs = (try? modelContext.fetch(descriptor)) ?? []
-
-        // 初期データがなければ作成
-        if existingTabs.isEmpty {
-            for (tabName, taskNames) in INITIAL_TODO_TABS {
-                let newTab = ToDoTab(name: tabName)
-                ToDoTabService.addTab(newTab, to: modelContext)
-
-                // タブに属するタスクを追加
-                for taskName in taskNames {
-                    let newTask = ToDoTask(title: taskName, detail: "", tabId: newTab.id)
-                    ToDoTaskService.addTask(newTask, to: modelContext)
-                }
-            }
-        }
+// スワイプ削除時の処理（handleDeleteTask）をCustomListに渡す
+CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+    ToDoListItem(
+        title: task.title,
+        isCompleted: task.isCompleted
+    ) {
+        toggleTaskCompletion(task)
     }
 }
 ```
 
-## 初期化処理の流れ
+`CustomList` の初期化パラメータ `onDelete` に次のステップで説明する削除メソッド `handleDeleteTask` を渡すことで、スワイプ操作による行の削除機能が有効になります。
 
-1. アプリ起動時にContentViewが表示されます
-2. `onAppear`で`initializeAppIfNeeded()`が呼び出されます
-3. 既存データをチェックします
-4. データが存在しなければ、初期データを作成します
-5. 初期化が完了したら`MainStack`を表示します
+### 2. 削除処理
 
-## 次のステップへ
+```swift
+// スワイプ削除イベントを受け取るメソッド
+private func handleDeleteTask(_ offsets: IndexSet) {
+    // 選択された行のインデックス（番号）をループ処理
+    for index in offsets {
+        // インデックスから削除対象のタスクを特定
+        let taskToDelete = tasks[index]
+        // データベースから削除
+        ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
+    }
+    // リスト表示を更新
+    loadTasks()
+}
+```
 
-次は、アプリ全体を確認して、最終調整を行います。
+リストでスワイプ削除が行われると、削除対象の行番号（インデックス）の集合が `offsets` として渡されてきます。  
+これを使って対象の `ToDoTask` を特定し、データベースから削除します。
+
+---
+
+## コード全体
+
+<img src="/images/timer/t21.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
+```swift
+// HomeView.swift
+import SwiftUI
+import SwiftData
+
+struct HomeView: View {
+    @Environment(\.modelContext) private var modelContext
+    @State private var tabs: [ToDoTab] = []
+    @State private var tasks: [ToDoTask] = []
+    @State private var selectedTabId: UUID?
+    @State private var newTaskTitle = ""
+    @Binding var navigationPath: [NavigationItem]
+
+    var body: some View {
+        ZStack {
+            VStack {
+                if tabs.isEmpty {
+                    Text("タブがありません")
+                        .padding()
+                } else {
+                    TabHeaderView(
+                        tabs: tabs.map { .init(id: $0.id, name: $0.name) },
+                        selectedTabId: $selectedTabId,
+                        onManageTabs: {
+                            navigationPath.append(NavigationItem(id: .tabManage))
+                        }
+                    )
+                    .onChange(of: selectedTabId) { _, _ in
+                        loadTasks()
+                    }
+
+                    if selectedTabId != nil && !tasks.isEmpty {
+                        CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+                            ToDoListItem(
+                                title: task.title,
+                                isCompleted: task.isCompleted
+                            ) {
+                                toggleTaskCompletion(task)
+                            }
+                        }
+                    } else {
+                        EmptyStateView(hasSelectedTab: selectedTabId != nil)
+                    }
+                }
+
+            }
+            .padding()
+            .navigationTitle("ToDoリスト")
+            .onAppear {
+                loadTabs()
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            if selectedTabId != nil {
+                InputView(text: $newTaskTitle, onAdd: addTask)
+            }
+        }
+    }
+
+    private func loadTabs() {
+        let descriptor = FetchDescriptor<ToDoTab>()
+        tabs = (try? modelContext.fetch(descriptor)) ?? []
+        if let selectedTabId = selectedTabId {
+            // 現在の選択が削除済みの場合は先頭タブに戻す
+            if !tabs.contains(where: { $0.id == selectedTabId }) {
+                self.selectedTabId = tabs.first?.id
+            }
+        } else {
+            selectedTabId = tabs.first?.id
+        }
+        loadTasks()
+    }
+
+    private func loadTasks() {
+        guard let selectedTabId = selectedTabId else {
+            tasks = []
+            return
+        }
+
+        let descriptor = FetchDescriptor<ToDoTask>(
+            predicate: #Predicate { $0.tabId == selectedTabId }
+        )
+        tasks = (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    private func toggleTaskCompletion(_ task: ToDoTask) {
+        ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
+        loadTasks()
+    }
+
+    private func addTask() {
+        guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
+
+        let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
+        ToDoTaskService.addTask(newTask, to: modelContext)
+
+        newTaskTitle = ""
+        loadTasks()
+    }
+
+    private func handleDeleteTask(_ offsets: IndexSet) {
+        for index in offsets {
+            let taskToDelete = tasks[index]
+            ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
+        }
+        loadTasks()
+    }
+}
+```
