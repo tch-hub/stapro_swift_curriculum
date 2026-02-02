@@ -1,6 +1,7 @@
-# ステップ14: SwiftDataの設定を行う
+# ステップ14: SwiftDataの設定を行う(ToDoListApp.swift)
 
 アプリ全体で SwiftData を使えるように `ModelContainer` を設定します。
+ステップ1で作成した `ToDoListApp.swift` を編集します。
 
 ### 1. スキーマの作成
 

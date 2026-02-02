@@ -1,6 +1,7 @@
-# ステップ10: タスク操作のサービスを作る
+# ステップ10: タスク操作のサービスを作る(ToDoTaskService.swift)
 
 タスクの追加・更新・削除をまとめた `ToDoTaskService` を作ります。
+ステップ1で作成した `Services/ToDoTaskService.swift` を編集します。
 
 ### 1. 追加
 

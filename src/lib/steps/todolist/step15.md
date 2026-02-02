@@ -1,6 +1,7 @@
-# ステップ15: 画面遷移の土台を作る
+# ステップ15: 画面遷移の土台を作る(MainStack.swift)
 
 `NavigationStack` を使って画面遷移をまとめます。
+ステップ1で作成した `Views/MainStack.swift` を編集します。
 
 ### 1. 画面IDを定義
 

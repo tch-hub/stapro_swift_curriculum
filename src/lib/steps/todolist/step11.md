@@ -1,6 +1,7 @@
-# ステップ11: タブ操作のサービスを作る
+# ステップ11: タブ操作のサービスを作る(ToDoTabService.swift)
 
 タブの追加・更新・削除をまとめた `ToDoTabService` を作ります。
+ステップ1で作成した `Services/ToDoTabService.swift` を編集します。
 
 ### 1. 追加
 

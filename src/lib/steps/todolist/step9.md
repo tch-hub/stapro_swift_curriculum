@@ -1,10 +1,11 @@
-# ステップ9: 初期データを投入する
+# ステップ9: 初期データを投入する(Constants.swift)
 
 アプリ起動時にタブとタスクが空なら、初期データを作成します。
 
 ### 1. 初期データの定義
 
 `Constants.swift` に初期タブとタスクを定義します。
+ステップ1で作成した `SwiftData/Constants.swift` を編集します。
 
 ```swift
 // Constants.swift

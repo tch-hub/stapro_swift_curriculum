@@ -1,6 +1,7 @@
-# ステップ3: どのリストにも使える CustomList
+# ステップ3: どのリストにも使えるCustomList(CustomList.swift)
 
 タスクやタブなど、いろいろなデータを表示できる汎用リストを作ります。
+ステップ1で作成した `Components/List.swift` を編集して実装していきます。
 
 ### 1. swiftUIの基本構造
 

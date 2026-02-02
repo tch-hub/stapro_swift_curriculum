@@ -1,4 +1,4 @@
-# ステップ1: プロジェクトの作成とセットアップ
+# ステップ1: プロジェクトの作成とセットアップ(ToDoListApp.swift)
 
 ### 1. Xcodeで新規プロジェクトを作成
 
@@ -94,3 +94,15 @@ struct ContentView: View {
     ContentView()
 }
 ```
+
+`struct ContentView: View`
+ContentViewという名前の画面の部品（ビュー）を作ります。`: View`をつけることで、これがSwiftUIのビューであることを示しています。
+
+`var body: some View`
+画面に表示する具体的な内容をここに記述します。
+
+`Text("ToDoList")`
+画面に「ToDoList」という文字を表示します。
+
+`#Preview`
+Xcodeのプレビュー機能を使って、シミュレータを起動しなくてもコードの結果をすぐに確認できるようにするためのものです。
