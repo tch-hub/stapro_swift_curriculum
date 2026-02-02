@@ -107,12 +107,7 @@ export const todolistSteps: TodolistStep[] = [
 	},
 	{
 		id: 'step21',
-		title: 'ステップ21: タスク編集を実装する(HomeView.swift)',
-		summary: '長押しでタスク名を編集できるようにします。'
-	},
-	{
-		id: 'step22',
-		title: 'ステップ22: 発展課題（もっと便利にするアイデア）',
+		title: 'ステップ21: 発展課題（もっと便利にするアイデア）',
 		summary: '検索やソートなどの追加機能に挑戦します。'
 	}
 ];
