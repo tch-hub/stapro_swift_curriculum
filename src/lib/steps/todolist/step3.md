@@ -1,80 +1,111 @@
 # ステップ3: どのリストにも使えるCustomList(CustomList.swift)
 
-タスクやタブなど、いろいろなデータを表示できる汎用リストを作ります。
-ステップ1で作成した `Components/List.swift` を編集して実装していきます。
+## 1. 基本構造の作成
 
-### 1. swiftUIの基本構造
+`Components/CustomList.swift` を以下のように書き換えて、汎用的に使える構造体（ジェネリクス）の土台を作ります。
 
 ```swift
 import SwiftUI
 
 struct CustomList<T: Identifiable, RowContent: View>: View {
+    // データを保持する配列
+    let items: [T]
+    // スワイプ削除時のアクション（必要な場合のみ）
+    let onDelete: ((IndexSet) -> Void)?
+    // 各行の見た目を作るためのクロージャ
+    @ViewBuilder let rowContent: (T) -> RowContent
+
     var body: some View {
+        List {
+            // ここにリストの中身を実装します
+        }
+        .listStyle(.plain)
     }
 }
 ```
 
-### 2. 変数の定義
+- `<T: Identifiable, RowContent: View>`: `T` は表示するデータ（IDを持っている必要がある）、`RowContent` は行の見た目（View）を表すジェネリクスです。これにより、どんなデータ型でもリスト表示できるようになります。
+- `@ViewBuilder`: クロージャ内で複数のViewを返せるようにするための属性です。
 
-struct CustomList: View {} 内に追加
+## 2. リストの中身を実装
 
-```swift
-// 表示するデータの一覧
-let items: [T]
-// スワイプ削除時の処理（削除機能が不要な場合は nil）
-let onDelete: ((IndexSet) -> Void)?
-// 各行の表示内容を作るためのクロージャ（ViewBuilder属性付き）
-@ViewBuilder let rowContent: (T) -> RowContent
-```
-
-`items` はジェネリクス `T` 型の配列で、リストに表示するデータを保持します。  
-`onDelete` はオプション型で定義されており、削除機能が必要な場合のみ関数を渡せるようにしています。  
-`rowContent` は各行のビューを生成するためのクロージャで、`@ViewBuilder` をつけることで SwiftUI の View を柔軟に記述できるようにしています。
-
-### 3. UIの作成
-
-var body: some View {} 内に追加
+`List` の中身を実装します。削除機能が有効な場合とそうでない場合で処理を分けます。
 
 ```swift
-// 標準的なリスト表示を作成
 List {
     // 削除機能が有効（onDelete が存在する）かどうかで分岐
     if let onDelete = onDelete {
-        // データごとの行を作成
-        ForEach(items.indices, id: \.self) { index in
-            // 行の中身を表示
-            let item = items[index]
+        ForEach(items) { item in
             rowContent(item)
-                // 先頭の上線は表示しない
-                .listRowSeparator(.hidden, edges: .top)
-                // 最後の下線は表示しない（境目だけ表示）
-                .listRowSeparator(index == items.count - 1 ? .hidden : .visible, edges: .bottom)
         }
-        // スワイプ削除アクションを設定
         .onDelete(perform: onDelete)
     } else {
         // 削除機能がない場合
-        ForEach(items.indices, id: \.self) { index in
-            let item = items[index]
+        ForEach(items) { item in
             rowContent(item)
-                .listRowSeparator(.hidden, edges: .top)
-                .listRowSeparator(index == items.count - 1 ? .hidden : .visible, edges: .bottom)
         }
     }
 }
-// リストの見た目をプレーンなスタイルに設定
 .listStyle(.plain)
 ```
 
-`onDelete` が渡されている場合は `.onDelete(perform: onDelete)` を適用してスワイプ削除を有効にし、渡されていない場合は単にリスト表示のみを行います。
+## 3. リストの区切り線を調整
 
-`List` コンポーネントを使用してデータを一覧表示します。`onDelete` が渡されている場合は `.onDelete(perform: onDelete)` を適用してスワイプ削除を有効にし、渡されていない場合は単にリスト表示のみを行います。各行の表示内容は `rowContent(item)` を呼び出すことで生成し、先頭の上線と最後の下線は隠して、行と行の境目だけに線が表示されるようにしています。
+デフォルトの区切り線を消して、スッキリした見た目にします。`rowContent(item)` の直後に以下のモディファイアを追加してください（`if` 側と `else` 側の両方の `rowContent(item)` に適用します）。
+
+```swift
+rowContent(item)
+    .listRowSeparator(.hidden)
+    .listRowInsets(EdgeInsets()) // 余白をリセット
+```
+
+## 4. プレビューの作成
+
+汎用リストが正しく動作するか確認するためのプレビューを作成します。ファイルの末尾に追加してください。
+
+```swift
+#Preview {
+    struct PreviewWrapper: View {
+        // テスト用のデータ型
+        struct MockItem: Identifiable {
+            let id = UUID()
+            var title: String
+            var isCompleted: Bool
+        }
+
+        @State private var items: [MockItem] = [
+            .init(title: "タップで完了", isCompleted: false),
+            .init(title: "スワイプで削除", isCompleted: true)
+        ]
+
+        var body: some View {
+            CustomList(items: items, onDelete: { indexSet in
+                items.remove(atOffsets: indexSet)
+            }) { item in
+                // ステップ2で作ったコンポーネントを使用
+                ToDoListItem(
+                    title: item.title,
+                    isCompleted: item.isCompleted
+                ) {
+                    if let index = items.firstIndex(where: { $0.id == item.id }) {
+                        items[index].isCompleted.toggle()
+                    }
+                }
+            }
+        }
+    }
+
+    return PreviewWrapper()
+}
+```
 
 ---
 
 ## コード全体
 
-<img src="/images/todolist/CustomList.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/CustomList.png" alt="CustomListの完成イメージ" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
+### Components/CustomList.swift
 
 ```swift
 import SwiftUI
@@ -87,26 +118,23 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
     var body: some View {
         List {
             if let onDelete = onDelete {
-                ForEach(items.indices, id: \.self) { index in
-                    let item = items[index]
+                ForEach(items) { item in
                     rowContent(item)
-                        .listRowSeparator(.hidden, edges: .top)
-                        .listRowSeparator(index == items.count - 1 ? .hidden : .visible, edges: .bottom)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
                 }
                 .onDelete(perform: onDelete)
             } else {
-                ForEach(items.indices, id: \.self) { index in
-                    let item = items[index]
+                ForEach(items) { item in
                     rowContent(item)
-                        .listRowSeparator(.hidden, edges: .top)
-                        .listRowSeparator(index == items.count - 1 ? .hidden : .visible, edges: .bottom)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
                 }
             }
         }
         .listStyle(.plain)
     }
 }
-
 
 #Preview {
     struct PreviewWrapper: View {

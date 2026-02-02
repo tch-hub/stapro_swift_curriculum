@@ -1,98 +1,90 @@
 # ステップ10: タスク操作のサービスを作る(ToDoTaskService.swift)
 
-タスクの追加・更新・削除をまとめた `ToDoTaskService` を作ります。
-ステップ1で作成した `Services/ToDoTaskService.swift` を編集します。
+## 1. クラスの基本構造
 
-### 1. 追加
+`Services/ToDoTaskService.swift` を開き、タスクの追加・更新・削除などのロジックをまとめるクラスを作成します。
 
 ```swift
-// メインスレッドで実行することを保証
-@MainActor
-static func addTask(_ task: ToDoTask, to modelContext: ModelContext) {
-    // データベースに追加
-    modelContext.insert(task)
-    // 変更を保存
-    try? modelContext.save()
+import Foundation
+import SwiftData
+
+class ToDoTaskService {
+    // ここに各メソッドを追加していきます
 }
 ```
 
-`modelContext.insert` を使うことで、新しいタスクデータをデータベースへの保存対象として登録します。  
-その直後に `save()` を呼び出して、変更を確定（永続化）させています。
+## 2. タスクの追加と更新
 
-### 2. 更新
-
-```swift
-@MainActor
-static func updateTask(_ task: ToDoTask, modelContext: ModelContext) {
-    // データの内容は変更済みなので、保存処理だけを行う
-    try? modelContext.save()
-}
-```
-
-SwiftData では、取得したモデルのプロパティを書き換えると自動的に変更が検知されます。  
-そのため、明示的な更新メソッドは不要ですが、変更を確実にディスクに書き込むために `save()` を呼び出しています。
-
-### 3. 削除
+タスクの作成（insert）と更新（save）を行うメソッドを追加します。
+`class ToDoTaskService {` の中に記述してください。
 
 ```swift
-@MainActor
-static func deleteTask(_ task: ToDoTask, from modelContext: ModelContext) {
-    // データを削除対象にする
-    modelContext.delete(task)
-    // 変更を保存
-    try? modelContext.save()
-}
-```
-
-`modelContext.delete` に削除したいタスクオブジェクトを渡すことで、データベースから削除します。
-
-### 4. 完了切り替え
-
-```swift
-// 完了/未完了の状態を反転させる
-    task.isCompleted.toggle()
-    // 変更を保存
-    try? modelContext.save()
-}
-```
-
-`toggle()` メソッドを使って `isCompleted` の `true` / `false` を切り替え、その結果を保存します。
-
-```swift
-tic func toggleTaskCompletion(_ task: ToDoTask, modelContext: ModelContext) {
-    task.isCompleted.toggle()
-    try? modelContext.save()
-}// 指定された tabId を持つタスクだけを検索する条件を作成
-    let descriptor = FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })
-    // 条件に合うタスクを取得
-    if let tasks = try? modelContext.fetch(descriptor) {
-        // 取得したタスクを1つずつ削除
-        tasks.forEach { modelContext.delete($0) }
-        // 変更をまとめて保存
+    // タスクを追加する
+    @MainActor
+    static func addTask(_ task: ToDoTask, to modelContext: ModelContext) {
+        modelContext.insert(task)
+        // 変更を保存
         try? modelContext.save()
     }
-}
-```
 
-特定のタブに含まれるタスクを一括削除する機能です。`#Predicate` を使って「`tabId` が一致するタスク」という検索条件を作り、該当するデータを全て取得してから削除しています。
-
-```swift
-inActor
-static func deleteAllTasks(for tabId: UUID, from modelContext: ModelContext) {
-    let descriptor = FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })
-    if let tasks = try? modelContext.fetch(descriptor) {
-        tasks.forEach { modelContext.delete($0) }
+    // タスクを更新する（変更を確定する）
+    @MainActor
+    static func updateTask(_ task: ToDoTask, modelContext: ModelContext) {
         try? modelContext.save()
     }
-}
+```
+
+- `@MainActor`: データベース操作をメインスレッドで行うことを保証し、安全にUI更新などを行えるようにします。
+- `modelContext.insert(task)`: 新しいデータをデータベースの保存対象として登録します。
+- `modelContext.save()`: 変更を確定して保存します。
+
+## 3. タスクの削除
+
+タスクの削除機能を追加します。
+個別の削除と、タブごとの一括削除を用意します。
+
+```swift
+    // タスクを削除する
+    @MainActor
+    static func deleteTask(_ task: ToDoTask, from modelContext: ModelContext) {
+        modelContext.delete(task)
+        try? modelContext.save()
+    }
+
+    // 特定のタブ内のタスクをすべて削除する（タブ削除時などに使用）
+    @MainActor
+    static func deleteAllTasks(for tabId: UUID, from modelContext: ModelContext) {
+        // 条件（tabIdが一致）に合うタスクを探す設定
+        let descriptor = FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })
+        
+        // 取得して削除
+        if let tasks = try? modelContext.fetch(descriptor) {
+            tasks.forEach { modelContext.delete($0) }
+            try? modelContext.save()
+        }
+    }
+```
+
+## 4. 完了状態の切り替え
+
+タスクの完了/未完了を切り替えるメソッドを追加します。
+
+```swift
+    // 完了状態を切り替える
+    @MainActor
+    static func toggleTaskCompletion(_ task: ToDoTask, modelContext: ModelContext) {
+        task.isCompleted.toggle()
+        try? modelContext.save()
+    }
 ```
 
 ---
 
 ## コード全体
 
+### Services/ToDoTaskService.swift
+
 ```swift
-// ToDoTaskService.swift
 import Foundation
 import SwiftData
 

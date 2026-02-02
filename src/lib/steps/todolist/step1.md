@@ -1,30 +1,32 @@
 # ステップ1: プロジェクトの作成とセットアップ(ToDoListApp.swift)
 
-### 1. Xcodeで新規プロジェクトを作成
 
-1. Xcodeを起動し、「Create a new Xcode project」を選択する。
-2. テンプレートで「App」を選択して「Next」をクリックする。
-3. 設定を入力し、以下の画像のように指定して「Next」を押す。
+
+## 1. Xcodeで新規プロジェクトを作成
+
+1. Xcodeを起動し、「Create a new Xcode project」を選択します。
+2. テンプレートで「App」を選択して「Next」をクリックします。
+3. 設定を入力し、以下の画像のように指定して「Next」を押します。
 
 ![Xcode の設定画面](/images/setup.png)
 
-4. 保存先を選んでプロジェクトを作成する。
+4. 保存先を選んでプロジェクトを作成します。
 
-### 2. 自動作成されるファイルを削除して必要なファイルを作成する
+## 2. 自動作成されるファイルを削除して必要なファイルを作成する
 
-新しいプロジェクトを作ると自動生成されるファイルはすべて削除し、必要なファイルを自分で作り直します。以下の手順で進めてください！
+新しくプロジェクトを作成すると自動生成されるファイルは一度すべて削除し、必要なファイルを自分で作り直します。以下の手順で進めてください。
 
-#### ファイルを削除する方法
+### ファイルを削除する方法
+- Xcodeのプロジェクトナビゲーターで、削除したいファイルまたはフォルダを選択します。
+- 右クリックし、メニューから「Delete」を選択します（「Move to Trash」を選んで完全に削除してください）。
 
-- Xcodeのプロジェクトナビゲーターで、削除したいファイルまたはフォルダを見つけて選択します。
-- 選択したファイルまたはフォルダを右クリックし、メニューから「Delete」を選択する。
+### 必要なファイル構造を作成する
+以下の構成になるようにフォルダとファイルを作成してください。
 
-#### 必要なファイルを作成する
-
-```
+```text
 ToDoList/
 ├── ToDoListApp.swift  # アプリのエントリーポイント
-├── Views
+├── Views/
 │   ├── ContentView.swift
 │   ├── HomeView.swift
 │   ├── MainStack.swift
@@ -37,23 +39,24 @@ ToDoList/
 │   ├── ToDoTaskService.swift
 │   └── ToDoTabService.swift
 └── Components/
-    ├── List.swift
-    ├── ListItem.swift
+    ├── CustomList.swift
+    ├── ToDoListItem.swift
     ├── EmptyStateView.swift
     ├── TabHeaderView.swift
-    └── TaskInputView.swift
+    └── InputView.swift
 ```
 
-Xcodeで新しいフォルダを作る手順
+**フォルダの作成方法:**
+- プロジェクトナビゲーターの空白部分で右クリックし、「New Folder」を作成します。
 
-- プロジェクトナビゲーターの空白の部分で右クリックし、「New Folder」を選択
+**ファイルの作成方法:**
+- いずれかの方法でファイルを作成してください。
+    - Xcode メニューバーの「File」→「New」→「File...」を選択
+    - プロジェクトナビゲーターの空白の部分で右クリックし、「New File...」を選択
 
-Xcodeで新しいファイルを作る手順（いずれかの方法でファイルを作成してください）
+## 3. ToDoListApp.swift の実装
 
-- Xcode メニューバーの「File」→「New」→「EmptyFile」を選択
-- プロジェクトナビゲーターの空白の部分で右クリックし、「New EmptyFile」を選択
-
-### 3. ToDoListApp.swiftに以下のコードを追加する
+アプリのエントリーポイントとなる `ToDoListApp.swift` に以下のコードを記述します。
 
 ```swift
 import SwiftUI
@@ -69,16 +72,14 @@ struct ToDoListApp: App {
 }
 ```
 
-`import SwiftData`
-SwiftDataを読み込むと、アプリ内でデータモデルを定義して永続化できるようになります。`@Model`属性を使ったモデルを作り、SwiftUIと組み合わせて簡単にデータの保存・取得・更新が行えます。
 
-`import SwiftUI`
-SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使えるようになります。  
-`body`という部分は、画面に何を表示するかを書くところです。
-ContentViewという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。  
-`WindowGroup {ContentView()}`は、コードを書くたびに画面をすぐに見られる機能です。これで、アプリの見た目をすぐに確認できます。
+- `import SwiftData`: アプリ内でデータベース機能を使うためにインポートします。
+- `@main`: ここがアプリの開始地点であることを示します。
+- `WindowGroup`: アプリのメインウィンドウを管理するコンテナです。ここでは `ContentView` を最初に表示するように設定しています。
 
-### 3. ContentView.swiftに以下のコードを追加する
+## 4. ContentView.swift の実装
+
+メイン画面となる `ContentView.swift` に以下のコードを記述します。
 
 ```swift
 import SwiftUI
@@ -95,14 +96,44 @@ struct ContentView: View {
 }
 ```
 
-`struct ContentView: View`
-ContentViewという名前の画面の部品（ビュー）を作ります。`: View`をつけることで、これがSwiftUIのビューであることを示しています。
 
-`var body: some View`
-画面に表示する具体的な内容をここに記述します。
+- `struct ContentView: View`: SwiftUIのビューを定義しています。
+- `Text("ToDoList")`: 画面に文字を表示するだけのシンプルな構成です。ここから機能を追加していきます。
+- `#Preview`: Xcodeのプレビュー機能で画面を確認するためのコードです。
 
-`Text("ToDoList")`
-画面に「ToDoList」という文字を表示します。
+---
 
-`#Preview`
-Xcodeのプレビュー機能を使って、シミュレータを起動しなくてもコードの結果をすぐに確認できるようにするためのものです。
+## コード全体
+
+### ToDoListApp.swift
+
+```swift
+import SwiftUI
+import SwiftData
+
+@main
+struct ToDoListApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
+}
+```
+
+### Views/ContentView.swift
+
+```swift
+import SwiftUI
+import SwiftData
+
+struct ContentView: View {
+    var body: some View {
+        Text("ToDoList")
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```

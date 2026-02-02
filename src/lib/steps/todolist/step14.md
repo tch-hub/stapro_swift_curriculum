@@ -1,39 +1,55 @@
 # ステップ14: SwiftDataの設定を行う(ToDoListApp.swift)
 
-アプリ全体で SwiftData を使えるように `ModelContainer` を設定します。
-ステップ1で作成した `ToDoListApp.swift` を編集します。
+## 1. SwiftDataの構成
 
-### 1. スキーマの作成
-
-```swift
-// 保存対象のデータモデル（ToDoTaskとToDoTab）を定義
-let schema = Schema([
-    ToDoTask.self,
-    ToDoTab.self
-])
-```
-
-SwiftData で扱うデータモデルのクラス（`ToDoTask` と `ToDoTab`）を `Schema` に登録して、データベースの構造を定義しています。
-
-### 2. ModelContainer の初期化
+`ToDoListApp.swift` を開き、作成したデータモデル（`ToDoTask`, `ToDoTab`）をアプリ全体で使えるように設定します。
 
 ```swift
-// モデルの設定（永続的に保存するため、メモリ内のみの保存は false に設定）
-let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-// 設定に基づいて ModelContainer を作成
-modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+import SwiftUI
+import SwiftData
+
+@main
+struct ToDoListApp: App {
+    let modelContainer: ModelContainer
+
+    init() {
+        // 保存対象のデータモデルを定義
+        let schema = Schema([
+            ToDoTask.self,
+            ToDoTab.self
+        ])
+        
+        // データベースの設定（永続化を有効にするため isStoredInMemoryOnly: false）
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            // コンテナの初期化
+            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not initialize ModelContainer: \(error)")
+        }
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+        // 作成したコンテナをアプリ全体に適用
+        .modelContainer(modelContainer)
+    }
+}
 ```
 
-`ModelConfiguration` でデータベースの動作設定を行います。  
-`isStoredInMemoryOnly: false` に設定することで、アプリを終了してもデータが消えずにファイルとして保存されるようにしています。  
-最後に、この設定を使って `ModelContainer`（データベースの実体）を初期化します。
+- `Schema`: どのクラスをデータベースのテーブルとして扱うかを定義します。
+- `ModelContainer`: データの保存場所（データベース）の実体です。これを `.modelContainer` で渡すことで、アプリ内のどこからでもデータにアクセスできるようになります。
 
 ---
 
 ## コード全体
 
-```swift title="ToDoListApp.swift"
-// ToDoListApp.swift
+### ToDoListApp.swift
+
+```swift
 import SwiftUI
 import SwiftData
 

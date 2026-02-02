@@ -1,72 +1,77 @@
 # ステップ11: タブ操作のサービスを作る(ToDoTabService.swift)
 
-タブの追加・更新・削除をまとめた `ToDoTabService` を作ります。
-ステップ1で作成した `Services/ToDoTabService.swift` を編集します。
+## 1. クラスの基本構造
 
-### 1. 追加
+`Services/ToDoTabService.swift` を開き、タブの追加・更新・削除などのロジックをまとめるクラスを作成します。
 
 ```swift
-// メインスレッドで実行することを保証
-@MainActor
-static func addTab(_ tab: ToDoTab, to modelContext: ModelContext) {
-    // データベースに追加
-    modelContext.insert(tab)
-    // 変更を保存
-    try? modelContext.save()
+import Foundation
+import SwiftData
+
+class ToDoTabService {
+    // ここに各メソッドを追加していきます
 }
 ```
 
-`modelContext.insert` を使って新しいタブをデータベースの管理下に置き、`save()` で保存します。
+## 2. タブの追加と更新
 
-### 2. 更新
-
-```swift
-@MainActor
-static func updateTab(_ tab: ToDoTab, modelContext: ModelContext) {
-    // データの内容は変更済みなので、保存処理だけを行う
-    try? modelContext.save()
-}
-```
-
-タスクの更新と同様、オブジェクトのプロパティを変更した後に `save()` を呼び出して変更を確定させます。
-
-### 3. 削除（関連タスクも削除）
+タブの作成（insert）と更新（save）を行うメソッドを追加します。
+`class ToDoTabService {` の中に記述してください。
 
 ```swift
-@MainActor
-static func deleteTab(_ tab: ToDoTab, from modelContext: ModelContext) {
-    // まず、そのタブに含まれる全てのタスクを削除
-    ToDoTaskService.deleteAllTasks(for: tab.id, from: modelContext)
-    // その後でタブ自体を削除
-    modelContext.delete(tab)
-    // 変更を保存
-    try? modelContext.save()
-}
+    // タブを追加する
+    @MainActor
+    static func addTab(_ tab: ToDoTab, to modelContext: ModelContext) {
+        modelContext.insert(tab)
+        try? modelContext.save()
+    }
+
+    // タブの内容を更新する
+    @MainActor
+    static func updateTab(_ tab: ToDoTab, modelContext: ModelContext) {
+        try? modelContext.save()
+    }
 ```
 
-タブを削除する際、その中にあるタスクが残ってしまう（ゴミデータになる）のを防ぐため、先に `ToDoTaskService.deleteAllTasks` を呼び出して関連するタスクを全て削除してから、タブ本体を削除します。
+## 3. タブの削除
 
-### 4. 取得
+タブの削除機能を追加します。
+**重要**: タブを削除する際、そのタブに関連付いているタスクも全て削除する必要があります。
 
 ```swift
-@MainActor
-static func getAllTabs(from modelContext: ModelContext) -> [ToDoTab] {
-    // 全てのタブを取得するための検索条件（条件なし＝全件）
-    let descriptor = FetchDescriptor<ToDoTab>()
-    // 検索を実行し、失敗した場合は空の配列を返す
-    return (try? modelContext.fetch(descriptor)) ?? []
-}
+    // タブと、そのタブ内のタスクをすべて削除する
+    @MainActor
+    static func deleteTab(_ tab: ToDoTab, from modelContext: ModelContext) {
+        // 先に中身のタスクを全削除（前回のステップで作ったメソッドを使用）
+        ToDoTaskService.deleteAllTasks(for: tab.id, from: modelContext)
+        
+        // タブ自体を削除
+        modelContext.delete(tab)
+        try? modelContext.save()
+    }
 ```
 
-データベースに保存されている全てのタブを取得します。  
-`FetchDescriptor` に条件（predicate）を指定していないため、登録されている全データが取得されます。
+## 4. 全タブの取得
+
+保存されている全てのタブを取得するメソッドを追加します。
+
+```swift
+    // すべてのタブを取得する
+    @MainActor
+    static func getAllTabs(from modelContext: ModelContext) -> [ToDoTab] {
+        let descriptor = FetchDescriptor<ToDoTab>()
+        // 取得に失敗した場合は空配列を返す
+        return (try? modelContext.fetch(descriptor)) ?? []
+    }
+```
 
 ---
 
 ## コード全体
 
+### Services/ToDoTabService.swift
+
 ```swift
-// ToDoTabService.swift
 import Foundation
 import SwiftData
 
@@ -84,9 +89,9 @@ class ToDoTabService {
 
     @MainActor
     static func deleteTab(_ tab: ToDoTab, from modelContext: ModelContext) {
-        // タブに属するタスクをすべて削除
+        // まず、そのタブに含まれる全てのタスクを削除
         ToDoTaskService.deleteAllTasks(for: tab.id, from: modelContext)
-        // タブを削除
+        // その後でタブ自体を削除
         modelContext.delete(tab)
         try? modelContext.save()
     }

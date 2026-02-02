@@ -1,11 +1,12 @@
 # ステップ18: 完了切り替えを実装する(HomeView.swift)
 
-タスクをタップした時に完了/未完了を切り替えます。
+## 1. ロジックの実装: 完了切り替え
 
-### 1. 切り替え処理を追加
+`Views/HomeView.swift` を開き、タスクの完了状態を切り替えるメソッドを追加します。
+`HomeView` クラスの一番下（他のprivateメソッドの近く）に追加してください。
 
 ```swift
-// タスクの完了状態を切り替えるメソッド
+// タスクの完了状態を切り替える
 private func toggleTaskCompletion(_ task: ToDoTask) {
     // Serviceクラスを使ってデータベースの値を更新
     ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
@@ -14,48 +15,51 @@ private func toggleTaskCompletion(_ task: ToDoTask) {
 }
 ```
 
-`ToDoTaskService` に定義した `toggleTaskCompletion` を呼び出してデータベースを更新し、直後に `loadTasks` を呼ぶことで画面上のタスク一覧も最新の状態（チェックマークの有無など）に更新します。
+## 2. UIの修正: アクションの紐付け
 
-### 2. ToDoListItem に処理を渡す
+`body` の中にある `ToDoListItem` の呼び出し部分を修正し、タップされた時に上記のメソッドを実行するようにします。
 
 ```swift
-// リスト内の各行を作成
-ToDoListItem(
-    title: task.title,
-    isCompleted: task.isCompleted
-) {
-    // タップされた時に呼ばれるクロージャ
-    toggleTaskCompletion(task)
+if selectedTabId != nil && !tasks.isEmpty {
+    CustomList(items: tasks, onDelete: nil) { task in
+        ToDoListItem(
+            title: task.title,
+            isCompleted: task.isCompleted
+        ) {
+            // タップされたら完了状態を切り替える
+            toggleTaskCompletion(task)
+        }
+    }
 }
 ```
-
-`ToDoListItem` コンポーネントの初期化時に、タップ時の動作として先ほど作成した `toggleTaskCompletion` メソッドを実行するように設定しています。  
-これにより、行をタップするとタスクの完了状態が切り替わるようになります。
 
 ---
 
 ## コード全体
 
-<img src="/images/todolist/18.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/18.png" alt="完了切り替え機能のイメージ" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
+### Views/HomeView.swift
 
 ```swift
-// HomeView.swift
 import SwiftUI
 import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
+    
     @State private var tabs: [ToDoTab] = []
     @State private var tasks: [ToDoTask] = []
     @State private var selectedTabId: UUID?
+    
     @Binding var navigationPath: [NavigationItem]
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             if tabs.isEmpty {
-                Text("タブがありません")
-                    .padding()
+                ContentUnavailableView("タブがありません", systemImage: "tray")
             } else {
+                // MARK: - ヘッダー
                 TabHeaderView(
                     tabs: tabs.map { .init(id: $0.id, name: $0.name) },
                     selectedTabId: $selectedTabId,
@@ -67,6 +71,7 @@ struct HomeView: View {
                     loadTasks()
                 }
 
+                // MARK: - コンテンツ
                 if selectedTabId != nil && !tasks.isEmpty {
                     CustomList(items: tasks, onDelete: nil) { task in
                         ToDoListItem(
@@ -80,22 +85,21 @@ struct HomeView: View {
                     EmptyStateView(hasSelectedTab: selectedTabId != nil)
                 }
             }
-
         }
-        .padding()
         .navigationTitle("ToDoリスト")
         .onAppear {
             loadTabs()
         }
     }
 
+    // MARK: - Private Methods
+
     private func loadTabs() {
-        let descriptor = FetchDescriptor<ToDoTab>()
-        tabs = (try? modelContext.fetch(descriptor)) ?? []
-        if let selectedTabId = selectedTabId {
-            // 現在の選択が削除済みの場合は先頭タブに戻す
-            if !tabs.contains(where: { $0.id == selectedTabId }) {
-                self.selectedTabId = tabs.first?.id
+        tabs = ToDoTabService.getAllTabs(from: modelContext)
+        
+        if let currentId = selectedTabId {
+            if !tabs.contains(where: { $0.id == currentId }) {
+                selectedTabId = tabs.first?.id
             }
         } else {
             selectedTabId = tabs.first?.id
@@ -104,13 +108,13 @@ struct HomeView: View {
     }
 
     private func loadTasks() {
-        guard let selectedTabId = selectedTabId else {
+        guard let tabId = selectedTabId else {
             tasks = []
             return
         }
-
+        
         let descriptor = FetchDescriptor<ToDoTask>(
-            predicate: #Predicate { $0.tabId == selectedTabId }
+            predicate: #Predicate { $0.tabId == tabId }
         )
         tasks = (try? modelContext.fetch(descriptor)) ?? []
     }
@@ -118,6 +122,13 @@ struct HomeView: View {
     private func toggleTaskCompletion(_ task: ToDoTask) {
         ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)
         loadTasks()
+    }
+}
+
+#Preview {
+    NavigationStack {
+        HomeView(navigationPath: .constant([]))
+            .modelContainer(for: [ToDoTab.self, ToDoTask.self], inMemory: true)
     }
 }
 ```

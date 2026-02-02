@@ -1,64 +1,74 @@
 # ステップ19: タスク追加フォームを作る(HomeView.swift)
 
-画面下部にタスク追加欄を表示します。
+## 1. 入力用の状態変数
 
-### 1. 入力用の状態
+`Views/HomeView.swift` を開き、新しく作成するタスクのタイトルを保持するための変数を追加します。
 
 ```swift
-// 新しく作成するタスクのタイトルを保持する変数
-@State private var newTaskTitle = ""
+struct HomeView: View {
+    // ... 既存の変数
+    
+    // ↓この行を追加
+    @State private var newTaskTitle = ""
 ```
 
-タスク追加フォームに入力された文字を一時的に保存しておくための変数を定義しています。
+## 2. UIの実装: 入力エリア
 
-### 2. コンポーネントの配置
+`body` の中身を修正し、画面下部に `InputView` を配置します。
+リストなど既存のコンテンツが入力欄に被らないように、`.safeAreaInset` を使います。
 
 ```swift
-// 画面の下部に入力エリアを固定表示
-.safeAreaInset(edge: .bottom) {
-    if selectedTabId != nil {
-        InputView(text: $newTaskTitle) {
-            addTask()
+    var body: some View {
+        VStack(spacing: 0) {
+            // ... (既存のヘッダーやリストの実装)
+        }
+        .navigationTitle("ToDoリスト")
+        .onAppear { loadTabs() }
+        
+        // ↓ここから追加（VStackの外、bodyの最後の方）
+        // 画面の下部に入力エリアを固定表示
+        .safeAreaInset(edge: .bottom) {
+            // タブが選択されている時のみ表示
+            if selectedTabId != nil {
+                InputView(text: $newTaskTitle) {
+                    addTask()
+                }
+            }
         }
     }
-}
 ```
 
-`.safeAreaInset(edge: .bottom)` を使って、ステップ5で作成した `InputView` コンポーネントを画面下部に配置します。  
-`text: $newTaskTitle` で入力値をバインディングし、クロージャで追加処理を渡しています。  
-デフォルトのプレースホルダー（「新しいタスクを追加...」）とアイコン（上向き矢印）が使用されます。
+## 3. ロジックの実装: タスク追加
 
-### 3. 追加処理
+`addTask` メソッドを実装します。入力されたタイトルでタスクを作成・保存します。
 
 ```swift
-// 新しいタスクをデータベースに追加するメソッド
-private func addTask() {
-    // タイトルが空でないか、タブが選択されているかを確認（ガード節）
-    guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
+    // 新しいタスクを追加
+    private func addTask() {
+        // ガード節：タイトルがあり、かつタブが選択されていること
+        guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }
 
-    // タスクモデルを作成
-    let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
-    // データベースに保存
-    ToDoTaskService.addTask(newTask, to: modelContext)
+        // タスクモデルを作成
+        let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
+        
+        // データベースに保存
+        ToDoTaskService.addTask(newTask, to: modelContext)
 
-    // 入力欄をクリア
-    newTaskTitle = ""
-    // リストを更新して新しいタスクを表示
-    loadTasks()
-}
+        // 入力欄をクリアしてリスト更新
+        newTaskTitle = ""
+        loadTasks()
+    }
 ```
-
-入力されたタイトルと現在選択されているタブIDを使って新しい `ToDoTask` を作成し、Service経由で保存します。  
-保存後は続けて入力できるように入力欄をクリアし、一覧を再読み込みしています。
 
 ---
 
 ## コード全体
 
-<img src="/images/todolist/19.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/19.png" alt="HomeViewの完成イメージ" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
+### Views/HomeView.swift
 
 ```swift
-// HomeView.swift
 import SwiftUI
 import SwiftData
 
@@ -71,44 +81,40 @@ struct HomeView: View {
     @Binding var navigationPath: [NavigationItem]
 
     var body: some View {
-        ZStack {
-            VStack {
-                if tabs.isEmpty {
-                    Text("タブがありません")
-                        .padding()
-                } else {
-                    TabHeaderView(
-                        tabs: tabs.map { .init(id: $0.id, name: $0.name) },
-                        selectedTabId: $selectedTabId,
-                        onManageTabs: {
-                            navigationPath.append(NavigationItem(id: .tabManage))
-                        }
-                    )
-                    .onChange(of: selectedTabId) { _, _ in
-                        loadTasks()
+        VStack(spacing: 0) {
+            if tabs.isEmpty {
+                ContentUnavailableView("タブがありません", systemImage: "tray")
+            } else {
+                TabHeaderView(
+                    tabs: tabs.map { .init(id: $0.id, name: $0.name) },
+                    selectedTabId: $selectedTabId,
+                    onManageTabs: {
+                        navigationPath.append(NavigationItem(id: .tabManage))
                     }
-
-                    if selectedTabId != nil && !tasks.isEmpty {
-                        CustomList(items: tasks, onDelete: nil) { task in
-                            ToDoListItem(
-                                title: task.title,
-                                isCompleted: task.isCompleted
-                            ) {
-                                toggleTaskCompletion(task)
-                            }
-                        }
-                    } else {
-                        EmptyStateView(hasSelectedTab: selectedTabId != nil)
-                    }
+                )
+                .onChange(of: selectedTabId) { _, _ in
+                    loadTasks()
                 }
 
-            }
-            .padding()
-            .navigationTitle("ToDoリスト")
-            .onAppear {
-                loadTabs()
+                if selectedTabId != nil && !tasks.isEmpty {
+                    CustomList(items: tasks, onDelete: nil) { task in
+                        ToDoListItem(
+                            title: task.title,
+                            isCompleted: task.isCompleted
+                        ) {
+                            toggleTaskCompletion(task)
+                        }
+                    }
+                } else {
+                    EmptyStateView(hasSelectedTab: selectedTabId != nil)
+                }
             }
         }
+        .navigationTitle("ToDoリスト")
+        .onAppear {
+            loadTabs()
+        }
+        // MARK: - 入力エリア
         .safeAreaInset(edge: .bottom) {
             if selectedTabId != nil {
                 InputView(text: $newTaskTitle) {
@@ -118,13 +124,14 @@ struct HomeView: View {
         }
     }
 
+    // MARK: - Private Methods
+
     private func loadTabs() {
-        let descriptor = FetchDescriptor<ToDoTab>()
-        tabs = (try? modelContext.fetch(descriptor)) ?? []
-        if let selectedTabId = selectedTabId {
-            // 現在の選択が削除済みの場合は先頭タブに戻す
-            if !tabs.contains(where: { $0.id == selectedTabId }) {
-                self.selectedTabId = tabs.first?.id
+        tabs = ToDoTabService.getAllTabs(from: modelContext)
+        
+        if let currentId = selectedTabId {
+            if !tabs.contains(where: { $0.id == currentId }) {
+                selectedTabId = tabs.first?.id
             }
         } else {
             selectedTabId = tabs.first?.id
@@ -133,13 +140,13 @@ struct HomeView: View {
     }
 
     private func loadTasks() {
-        guard let selectedTabId = selectedTabId else {
+        guard let tabId = selectedTabId else {
             tasks = []
             return
         }
-
+        
         let descriptor = FetchDescriptor<ToDoTask>(
-            predicate: #Predicate { $0.tabId == selectedTabId }
+            predicate: #Predicate { $0.tabId == tabId }
         )
         tasks = (try? modelContext.fetch(descriptor)) ?? []
     }
@@ -157,6 +164,13 @@ struct HomeView: View {
 
         newTaskTitle = ""
         loadTasks()
+    }
+}
+
+#Preview {
+    NavigationStack {
+        HomeView(navigationPath: .constant([]))
+            .modelContainer(for: [ToDoTab.self, ToDoTask.self], inMemory: true)
     }
 }
 ```

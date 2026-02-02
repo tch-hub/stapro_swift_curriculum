@@ -1,118 +1,156 @@
 # ステップ2: タスクコンポーネントを作る(ToDoListItem.swift)
 
-## タスクコンポーネントを作る
+## 1. 土台の作成
 
-ここでは、ステップ1で作成したファイルを編集し、タスクを表示するための `ToDoListItem` を実装します。
-タップで完了/未完了を切り替えられるようにします。
-
-### 1. swiftUIの基本構造
+まず、`ToDoListItem.swift` の中身を以下のように書き換えて土台を作ります。
 
 ```swift
 import SwiftUI
 
 struct ToDoListItem: View {
     var body: some View {
+        Text("Task Item")
     }
 }
 ```
 
-### 2. 変数の定義
+## 2. プロパティの定義
 
-struct ToDoListItem: View {} 内に追加
+タスクを表示するために必要な情報（タイトル、完了状態）と、操作時のアクション（完了切り替え）を受け取れるように変数を定義します。
+
+`struct ToDoListItem: View {` の直下に追加してください。
 
 ```swift
-// タスク名
-let title: String
-// 完了状態（trueなら完了、falseなら未完了）
-let isCompleted: Bool
-// タップされた時に実行する処理
-let onToggle: () -> Void
+    // タスク名
+    let title: String
+    // 完了状態（trueなら完了、falseなら未完了）
+    let isCompleted: Bool
+    // タップされた時に実行する処理
+    let onToggle: () -> Void
 ```
 
-ここでは、タスクのタイトルとなる `title`、完了しているかどうかを管理する `isCompleted`、そしてタップされた時の動作を決める `onToggle` を定義しています。
+## 3. UIの実装: ボタンとレイアウト
 
-### 3. UIの作成
-
-var body: some View {} 内に追加
+`body` の中身を書き換えて、要素を横並びにする `HStack` と、全体をタップ可能にする `Button` を配置します。
 
 ```swift
-// タップした時の動作を指定してボタンを作成
-Button(action: onToggle) {
-    // 部品を横並びにする（間隔を12空ける）
-    HStack(spacing: 12) {
-        // 完了状態に応じてアイコンを切り替え
-        Image(systemName: isCompleted
-              ? "checkmark.circle.fill" // 完了時：チェックマーク付きの丸
-              : "circle")              // 未完了時：空の丸
-            // 完了時はグレー、未完了時はアクセントカラー（青など）にする
-            .foregroundColor(isCompleted ? .gray : .accentColor)
-
-        // タスク名を表示
-        Text(title)
-            // 完了時に打ち消し線を引く
-            .strikethrough(isCompleted)
-            // 完了時は文字色をグレーにする
-            .foregroundColor(isCompleted ? .gray : .primary)
-
-        // 右側に余白を作り、要素を左寄せにする
-        Spacer()
+    var body: some View {
+        Button(action: {
+            // アニメーション付きで状態を切り替え
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                onToggle()
+            }
+        }) {
+            HStack(spacing: 12) {
+                // ここにチェックボックスとテキストを追加します
+                
+                Spacer()
+            }
+            .padding(.vertical, 12)
+            // 行全体のどこを押しても反応するようにする背景設定
+            .contentShape(Rectangle())
+        }
+        // ボタンのデフォルトの見た目を無効化（リスト内での強調表示などを防ぐ）
+        .buttonStyle(.plain) 
     }
-    // 上下の余白を少し追加
-    .padding(.vertical, 8)
-}
-// iOS標準のリストスタイルに馴染むボタンスタイルを適用
-.buttonStyle(.plain)
 ```
 
-全体を `Button` で囲むことで行全体をタップ可能にしています。  
-`HStack` を使ってアイコンとテキストを横並びに配置し、`Spacer()` を最後に入れることで左寄せのレイアウトを作っています。  
-また、アイコンやテキストは三項演算子（`条件 ? 真の場合 : 偽の場合`）を使って、完了状態 (`isCompleted`) に応じて見た目が変わるようにしています。
+- `HStack(spacing: 12)`: 要素を横一列に並べます。要素間のスペースを12に設定しています。
+- `Spacer()`: 左寄せにするために、右側に残りのスペースを埋める要素です。
 
-### Canvasプレビューの設定
+## 4. UIの実装: チェックボックス
 
-struct ToDoListItem: View {}の下に追加
+`HStack` の中に、完了状態に応じて見た目が変わるチェックボックス（円）を追加します。以下のコードを `// ここにチェックボックスとテキストを追加します` の部分に記述してください。
 
 ```swift
-// Xcodeのプレビュー機能用コード
+                // チェックボックス部分
+                ZStack {
+                    // 未完了時の枠
+                    Circle()
+                        .stroke(
+                            isCompleted ? Color.accentColor : Color.secondary,
+                            lineWidth: 2
+                        )
+                        .frame(width: 24, height: 24)
+
+                    // 完了時のチェックマーク
+                    if isCompleted {
+                        Image(systemName: "checkmark.circle.fill")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundStyle(Color.accentColor)
+                            // 現れる時のアニメーション
+                            .transition(.scale.combined(with: .opacity))
+                    }
+                }
+                .padding(.leading, 4)
+```
+
+- `ZStack`: 要素を重ねて表示します。ここでは円の枠の上にチェックマークを重ねています。
+- `.stroke(...)`: 円の枠線を描画します。`isCompleted` が `true` の時はアクセントカラーになります。
+
+## 5. UIの実装: テキスト
+
+チェックボックスの右側にタスク名を表示させます。`ZStack` の閉じ括弧 `}` の後ろに追加してください。
+
+```swift
+                // タスク名のテキスト
+                Text(title)
+                    .font(.body)
+                    // 完了時は色を薄くする
+                    .foregroundStyle(isCompleted ? .secondary : .primary)
+                    // 完了時は打ち消し線を入れる
+                    .strikethrough(isCompleted, color: .secondary)
+                    // テキストの変化を滑らかに
+                    .contentTransition(.opacity)
+```
+
+- `.strikethrough(...)`: 文字に取り消し線を引きます。完了時のみ有効にします。
+- `.foregroundStyle(...)`: 文字の色を指定します。完了時は薄い色（secondary）にします。
+
+## 6. プレビューの作成
+
+Xcodeのキャンバスで動作確認ができるように、プレビュー用のコードを追加します。ファイルの末尾に追加してください。
+
+```swift
 #Preview {
-    // プレビュー用に一時的なビュー構造体を作る
+    // 状態変化を確認するためのラッパー
     struct PreviewWrapper: View {
-        // プレビュー内での状態変化を管理する変数
-        @State private var completed = false
+        @State private var items = [
+            (id: UUID(), title: "タップで状態切り替え", isCompleted: false),
+            (id: UUID(), title: "完了したタスク", isCompleted: true),
+            (id: UUID(), title: "長いタスク名の場合の表示確認テスト", isCompleted: false)
+        ]
 
         var body: some View {
-            // 本番と同じようにリスト形式で表示
             List {
-                // 作成したコンポーネントを表示テスト
-                ToDoListItem(
-                    title: "タップで状態切り替え",
-                    isCompleted: completed
-                ) {
-                    // タップされたら状態を反転させる
-                    completed.toggle()
+                ForEach(items.indices, id: \.self) { index in
+                    ToDoListItem(
+                        title: items[index].title,
+                        isCompleted: items[index].isCompleted
+                    ) {
+                        items[index].isCompleted.toggle()
+                    }
                 }
             }
-            // リストのスタイルを標準的なものに設定
             .listStyle(.plain)
         }
     }
 
-    // 作成したプレビュー用ビューを返す
     return PreviewWrapper()
 }
 ```
 
-`#Preview` は、いま作っている画面を確認するための特別なブロックです。  
-ここでは `PreviewWrapper` という仮の入れ物を作り、その中で `@State` を使って変数を管理することで、プレビュー画面上でもタップしてチェックマークが付くかどうかの動作確認ができるようにしています。  
-`List` で囲っているのは、実際の画面と同じような見た目で確認するためです。  
-`#Preview`を書かなくてもアプリは動きますが、こまめに確認することでミスに早く気づけるようになります。  
-もしCanvasが表示されていない場合は、Xcode右上の「Canvas」ボタンを押して表示してください。
+- `#Preview`: このブロック内に書いたコードがXcodeのプレビュー画面に表示されます。
+- `PreviewWrapper`: `ToDoListItem` だけでは状態（完了/未完了）を保持できないため、プレビュー用に仮の状態管理を行うビューを作っています。
 
 ---
 
 ## コード全体
 
-<img src="/images/todolist/ToDoListItem.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/ToDoListItem.png" alt="ToDoListItemの完成イメージ" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+
+### Components/ToDoListItem.swift
 
 ```swift
 import SwiftUI
@@ -124,9 +162,6 @@ struct ToDoListItem: View {
 
     var body: some View {
         Button(action: {
-            // アクション実行
-            triggerHapticFeedback()
-            // アニメーション付きでトグルを実行
             withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
                 onToggle()
             }
@@ -134,7 +169,6 @@ struct ToDoListItem: View {
             HStack(spacing: 12) {
                 // MARK: - チェックボックス
                 ZStack {
-                    // 未完了時の枠
                     Circle()
                         .stroke(
                             isCompleted ? Color.accentColor : Color.secondary,
@@ -142,42 +176,29 @@ struct ToDoListItem: View {
                         )
                         .frame(width: 24, height: 24)
 
-                    // 完了時の塗りつぶし（アニメーション用）
                     if isCompleted {
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .frame(width: 24, height: 24)
                             .foregroundStyle(Color.accentColor)
-                            // 完了時に少し拡大してから戻る「弾む」アニメーション
                             .transition(.scale.combined(with: .opacity))
                     }
                 }
-                .padding(.leading, 4) // 左端の余白調整
+                .padding(.leading, 4)
 
                 // MARK: - テキスト
                 Text(title)
                     .font(.body)
-                    // 完了時は文字色を薄くする
                     .foregroundStyle(isCompleted ? .secondary : .primary)
-                    // 打ち消し線のアニメーション
                     .strikethrough(isCompleted, color: .secondary)
-                    // コンテンツの変更を滑らかに
                     .contentTransition(.opacity)
 
                 Spacer()
             }
             .padding(.vertical, 12)
-            // 行のどこをタップしても反応するようにする（重要）
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain) // リスト内でのデフォルトのハイライト効果を消す
-    }
-
-    // MARK: - 触覚フィードバックのヘルパー
-    private func triggerHapticFeedback() {
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.prepare() // 遅延を減らすための事前準備
-        generator.impactOccurred()
+        .buttonStyle(.plain)
     }
 }
 
