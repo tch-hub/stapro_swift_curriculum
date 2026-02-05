@@ -2,7 +2,7 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
-	import cheatsheetData from '$lib/data/cheatsheet.json';
+	import stylingData from '$lib/data/styling-guide.json';
 
 	// ローディング状態の管理
 	let isLoading = $state(true);
@@ -15,7 +15,7 @@
 	let debounceTimer = null;
 
 	// JSONからセクションを取得
-	const sections = cheatsheetData.sections;
+	const sections = stylingData.sections;
 
 	// 検索用インデックスを事前に作成（小文字化済み）
 	const searchIndex = sections.map((section) => ({
@@ -124,6 +124,8 @@
 		}
 
 		// 入力中は検索中表示
+		// Note: isSearchingを維持するかどうかはUI体験によるが、
+		// 段階表示中は操作可能なのでfalseにする方針をとる
 		if (query !== debouncedQuery) {
 			isSearching = true;
 		}
@@ -226,7 +228,7 @@
 						<path d="m21 21-4.3-4.3"></path>
 					</g>
 				</svg>
-				<input type="text" class="grow" placeholder="文法を検索..." bind:value={searchQuery} />
+				<input type="text" class="grow" placeholder="修飾子を検索..." bind:value={searchQuery} />
 				{#if searchQuery}
 					<button class="btn btn-circle btn-ghost btn-xs" onclick={clearSearch}>
 						<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -253,16 +255,7 @@
 		</div>
 
 		<ul class="menu">
-			<li class="menu-title">Swift基本文法</li>
-			<li>
-				<a
-					href="#how-to-use"
-					onclick={(e) => handleClick(e, 'how-to-use')}
-					onkeydown={(e) => handleKeydown(e, 'how-to-use')}
-					role="button"
-					tabindex="0">使いかた</a
-				>
-			</li>
+			<li class="menu-title">SwiftUIスタイリング</li>
 			{#each filteredSections as section}
 				<li>
 					<a
@@ -291,7 +284,7 @@
 			<!-- ローディングアニメーション -->
 			<div class="flex min-h-[50vh] flex-col items-center justify-center space-y-4">
 				<div class="loading loading-lg loading-spinner text-primary"></div>
-				<p class="text-lg text-base-content/70">swift基本構文を読み込み中...</p>
+				<p class="text-lg text-base-content/70">スタイリングガイドを読み込み中...</p>
 				<div class="flex space-x-1">
 					<div class="h-2 w-2 animate-bounce rounded-full bg-primary"></div>
 					<div
@@ -306,46 +299,26 @@
 			</div>
 		{:else}
 			<div class="container mx-auto">
-				<!-- SwiftFiddle実行の解説 -->
-				<div id="how-to-use" class="card mb-6 bg-base-100 shadow-xl">
+				<!-- イントロダクション -->
+				<div class="card mb-6 bg-base-100 shadow-xl">
 					<div class="card-body">
 						<h2 class="card-title">
 							<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
 								<path
 									fill-rule="evenodd"
-									d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+									d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z"
 									clip-rule="evenodd"
 								></path>
 							</svg>
-							SwiftFiddleで実行できます
+							SwiftUIスタイリングガイド
 						</h2>
 						<p class="mb-4">
-							このページのSwiftコードは、オンライン実行環境「SwiftFiddle」で実際に動かして試すことができます。
+							SwiftUIでUIの見た目をカスタマイズするための修飾子（Modifier）をまとめたリファレンスです。
+							各修飾子はビューに対してチェーンで適用でき、宣言的にスタイルを定義できます。
 						</p>
 
-						<div class="grid gap-4 md:grid-cols-2">
-							<div class="space-y-2">
-								<h3 class="text-lg font-semibold">使い方</h3>
-								<ol class="list-inside list-decimal space-y-1 text-sm">
-									<li>各コードブロックの右上にある実行ボタンをクリックする</li>
-									<li>
-										<a
-											href="https://swiftfiddle.com"
-											target="_blank"
-											rel="noopener noreferrer"
-											class="link link-accent">SwiftFiddle</a
-										>を開く
-									</li>
-									<li>このページのコードをコピー</li>
-									<li>SwiftFiddleに貼り付けて実行</li>
-									<li>結果が右側に表示されます</li>
-									<li>clear consoleボタンで右側の結果をリセットできます</li>
-								</ol>
-							</div>
-						</div>
-
 						<!-- モバイル用検索バー -->
-						<div class="mt-4 lg:hidden">
+						<div class="lg:hidden">
 							<label class="input w-full">
 								<svg
 									class="h-4 w-4 opacity-50"
@@ -366,7 +339,7 @@
 								<input
 									type="text"
 									class="grow"
-									placeholder="文法を検索..."
+									placeholder="修飾子を検索..."
 									bind:value={searchQuery}
 								/>
 								{#if searchQuery}
@@ -392,6 +365,26 @@
 									{/if}
 								</p>
 							{/if}
+						</div>
+
+						<div class="alert alert-info">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								class="h-6 w-6 shrink-0 stroke-current"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+								></path>
+							</svg>
+							<span
+								>修飾子の適用順序は重要です。例えば <code>.padding().background()</code> と
+								<code>.background().padding()</code> では結果が異なります。</span
+							>
 						</div>
 					</div>
 				</div>
@@ -433,17 +426,8 @@
 							<p>{section.description}</p>
 
 							{#each section.codeBlocks as codeBlock (codeBlock.title)}
-								<CodeBlock
-									title={codeBlock.title}
-									code={codeBlock.code}
-									output={codeBlock.output}
-									executable={codeBlock.executable}
-								/>
+								<CodeBlock title={codeBlock.title} code={codeBlock.code} executable={false} />
 							{/each}
-
-							{#if section.afterHtml}
-								{@html section.afterHtml}
-							{/if}
 						</div>
 					</div>
 				{/each}

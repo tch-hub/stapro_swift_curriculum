@@ -52,6 +52,8 @@
 		project: 'プロジェクト',
 		timer: 'タイマーアプリ',
 		cheatsheet: 'swift基本構文',
+		'styling-guide': 'スタイリングガイド',
+		'components-guide': 'UIコンポーネントガイド',
 		editor: 'JSONエディタ'
 	};
 
@@ -112,6 +114,8 @@
 				<li><a href={resolve('/')}>ホーム</a></li>
 				<li><a href={resolve('/setup')}>環境構築</a></li>
 				<li><a href={resolve('/cheatsheet')}>swift基本構文</a></li>
+				<li><a href={resolve('/styling-guide')}>スタイリングガイド</a></li>
+				<li><a href={resolve('/components-guide')}>UIコンポーネントガイド</a></li>
 				<li><a href={resolve('/quiz')}>練習問題</a></li>
 				<li><a href={resolve('/tutorial')}>チュートリアル</a></li>
 				<li><a href={resolve('/project')}>プロジェクト</a></li>
@@ -138,6 +142,8 @@
 		<ul class="menu menu-horizontal hidden px-1 lg:flex">
 			<li><a href={resolve('/setup')}>環境構築</a></li>
 			<li><a href={resolve('/cheatsheet')}>swift基本構文</a></li>
+			<li><a href={resolve('/styling-guide')}>スタイリングガイド</a></li>
+			<li><a href={resolve('/components-guide')}>UIコンポーネントガイド</a></li>
 			<li><a href={resolve('/quiz')}>練習問題</a></li>
 			<li><a href={resolve('/tutorial')}>チュートリアル</a></li>
 			<li><a href={resolve('/project')}>プロジェクト</a></li>

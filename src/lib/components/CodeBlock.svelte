@@ -46,6 +46,8 @@
 		}
 	}
 
+	let codeElement = $state();
+
 	// 行番号付きでコードを表示するための処理
 	// code / language が変化したときにも Prism ハイライトを再適用する
 	$effect(() => {
@@ -54,8 +56,8 @@
 		void code;
 		void language;
 		void showLineNumbers;
-		if (typeof window !== 'undefined' && window.Prism) {
-			window.Prism.highlightAll();
+		if (typeof window !== 'undefined' && window.Prism && codeElement) {
+			window.Prism.highlightElement(codeElement);
 		}
 	});
 </script>
@@ -143,7 +145,9 @@
 		<pre
 			class="language-swift {showLineNumbers
 				? 'line-numbers'
-				: ''} m-0 overflow-x-auto bg-transparent p-4"><code class="language-swift">{code}</code
+				: ''} m-0 overflow-x-auto bg-transparent p-4"><code
+				bind:this={codeElement}
+				class="language-swift">{code}</code
 			></pre>
 	</div>
 

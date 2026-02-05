@@ -2,7 +2,7 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
-	import cheatsheetData from '$lib/data/cheatsheet.json';
+	import componentData from '$lib/data/components-guide.json';
 
 	// ローディング状態の管理
 	let isLoading = $state(true);
@@ -15,7 +15,7 @@
 	let debounceTimer = null;
 
 	// JSONからセクションを取得
-	const sections = cheatsheetData.sections;
+	const sections = componentData.sections;
 
 	// 検索用インデックスを事前に作成（小文字化済み）
 	const searchIndex = sections.map((section) => ({
@@ -226,7 +226,12 @@
 						<path d="m21 21-4.3-4.3"></path>
 					</g>
 				</svg>
-				<input type="text" class="grow" placeholder="文法を検索..." bind:value={searchQuery} />
+				<input
+					type="text"
+					class="grow"
+					placeholder="コンポーネントを検索..."
+					bind:value={searchQuery}
+				/>
 				{#if searchQuery}
 					<button class="btn btn-circle btn-ghost btn-xs" onclick={clearSearch}>
 						<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -253,16 +258,7 @@
 		</div>
 
 		<ul class="menu">
-			<li class="menu-title">Swift基本文法</li>
-			<li>
-				<a
-					href="#how-to-use"
-					onclick={(e) => handleClick(e, 'how-to-use')}
-					onkeydown={(e) => handleKeydown(e, 'how-to-use')}
-					role="button"
-					tabindex="0">使いかた</a
-				>
-			</li>
+			<li class="menu-title">UIコンポーネント</li>
 			{#each filteredSections as section}
 				<li>
 					<a
@@ -290,62 +286,40 @@
 		{#if isLoading}
 			<!-- ローディングアニメーション -->
 			<div class="flex min-h-[50vh] flex-col items-center justify-center space-y-4">
-				<div class="loading loading-lg loading-spinner text-primary"></div>
-				<p class="text-lg text-base-content/70">swift基本構文を読み込み中...</p>
+				<div class="loading loading-lg loading-spinner text-secondary"></div>
+				<p class="text-lg text-base-content/70">コンポーネントガイドを読み込み中...</p>
 				<div class="flex space-x-1">
-					<div class="h-2 w-2 animate-bounce rounded-full bg-primary"></div>
+					<div class="h-2 w-2 animate-bounce rounded-full bg-secondary"></div>
 					<div
-						class="h-2 w-2 animate-bounce rounded-full bg-primary"
+						class="h-2 w-2 animate-bounce rounded-full bg-secondary"
 						style="animation-delay: 0.1s"
 					></div>
 					<div
-						class="h-2 w-2 animate-bounce rounded-full bg-primary"
+						class="h-2 w-2 animate-bounce rounded-full bg-secondary"
 						style="animation-delay: 0.2s"
 					></div>
 				</div>
 			</div>
 		{:else}
 			<div class="container mx-auto">
-				<!-- SwiftFiddle実行の解説 -->
-				<div id="how-to-use" class="card mb-6 bg-base-100 shadow-xl">
+				<!-- イントロダクション -->
+				<div class="card mb-6 bg-base-100 shadow-xl">
 					<div class="card-body">
 						<h2 class="card-title">
 							<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
 								<path
-									fill-rule="evenodd"
-									d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-									clip-rule="evenodd"
+									d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 110 4H4a2 2 0 01-2-2z"
 								></path>
 							</svg>
-							SwiftFiddleで実行できます
+							SwiftUIコンポーネントガイド
 						</h2>
 						<p class="mb-4">
-							このページのSwiftコードは、オンライン実行環境「SwiftFiddle」で実際に動かして試すことができます。
+							SwiftUIでUIを構築するための主要なコンポーネント（ビュー）をまとめたリファレンスです。
+							これらを組み合わせることで、アプリのインターフェースを作成します。
 						</p>
 
-						<div class="grid gap-4 md:grid-cols-2">
-							<div class="space-y-2">
-								<h3 class="text-lg font-semibold">使い方</h3>
-								<ol class="list-inside list-decimal space-y-1 text-sm">
-									<li>各コードブロックの右上にある実行ボタンをクリックする</li>
-									<li>
-										<a
-											href="https://swiftfiddle.com"
-											target="_blank"
-											rel="noopener noreferrer"
-											class="link link-accent">SwiftFiddle</a
-										>を開く
-									</li>
-									<li>このページのコードをコピー</li>
-									<li>SwiftFiddleに貼り付けて実行</li>
-									<li>結果が右側に表示されます</li>
-									<li>clear consoleボタンで右側の結果をリセットできます</li>
-								</ol>
-							</div>
-						</div>
-
 						<!-- モバイル用検索バー -->
-						<div class="mt-4 lg:hidden">
+						<div class="lg:hidden">
 							<label class="input w-full">
 								<svg
 									class="h-4 w-4 opacity-50"
@@ -366,7 +340,7 @@
 								<input
 									type="text"
 									class="grow"
-									placeholder="文法を検索..."
+									placeholder="コンポーネントを検索..."
 									bind:value={searchQuery}
 								/>
 								{#if searchQuery}
@@ -393,6 +367,25 @@
 								</p>
 							{/if}
 						</div>
+
+						<div class="alert-success/20 alert">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								class="h-6 w-6 shrink-0 stroke-current"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+								></path>
+							</svg>
+							<span
+								>コンポーネントは <code>Text()</code> のように大文字で始まります。 見た目を調整するには、スタイリングガイドの修飾子と組み合わせて使用します。</span
+							>
+						</div>
 					</div>
 				</div>
 
@@ -413,9 +406,12 @@
 									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
 								/>
 							</svg>
-							<h3 class="text-lg font-semibold">「{searchQuery}」に一致する項目が見つかりません</h3>
+							<h3 class="text-lg font-semibold">
+								「{searchQuery}」に一致するコンポーネントが見つかりません
+							</h3>
 							<p class="text-base-content/70">別のキーワードで検索してみてください</p>
-							<button class="btn mt-2 btn-sm btn-primary" onclick={clearSearch}>検索をクリア</button
+							<button class="btn mt-2 btn-sm btn-secondary" onclick={clearSearch}
+								>検索をクリア</button
 							>
 						</div>
 					</div>
@@ -433,17 +429,8 @@
 							<p>{section.description}</p>
 
 							{#each section.codeBlocks as codeBlock (codeBlock.title)}
-								<CodeBlock
-									title={codeBlock.title}
-									code={codeBlock.code}
-									output={codeBlock.output}
-									executable={codeBlock.executable}
-								/>
+								<CodeBlock title={codeBlock.title} code={codeBlock.code} executable={false} />
 							{/each}
-
-							{#if section.afterHtml}
-								{@html section.afterHtml}
-							{/if}
 						</div>
 					</div>
 				{/each}
