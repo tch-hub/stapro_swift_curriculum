@@ -79,6 +79,7 @@ export async function load({ params }) {
 		summary: steps[stepIndex].summary,
 		content,
 		prevStep: stepIndex > 0 ? steps[stepIndex - 1] : null,
-		nextStep: stepIndex < steps.length - 1 ? steps[stepIndex + 1] : null
+		nextStep: stepIndex < steps.length - 1 ? steps[stepIndex + 1] : null,
+		allSteps: steps
 	};
 }

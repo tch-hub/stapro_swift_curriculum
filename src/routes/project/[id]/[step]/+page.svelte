@@ -78,31 +78,13 @@
 	{@const StepComponent = originalAppStepComponents[data.stepId]}
 	<StepComponent />
 {:else}
-	<div class="container mx-auto px-4 py-8">
-		<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-			<div class="flex flex-wrap gap-3">
-				{#if data.stepId === 'step1'}
-					<a href={resolve('/project/' + data.projectId)} class="btn btn-outline btn-sm">
-						← プロジェクト概要
-					</a>
-				{/if}
-				{#if data.prevStep}
-					<a
-						href={resolve('/project/' + data.projectId + '/' + data.prevStep.id)}
-						class="btn btn-outline btn-sm"
-					>
-						← {data.prevStep.title}
-					</a>
-				{/if}
-			</div>
-			{#if data.nextStep}
-				<a
-					href={resolve('/project/' + data.projectId + '/' + data.nextStep.id)}
-					class="btn btn-sm btn-primary"
-				>
-					{data.nextStep.title} →
-				</a>
-			{/if}
+	<div class="container mx-auto px-4 py-8 pb-32">
+		<!-- パンくずリスト（簡易版） -->
+		<div class="breadcrumbs mb-6 text-sm">
+			<ul>
+				<li><a href={resolve('/project/' + data.projectId)}>プロジェクト概要</a></li>
+				<li>{data.title}</li>
+			</ul>
 		</div>
 
 		<header class="mb-8 text-center">
@@ -127,28 +109,101 @@
 			{/each}
 		</section>
 
-		<div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-			{#if data.prevStep}
-				<a
-					href={resolve('/project/' + data.projectId + '/' + data.prevStep.id)}
-					class="btn btn-outline btn-sm"
-				>
-					← {data.prevStep.title}
-				</a>
-			{/if}
-			{#if data.stepId === 'step1'}
-				<a href={resolve('/project/' + data.projectId)} class="btn btn-sm btn-secondary">
-					ステップ一覧に戻る
-				</a>
-			{/if}
-			{#if data.nextStep}
-				<a
-					href={resolve('/project/' + data.projectId + '/' + data.nextStep.id)}
-					class="btn btn-sm btn-primary"
-				>
-					{data.nextStep.title} →
-				</a>
-			{/if}
+		<!-- 固定ナビゲーションフッター -->
+		<div
+			class="fixed right-0 bottom-0 left-0 z-50 border-t border-base-300 bg-base-100/90 p-4 backdrop-blur"
+		>
+			<div class="container mx-auto flex max-w-4xl items-center justify-between">
+				<!-- 前へボタン -->
+				<div class="w-24">
+					{#if data.prevStep}
+						<a
+							href={resolve('/project/' + data.projectId + '/' + data.prevStep.id)}
+							class="btn gap-2 btn-ghost btn-sm"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg
+							>
+							<span class="hidden sm:inline">前へ</span>
+						</a>
+					{/if}
+				</div>
+
+				<!-- ステップ切り替えメニュー -->
+				<div class="dropdown dropdown-center dropdown-top">
+					<div tabindex="0" role="button" class="btn font-normal normal-case btn-ghost btn-sm">
+						<span class="text-xs opacity-70"
+							>Step {data.allSteps.findIndex((s) => s.id === data.stepId) + 1} / {data.allSteps
+								.length}</span
+						>
+						<span class="ml-1 max-w-[150px] truncate font-bold sm:max-w-xs">{data.title}</span>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"><path d="m18 15-6-6-6 6" /></svg
+						>
+					</div>
+					<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+					<ul
+						tabindex="0"
+						class="dropdown-content menu z-[1] mb-2 max-h-[60vh] w-72 flex-nowrap overflow-y-auto rounded-box border border-base-200 bg-base-100 p-2 shadow"
+					>
+						{#each data.allSteps as step, i}
+							<li>
+								<a
+									href={resolve('/project/' + data.projectId + '/' + step.id)}
+									class:active={step.id === data.stepId}
+									class="flex flex-col items-start gap-1 py-3"
+								>
+									<span class="text-xs opacity-70">Step {i + 1}</span>
+									<span class="leading-tight font-bold">{step.title}</span>
+								</a>
+							</li>
+						{/each}
+					</ul>
+				</div>
+
+				<!-- 次へボタン -->
+				<div class="flex w-24 justify-end">
+					{#if data.nextStep}
+						<a
+							href={resolve('/project/' + data.projectId + '/' + data.nextStep.id)}
+							class="btn gap-2 btn-sm btn-primary"
+						>
+							<span class="hidden sm:inline">次へ</span>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg
+							>
+						</a>
+					{:else}
+						<a href={resolve('/project/' + data.projectId)} class="btn btn-outline btn-sm">
+							完了
+						</a>
+					{/if}
+				</div>
+			</div>
 		</div>
 	</div>
 {/if}
