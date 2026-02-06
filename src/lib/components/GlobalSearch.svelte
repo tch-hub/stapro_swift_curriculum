@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
+
 	import {
 		searchGlobal,
 		getSearchResultDetail,
@@ -44,13 +44,6 @@
 		dialog?.showModal();
 	}
 
-	function close() {
-		isOpen = false;
-		dialog?.close();
-		query = ''; // Optional: clear on close
-		selectedResult = null;
-		previewSection = undefined;
-	}
 	// ... (keep existing functions close, handleKeydown, etc. unchanged)
 
 	function handleKeydown(e: KeyboardEvent) {
@@ -72,13 +65,6 @@
 	function closePreview() {
 		selectedResult = null;
 		previewSection = undefined;
-	}
-
-	function navigateToPage() {
-		if (selectedResult) {
-			close();
-			goto(`${base}${selectedResult.pagePath}#${selectedResult.sectionId}`);
-		}
 	}
 
 	onMount(() => {
@@ -148,7 +134,13 @@
 						戻る
 					</button>
 					<span class="flex-1 truncate font-bold">{selectedResult.title}</span>
-					<button class="btn btn-sm btn-primary" onclick={navigateToPage}> ページを開く </button>
+					<a
+						class="btn btn-sm btn-primary"
+						href="{base}{selectedResult.pagePath}#{selectedResult.sectionId}"
+						target="_blank"
+					>
+						ページを開く
+					</a>
 				</div>
 			{:else}
 				<h3 class="mb-4 text-lg font-bold">ドキュメント検索</h3>
