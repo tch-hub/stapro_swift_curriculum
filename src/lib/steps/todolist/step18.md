@@ -47,11 +47,11 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
-    
+
     @State private var tabs: [ToDoTab] = []
     @State private var tasks: [ToDoTask] = []
     @State private var selectedTabId: UUID?
-    
+
     @Binding var navigationPath: [NavigationItem]
 
     var body: some View {
@@ -96,7 +96,7 @@ struct HomeView: View {
 
     private func loadTabs() {
         tabs = ToDoTabService.getAllTabs(from: modelContext)
-        
+
         if let currentId = selectedTabId {
             if !tabs.contains(where: { $0.id == currentId }) {
                 selectedTabId = tabs.first?.id
@@ -112,7 +112,7 @@ struct HomeView: View {
             tasks = []
             return
         }
-        
+
         let descriptor = FetchDescriptor<ToDoTask>(
             predicate: #Predicate { $0.tabId == tabId }
         )

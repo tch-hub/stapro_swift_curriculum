@@ -56,7 +56,7 @@ class ToDoTaskService {
     static func deleteAllTasks(for tabId: UUID, from modelContext: ModelContext) {
         // 条件（tabIdが一致）に合うタスクを探す設定
         let descriptor = FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })
-        
+
         // 取得して削除
         if let tasks = try? modelContext.fetch(descriptor) {
             tasks.forEach { modelContext.delete($0) }

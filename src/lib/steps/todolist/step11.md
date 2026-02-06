@@ -44,7 +44,7 @@ class ToDoTabService {
     static func deleteTab(_ tab: ToDoTab, from modelContext: ModelContext) {
         // 先に中身のタスクを全削除（前回のステップで作ったメソッドを使用）
         ToDoTaskService.deleteAllTasks(for: tab.id, from: modelContext)
-        
+
         // タブ自体を削除
         modelContext.delete(tab)
         try? modelContext.save()

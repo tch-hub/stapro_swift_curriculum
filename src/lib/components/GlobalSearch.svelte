@@ -173,7 +173,12 @@
 
 						{#each previewSection.codeBlocks as block}
 							<div>
-								<CodeBlock title={block.title} code={block.code} executable={false} />
+								<CodeBlock
+									title={block.title}
+									code={block.code}
+									executable={false}
+									description={block.description}
+								/>
 							</div>
 						{/each}
 

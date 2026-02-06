@@ -1,487 +1,360 @@
 {
-    "sections": [
-        {
-            "id": "basic-syntax",
-            "title": "基本構文",
-            "description": "変数、定数、データ型の基本です。",
-            "codeBlocks": [
-                {
-                    "title": "変数と定数",
-                    "code": "// Swiftでは、定数（let）と変数（var）を宣言できます\n// 定数の宣言（値を変更できない）\nlet schoolName = \"中央中学校\"  // 学校名を定数として宣言\nlet pi = 3.14159  // 円周率も定数\n\n// 変数の宣言（値を変更できる）\nvar score = 85  // スコアを変数として宣言\nvar isStudying = true  // 勉強中かどうかを変数で管理\n\n// データ型を明示的に指定することも可能\nvar height: Double = 165.5  // 身長をDouble型で宣言\nvar weight: Int = 50  // 体重をInt型で宣言\n\n// print関数を使って値を出力\nprint(\"学校名: \\(schoolName)\")  // 文字列補間を使って変数を埋め込み\nprint(\"スコア: \\(score)\")\nprint(\"勉強中: \\(isStudying)\")\nprint(\"身長: \\(height)cm\")\nprint(\"体重: \\(weight)kg\")",
-                    "output": "学校名: 中央中学校\nスコア: 85\n勉強中: true\n身長: 165.5cm\n体重: 50kg",
-                    "executable": true,
-                    "keywords": [
-                        "variable",
-                        "constant",
-                        "let",
-                        "var",
-                        "宣言",
-                        "定義",
-                        "変数",
-                        "定数"
-                    ]
-                },
-                {
-                    "title": "定数への再代入（エラー例）",
-                    "code": "// 定数の宣言\nlet schoolName = \"中央中学校\"\n\n// 定数への再代入はエラーになる\nschoolName = \"東京中学校\"",
-                    "output": "error: cannot assign to value: 'schoolName' is a 'let' constant\nschoolName = \"東京中学校\"\n^^^^^^^^^^\nnote: change 'let' to 'var' to make it mutable",
-                    "executable": true,
-                    "keywords": [
-                        "error",
-                        "reassignment",
-                        "let",
-                        "change",
-                        "変更",
-                        "エラー",
-                        "再代入"
-                    ]
-                },
-                {
-                    "title": "列挙型（Enum）",
-                    "code": "// 列挙型（Enum）は、関連する値をグループ化する型です\n// 基本的な列挙型の定義\nenum Direction {\n    case north  // 北\n    case south  // 南\n    case east   // 東\n    case west   // 西\n}\n\n// 短縮形での定義（1行で複数のcaseを定義）\nenum Direction {\n    case north, south, east, west\n}\n\n// enumの使用例\nlet currentDirection = Direction.north  // 北方向を指定\n\n// switch文を使ってenumの値を処理\nswitch currentDirection {\ncase .north:\n    print(\"北へ進む\")  // northの場合の処理\ncase .south:\n    print(\"南へ進む\")  // southの場合の処理\ncase .east:\n    print(\"東へ進む\")  // eastの場合の処理\ncase .west:\n    print(\"西へ進む\")  // westの場合の処理\n}\n\n// 生の値（raw value）を持つenumの例\nenum Planet: Int {  // Int型のraw valueを持つ\n    case mercury = 1  // 水星\n    case venus = 2    // 金星\n    case earth = 3    // 地球\n    case mars = 4     // 火星\n}\n\nlet earthNumber = Planet.earth.rawValue  // rawValueで数値を取得\nprint(\"地球の番号: \\(earthNumber)\")",
-                    "output": "北へ進む\n地球の番号: 3",
-                    "executable": true,
-                    "keywords": [
-                        "enum",
-                        "case",
-                        "switch",
-                        "列挙",
-                        "イナム",
-                        "エナム"
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "types",
-            "title": "型",
-            "description": "Swiftのデータ型について学びます。",
-            "codeBlocks": [
-                {
-                    "title": "基本型",
-                    "code": "// Swiftの基本的なデータ型\n// 整数型（Int）- 正負の整数を扱う\nlet age: Int = 13  // 年齢（整数）\nlet score: Int = 85  // スコア（整数）\n\n// 浮動小数点型（Double, Float）- 小数点を扱う\nlet height: Double = 165.5  // 身長（倍精度浮動小数点）\nlet weight: Float = 50.5    // 体重（単精度浮動小数点）\n\n// 論理型（Bool）- trueまたはfalseの値\nlet isStudent: Bool = true   // 学生かどうか\nlet hasHomework: Bool = false  // 宿題があるかどうか\n\n// 文字列型（String）- 文字の並び\nlet name: String = \"太郎\"  // 名前\nlet message: String = \"こんにちは\"  // メッセージ\n\n// 文字型（Character）- 単一の文字\nlet grade: Character = \"A\"  // 成績\nlet symbol: Character = \"★\"  // 記号\n\n// 値の出力\nprint(\"年齢: \\(age)歳\")\nprint(\"身長: \\(height)cm\")\nprint(\"学生: \\(isStudent)\")\nprint(\"名前: \\(name)\")\nprint(\"成績: \\(grade)\")",
-                    "output": "年齢: 13歳\n身長: 165.5cm\n学生: true\n名前: 太郎\n成績: A",
-                    "executable": true,
-                    "keywords": [
-                        "Int",
-                        "Double",
-                        "String",
-                        "Bool",
-                        "型",
-                        "type",
-                        "integer",
-                        "boolean",
-                        "数値",
-                        "文字"
-                    ]
-                },
-                {
-                    "title": "型の確認（type(of:)関数）",
-                    "code": "// type(of:)関数を使って変数の型を確認する\nlet number = 42\nlet decimal = 3.14\nlet text = \"Hello\"\nlet flag = true\n\nprint(\"numberの型: \\(type(of: number))\")  // Int型\nprint(\"decimalの型: \\(type(of: decimal))\")  // Double型\nprint(\"textの型: \\(type(of: text))\")      // String型\nprint(\"flagの型: \\(type(of: flag))\")      // Bool型",
-                    "output": "numberの型: Int\ndecimalの型: Double\ndecimalの型: String\nflagの型: Bool",
-                    "executable": true,
-                    "keywords": [
-                        "type(of:)",
-                        "check",
-                        "確認",
-                        "型確認"
-                    ]
-                },
-                {
-                    "title": "タプル（Tuple）",
-                    "code": "// タプルは複数の値をグループ化する型\n// 生徒の情報をタプルで表現\nlet student: (String, Int, String) = (\"太郎\", 13, \"中学1年\")\nlet point: (x: Int, y: Int) = (x: 10, y: 20)\n\n// インデックスでアクセス\nprint(\"名前: \\(student.0)\")  // 最初の要素（太郎）\nprint(\"年齢: \\(student.1)\")  // 2番目の要素（13）\nprint(\"学年: \\(student.2)\")  // 3番目の要素（中学1年）\n\n// ラベル付きでアクセス\nprint(\"X座標: \\(point.x)\")  // xラベルでアクセス\nprint(\"Y座標: \\(point.y)\")  // yラベルでアクセス\n\n// 分解して代入\nlet (name, age, grade) = student\nprint(\"\\(name)は\\(age)歳の\\(grade)生です\")",
-                    "output": "名前: 太郎\n年齢: 13\n学年: 中学1年\nX座標: 10\nY座標: 20\n太郎は13歳の中学1年生です",
-                    "executable": true,
-                    "keywords": [
-                        "tuple",
-                        "multiple",
-                        "values",
-                        "pair",
-                        "組",
-                        "タプル"
-                    ]
-                },
-                {
-                    "title": "型の変換（キャスト）",
-                    "code": "// 異なる型同士の変換（キャスト）\n// IntからDoubleへの変換\nlet intValue = 42\nlet doubleValue = Double(intValue)  // IntからDoubleに変換\nprint(\"IntからDouble: \\(doubleValue)\")  // 42.0\n\n// DoubleからIntへの変換（小数点以下切り捨て）\nlet decimalValue = 3.9\nlet intFromDouble = Int(decimalValue)  // DoubleからIntに変換\nprint(\"DoubleからInt: \\(intFromDouble)\")  // 3\n\n// StringからIntへの変換（失敗する可能性あり）\nlet numberString = \"123\"\nif let convertedNumber = Int(numberString) {\n    print(\"StringからInt: \\(convertedNumber)\")  // 変換成功\n} else {\n    print(\"変換できませんでした\")\n}\n\n// IntからStringへの変換\nlet numberToString = String(intValue)\nprint(\"IntからString: \\(numberToString)\")",
-                    "output": "IntからDouble: 42.0\nDoubleからInt: 3\nStringからInt: 123\nIntからString: 42",
-                    "executable": true,
-                    "keywords": [
-                        "cast",
-                        "convert",
-                        "Double(int)",
-                        "Int(double)",
-                        "String(int)",
-                        "変換",
-                        "キャスト"
-                    ]
-                },
-                {
-                    "title": "範囲型（Range）",
-                    "code": "// 範囲型は連続した値の範囲を表す型\n// ClosedRangeは開始値と終了値を含む範囲（...演算子）\nlet closedRange: ClosedRange<Int> = 1...5  // 1, 2, 3, 4, 5を含む範囲\nprint(\"ClosedRange: \\(closedRange)\")  // 1...5と表示される\n\n// 範囲を使ったループ\nprint(\"範囲内の値:\")\nfor number in closedRange {\n    print(\"\\(number)\", terminator: \" \")  // 1 2 3 4 5 と出力\n}\nprint()  // 改行\n\n// 範囲に値が含まれるかチェック\nlet testValue = 3\nif closedRange.contains(testValue) {\n    print(\"\\(testValue)は範囲内に含まれます\")  // 3は範囲内に含まれる\n}\n\n// 範囲の境界値を取得\nprint(\"開始値: \\(closedRange.lowerBound)\")  // 1\nprint(\"終了値: \\(closedRange.upperBound)\")  // 5\n\n// 半開範囲（..<演算子）との比較\nlet halfOpenRange = 1..<5  // 1, 2, 3, 4を含む（5を含まない）\nprint(\"Half-open range: \\(halfOpenRange)\")  // 1..<5\n\n// 文字の範囲も可能\nlet charRange: ClosedRange<Character> = \"a\"...\"z\"\nprint(\"文字の範囲: \\(charRange.contains(\\\"m\\\"))\")  // true",
-                    "output": "ClosedRange: 1...5\n範囲内の値:\n1 2 3 4 5\n3は範囲内に含まれます\n開始値: 1\n終了値: 5\nHalf-open range: 1..<5\n文字の範囲: true",
-                    "executable": true,
-                    "keywords": [
-                        "range",
-                        "closed",
-                        "half-open",
-                        "...",
-                        "..<",
-                        "範囲"
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "operators",
-            "title": "演算子",
-            "description": "計算や比較に使う記号です。",
-            "codeBlocks": [
-                {
-                    "title": "算術演算子",
-                    "code": "// 算術演算子を使って数値の計算を行う\nlet a = 10  // 変数aに10を代入\nlet b = 3   // 変数bに3を代入\n\nlet sum = a + b        // 加算（和）: 10 + 3 = 13\nlet difference = a - b // 減算（差）: 10 - 3 = 7\nlet product = a * b    // 乗算（積）: 10 * 3 = 30\nlet quotient = a / b   // 除算（商）: 10 / 3 = 3（整数除算なので小数点以下切り捨て）\nlet remainder = a % b  // 剰余（余り）: 10 % 3 = 1\n\n// 計算結果を出力\nprint(\"和: \\(sum)\")\nprint(\"差: \\(difference)\")\nprint(\"積: \\(product)\")\nprint(\"商: \\(quotient)\")\nprint(\"余り: \\(remainder)\")",
-                    "output": "和: 13\n差: 7\n積: 30\n商: 3\n余り: 1",
-                    "executable": true,
-                    "keywords": [
-                        "+",
-                        "-",
-                        "*",
-                        "/",
-                        "%",
-                        "math",
-                        "calculation",
-                        "計算",
-                        "足し算",
-                        "引き算",
-                        "掛け算",
-                        "割り算"
-                    ]
-                },
-                {
-                    "title": "比較演算子",
-                    "code": "// 比較演算子を使って値の大小や等しさを比較する\nlet x = 5   // 変数xに5を代入\nlet y = 10  // 変数yに10を代入\n\nprint(\"x == y: \\(x == y)\")  // 等しい（xはyと等しいか？）: false\nprint(\"x != y: \\(x != y)\")  // 等しくない（xはyと等しくないか？）: true\nprint(\"x < y: \\(x < y)\")   // より小さい（xはyより小さいか？）: true\nprint(\"x > y: \\(x > y)\")   // より大きい（xはyより大きいか？）: false\nprint(\"x <= y: \\(x <= y)\")  // 以下（xはy以下か？）: true\nprint(\"x >= y: \\(x >= y)\")  // 以上（xはy以上か？）: false",
-                    "output": "x == y: false\nx != y: true\nx < y: true\nx > y: false\nx <= y: true\nx >= y: false",
-                    "executable": true,
-                    "keywords": [
-                        "==",
-                        "!=",
-                        "<",
-                        ">",
-                        "compare",
-                        "equal",
-                        "比較",
-                        "等しい",
-                        "大小"
-                    ]
-                },
-                {
-                    "title": "三項演算子",
-                    "code": "// 三項演算子は条件式 ? 真の値 : 偽の値 の形式で、条件によって値を選択する\nlet score = 85  // テストのスコア\n\n// 条件に基づいて値を選択（60点以上なら合格、そうでなければ不合格）\nlet result = score >= 60 ? \"合格\" : \"不合格\"\nprint(\"テスト結果: \\(result)\")\n\n// 数値の比較（aとbのうち大きい方を選択）\nlet a = 10\nlet b = 20\nlet max = a > b ? a : b  // aがbより大きい場合はa、そうでなければb\nprint(\"大きい方の値: \\(max)\")\n\n// 文字列の選択（学生かどうかに応じてメッセージを選択）\nlet isStudent = true\nlet message = isStudent ? \"学生です\" : \"学生ではありません\"\nprint(message)",
-                    "output": "テスト結果: 合格\n大きい方の値: 20\n学生です",
-                    "executable": true,
-                    "keywords": [
-                        "ternary",
-                        "?:",
-                        "condition",
-                        "if-else",
-                        "operator",
-                        "条件演算子",
-                        "三項"
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "control-structures",
-            "title": "制御構造",
-            "description": "プログラムの流れを制御します。",
-            "codeBlocks": [
-                {
-                    "title": "if文",
-                    "code": "// if文を使って条件分岐を行う\nlet age = 13  // 年齢\n\n// 基本的なif-else文（13歳以上なら中学生、そうでなければ小学生）\nif age >= 13 {\n    print(\"中学生です\")\n} else {\n    print(\"小学生です\")\n}\n\n// 複数の条件をチェックするif-else if-else文\nif age >= 18 {\n    print(\"大人\")  // 18歳以上は大人\n} else if age >= 13 {\n    print(\"中学生\")  // 13-17歳は中学生\n} else {\n    print(\"小学生\")  // 12歳以下は小学生\n}",
-                    "output": "中学生です\n中学生",
-                    "executable": true,
-                    "keywords": [
-                        "condition",
-                        "else",
-                        "branch",
-                        "条件",
-                        "分岐",
-                        "if"
-                    ]
-                },
-                {
-                    "title": "for-inループ",
-                    "code": "// for-inループを使ってコレクションの要素を順番に処理する\nlet fruits = [\"りんご\", \"バナナ\", \"オレンジ\"]  // 果物の配列\n\n// 配列の各要素を順番に処理\nfor fruit in fruits {\n    print(\"好きな果物: \\(fruit)\")\n}\n\n// 範囲を使ったループ（1から5までの数字を順番に処理）\nfor i in 1...5 {  // 1, 2, 3, 4, 5の順にiに代入される\n    print(\"\\(i)回目のループ\")\n}",
-                    "output": "好きな果物: りんご\n好きな果物: バナナ\n好きな果物: オレンジ\n1回目のループ\n2回目のループ\n3回目のループ\n4回目のループ\n5回目のループ",
-                    "executable": true,
-                    "keywords": [
-                        "loop",
-                        "iteration",
-                        "repeat",
-                        "繰り返し",
-                        "ループ",
-                        "for"
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "functions",
-            "title": "関数",
-            "description": "処理をまとめて再利用できるようにします。",
-            "codeBlocks": [
-                {
-                    "title": "関数の定義と呼び出し",
-                    "code": "// funcキーワードを使って関数を定義する\n// 挨拶をする関数（名前を受け取って挨拶文を返す）\nfunc greet(name: String) -> String {\n    return \"こんにちは、\\(name)さん!\"  // 挨拶文を返す\n}\n\n// 計算を行う関数（2つの整数を受け取ってその和を返す）\nfunc add(a: Int, b: Int) -> Int {\n    return a + b  // a + bの結果を返す\n}\n\n// 関数の実行（呼び出し）\nlet message = greet(name: \"太郎\")  // greet関数を呼び出し、結果をmessageに代入\nlet result = add(a: 10, b: 5)     // add関数を呼び出し、結果をresultに代入\n\nprint(message)  // 挨拶文を出力\nprint(\"10 + 5 = \\(result)\")  // 計算結果を出力",
-                    "output": "こんにちは、太郎さん!\n10 + 5 = 15",
-                    "executable": true,
-                    "keywords": [
-                        "func",
-                        "return",
-                        "arguments",
-                        "parameters",
-                        "call",
-                        "定義",
-                        "呼び出し",
-                        "関数",
-                        "引数",
-                        "戻り値"
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "collections",
-            "title": "コレクション",
-            "description": "複数の値をまとめて扱います。",
-            "codeBlocks": [
-                {
-                    "title": "配列（Array）",
-                    "code": "// 配列は複数の値を順番に格納するコレクション型\n// 配列の作成（文字列の配列）\nvar fruits = [\"りんご\", \"バナナ\", \"オレンジ\"]  // 果物の名前を格納\nlet numbers = [1, 2, 3, 4, 5]  // 数値の配列\n\n// インデックスを使って要素にアクセス（0から始まる）\nprint(fruits[0])  // 最初の要素（りんご）を出力\nprint(numbers[0]) // 最初の要素（1）を出力\n\n// 要素の追加（appendメソッドを使う）\nfruits.append(\"ぶどう\")  // 配列の末尾にぶどうを追加\nprint(fruits)  // 追加後の配列全体を出力\n\n// 要素数の取得（countプロパティ）\nprint(fruits.count)  // fruits配列の要素数を出力\nprint(numbers.count) // numbers配列の要素数を出力",
-                    "output": "りんご\n1\n[\"りんご\", \"バナナ\", \"オレンジ\", \"ぶどう\"]\n4\n5",
-                    "executable": true,
-                    "keywords": [
-                        "array",
-                        "list",
-                        "append",
-                        "count",
-                        "index",
-                        "リスト",
-                        "配列"
-                    ]
-                },
-                {
-                    "title": "辞書（Dictionary）",
-                    "code": "// 辞書はキーと値のペアを格納するコレクション型\n// 辞書の作成（キーが科目名、値が点数の辞書）\nvar scores = [\"数学\": 85, \"英語\": 92, \"国語\": 78]\n\n// キーを使って値を取得（オプショナルバインディングを使用）\nif let mathScore = scores[\"数学\"] {  // 数学の点数を取得しようとする\n    print(\"数学の点数: \\(mathScore)\")  // 取得成功したら出力\n}\n\n// 値の更新または追加\nscores[\"理科\"] = 88  // 理科の点数を追加\nprint(scores)  // 更新後の辞書全体を出力",
-                    "output": "数学の点数: 85\n[\"数学\": 85, \"英語\": 92, \"国語\": 78, \"理科\": 88]",
-                    "executable": true,
-                    "keywords": [
-                        "dictionary",
-                        "key",
-                        "value",
-                        "map",
-                        "hash",
-                        "連想配列",
-                        "辞書"
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "classes-structs",
-            "title": "クラスと構造体",
-            "description": "データをまとめて扱うための型です。",
-            "codeBlocks": [
-                {
-                    "title": "構造体の定義",
-                    "code": "// structキーワードを使って構造体を定義（関連するデータをまとめる）\nstruct Student {  // 学生を表す構造体\n    var name: String   // 名前（変数）\n    var age: Int       // 年齢（変数）\n    var grade: String  // 学年（変数）\n}\n\n// 構造体のインスタンスを作成\nvar student1 = Student(name: \"太郎\", age: 13, grade: \"中学1年\")\n\n// ドット記法を使ってプロパティにアクセス\nprint(\"\\(student1.name)は\\(student1.age)歳です\")",
-                    "output": "太郎は13歳です",
-                    "executable": true,
-                    "keywords": [
-                        "struct",
-                        "definition",
-                        "instance",
-                        "class",
-                        "model",
-                        "構造体",
-                        "インスタンス"
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "methods",
-            "title": "メソッド",
-            "description": "メソッドは、特定の型（クラス、構造体、列挙型）の内部で定義された関数です。その型のデータ（プロパティ）を使って処理を行う「振る舞い」を定義します。",
-            "codeBlocks": [
-                {
-                    "title": "メソッドの定義と使用",
-                    "code": "class Counter {\n    var count = 0\n    \n    // カウントを1増やすメソッド\n    func increment() {\n        count += 1\n        print(\"カウント: \\(count)\")\n    }\n    \n    // 指定した数だけ増やすメソッド\n    func increment(by amount: Int) {\n        count += amount\n        print(\"\\(amount)増やしました。合計: \\(count)\")\n    }\n}\n\n// クラスのインスタンスを作成\nlet myCounter = Counter()\n\n// メソッドの呼び出し\nmyCounter.increment()\nmyCounter.increment(by: 5)",
-                    "output": "カウント: 1\n5増やしました。合計: 6",
-                    "executable": true,
-                    "keywords": [
-                        "method",
-                        "function",
-                        "class",
-                        "instance",
-                        "behavior",
-                        "振る舞い",
-                        "メソッド"
-                    ]
-                }
-            ],
-            "afterHtml": "<div class=\"mt-8\"><h3 class=\"mb-4 text-xl font-bold\">関数とメソッドの違い</h3><div class=\"overflow-x-auto\"><table class=\"table w-full rounded-box table-zebra bg-base-200\"><thead><tr class=\"bg-base-300\"><th class=\"text-base text-base-content\">項目</th><th class=\"text-base text-base-content\">関数 (Function)</th><th class=\"text-base text-base-content\">メソッド (Method)</th></tr></thead><tbody><tr><td class=\"font-bold\">定義場所</td><td>型の外側（グローバル）</td><td>型（クラス・構造体）の内側</td></tr><tr><td class=\"font-bold\">呼び出し方</td><td><code class=\"rounded bg-base-300 px-1\">funcName()</code></td><td><code class=\"rounded bg-base-300 px-1\">instance.methodName()</code></td></tr><tr><td class=\"font-bold\">役割</td><td>単独で動作する処理のまとまり</td><td>その型のデータ操作や振る舞い</td></tr><tr><td class=\"font-bold\">データアクセス</td><td>引数のみ</td><td>インスタンス自身のプロパティ（<code>self</code>）にアクセス可能</td></tr></tbody></table></div></div>"
-        },
-        {
-            "id": "keypaths",
-            "title": "KeyPathと.self",
-            "description": "プロパティへの参照や、値そのものを指すための構文です。",
-            "codeBlocks": [
-                {
-                    "title": "KeyPathと.selfの使い方",
-                    "code": "// 1. \\.self の意味\n// \\.self は「その値自身」を指すKeyPathです\nlet numbers = [10, 20, 30]\n\n// List(numbers, id: \\.self) のように使う場合、\n// 「配列の各要素（数値）そのものを識別子(ID)として使う」という意味になります\n\n\n// 2. プロパティへのKeyPath\nstruct Student {\n    var name: String\n    var grade: Int\n}\n\nlet students = [\n    Student(name: \"太郎\", grade: 1),\n    Student(name: \"花子\", grade: 2),\n    Student(name: \"次郎\", grade: 1)\n]\n\n// map関数などでKeyPathを使うと、クロージャを省略して簡潔に書けます\n// 通常の書き方: students.map { student in student.name }\nlet names = students.map(\\.name)\nprint(\"名前一覧: \\(names)\")\n\n// filterなどでの活用（KeyPathそのものではなく、プロパティ参照として）\n// KeyPath自体は値への「パス」を表す型です\nlet namePath = \\Student.name\nlet taro = students[0]\nprint(\"KeyPathでアクセス: \\(taro[keyPath: namePath])\")",
-                    "output": "names: [\"太郎\", \"花子\", \"次郎\"]\nKeyPathでアクセス: 太郎",
-                    "executable": true,
-                    "keywords": [
-                        "keypath",
-                        "self",
-                        "syntax",
-                        "reference",
-                        "参照",
-                        "キーパス"
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "optionals-error-handling",
-            "title": "オプションとエラー処理",
-            "description": "値が存在しない可能性を扱います。",
-            "codeBlocks": [
-                {
-                    "title": "Optional型",
-                    "code": "// Optional型は値が存在しない可能性を表す（型名の後に?をつける）\nvar optionalName: String? = \"太郎\"  // 値があるOptional\nvar optionalAge: Int? = nil         // nil（値なし）のOptional\n\n// オプショナルバインディング（if let）で安全に値を取り出す\nif let name = optionalName {  // optionalNameに値があればnameに代入\n    print(\"名前: \\(name)\")\n} else {\n    print(\"名前が設定されていません\")\n}\n\n// nilの値に対するオプショナルバインディング\nif let age = optionalAge {  // optionalAgeはnilなので実行されない\n    print(\"年齢: \\(age)\")\n} else {\n    print(\"年齢が設定されていません\")\n}\n\n// 強制アンラップ（!）はnilでないことを確認してから使用（危険）\nif optionalAge != nil {\n    print(\"年齢: \\(optionalAge!)\")  // !で強制的に値を取り出す\n}\n\n// 注意: nilに対して強制アンラップするとランタイムエラーになる\n// 以下のコードは実行しないこと（コメントアウト）\n// let nilValue: Int? = nil\n// print(nilValue!)  // Fatal error: Unexpectedly found nil while unwrapping an Optional value",
-                    "output": "名前: 太郎\n年齢が設定されていません",
-                    "executable": true,
-                    "keywords": [
-                        "nil",
-                        "unwrap",
-                        "binding",
-                        "if let",
-                        "guard",
-                        "?",
-                        "!",
-                        "アンラップ",
-                        "オプショナル"
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "useful-functions",
-            "title": "便利な関数",
-            "description": "よく使う組み込み関数です。",
-            "codeBlocks": [
-                {
-                    "title": "print関数",
-                    "code": "// print関数はコンソールに値を出力する\nprint(\"Hello, World!\")  // 基本的な出力\nprint(\"名前: 太郎, 年齢: 13\")  // 複数の値をカンマ区切りで出力\n\n// terminatorパラメータで改行を制御（デフォルトは\\n）\nprint(\"こんにちは\", terminator: \"\")  // 改行なしで出力\n\n// 明示的に改行を指定（デフォルトと同じ）\nprint(\"こんにちは\", terminator: \"\\n\")\n\n// 複数の改行を出力\nprint(\"1行目\")  // 1行目出力\nprint(\"2行目\", terminator: \"\\n\\n\")  // 2行目出力後に2回改行\nprint(\"4行目\")  // 4行目出力",
-                    "output": "Hello, World!\n名前: 太郎, 年齢: 13\nこんにちはこんにちは\n1行目\n2行目\n\n4行目",
-                    "executable": true,
-                    "keywords": [
-                        "log",
-                        "console",
-                        "debug",
-                        "output",
-                        "出力",
-                        "プリント"
-                    ]
-                },
-                {
-                    "title": "Stringのメソッド",
-                    "code": "let message = \"Hello, Swift!\"  // 文字列を変数に代入\n\n// countプロパティで文字数を取得\nprint(message.count)  // 文字列の長さ（文字数）を出力\n\n// uppercased()メソッドで大文字に変換\nprint(message.uppercased())  // \"HELLO, SWIFT!\"\n\n// lowercased()メソッドで小文字に変換\nprint(message.lowercased())  // \"hello, swift!\"\n\n// contains()メソッドで部分文字列の検索\nif message.contains(\"Swift\") {  // \"Swift\"が含まれているかチェック\n    print(\"Swiftが見つかりました\")  // 含まれていれば出力\n}",
-                    "output": "13\nHELLO, SWIFT!\nhello, swift!\nSwiftが見つかりました",
-                    "executable": true,
-                    "keywords": [
-                        "length",
-                        "count",
-                        "upper",
-                        "lower",
-                        "search",
-                        "contains",
-                        "文字数",
-                        "検索",
-                        "大文字",
-                        "小文字"
-                    ]
-                },
-                {
-                    "title": "UUID() - 一意なIDの生成",
-                    "code": "import Foundation\n\n// UUID（Universally Unique Identifier）は、世界で唯一の識別子を生成します\n// ランダムなUUIDを生成\nlet id = UUID()\nprint(\"生成されたID: \\(id)\")\n// 出力例: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\n\n// 文字列として取得する場合\nlet idString = id.uuidString\nprint(\"文字列形式: \\(idString)\")\n\n// SwiftUIでの活用例（リスト表示の識別子としてよく使われます）\nstruct TodoItem: Identifiable {\n    let id = UUID()  // インスタンス作成時に自動でユニークなIDを付与\n    var title: String\n}\n\nlet item = TodoItem(title: \"牛乳を買う\")\nprint(\"Todo項目のID: \\(item.id)\")",
-                    "output": "生成されたID: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\n文字列形式: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\nTodo項目のID: E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
-                    "executable": true,
-                    "keywords": [
-                        "id",
-                        "unique",
-                        "identifier",
-                        "random",
-                        "uuid",
-                        "識別子",
-                        "一意",
-                        "ランダム"
-                    ]
-                }
-            ]
-        },
-        {
-            "id": "swiftui-property-wrappers",
-            "title": "SwiftUIプロパティラッパー",
-            "description": "ビューの状態管理とデータの受け渡しに使う特別な属性です。",
-            "codeBlocks": [
-                {
-                    "title": "@State（状態の管理）",
-                    "code": "import SwiftUI\n\n// @Stateは、ビュー内で変更可能な状態を管理するためのプロパティラッパーです\n// 値が変更されると、ビューが自動的に再描画されます\n\nstruct CounterView: View {\n    // @Stateを使って、カウント値を管理\n    // privateをつけるのが推奨（このビュー内でのみ使用するため）\n    @State private var count = 0\n    \n    var body: some View {\n        VStack {\n            Text(\"カウント: \\(count)\")\n            \n            Button(\"増やす\") {\n                count += 1  // 値を変更するとビューが更新される\n            }\n        }\n    }\n}\n\n// @Stateの特徴:\n// - ビューが所有する「単一の情報源」\n// - 値型（Int, String, Bool, 構造体など）に使用\n// - ビューが再生成されても値は保持される",
-                    "output": "（ボタンを押すたびにカウントが1ずつ増える）",
-                    "executable": false,
-                    "keywords": [
-                        "state",
-                        "property wrapper",
-                        "view",
-                        "update",
-                        "状態",
-                        "再描画"
-                    ]
-                },
-                {
-                    "title": "@Binding（双方向データ渡し）",
-                    "code": "import SwiftUI\n\n// @Bindingは、親ビューの@State変数への「参照」を子ビューに渡すためのプロパティラッパーです\n// 子ビューで値を変更すると、親ビューの値も変更されます\n\n// 子ビュー: トグルスイッチのコンポーネント\nstruct ToggleRow: View {\n    let label: String\n    @Binding var isOn: Bool  // 親からの参照を受け取る\n    \n    var body: some View {\n        Toggle(label, isOn: $isOn)  // $をつけてBindingとして渡す\n    }\n}\n\n// 親ビュー\nstruct SettingsView: View {\n    @State private var notificationsEnabled = true  // 親が所有する状態\n    @State private var darkModeEnabled = false\n    \n    var body: some View {\n        VStack {\n            // 子ビューに$をつけてBindingとして渡す\n            ToggleRow(label: \"通知\", isOn: $notificationsEnabled)\n            ToggleRow(label: \"ダークモード\", isOn: $darkModeEnabled)\n            \n            // 現在の状態を表示\n            Text(\"通知: \\(notificationsEnabled ? \"ON\" : \"OFF\")\")\n            Text(\"ダークモード: \\(darkModeEnabled ? \"ON\" : \"OFF\")\")\n        }\n    }\n}",
-                    "output": "（子ビューでトグルを切り替えると、親ビューの状態も更新される）",
-                    "executable": false,
-                    "keywords": [
-                        "binding",
-                        "share",
-                        "reference",
-                        "two-way",
-                        "双方向",
-                        "参照",
-                        "バインディング"
-                    ]
-                },
-                {
-                    "title": "@Stateと@Bindingの使い分け",
-                    "code": "import SwiftUI\n\n// TextFieldの例で@Stateと@Bindingの連携を理解する\n\n// 入力フォームの子コンポーネント\nstruct NameInputField: View {\n    @Binding var name: String  // 親から渡される参照\n    \n    var body: some View {\n        TextField(\"名前を入力\", text: $name)\n            .textFieldStyle(.roundedBorder)\n    }\n}\n\n// 親ビュー\nstruct FormView: View {\n    @State private var userName = \"\"  // この状態を親が「所有」\n    \n    var body: some View {\n        VStack(spacing: 20) {\n            // 子ビューに状態の「参照」を渡す\n            NameInputField(name: $userName)\n            \n            // 入力された値をリアルタイムで表示\n            Text(\"こんにちは、\\(userName.isEmpty ? \"ゲスト\" : userName)さん！\")\n        }\n        .padding()\n    }\n}\n\n// まとめ:\n// @State  → 「状態を持つ」側（親）で使う\n// @Binding → 「状態を借りる」側（子）で使う\n// $変数名 → Bindingとして渡すときに使う記法",
-                    "output": "（TextFieldに入力すると、下のテキストがリアルタイムで更新される）",
-                    "executable": false,
-                    "keywords": [
-                        "difference",
-                        "usage",
-                        "pattern",
-                        "使い分け",
-                        "違い"
-                    ]
-                }
-            ],
-            "afterHtml": "<div class=\"mt-8\"><h3 class=\"mb-4 text-xl font-bold\">@Stateと@Bindingの関係</h3><div class=\"overflow-x-auto\"><table class=\"table w-full rounded-box table-zebra bg-base-200\"><thead><tr class=\"bg-base-300\"><th class=\"text-base text-base-content\">項目</th><th class=\"text-base text-base-content\">@State</th><th class=\"text-base text-base-content\">@Binding</th></tr></thead><tbody><tr><td class=\"font-bold\">役割</td><td>状態を「所有」する</td><td>状態を「参照」する</td></tr><tr><td class=\"font-bold\">使う場所</td><td>親ビュー（状態の発生源）</td><td>子ビュー（状態を受け取る側）</td></tr><tr><td class=\"font-bold\">宣言方法</td><td><code class=\"rounded bg-base-300 px-1\">@State private var value = 初期値</code></td><td><code class=\"rounded bg-base-300 px-1\">@Binding var value: 型</code></td></tr><tr><td class=\"font-bold\">渡し方</td><td>-</td><td><code class=\"rounded bg-base-300 px-1\">$変数名</code>で渡す</td></tr><tr><td class=\"font-bold\">初期値</td><td>必要</td><td>不要（親から受け取る）</td></tr></tbody></table></div></div>"
-        }
-    ]
+	"sections": [
+		{
+			"id": "basic-syntax",
+			"title": "基本構文",
+			"description": "変数、定数、データ型の基本です。",
+			"codeBlocks": [
+				{
+					"title": "変数と定数",
+					"code": "// Swiftでは、定数（let）と変数（var）を宣言できます\n// 定数の宣言（値を変更できない）\nlet schoolName = \"中央中学校\"  // 学校名を定数として宣言\nlet pi = 3.14159  // 円周率も定数\n\n// 変数の宣言（値を変更できる）\nvar score = 85  // スコアを変数として宣言\nvar isStudying = true  // 勉強中かどうかを変数で管理\n\n// データ型を明示的に指定することも可能\nvar height: Double = 165.5  // 身長をDouble型で宣言\nvar weight: Int = 50  // 体重をInt型で宣言\n\n// print関数を使って値を出力\nprint(\"学校名: \\(schoolName)\")  // 文字列補間を使って変数を埋め込み\nprint(\"スコア: \\(score)\")\nprint(\"勉強中: \\(isStudying)\")\nprint(\"身長: \\(height)cm\")\nprint(\"体重: \\(weight)kg\")",
+					"output": "学校名: 中央中学校\nスコア: 85\n勉強中: true\n身長: 165.5cm\n体重: 50kg",
+					"executable": true,
+					"keywords": ["variable", "constant", "let", "var", "宣言", "定義", "変数", "定数"]
+				},
+				{
+					"title": "定数への再代入（エラー例）",
+					"code": "// 定数の宣言\nlet schoolName = \"中央中学校\"\n\n// 定数への再代入はエラーになる\nschoolName = \"東京中学校\"",
+					"output": "error: cannot assign to value: 'schoolName' is a 'let' constant\nschoolName = \"東京中学校\"\n^^^^^^^^^^\nnote: change 'let' to 'var' to make it mutable",
+					"executable": true,
+					"keywords": ["error", "reassignment", "let", "change", "変更", "エラー", "再代入"]
+				},
+				{
+					"title": "列挙型（Enum）",
+					"code": "// 列挙型（Enum）は、関連する値をグループ化する型です\n// 基本的な列挙型の定義\nenum Direction {\n    case north  // 北\n    case south  // 南\n    case east   // 東\n    case west   // 西\n}\n\n// 短縮形での定義（1行で複数のcaseを定義）\nenum Direction {\n    case north, south, east, west\n}\n\n// enumの使用例\nlet currentDirection = Direction.north  // 北方向を指定\n\n// switch文を使ってenumの値を処理\nswitch currentDirection {\ncase .north:\n    print(\"北へ進む\")  // northの場合の処理\ncase .south:\n    print(\"南へ進む\")  // southの場合の処理\ncase .east:\n    print(\"東へ進む\")  // eastの場合の処理\ncase .west:\n    print(\"西へ進む\")  // westの場合の処理\n}\n\n// 生の値（raw value）を持つenumの例\nenum Planet: Int {  // Int型のraw valueを持つ\n    case mercury = 1  // 水星\n    case venus = 2    // 金星\n    case earth = 3    // 地球\n    case mars = 4     // 火星\n}\n\nlet earthNumber = Planet.earth.rawValue  // rawValueで数値を取得\nprint(\"地球の番号: \\(earthNumber)\")",
+					"output": "北へ進む\n地球の番号: 3",
+					"executable": true,
+					"keywords": ["enum", "case", "switch", "列挙", "イナム", "エナム"]
+				}
+			]
+		},
+		{
+			"id": "types",
+			"title": "型",
+			"description": "Swiftのデータ型について学びます。",
+			"codeBlocks": [
+				{
+					"title": "基本型",
+					"code": "// Swiftの基本的なデータ型\n// 整数型（Int）- 正負の整数を扱う\nlet age: Int = 13  // 年齢（整数）\nlet score: Int = 85  // スコア（整数）\n\n// 浮動小数点型（Double, Float）- 小数点を扱う\nlet height: Double = 165.5  // 身長（倍精度浮動小数点）\nlet weight: Float = 50.5    // 体重（単精度浮動小数点）\n\n// 論理型（Bool）- trueまたはfalseの値\nlet isStudent: Bool = true   // 学生かどうか\nlet hasHomework: Bool = false  // 宿題があるかどうか\n\n// 文字列型（String）- 文字の並び\nlet name: String = \"太郎\"  // 名前\nlet message: String = \"こんにちは\"  // メッセージ\n\n// 文字型（Character）- 単一の文字\nlet grade: Character = \"A\"  // 成績\nlet symbol: Character = \"★\"  // 記号\n\n// 値の出力\nprint(\"年齢: \\(age)歳\")\nprint(\"身長: \\(height)cm\")\nprint(\"学生: \\(isStudent)\")\nprint(\"名前: \\(name)\")\nprint(\"成績: \\(grade)\")",
+					"output": "年齢: 13歳\n身長: 165.5cm\n学生: true\n名前: 太郎\n成績: A",
+					"executable": true,
+					"keywords": [
+						"Int",
+						"Double",
+						"String",
+						"Bool",
+						"型",
+						"type",
+						"integer",
+						"boolean",
+						"数値",
+						"文字"
+					]
+				},
+				{
+					"title": "型の確認（type(of:)関数）",
+					"code": "// type(of:)関数を使って変数の型を確認する\nlet number = 42\nlet decimal = 3.14\nlet text = \"Hello\"\nlet flag = true\n\nprint(\"numberの型: \\(type(of: number))\")  // Int型\nprint(\"decimalの型: \\(type(of: decimal))\")  // Double型\nprint(\"textの型: \\(type(of: text))\")      // String型\nprint(\"flagの型: \\(type(of: flag))\")      // Bool型",
+					"output": "numberの型: Int\ndecimalの型: Double\ndecimalの型: String\nflagの型: Bool",
+					"executable": true,
+					"keywords": ["type(of:)", "check", "確認", "型確認"]
+				},
+				{
+					"title": "タプル（Tuple）",
+					"code": "// タプルは複数の値をグループ化する型\n// 生徒の情報をタプルで表現\nlet student: (String, Int, String) = (\"太郎\", 13, \"中学1年\")\nlet point: (x: Int, y: Int) = (x: 10, y: 20)\n\n// インデックスでアクセス\nprint(\"名前: \\(student.0)\")  // 最初の要素（太郎）\nprint(\"年齢: \\(student.1)\")  // 2番目の要素（13）\nprint(\"学年: \\(student.2)\")  // 3番目の要素（中学1年）\n\n// ラベル付きでアクセス\nprint(\"X座標: \\(point.x)\")  // xラベルでアクセス\nprint(\"Y座標: \\(point.y)\")  // yラベルでアクセス\n\n// 分解して代入\nlet (name, age, grade) = student\nprint(\"\\(name)は\\(age)歳の\\(grade)生です\")",
+					"output": "名前: 太郎\n年齢: 13\n学年: 中学1年\nX座標: 10\nY座標: 20\n太郎は13歳の中学1年生です",
+					"executable": true,
+					"keywords": ["tuple", "multiple", "values", "pair", "組", "タプル"]
+				},
+				{
+					"title": "型の変換（キャスト）",
+					"code": "// 異なる型同士の変換（キャスト）\n// IntからDoubleへの変換\nlet intValue = 42\nlet doubleValue = Double(intValue)  // IntからDoubleに変換\nprint(\"IntからDouble: \\(doubleValue)\")  // 42.0\n\n// DoubleからIntへの変換（小数点以下切り捨て）\nlet decimalValue = 3.9\nlet intFromDouble = Int(decimalValue)  // DoubleからIntに変換\nprint(\"DoubleからInt: \\(intFromDouble)\")  // 3\n\n// StringからIntへの変換（失敗する可能性あり）\nlet numberString = \"123\"\nif let convertedNumber = Int(numberString) {\n    print(\"StringからInt: \\(convertedNumber)\")  // 変換成功\n} else {\n    print(\"変換できませんでした\")\n}\n\n// IntからStringへの変換\nlet numberToString = String(intValue)\nprint(\"IntからString: \\(numberToString)\")",
+					"output": "IntからDouble: 42.0\nDoubleからInt: 3\nStringからInt: 123\nIntからString: 42",
+					"executable": true,
+					"keywords": [
+						"cast",
+						"convert",
+						"Double(int)",
+						"Int(double)",
+						"String(int)",
+						"変換",
+						"キャスト"
+					]
+				},
+				{
+					"title": "範囲型（Range）",
+					"code": "// 範囲型は連続した値の範囲を表す型\n// ClosedRangeは開始値と終了値を含む範囲（...演算子）\nlet closedRange: ClosedRange<Int> = 1...5  // 1, 2, 3, 4, 5を含む範囲\nprint(\"ClosedRange: \\(closedRange)\")  // 1...5と表示される\n\n// 範囲を使ったループ\nprint(\"範囲内の値:\")\nfor number in closedRange {\n    print(\"\\(number)\", terminator: \" \")  // 1 2 3 4 5 と出力\n}\nprint()  // 改行\n\n// 範囲に値が含まれるかチェック\nlet testValue = 3\nif closedRange.contains(testValue) {\n    print(\"\\(testValue)は範囲内に含まれます\")  // 3は範囲内に含まれる\n}\n\n// 範囲の境界値を取得\nprint(\"開始値: \\(closedRange.lowerBound)\")  // 1\nprint(\"終了値: \\(closedRange.upperBound)\")  // 5\n\n// 半開範囲（..<演算子）との比較\nlet halfOpenRange = 1..<5  // 1, 2, 3, 4を含む（5を含まない）\nprint(\"Half-open range: \\(halfOpenRange)\")  // 1..<5\n\n// 文字の範囲も可能\nlet charRange: ClosedRange<Character> = \"a\"...\"z\"\nprint(\"文字の範囲: \\(charRange.contains(\\\"m\\\"))\")  // true",
+					"output": "ClosedRange: 1...5\n範囲内の値:\n1 2 3 4 5\n3は範囲内に含まれます\n開始値: 1\n終了値: 5\nHalf-open range: 1..<5\n文字の範囲: true",
+					"executable": true,
+					"keywords": ["range", "closed", "half-open", "...", "..<", "範囲"]
+				}
+			]
+		},
+		{
+			"id": "operators",
+			"title": "演算子",
+			"description": "計算や比較に使う記号です。",
+			"codeBlocks": [
+				{
+					"title": "算術演算子",
+					"code": "// 算術演算子を使って数値の計算を行う\nlet a = 10  // 変数aに10を代入\nlet b = 3   // 変数bに3を代入\n\nlet sum = a + b        // 加算（和）: 10 + 3 = 13\nlet difference = a - b // 減算（差）: 10 - 3 = 7\nlet product = a * b    // 乗算（積）: 10 * 3 = 30\nlet quotient = a / b   // 除算（商）: 10 / 3 = 3（整数除算なので小数点以下切り捨て）\nlet remainder = a % b  // 剰余（余り）: 10 % 3 = 1\n\n// 計算結果を出力\nprint(\"和: \\(sum)\")\nprint(\"差: \\(difference)\")\nprint(\"積: \\(product)\")\nprint(\"商: \\(quotient)\")\nprint(\"余り: \\(remainder)\")",
+					"output": "和: 13\n差: 7\n積: 30\n商: 3\n余り: 1",
+					"executable": true,
+					"keywords": [
+						"+",
+						"-",
+						"*",
+						"/",
+						"%",
+						"math",
+						"calculation",
+						"計算",
+						"足し算",
+						"引き算",
+						"掛け算",
+						"割り算"
+					]
+				},
+				{
+					"title": "比較演算子",
+					"code": "// 比較演算子を使って値の大小や等しさを比較する\nlet x = 5   // 変数xに5を代入\nlet y = 10  // 変数yに10を代入\n\nprint(\"x == y: \\(x == y)\")  // 等しい（xはyと等しいか？）: false\nprint(\"x != y: \\(x != y)\")  // 等しくない（xはyと等しくないか？）: true\nprint(\"x < y: \\(x < y)\")   // より小さい（xはyより小さいか？）: true\nprint(\"x > y: \\(x > y)\")   // より大きい（xはyより大きいか？）: false\nprint(\"x <= y: \\(x <= y)\")  // 以下（xはy以下か？）: true\nprint(\"x >= y: \\(x >= y)\")  // 以上（xはy以上か？）: false",
+					"output": "x == y: false\nx != y: true\nx < y: true\nx > y: false\nx <= y: true\nx >= y: false",
+					"executable": true,
+					"keywords": ["==", "!=", "<", ">", "compare", "equal", "比較", "等しい", "大小"]
+				},
+				{
+					"title": "三項演算子",
+					"code": "// 三項演算子は条件式 ? 真の値 : 偽の値 の形式で、条件によって値を選択する\nlet score = 85  // テストのスコア\n\n// 条件に基づいて値を選択（60点以上なら合格、そうでなければ不合格）\nlet result = score >= 60 ? \"合格\" : \"不合格\"\nprint(\"テスト結果: \\(result)\")\n\n// 数値の比較（aとbのうち大きい方を選択）\nlet a = 10\nlet b = 20\nlet max = a > b ? a : b  // aがbより大きい場合はa、そうでなければb\nprint(\"大きい方の値: \\(max)\")\n\n// 文字列の選択（学生かどうかに応じてメッセージを選択）\nlet isStudent = true\nlet message = isStudent ? \"学生です\" : \"学生ではありません\"\nprint(message)",
+					"output": "テスト結果: 合格\n大きい方の値: 20\n学生です",
+					"executable": true,
+					"keywords": ["ternary", "?:", "condition", "if-else", "operator", "条件演算子", "三項"]
+				}
+			]
+		},
+		{
+			"id": "control-structures",
+			"title": "制御構造",
+			"description": "プログラムの流れを制御します。",
+			"codeBlocks": [
+				{
+					"title": "if文",
+					"code": "// if文を使って条件分岐を行う\nlet age = 13  // 年齢\n\n// 基本的なif-else文（13歳以上なら中学生、そうでなければ小学生）\nif age >= 13 {\n    print(\"中学生です\")\n} else {\n    print(\"小学生です\")\n}\n\n// 複数の条件をチェックするif-else if-else文\nif age >= 18 {\n    print(\"大人\")  // 18歳以上は大人\n} else if age >= 13 {\n    print(\"中学生\")  // 13-17歳は中学生\n} else {\n    print(\"小学生\")  // 12歳以下は小学生\n}",
+					"output": "中学生です\n中学生",
+					"executable": true,
+					"keywords": ["condition", "else", "branch", "条件", "分岐", "if"]
+				},
+				{
+					"title": "for-inループ",
+					"code": "// for-inループを使ってコレクションの要素を順番に処理する\nlet fruits = [\"りんご\", \"バナナ\", \"オレンジ\"]  // 果物の配列\n\n// 配列の各要素を順番に処理\nfor fruit in fruits {\n    print(\"好きな果物: \\(fruit)\")\n}\n\n// 範囲を使ったループ（1から5までの数字を順番に処理）\nfor i in 1...5 {  // 1, 2, 3, 4, 5の順にiに代入される\n    print(\"\\(i)回目のループ\")\n}",
+					"output": "好きな果物: りんご\n好きな果物: バナナ\n好きな果物: オレンジ\n1回目のループ\n2回目のループ\n3回目のループ\n4回目のループ\n5回目のループ",
+					"executable": true,
+					"keywords": ["loop", "iteration", "repeat", "繰り返し", "ループ", "for"]
+				}
+			]
+		},
+		{
+			"id": "functions",
+			"title": "関数",
+			"description": "処理をまとめて再利用できるようにします。",
+			"codeBlocks": [
+				{
+					"title": "関数の定義と呼び出し",
+					"code": "// funcキーワードを使って関数を定義する\n// 挨拶をする関数（名前を受け取って挨拶文を返す）\nfunc greet(name: String) -> String {\n    return \"こんにちは、\\(name)さん!\"  // 挨拶文を返す\n}\n\n// 計算を行う関数（2つの整数を受け取ってその和を返す）\nfunc add(a: Int, b: Int) -> Int {\n    return a + b  // a + bの結果を返す\n}\n\n// 関数の実行（呼び出し）\nlet message = greet(name: \"太郎\")  // greet関数を呼び出し、結果をmessageに代入\nlet result = add(a: 10, b: 5)     // add関数を呼び出し、結果をresultに代入\n\nprint(message)  // 挨拶文を出力\nprint(\"10 + 5 = \\(result)\")  // 計算結果を出力",
+					"output": "こんにちは、太郎さん!\n10 + 5 = 15",
+					"executable": true,
+					"keywords": [
+						"func",
+						"return",
+						"arguments",
+						"parameters",
+						"call",
+						"定義",
+						"呼び出し",
+						"関数",
+						"引数",
+						"戻り値"
+					]
+				}
+			]
+		},
+		{
+			"id": "collections",
+			"title": "コレクション",
+			"description": "複数の値をまとめて扱います。",
+			"codeBlocks": [
+				{
+					"title": "配列（Array）",
+					"code": "// 配列は複数の値を順番に格納するコレクション型\n// 配列の作成（文字列の配列）\nvar fruits = [\"りんご\", \"バナナ\", \"オレンジ\"]  // 果物の名前を格納\nlet numbers = [1, 2, 3, 4, 5]  // 数値の配列\n\n// インデックスを使って要素にアクセス（0から始まる）\nprint(fruits[0])  // 最初の要素（りんご）を出力\nprint(numbers[0]) // 最初の要素（1）を出力\n\n// 要素の追加（appendメソッドを使う）\nfruits.append(\"ぶどう\")  // 配列の末尾にぶどうを追加\nprint(fruits)  // 追加後の配列全体を出力\n\n// 要素数の取得（countプロパティ）\nprint(fruits.count)  // fruits配列の要素数を出力\nprint(numbers.count) // numbers配列の要素数を出力",
+					"output": "りんご\n1\n[\"りんご\", \"バナナ\", \"オレンジ\", \"ぶどう\"]\n4\n5",
+					"executable": true,
+					"keywords": ["array", "list", "append", "count", "index", "リスト", "配列"]
+				},
+				{
+					"title": "辞書（Dictionary）",
+					"code": "// 辞書はキーと値のペアを格納するコレクション型\n// 辞書の作成（キーが科目名、値が点数の辞書）\nvar scores = [\"数学\": 85, \"英語\": 92, \"国語\": 78]\n\n// キーを使って値を取得（オプショナルバインディングを使用）\nif let mathScore = scores[\"数学\"] {  // 数学の点数を取得しようとする\n    print(\"数学の点数: \\(mathScore)\")  // 取得成功したら出力\n}\n\n// 値の更新または追加\nscores[\"理科\"] = 88  // 理科の点数を追加\nprint(scores)  // 更新後の辞書全体を出力",
+					"output": "数学の点数: 85\n[\"数学\": 85, \"英語\": 92, \"国語\": 78, \"理科\": 88]",
+					"executable": true,
+					"keywords": ["dictionary", "key", "value", "map", "hash", "連想配列", "辞書"]
+				}
+			]
+		},
+		{
+			"id": "classes-structs",
+			"title": "クラスと構造体",
+			"description": "データをまとめて扱うための型です。",
+			"codeBlocks": [
+				{
+					"title": "構造体の定義",
+					"code": "// structキーワードを使って構造体を定義（関連するデータをまとめる）\nstruct Student {  // 学生を表す構造体\n    var name: String   // 名前（変数）\n    var age: Int       // 年齢（変数）\n    var grade: String  // 学年（変数）\n}\n\n// 構造体のインスタンスを作成\nvar student1 = Student(name: \"太郎\", age: 13, grade: \"中学1年\")\n\n// ドット記法を使ってプロパティにアクセス\nprint(\"\\(student1.name)は\\(student1.age)歳です\")",
+					"output": "太郎は13歳です",
+					"executable": true,
+					"keywords": [
+						"struct",
+						"definition",
+						"instance",
+						"class",
+						"model",
+						"構造体",
+						"インスタンス"
+					]
+				}
+			]
+		},
+		{
+			"id": "methods",
+			"title": "メソッド",
+			"description": "メソッドは、特定の型（クラス、構造体、列挙型）の内部で定義された関数です。その型のデータ（プロパティ）を使って処理を行う「振る舞い」を定義します。",
+			"codeBlocks": [
+				{
+					"title": "メソッドの定義と使用",
+					"code": "class Counter {\n    var count = 0\n    \n    // カウントを1増やすメソッド\n    func increment() {\n        count += 1\n        print(\"カウント: \\(count)\")\n    }\n    \n    // 指定した数だけ増やすメソッド\n    func increment(by amount: Int) {\n        count += amount\n        print(\"\\(amount)増やしました。合計: \\(count)\")\n    }\n}\n\n// クラスのインスタンスを作成\nlet myCounter = Counter()\n\n// メソッドの呼び出し\nmyCounter.increment()\nmyCounter.increment(by: 5)",
+					"output": "カウント: 1\n5増やしました。合計: 6",
+					"executable": true,
+					"keywords": [
+						"method",
+						"function",
+						"class",
+						"instance",
+						"behavior",
+						"振る舞い",
+						"メソッド"
+					]
+				}
+			],
+			"afterHtml": "<div class=\"mt-8\"><h3 class=\"mb-4 text-xl font-bold\">関数とメソッドの違い</h3><div class=\"overflow-x-auto\"><table class=\"table w-full rounded-box table-zebra bg-base-200\"><thead><tr class=\"bg-base-300\"><th class=\"text-base text-base-content\">項目</th><th class=\"text-base text-base-content\">関数 (Function)</th><th class=\"text-base text-base-content\">メソッド (Method)</th></tr></thead><tbody><tr><td class=\"font-bold\">定義場所</td><td>型の外側（グローバル）</td><td>型（クラス・構造体）の内側</td></tr><tr><td class=\"font-bold\">呼び出し方</td><td><code class=\"rounded bg-base-300 px-1\">funcName()</code></td><td><code class=\"rounded bg-base-300 px-1\">instance.methodName()</code></td></tr><tr><td class=\"font-bold\">役割</td><td>単独で動作する処理のまとまり</td><td>その型のデータ操作や振る舞い</td></tr><tr><td class=\"font-bold\">データアクセス</td><td>引数のみ</td><td>インスタンス自身のプロパティ（<code>self</code>）にアクセス可能</td></tr></tbody></table></div></div>"
+		},
+		{
+			"id": "keypaths",
+			"title": "KeyPathと.self",
+			"description": "プロパティへの参照や、値そのものを指すための構文です。",
+			"codeBlocks": [
+				{
+					"title": "KeyPathと.selfの使い方",
+					"code": "// 1. \\.self の意味\n// \\.self は「その値自身」を指すKeyPathです\nlet numbers = [10, 20, 30]\n\n// List(numbers, id: \\.self) のように使う場合、\n// 「配列の各要素（数値）そのものを識別子(ID)として使う」という意味になります\n\n\n// 2. プロパティへのKeyPath\nstruct Student {\n    var name: String\n    var grade: Int\n}\n\nlet students = [\n    Student(name: \"太郎\", grade: 1),\n    Student(name: \"花子\", grade: 2),\n    Student(name: \"次郎\", grade: 1)\n]\n\n// map関数などでKeyPathを使うと、クロージャを省略して簡潔に書けます\n// 通常の書き方: students.map { student in student.name }\nlet names = students.map(\\.name)\nprint(\"名前一覧: \\(names)\")\n\n// filterなどでの活用（KeyPathそのものではなく、プロパティ参照として）\n// KeyPath自体は値への「パス」を表す型です\nlet namePath = \\Student.name\nlet taro = students[0]\nprint(\"KeyPathでアクセス: \\(taro[keyPath: namePath])\")",
+					"output": "names: [\"太郎\", \"花子\", \"次郎\"]\nKeyPathでアクセス: 太郎",
+					"executable": true,
+					"keywords": ["keypath", "self", "syntax", "reference", "参照", "キーパス"]
+				}
+			]
+		},
+		{
+			"id": "optionals-error-handling",
+			"title": "オプションとエラー処理",
+			"description": "値が存在しない可能性を扱います。",
+			"codeBlocks": [
+				{
+					"title": "Optional型",
+					"code": "// Optional型は値が存在しない可能性を表す（型名の後に?をつける）\nvar optionalName: String? = \"太郎\"  // 値があるOptional\nvar optionalAge: Int? = nil         // nil（値なし）のOptional\n\n// オプショナルバインディング（if let）で安全に値を取り出す\nif let name = optionalName {  // optionalNameに値があればnameに代入\n    print(\"名前: \\(name)\")\n} else {\n    print(\"名前が設定されていません\")\n}\n\n// nilの値に対するオプショナルバインディング\nif let age = optionalAge {  // optionalAgeはnilなので実行されない\n    print(\"年齢: \\(age)\")\n} else {\n    print(\"年齢が設定されていません\")\n}\n\n// 強制アンラップ（!）はnilでないことを確認してから使用（危険）\nif optionalAge != nil {\n    print(\"年齢: \\(optionalAge!)\")  // !で強制的に値を取り出す\n}\n\n// 注意: nilに対して強制アンラップするとランタイムエラーになる\n// 以下のコードは実行しないこと（コメントアウト）\n// let nilValue: Int? = nil\n// print(nilValue!)  // Fatal error: Unexpectedly found nil while unwrapping an Optional value",
+					"output": "名前: 太郎\n年齢が設定されていません",
+					"executable": true,
+					"keywords": [
+						"nil",
+						"unwrap",
+						"binding",
+						"if let",
+						"guard",
+						"?",
+						"!",
+						"アンラップ",
+						"オプショナル"
+					]
+				}
+			]
+		},
+		{
+			"id": "useful-functions",
+			"title": "便利な関数",
+			"description": "よく使う組み込み関数です。",
+			"codeBlocks": [
+				{
+					"title": "print関数",
+					"code": "// print関数はコンソールに値を出力する\nprint(\"Hello, World!\")  // 基本的な出力\nprint(\"名前: 太郎, 年齢: 13\")  // 複数の値をカンマ区切りで出力\n\n// terminatorパラメータで改行を制御（デフォルトは\\n）\nprint(\"こんにちは\", terminator: \"\")  // 改行なしで出力\n\n// 明示的に改行を指定（デフォルトと同じ）\nprint(\"こんにちは\", terminator: \"\\n\")\n\n// 複数の改行を出力\nprint(\"1行目\")  // 1行目出力\nprint(\"2行目\", terminator: \"\\n\\n\")  // 2行目出力後に2回改行\nprint(\"4行目\")  // 4行目出力",
+					"output": "Hello, World!\n名前: 太郎, 年齢: 13\nこんにちはこんにちは\n1行目\n2行目\n\n4行目",
+					"executable": true,
+					"keywords": ["log", "console", "debug", "output", "出力", "プリント"]
+				},
+				{
+					"title": "Stringのメソッド",
+					"code": "let message = \"Hello, Swift!\"  // 文字列を変数に代入\n\n// countプロパティで文字数を取得\nprint(message.count)  // 文字列の長さ（文字数）を出力\n\n// uppercased()メソッドで大文字に変換\nprint(message.uppercased())  // \"HELLO, SWIFT!\"\n\n// lowercased()メソッドで小文字に変換\nprint(message.lowercased())  // \"hello, swift!\"\n\n// contains()メソッドで部分文字列の検索\nif message.contains(\"Swift\") {  // \"Swift\"が含まれているかチェック\n    print(\"Swiftが見つかりました\")  // 含まれていれば出力\n}",
+					"output": "13\nHELLO, SWIFT!\nhello, swift!\nSwiftが見つかりました",
+					"executable": true,
+					"keywords": [
+						"length",
+						"count",
+						"upper",
+						"lower",
+						"search",
+						"contains",
+						"文字数",
+						"検索",
+						"大文字",
+						"小文字"
+					]
+				},
+				{
+					"title": "UUID() - 一意なIDの生成",
+					"code": "import Foundation\n\n// UUID（Universally Unique Identifier）は、世界で唯一の識別子を生成します\n// ランダムなUUIDを生成\nlet id = UUID()\nprint(\"生成されたID: \\(id)\")\n// 出力例: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\n\n// 文字列として取得する場合\nlet idString = id.uuidString\nprint(\"文字列形式: \\(idString)\")\n\n// SwiftUIでの活用例（リスト表示の識別子としてよく使われます）\nstruct TodoItem: Identifiable {\n    let id = UUID()  // インスタンス作成時に自動でユニークなIDを付与\n    var title: String\n}\n\nlet item = TodoItem(title: \"牛乳を買う\")\nprint(\"Todo項目のID: \\(item.id)\")",
+					"output": "生成されたID: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\n文字列形式: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\nTodo項目のID: E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
+					"executable": true,
+					"keywords": ["id", "unique", "identifier", "random", "uuid", "識別子", "一意", "ランダム"]
+				}
+			]
+		},
+		{
+			"id": "swiftui-property-wrappers",
+			"title": "SwiftUIプロパティラッパー",
+			"description": "ビューの状態管理とデータの受け渡しに使う特別な属性です。",
+			"codeBlocks": [
+				{
+					"title": "@State（状態の管理）",
+					"code": "import SwiftUI\n\n// @Stateは、ビュー内で変更可能な状態を管理するためのプロパティラッパーです\n// 値が変更されると、ビューが自動的に再描画されます\n\nstruct CounterView: View {\n    // @Stateを使って、カウント値を管理\n    // privateをつけるのが推奨（このビュー内でのみ使用するため）\n    @State private var count = 0\n    \n    var body: some View {\n        VStack {\n            Text(\"カウント: \\(count)\")\n            \n            Button(\"増やす\") {\n                count += 1  // 値を変更するとビューが更新される\n            }\n        }\n    }\n}\n\n// @Stateの特徴:\n// - ビューが所有する「単一の情報源」\n// - 値型（Int, String, Bool, 構造体など）に使用\n// - ビューが再生成されても値は保持される",
+					"output": "（ボタンを押すたびにカウントが1ずつ増える）",
+					"executable": false,
+					"keywords": ["state", "property wrapper", "view", "update", "状態", "再描画"]
+				},
+				{
+					"title": "@Binding（双方向データ渡し）",
+					"code": "import SwiftUI\n\n// @Bindingは、親ビューの@State変数への「参照」を子ビューに渡すためのプロパティラッパーです\n// 子ビューで値を変更すると、親ビューの値も変更されます\n\n// 子ビュー: トグルスイッチのコンポーネント\nstruct ToggleRow: View {\n    let label: String\n    @Binding var isOn: Bool  // 親からの参照を受け取る\n    \n    var body: some View {\n        Toggle(label, isOn: $isOn)  // $をつけてBindingとして渡す\n    }\n}\n\n// 親ビュー\nstruct SettingsView: View {\n    @State private var notificationsEnabled = true  // 親が所有する状態\n    @State private var darkModeEnabled = false\n    \n    var body: some View {\n        VStack {\n            // 子ビューに$をつけてBindingとして渡す\n            ToggleRow(label: \"通知\", isOn: $notificationsEnabled)\n            ToggleRow(label: \"ダークモード\", isOn: $darkModeEnabled)\n            \n            // 現在の状態を表示\n            Text(\"通知: \\(notificationsEnabled ? \"ON\" : \"OFF\")\")\n            Text(\"ダークモード: \\(darkModeEnabled ? \"ON\" : \"OFF\")\")\n        }\n    }\n}",
+					"output": "（子ビューでトグルを切り替えると、親ビューの状態も更新される）",
+					"executable": false,
+					"keywords": [
+						"binding",
+						"share",
+						"reference",
+						"two-way",
+						"双方向",
+						"参照",
+						"バインディング"
+					]
+				},
+				{
+					"title": "@Stateと@Bindingの使い分け",
+					"code": "import SwiftUI\n\n// TextFieldの例で@Stateと@Bindingの連携を理解する\n\n// 入力フォームの子コンポーネント\nstruct NameInputField: View {\n    @Binding var name: String  // 親から渡される参照\n    \n    var body: some View {\n        TextField(\"名前を入力\", text: $name)\n            .textFieldStyle(.roundedBorder)\n    }\n}\n\n// 親ビュー\nstruct FormView: View {\n    @State private var userName = \"\"  // この状態を親が「所有」\n    \n    var body: some View {\n        VStack(spacing: 20) {\n            // 子ビューに状態の「参照」を渡す\n            NameInputField(name: $userName)\n            \n            // 入力された値をリアルタイムで表示\n            Text(\"こんにちは、\\(userName.isEmpty ? \"ゲスト\" : userName)さん！\")\n        }\n        .padding()\n    }\n}\n\n// まとめ:\n// @State  → 「状態を持つ」側（親）で使う\n// @Binding → 「状態を借りる」側（子）で使う\n// $変数名 → Bindingとして渡すときに使う記法",
+					"output": "（TextFieldに入力すると、下のテキストがリアルタイムで更新される）",
+					"executable": false,
+					"keywords": ["difference", "usage", "pattern", "使い分け", "違い"]
+				}
+			],
+			"afterHtml": "<div class=\"mt-8\"><h3 class=\"mb-4 text-xl font-bold\">@Stateと@Bindingの関係</h3><div class=\"overflow-x-auto\"><table class=\"table w-full rounded-box table-zebra bg-base-200\"><thead><tr class=\"bg-base-300\"><th class=\"text-base text-base-content\">項目</th><th class=\"text-base text-base-content\">@State</th><th class=\"text-base text-base-content\">@Binding</th></tr></thead><tbody><tr><td class=\"font-bold\">役割</td><td>状態を「所有」する</td><td>状態を「参照」する</td></tr><tr><td class=\"font-bold\">使う場所</td><td>親ビュー（状態の発生源）</td><td>子ビュー（状態を受け取る側）</td></tr><tr><td class=\"font-bold\">宣言方法</td><td><code class=\"rounded bg-base-300 px-1\">@State private var value = 初期値</code></td><td><code class=\"rounded bg-base-300 px-1\">@Binding var value: 型</code></td></tr><tr><td class=\"font-bold\">渡し方</td><td>-</td><td><code class=\"rounded bg-base-300 px-1\">$変数名</code>で渡す</td></tr><tr><td class=\"font-bold\">初期値</td><td>必要</td><td>不要（親から受け取る）</td></tr></tbody></table></div></div>"
+		}
+	]
 }

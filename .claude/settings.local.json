@@ -1,11 +1,11 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(tree:*)",
-      "Bash(wc:*)",
-      "Bash(curl:*)",
-      "Bash(npm run build:*)",
-      "Bash(npm run check:*)"
-    ]
-  }
+	"permissions": {
+		"allow": [
+			"Bash(tree:*)",
+			"Bash(wc:*)",
+			"Bash(curl:*)",
+			"Bash(npm run build:*)",
+			"Bash(npm run check:*)"
+		]
+	}
 }

@@ -153,7 +153,10 @@ export function createSearch(sections) {
 			// セクションタイトル/説明またはcodeBlockタイトルにマッチ → タイトル一致
 			if (sectionTitleMatches) {
 				titleMatchedSectionIds.add(section.id);
-				matchedCodeBlocks.set(section.id, section.codeBlocks.map((b) => b.title));
+				matchedCodeBlocks.set(
+					section.id,
+					section.codeBlocks.map((b) => b.title)
+				);
 				titleMatches.push(section);
 			} else if (titleMatchingBlocks.length > 0) {
 				titleMatchedSectionIds.add(section.id);
@@ -180,13 +183,14 @@ export function createSearch(sections) {
 			const q = query;
 			if (t === q) return 1000; // 完全一致
 			if (t.startsWith(q)) return 500 - t.length; // 先頭一致（短い方優先）
-			if (t.includes(' ' + q) || t.includes('.' + q) || t.includes('_' + q))
-				return 300 - t.length; // 単語境界一致
+			if (t.includes(' ' + q) || t.includes('.' + q) || t.includes('_' + q)) return 300 - t.length; // 単語境界一致
 			return 100 - t.length; // 部分一致
 		};
 
 		// タイトル一致のソート
-		titleMatches.sort((a, b) => calcScore(a.title, lowerQuery) - calcScore(b.title, lowerQuery)).reverse();
+		titleMatches
+			.sort((a, b) => calcScore(a.title, lowerQuery) - calcScore(b.title, lowerQuery))
+			.reverse();
 
 		// コード一致のソート（マッチしたコードブロックの中で最高スコアを使う）
 		codeMatches.sort((a, b) => {

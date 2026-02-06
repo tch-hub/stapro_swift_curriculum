@@ -11,10 +11,10 @@ import SwiftData
 struct ContentView: View {
     // データ操作用
     @Environment(\.modelContext) private var modelContext
-    
+
     // 初期化が完了したかどうかを管理するフラグ
     @State private var isInitialized: Bool
-    
+
     // 自動初期化を行うかどうか（プレビュー用などではfalseにできるように）
     private let autoInitialize: Bool
 
@@ -23,7 +23,7 @@ struct ContentView: View {
         _isInitialized = State(initialValue: isInitialized)
         self.autoInitialize = autoInitialize
     }
-    
+
     var body: some View {
         // ... (次の手順で実装します)
         Text("Loading...")
@@ -50,7 +50,7 @@ struct ContentView: View {
             .onAppear {
                 // 画面が表示されたら初期化処理を開始
                 if !autoInitialize { return }
-                
+
                 // 1秒待ってから処理開始（ローディングを見せるため）
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     initializeAppIfNeeded()

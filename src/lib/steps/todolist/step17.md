@@ -10,7 +10,7 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
-    
+
     // データ管理用の状態変数
     @State private var tabs: [ToDoTab] = []         // 全タブのリスト
     @State private var tasks: [ToDoTask] = []       // 選択中のタブのタスクリスト
@@ -64,7 +64,7 @@ struct HomeView: View {
                 .onChange(of: selectedTabId) { _, _ in
                     loadTasks()
                 }
-                
+
                 // 次にリスト部分を追加します
             }
 ```
@@ -106,7 +106,7 @@ struct HomeView: View {
             tasks = []
             return
         }
-        
+
         // 条件：tabIdが一致するタスクだけを取得
         let descriptor = FetchDescriptor<ToDoTask>(
             predicate: #Predicate { $0.tabId == tabId }
@@ -126,7 +126,7 @@ struct HomeView: View {
     private func loadTabs() {
         // ステップ11で作ったServiceを使って全件取得
         tabs = ToDoTabService.getAllTabs(from: modelContext)
-        
+
         // 選択状態の自動調整
         if let currentId = selectedTabId {
             // もし選択中のIDがリストの中に無かったら（削除された場合など）
@@ -138,7 +138,7 @@ struct HomeView: View {
             // 未選択（初回起動時など）なら、先頭のタブを選択
             selectedTabId = tabs.first?.id
         }
-        
+
         // タブ一覧の更新に合わせて、タスクも再読み込み
         loadTasks()
     }
@@ -158,11 +158,11 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
-    
+
     @State private var tabs: [ToDoTab] = []
     @State private var tasks: [ToDoTask] = []
     @State private var selectedTabId: UUID?
-    
+
     @Binding var navigationPath: [NavigationItem]
 
     var body: some View {
@@ -208,7 +208,7 @@ struct HomeView: View {
 
     private func loadTabs() {
         tabs = ToDoTabService.getAllTabs(from: modelContext)
-        
+
         if let currentId = selectedTabId {
             if !tabs.contains(where: { $0.id == currentId }) {
                 selectedTabId = tabs.first?.id
@@ -224,7 +224,7 @@ struct HomeView: View {
             tasks = []
             return
         }
-        
+
         let descriptor = FetchDescriptor<ToDoTask>(
             predicate: #Predicate { $0.tabId == tabId }
         )

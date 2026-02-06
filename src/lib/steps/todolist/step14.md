@@ -18,7 +18,7 @@ struct ToDoListApp: App {
             ToDoTask.self,
             ToDoTab.self
         ])
-        
+
         // データベースの設定（永続化を有効にするため isStoredInMemoryOnly: false）
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

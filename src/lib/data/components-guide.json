@@ -7,6 +7,7 @@
             "codeBlocks": [
                 {
                     "title": "Text - テキストの表示",
+                    "description": "アプリ内でテキストを表示するための最も基本的なコンポーネントです。",
                     "code": "// 基本的なテキスト\nText(\"Hello, World!\")\n\n// Markdown記法のサポート\nText(\"**太字** と *斜体* と [リンク](https://apple.com)\")\n\n// 日付の表示スタイル\nText(Date(), style: .date)     // 2024年1月1日\nText(Date(), style: .time)     // 12:00\nText(Date(), style: .relative) // 2時間前\nText(Date(), style: .timer)    // 0:00 (カウントアップ)\n\n// 数値のフォーマット\nText(1000, format: .currency(code: \"JPY\")) // ¥1,000",
                     "keywords": [
                         "label",
@@ -19,6 +20,7 @@
                 },
                 {
                     "title": "Image - 画像の表示",
+                    "description": "画像を表示するためのコンポーネントです。SF Symbolsやアセット画像の表示が可能です。",
                     "code": "// システムアイコン (SF Symbols)\nImage(systemName: \"star.fill\")\n    .foregroundStyle(.yellow)\n\n// アセット画像\nImage(\"ProfilePicture\")\n    .resizable()        // サイズ変更を許可\n    .aspectRatio(contentMode: .fit) // アスペクト比を維持\n    .frame(width: 100)\n\n// 非同期画像の読み込み\nAsyncImage(url: URL(string: \"https://example.com/icon.png\")) {\n    image in image.resizable()\n} placeholder: {\n    ProgressView()\n}",
                     "keywords": [
                         "picture",
@@ -32,6 +34,7 @@
                 },
                 {
                     "title": "Button - ボタン",
+                    "description": "タップ操作を受け付け、アクションを実行するボタンコンポーネントです。",
                     "code": "// 基本的なボタン\nButton(\"タップして実行\") {\n    print(\"実行されました\")\n}\n\n// テキスト以外のラベル\nButton(action: {\n    // アクション\n}) {\n    HStack {\n        Image(systemName: \"trash\")\n        Text(\"削除\")\n    }\n}\n\n// ロール指定（破壊的なアクションなど）\nButton(\"削除\", role: .destructive) {\n    // 削除処理\n}",
                     "keywords": [
                         "action",

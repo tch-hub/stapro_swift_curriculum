@@ -7,7 +7,7 @@
 ```swift
 struct HomeView: View {
     // ... 既存の変数
-    
+
     // ↓この行を追加
     @State private var newTaskTitle = ""
 ```
@@ -24,7 +24,7 @@ struct HomeView: View {
         }
         .navigationTitle("ToDoリスト")
         .onAppear { loadTabs() }
-        
+
         // ↓ここから追加（VStackの外、bodyの最後の方）
         // 画面の下部に入力エリアを固定表示
         .safeAreaInset(edge: .bottom) {
@@ -50,7 +50,7 @@ struct HomeView: View {
 
         // タスクモデルを作成
         let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)
-        
+
         // データベースに保存
         ToDoTaskService.addTask(newTask, to: modelContext)
 
@@ -128,7 +128,7 @@ struct HomeView: View {
 
     private func loadTabs() {
         tabs = ToDoTabService.getAllTabs(from: modelContext)
-        
+
         if let currentId = selectedTabId {
             if !tabs.contains(where: { $0.id == currentId }) {
                 selectedTabId = tabs.first?.id
@@ -144,7 +144,7 @@ struct HomeView: View {
             tasks = []
             return
         }
-        
+
         let descriptor = FetchDescriptor<ToDoTask>(
             predicate: #Predicate { $0.tabId == tabId }
         )

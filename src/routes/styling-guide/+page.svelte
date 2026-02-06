@@ -31,22 +31,6 @@
 		}
 	});
 
-	// SvelteKit内部ナビゲーション時のハッシュスクロール対応
-	afterNavigate(({ to }) => {
-		if (to?.url?.hash) {
-			const hash = to.url.hash.substring(1);
-			// ローディング完了後にスクロール
-			const checkAndScroll = () => {
-				if (!isLoading) {
-					setTimeout(() => scrollToSection(hash), 100);
-				} else {
-					setTimeout(checkAndScroll, 100);
-				}
-			};
-			checkAndScroll();
-		}
-	});
-
 	// サイドバーのリンククリック時のスクロール関数
 	function scrollToSection(id) {
 		const element = document.getElementById(id);

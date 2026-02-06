@@ -1,7 +1,5 @@
 # ステップ9: 初期データを投入する(Constants.swift)
 
-
-
 ## 1. 初期データの定義
 
 `SwiftData/Constants.swift` を開き、初期タブとそれに紐づくタスクのリストを定義します。

@@ -1,18 +1,25 @@
 <script>
+	import { onMount } from 'svelte';
+
 	// プロパティの定義
 	let {
 		code = '', // 表示するコード
 		language = 'swift', // プログラミング言語（現在はswiftのみ）
 		title = '', // コードブロックのタイトル
+		description = '', // コードブロックの解説文
 		fileName = '', // 編集するファイル名
 		executable = false, // 実行可能コードかどうか
 		showLineNumbers = true, // 行番号を表示するかどうか
 		output = '', // 実行結果
 		showHeader = true // ヘッダーを表示するかどうか
-	} = $props(); // コピー機能の状態管理
+	} = $props();
+
+	// コピー機能の状態管理
 	let copied = $state(false);
 	// 実行機能の状態管理
 	let runMessage = $state('');
+	// マウント状態（hydration後にのみtrueになる）
+	let mounted = $state(false);
 
 	// クリップボードにコードをコピーする関数
 	async function copyToClipboard() {
@@ -48,15 +55,19 @@
 
 	let codeElement = $state();
 
+	// マウント後にPrismを適用
+	onMount(() => {
+		mounted = true;
+	});
+
 	// 行番号付きでコードを表示するための処理
 	// code / language が変化したときにも Prism ハイライトを再適用する
 	$effect(() => {
-		// 依存として code / language / showLineNumbers を参照することで
-		// これらが変化したときにこの effect が再実行されるようにする
+		// 依存として code / language / showLineNumbers / mounted を参照
 		void code;
 		void language;
 		void showLineNumbers;
-		if (typeof window !== 'undefined' && window.Prism && codeElement) {
+		if (mounted && window.Prism && codeElement) {
 			window.Prism.highlightElement(codeElement);
 		}
 	});
@@ -72,7 +83,9 @@
 		href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css"
 		rel="stylesheet"
 	/>
+	<!-- data-manual で自動ハイライトを無効化 -->
 	<script
+		data-manual
 		src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"
 	></script>
 	<script
@@ -150,6 +163,18 @@
 				class="language-swift">{code}</code
 			></pre>
 	</div>
+
+	<!-- 解説表示部分 -->
+	{#if description}
+		<div class="description-content border-t border-base-300">
+			<div class="description-header bg-base-200 px-4 py-2">
+				<h4 class="text-sm font-semibold text-base-content">解説</h4>
+			</div>
+			<div class="bg-base-100 px-4 py-3 text-sm leading-relaxed text-base-content/80">
+				{description}
+			</div>
+		</div>
+	{/if}
 
 	<!-- 実行結果表示部分 -->
 	{#if output}

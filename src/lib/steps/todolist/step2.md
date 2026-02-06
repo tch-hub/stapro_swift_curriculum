@@ -43,7 +43,7 @@ struct ToDoListItem: View {
         }) {
             HStack(spacing: 12) {
                 // ここにチェックボックスとテキストを追加します
-                
+
                 Spacer()
             }
             .padding(.vertical, 12)
@@ -51,7 +51,7 @@ struct ToDoListItem: View {
             .contentShape(Rectangle())
         }
         // ボタンのデフォルトの見た目を無効化（リスト内での強調表示などを防ぐ）
-        .buttonStyle(.plain) 
+        .buttonStyle(.plain)
     }
 ```
 

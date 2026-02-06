@@ -1,6 +1,5 @@
 # ステップ20: スワイプ削除を追加する(HomeView.swift)
 
-
 ## 1. ロジックの実装: 削除処理
 
 `Views/HomeView.swift` を開き、タスク削除用のメソッドを追加します。
@@ -107,7 +106,7 @@ struct HomeView: View {
 
     private func loadTabs() {
         tabs = ToDoTabService.getAllTabs(from: modelContext)
-        
+
         if let currentId = selectedTabId {
             if !tabs.contains(where: { $0.id == currentId }) {
                 selectedTabId = tabs.first?.id
@@ -123,7 +122,7 @@ struct HomeView: View {
             tasks = []
             return
         }
-        
+
         let descriptor = FetchDescriptor<ToDoTask>(
             predicate: #Predicate { $0.tabId == tabId }
         )

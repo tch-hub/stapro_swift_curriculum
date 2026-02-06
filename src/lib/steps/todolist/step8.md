@@ -20,7 +20,7 @@ final class ToDoTab: Identifiable {
     var name: String = ""
     // 作成日時
     var createdAt: Date = Date()
-    
+
     // 新しいタブを作成する時の初期設定
     init(name: String) {
         self.name = name
@@ -47,7 +47,7 @@ final class ToDoTab: Identifiable {
     var id: UUID = UUID()
     var name: String = ""
     var createdAt: Date = Date()
-    
+
     init(name: String) {
         self.name = name
         self.createdAt = Date()

@@ -49,9 +49,9 @@ struct InputView: View {
 ```swift
     var body: some View {
         HStack(alignment: .bottom, spacing: 12) {
-            
+
             // ①ここにテキスト入力欄を追加します
-            
+
             // ②ここに送信ボタンを追加します
 
         }
@@ -117,7 +117,7 @@ struct InputView: View {
                 List(tasks, id: \.self) { task in
                     Text(task)
                 }
-                
+
                 InputView(text: $text) {
                     tasks.append(text)
                     text = "" // 送信後にクリア
@@ -196,7 +196,7 @@ struct InputView: View {
                 List(tasks, id: \.self) { task in
                     Text(task)
                 }
-                
+
                 InputView(text: $text) {
                     tasks.append(text)
                     text = ""

@@ -26,7 +26,7 @@ final class ToDoTask: Identifiable {
     var tabId: UUID = UUID()
     // 作成日時
     var createdAt: Date = Date()
-    
+
     // 新しいタスクを作成する時の初期設定
     init(title: String, detail: String, tabId: UUID) {
         self.title = title
@@ -61,7 +61,7 @@ final class ToDoTask: Identifiable {
     var isCompleted: Bool = false
     var tabId: UUID = UUID()
     var createdAt: Date = Date()
-    
+
     init(title: String, detail: String, tabId: UUID) {
         self.title = title
         self.detail = detail

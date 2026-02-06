@@ -1,5 +1,6 @@
 <script>
 	import { base } from '$app/paths';
+	import { afterNavigate } from '$app/navigation';
 	import { tick, onMount } from 'svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
@@ -264,7 +265,12 @@
 
 						{#each section.codeBlocks as codeBlock (codeBlock.title)}
 							<div id={toSafeId(section.id, codeBlock.title)}>
-								<CodeBlock title={codeBlock.title} code={codeBlock.code} executable={false} />
+								<CodeBlock
+									title={codeBlock.title}
+									code={codeBlock.code}
+									executable={false}
+									description={codeBlock.description}
+								/>
 							</div>
 						{/each}
 					</div>

@@ -46,7 +46,7 @@ struct TabManageView: View {
             }
             .navigationTitle("タブ管理")
             .onAppear { loadTabs() } // 表示時にデータを読み込む
-            
+
             // 削除確認アラート
             .alert("タブの削除", isPresented: $showDeleteAlert) {
                 Button("削除", role: .destructive) { confirmDelete() }

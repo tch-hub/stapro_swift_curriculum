@@ -34,8 +34,10 @@ struct TabHeaderView: View {
 - `tabs.first(where: { ... })`: リストの中から、条件（IDが一致するもの）に合う最初のタブを探します。
 - `?.name`: タブが見つかればその名前を取得します。
 - `?? "タブを選択"`: もしタブが見つからなければ（未選択など）、代わりに "タブを選択" という文字を使います。
+
 ## 2. UIの実装: レイアウトの枠組み
-```
+
+````
 
 
 `body` の中身を実装します。横並びのレイアウトを作り、左側にタブ切り替えメニュー、右側に管理ボタンを配置します。
@@ -43,7 +45,7 @@ struct TabHeaderView: View {
 ```swift
     var body: some View {
         HStack(alignment: .center, spacing: 16) {
-            
+
             // ①ここにタブ切り替えメニューを追加します
 
             Spacer()
@@ -58,7 +60,7 @@ struct TabHeaderView: View {
              Divider() // 下に境界線を引く
         }
     }
-```
+````
 
 ## 3. UIの実装: タブ切り替えメニュー
 
