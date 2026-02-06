@@ -1,6 +1,7 @@
 import componentsData from '$lib/data/components-guide.json';
 import cheatsheetData from '$lib/data/cheatsheet.json';
 import stylingData from '$lib/data/styling-guide.json';
+import glossaryData from '$lib/data/glossary.json';
 
 export interface SearchResult {
 	id: string;
@@ -43,6 +44,11 @@ const PAGES = [
 		data: stylingData,
 		title: 'スタイリングガイド',
 		path: '/styling-guide'
+	},
+	{
+		data: glossaryData,
+		title: '用語解説',
+		path: '/glossary'
 	}
 ];
 

@@ -16,18 +16,31 @@ struct ToDoListItem: View {
 
 ## 2. プロパティの定義
 
-タスクを表示するために必要な情報（タイトル、完了状態）と、操作時のアクション（完了切り替え）を受け取れるように変数を定義します。
 
 `struct ToDoListItem: View {` の直下に追加してください。
 
 ```swift
-    // タスク名
-    let title: String
-    // 完了状態（trueなら完了、falseなら未完了）
-    let isCompleted: Bool
-    // タップされた時に実行する処理
-    let onToggle: () -> Void
+// タスク名
+let title: String
+// 完了状態（trueなら完了、falseなら未完了）
+let isCompleted: Bool
+// タップされた時に実行する処理
+let onToggle: () -> Void
 ```
+このコードでは、`ToDoListItem` という「部品」を動かすために必要な設定項目（プロパティ）を3つ定義しています。
+
+- **`let title: String`**  
+  タスクの「名前」を受け取るための定数です。`String` は「文字列」を扱う型です。
+
+- **`let isCompleted: Bool`**  
+  タスクが「完了しているかどうか」を受け取るための定数です。`Bool` は `true`（はい/完了）か `false`（いいえ/未完了）のどちらかの値が入る型です。
+
+- **`let onToggle: () -> Void`**  
+  ユーザーがこのリスト項目をタップしたときに、「何をするか」という**処理そのもの（アクション）**を受け取るための定数です。
+  - `() -> Void` という書き方は、「引数（入力）を受け取らず、戻り値（出力）もない関数」という意味です。
+  - 例えば、「完了状態を反転させる」といった処理を、この部品を使う側（親となる画面）から渡してもらう仕組みです。
+
+これらを `let` で定義しているのは、`ToDoListItem` というViewが作られた後に、勝手に中身が変わらないようにするためです。SwiftUIでは、データが変わるとView全体が新しく作り直されるため、Viewの中身自体は定数（`let`）にするのが基本となります。
 
 ## 3. UIの実装: ボタンとレイアウト
 
@@ -54,9 +67,6 @@ struct ToDoListItem: View {
         .buttonStyle(.plain)
     }
 ```
-
-- `HStack(spacing: 12)`: 要素を横一列に並べます。要素間のスペースを12に設定しています。
-- `Spacer()`: 左寄せにするために、右側に残りのスペースを埋める要素です。
 
 ## 4. UIの実装: チェックボックス
 
@@ -105,8 +115,11 @@ struct ToDoListItem: View {
                     .contentTransition(.opacity)
 ```
 
-- `.strikethrough(...)`: 文字に取り消し線を引きます。完了時のみ有効にします。
-- `.foregroundStyle(...)`: 文字の色を指定します。完了時は薄い色（secondary）にします。
+- **`.foregroundStyle(isCompleted ? .secondary : .primary)`**
+  文字の色を指定します。このモディファイアは「色」そのものを要求するため、`? :`（三項演算子）を使って、「完了なら薄い色、そうでなければ通常色」というふうに**渡す色を切り替えて**います。
+
+- **`.strikethrough(isCompleted, color: .secondary)`**
+  文字に取り消し線を引きます。このモディファイアは、最初の設定として「有効にするかどうか（`Boolean`）」を受け取る設計になっています。そのため、`isCompleted` をそのまま渡すだけで、自動的にオン/オフが切り替わります。
 
 ## 6. プレビューの作成
 

@@ -96,13 +96,15 @@
 	></script>
 </svelte:head>
 
-<div class="code-block my-4 overflow-hidden rounded-lg bg-base-100 shadow-lg">
+<div class="code-block overflow-hidden rounded-lg bg-base-100 shadow-lg">
 	{#if showHeader}
 		<!-- ヘッダー部分 -->
 		<div class="code-header flex items-center justify-between bg-base-200 px-4 py-2">
 			<div class="flex items-center space-x-2">
 				{#if title}
-					<h3 class="text-sm font-semibold text-base-content">{title}</h3>
+					<h3 class="m-0 text-sm font-semibold text-base-content">{title}</h3>
+				{:else if fileName}
+					<h3 class="m-0 font-mono text-sm font-semibold text-base-content">{fileName}</h3>
 				{/if}
 				{#if executable}
 					<span class="badge badge-sm badge-success">実行可能</span>
@@ -111,8 +113,6 @@
 			<div class="flex items-center space-x-2">
 				{#if title && fileName}
 					<span class="font-mono text-xs text-base-content opacity-70">{fileName}</span>
-				{:else if fileName}
-					<h3 class="font-mono text-sm font-semibold text-base-content">{fileName}</h3>
 				{/if}
 				<span class="badge badge-outline badge-sm">Swift</span>
 				{#if executable}
@@ -264,5 +264,11 @@
 	/* 実行メッセージのスタイル */
 	.run-message-content {
 		font-size: 0.875rem;
+	}
+
+	/* リセット用スタイル: proseの影響を打ち消す */
+	:global(.prose .code-block h3) {
+		margin-top: 0 !important;
+		margin-bottom: 0 !important;
 	}
 </style>

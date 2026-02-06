@@ -39,8 +39,18 @@
 			.map((token) => {
 				if (token.type === 'code') {
 					let fileName = '';
-					if (token.meta) {
-						const titleMatch = token.meta.match(/title="([^"]+)"/);
+					let lang = token.lang || 'swift';
+					let meta = token.meta || '';
+
+					// langに空白が含まれている場合、メタデータとして扱う
+					const spaceIndex = lang.indexOf(' ');
+					if (spaceIndex !== -1) {
+						meta = lang.slice(spaceIndex + 1) + (meta ? ' ' + meta : '');
+						lang = lang.slice(0, spaceIndex);
+					}
+
+					if (meta) {
+						const titleMatch = meta.match(/title="([^"]+)"/);
 						if (titleMatch) {
 							fileName = titleMatch[1];
 						}
@@ -49,7 +59,7 @@
 					return {
 						type: 'code',
 						code: token.text,
-						language: token.lang || 'swift',
+						language: lang,
 						fileName
 					};
 				}

@@ -21,26 +21,51 @@ struct InputView: View {
     }
 }
 ```
+このコンポーネントで定義している4つのプロパティについて解説します。
+
+- **`@Binding var text: String`**
+  親ビュー（この部品を使う側）とテキストデータを共有するためのプロパティです。`@State` ではなく `@Binding` を使うことで、入力された文字が親ビューの変数にもリアルタイムで反映されるようになります。
+
+- **`let onAdd: () -> Void`**
+  ボタンが押された時に実行したい「処理」を受け取るためのプロパティです。データの保存処理などをここに入れます。
+
+- **`var placeholder: String = ...`**
+  入力欄に表示するヒントテキストです。初期値（デフォルト値）を設定しているため、親ビューから指定せずに省略することも可能です。
+
+- **`var buttonIcon: String = ...`**
+  送信ボタンのアイコン名です。こちらも初期値を設定しており、必要に応じて変更できるようにしています。
 
 ## 2. 入力チェックとフォーカス制御
 
 入力が空でないかをチェックする機能と、キーボードのフォーカス制御を追加します。`struct InputView: View {` の中に追加してください。
 
 ```swift
-    // キーボードのフォーカス状態を管理
-    @FocusState private var isFocused: Bool
-
-    // 入力が空でないか判定（空白のみは無効）
-    private var isValid: Bool {
-        !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-
-    // 送信時の処理
-    private func handleSubmit() {
-        guard isValid else { return } // 無効なら何もしない
-        onAdd()
-    }
+// キーボードのフォーカス状態を管理
+@FocusState private var isFocused: Bool
+// 入力が空でないか判定（空白のみは無効）
+private var isValid: Bool {
+    !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+}
+// 送信時の処理
+private func handleSubmit() {
+    guard isValid else { return } // 無効なら何もしない
+    onAdd()
+}
 ```
+
+ここで行っている3つの処理について解説します。
+
+- **`@FocusState private var isFocused: Bool`**
+  キーボードが出ているか（入力中か）どうかを管理する変数です。
+  - 後ほど `TextField` に `.focused($isFocused)` と紐付けることで、プログラムからキーボードを閉じたり開いたりできるようになります。
+
+- **`private var isValid: Bool`**
+  「入力内容が有効かどうか」を判定する変数です（Computed Property）。
+  - `trimmingCharacters` を使って、スペースや改行だけの入力を「無効（空）」とみなすようにしています。これにより、空のタスクが作られるのを防ぎます。
+
+- **`private func handleSubmit()`**
+  送信ボタンが押されたり、Enterキーが押されたりした時に呼ぶ関数です。
+  - `guard isValid else { return }` というのは、「もし無効なら、ここで帰る（何もしない）」というガード（門番）の役割です。有効な場合だけ `onAdd()` を実行します。
 
 ## 3. UIの実装: 入力エリアと背景
 
@@ -59,8 +84,6 @@ struct InputView: View {
         .background(.ultraThinMaterial) // 半透明の背景（すりガラス効果）
     }
 ```
-
-- `.background(.ultraThinMaterial)`: iOSのナビゲーションバーなどで使われるような、半透明のガラスのような見た目になります。
 
 ## 4. UIの実装: テキスト入力欄
 
@@ -99,8 +122,24 @@ struct InputView: View {
             .padding(.bottom, 4) // 入力欄と高さを合わせるための微調整
 ```
 
-- `.disabled(!isValid)`: 入力が無効（空など）の場合はボタンを押せないようにして、誤操作を防ぎます。
-- `.foregroundStyle`: `isValid` フラグを使って、押せる時だけ青色になるようにしています。
+送信ボタンの実装について解説します。
+
+- **`Button(action: handleSubmit)`**
+  ボタンが押された時に、先ほど定義した `handleSubmit` メソッドを実行するように指定しています。
+
+- **`.foregroundStyle(...)` / 三項演算子 (`? :`)**
+  ボタンの色を `isValid` の状態によって切り替えています。
+  - `isValid` が `true`（入力あり）なら `Color.accentColor`（青色など）
+  - `false`（入力なし）なら `Color(.systemGray4)`（グレー）
+  このようにすることで、ユーザーに「今は押せない」ということを視覚的に伝えます。
+
+- **`.disabled(!isValid)`**
+  見た目だけでなく、機能としてもボタンを押せないようにします。
+  - `!isValid` は「有効ではない（＝無効）」という意味です。
+  - これにより、グレーの状態でボタンを連打されても、空のタスクが登録されることはありません。
+
+- **`.padding(.bottom, 4)`**
+  隣にあるテキスト入力欄と高さを揃えるための微調整です。`HStack(alignment: .bottom)` を使っているため、アイコンの位置を少し持ち上げることでバランスを取っています。
 
 ## 6. プレビューの作成
 

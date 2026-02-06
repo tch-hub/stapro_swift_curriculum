@@ -69,6 +69,25 @@
                     ]
                 },
                 {
+                    "title": "Capsule / 基本シェイプ - 形状の描画",
+                    "description": "Capsuleは角が完全に丸い長方形（ピル型）を描くシェイプです。ボタンやタグの背景によく使われます。",
+                    "code": "// Capsule（ピル型の角丸長方形）\nCapsule()\n    .fill(.blue)        // .fill: シェイプを色で塗りつぶす\n    .frame(width: 200, height: 50)\n\n// .fill の詳細\n// fill: シェイプの内部を指定の色で完全に塗りつぶすメソッド\n// stroke: 枠線だけを描く（内部は透明）\n// 単色だけでなく、グラデーションも指定可能\n\nCapsule()\n    .fill(\n        LinearGradient(\n            gradient: Gradient(colors: [.blue, .purple]),\n            startPoint: .topLeading,\n            endPoint: .bottomTrailing\n        )\n    )\n    .frame(width: 200, height: 50)\n\n// ボタンの背景として使う例\nText(\"タグ\")\n    .padding(.horizontal, 16)\n    .padding(.vertical, 8)\n    .background(Capsule().fill(.blue))\n    .foregroundStyle(.white)\n\n// 枠線だけのCapsule\nCapsule()\n    .stroke(.blue, lineWidth: 2)   // stroke: 枠線のみ\n    .frame(width: 200, height: 50)\n\n// その他の基本シェイプ\nCircle()                          // 円\nRectangle()                       // 長方形\nRoundedRectangle(cornerRadius: 10) // 角丸長方形\nEllipse()                         // 楕円",
+                    "keywords": [
+                        "capsule",
+                        "shape",
+                        "pill",
+                        "circle",
+                        "rectangle",
+                        "rounded",
+                        "カプセル",
+                        "シェイプ",
+                        "形状",
+                        "角丸",
+                        "丸",
+                        "タグ"
+                    ]
+                },
+                {
                     "title": "Spacer & Divider - 余白と区切り",
                     "code": "// Spacer: 利用可能な空間を埋める\nHStack {\n    Text(\"左端\")\n    Spacer() // ここが広がる\n    Text(\"右端\")\n}\n\n// Divider: 区切り線を表示\nVStack {\n    Text(\"上段\")\n    Divider()\n    Text(\"下段\")\n}",
                     "keywords": [

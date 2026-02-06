@@ -54,6 +54,7 @@
 		cheatsheet: 'swift基本構文',
 		'styling-guide': 'スタイリングガイド',
 		'components-guide': 'UIコンポーネントガイド',
+		glossary: '用語解説',
 		editor: 'JSONエディタ'
 	};
 
@@ -116,6 +117,7 @@
 				<li><a href={resolve('/cheatsheet')}>swift基本構文</a></li>
 				<li><a href={resolve('/styling-guide')}>スタイリングガイド</a></li>
 				<li><a href={resolve('/components-guide')}>UIコンポーネントガイド</a></li>
+				<li><a href={resolve('/glossary')}>用語解説</a></li>
 				<li><a href={resolve('/quiz')}>練習問題</a></li>
 				<li><a href={resolve('/tutorial')}>チュートリアル</a></li>
 				<li><a href={resolve('/project')}>プロジェクト</a></li>
@@ -144,6 +146,7 @@
 			<li><a href={resolve('/cheatsheet')}>swift基本構文</a></li>
 			<li><a href={resolve('/styling-guide')}>スタイリングガイド</a></li>
 			<li><a href={resolve('/components-guide')}>UIコンポーネントガイド</a></li>
+			<li><a href={resolve('/glossary')}>用語解説</a></li>
 			<li><a href={resolve('/quiz')}>練習問題</a></li>
 			<li><a href={resolve('/tutorial')}>チュートリアル</a></li>
 			<li><a href={resolve('/project')}>プロジェクト</a></li>
