@@ -64,7 +64,7 @@ Button("一時停止") {
 
 ## コード全体 — ContentView
 
-<img src="/images/timer/t61.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/timer/t61.png" alt="Xcode の設定画面" class="mobile-screenshot" />
 
 ```swift
 // ContentView.swift
@@ -131,3 +131,4 @@ struct ContentView: View {
 }
 
 ```
+

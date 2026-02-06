@@ -161,7 +161,7 @@ Xcodeのキャンバスで動作確認ができるように、プレビュー用
 
 ## コード全体
 
-<img src="/images/todolist/ToDoListItem.png" alt="ToDoListItemの完成イメージ" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/ToDoListItem.png" alt="ToDoListItemの完成イメージ" class="mobile-screenshot" />
 
 ### Components/ToDoListItem.swift
 
@@ -242,3 +242,4 @@ struct ToDoListItem: View {
     return PreviewWrapper()
 }
 ```
+

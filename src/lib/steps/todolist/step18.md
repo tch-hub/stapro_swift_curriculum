@@ -108,7 +108,7 @@ if selectedTabId != nil && !tasks.isEmpty {
 
 ## コード全体
 
-<img src="/images/todolist/18.png" alt="完了切り替え機能のイメージ" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/18.png" alt="完了切り替え機能のイメージ" class="mobile-screenshot" />
 
 ### Views/HomeView.swift
 
@@ -203,3 +203,4 @@ struct HomeView: View {
     }
 }
 ```
+

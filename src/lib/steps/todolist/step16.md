@@ -170,7 +170,7 @@ struct ContentView: View {
 
 ## コード全体
 
-<img src="/images/todolist/ContentView16.png" alt="ContentViewの完成イメージ" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/ContentView16.png" alt="ContentViewの完成イメージ" class="mobile-screenshot" />
 
 ### Views/ContentView.swift
 
@@ -233,3 +233,4 @@ struct ContentView: View {
     ContentView(isInitialized: false, autoInitialize: false)
 }
 ```
+

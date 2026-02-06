@@ -6,7 +6,7 @@
 2. テンプレートで「App」を選択して「Next」をクリックする。
 3. 設定を入力し、以下の画像のように指定して「Next」を押す。
 
-![Xcode の設定画面](/images/setup.png)
+<img src="/images/setup.png" alt="Xcode の設定画面" class="mx-auto block max-w-full md:max-w-lg rounded-lg border border-base-300 shadow-sm" />
 
 4. 保存先を選んでプロジェクトを作成する。
 

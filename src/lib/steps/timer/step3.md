@@ -58,7 +58,7 @@ Text("\(value) \(title)").tag(value)
 
 ## コード全体
 
-<img src="/images/timer/picker.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/timer/picker.png" alt="Xcode の設定画面" class="mobile-screenshot" />
 
 ```swift
 // TimePicker.swift
@@ -127,7 +127,7 @@ HStack {
 
 ## コード全体
 
-<img src="/images/timer/t32.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/timer/t32.png" alt="Xcode の設定画面" class="mobile-screenshot" />
 
 ```swift
 // TimeSelectionView.swift
@@ -199,7 +199,7 @@ hours = 0; minutes = 0; seconds = 0
 
 ## コード全体
 
-<img src="/images/timer/t31.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/timer/t31.png" alt="Xcode の設定画面" class="mobile-screenshot" />
 
 ```swift
 // ContentView.swift
@@ -259,3 +259,4 @@ struct ContentView: View {
     ContentView()
 }
 ```
+

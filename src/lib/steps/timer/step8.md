@@ -55,7 +55,7 @@ Text(text)
 - `.font(.subheadline)` は表示フォントサイズをサブ見出し程度に調整し、ボタン内テキストのバランスを整えます。
 
 ColorButton使用イメージ
-<img src="/images/timer/download.jpg" alt="ColorButtonの使用イメージ" width="360" style=" margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/timer/download.jpg" alt="ColorButtonの使用イメージ" class="mobile-screenshot" />
 
 ---
 
@@ -106,7 +106,7 @@ HStack(spacing: 130) {
 
 ## コード全体
 
-<img src="/images/timer/download.jpg" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/timer/download.jpg" alt="Xcode の設定画面" class="mobile-screenshot" />
 
 ```swift title="ColorButton.swift"
 // ColorButton.swift
@@ -130,7 +130,7 @@ struct ColorButton: View {
 }
 ```
 
-<img src="/images/timer/t82.png" alt="Xcode の設定画面" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/timer/t82.png" alt="Xcode の設定画面" class="mobile-screenshot" />
 
 ```swift title="ContentView.swift"
 // ContentView.swift
@@ -186,3 +186,4 @@ struct ContentView: View {
     ContentView()
 }
 ```
+

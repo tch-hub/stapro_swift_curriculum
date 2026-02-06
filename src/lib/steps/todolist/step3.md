@@ -103,11 +103,9 @@ rowContent(item)
 
 ## コード全体
 
-<img src="/images/todolist/CustomList.png" alt="CustomListの完成イメージ" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/CustomList.png" alt="CustomListの完成イメージ" class="mobile-screenshot" />
 
-### Components/CustomList.swift
-
-```swift
+```swift title="Components/CustomList.swift"
 import SwiftUI
 
 struct CustomList<T: Identifiable, RowContent: View>: View {
@@ -168,3 +166,4 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
     return PreviewWrapper()
 }
 ```
+

@@ -173,7 +173,7 @@ private func handleSubmit() {
 
 ## コード全体
 
-<img src="/images/todolist/TaskInputView.png" alt="InputViewの完成イメージ" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/TaskInputView.png" alt="InputViewの完成イメージ" class="mobile-screenshot" />
 
 ### Components/InputView.swift
 
@@ -247,3 +247,4 @@ struct InputView: View {
     return PreviewWrapper()
 }
 ```
+

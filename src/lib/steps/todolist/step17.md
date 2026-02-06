@@ -318,7 +318,7 @@ struct HomeView: View {
 
 ## コード全体
 
-<img src="/images/todolist/17.png" alt="HomeViewの完成イメージ" width="360" style="float: right; margin-left: 1rem; margin-bottom: 1rem; max-width: 100%; height: auto;" />
+<img src="/images/todolist/17.png" alt="HomeViewの完成イメージ" class="mobile-screenshot" />
 
 ### Views/HomeView.swift
 
@@ -409,3 +409,4 @@ struct HomeView: View {
     }
 }
 ```
+
