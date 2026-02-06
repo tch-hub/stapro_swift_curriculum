@@ -40,6 +40,7 @@ struct HomeView: View {
   親（MainStack）から受け取った画面遷移の履歴です。タブ管理画面への遷移時に、この配列に要素を追加します。
 
 **データの流れ:**
+
 1. `loadTabs()` で全タブを取得 → `tabs` に格納
 2. 最初のタブを自動選択 → `selectedTabId` に設定
 3. `selectedTabId` の変更を検知 → `loadTasks()` が実行される
@@ -84,7 +85,7 @@ struct HomeView: View {
 
 - **`.onAppear { loadTabs() }`**
   ビューが画面に表示された時に1度だけ実行されます。ここでデータベースからタブ一覧を読み込みます。
-  
+
   **重要:** `.onAppear` はビューのライフサイクルの一部で、画面が表示されるたびに呼ばれます。ただし、同じビューが表示され続けている間は再実行されません。
 
 ## 3. UIの実装: タブヘッダー
@@ -120,7 +121,7 @@ struct HomeView: View {
   - `map` は配列の各要素を変換する関数
   - `.init(id: $0.id, name: $0.name)` で新しい構造体を作成
   - `$0` は現在処理中の要素（`ToDoTab`）を指す
-  
+
   **なぜ変換が必要？** `TabHeaderView` は汎用的なコンポーネントなので、SwiftDataの `ToDoTab` に直接依存しないよう設計されています。
 
 - **`selectedTabId: $selectedTabId`**
@@ -138,6 +139,7 @@ struct HomeView: View {
   - タブが切り替わったら、そのタブのタスクを読み込み直します
 
 **データの流れ:**
+
 1. ユーザーがタブをタップ
 2. `TabHeaderView` 内で `selectedTabId` が更新される
 3. Bindingにより、HomeViewの `selectedTabId` も更新される
@@ -173,7 +175,7 @@ struct HomeView: View {
   2つの条件を両方満たす場合にタスクリストを表示します:
   1. `selectedTabId != nil`: タブが選択されている
   2. `!tasks.isEmpty`: タスクが1つ以上ある
-  
+
   `&&` は「かつ」を意味する論理演算子です。
 
 - **`CustomList(items: tasks, onDelete: nil) { task in ... }`**
@@ -221,7 +223,7 @@ struct HomeView: View {
   `guard` 文は「条件を満たさない場合に早期リターン」するための構文です。
   - `selectedTabId` がnilの場合（タブ未選択）、`tasks = []` で空にして関数を終了
   - nilでない場合、`tabId` に値を取り出して処理を続行
-  
+
   **`if let` との違い:** `guard let` は「正常な場合に処理を続ける」ことを明示し、コードの可読性が向上します。
 
 - **`FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })`**
@@ -237,6 +239,7 @@ struct HomeView: View {
   - 結果として、エラー時でもアプリがクラッシュせず、空のリストが表示されます
 
 **処理の流れ:**
+
 1. タブが選択されているかチェック
 2. 選択されていなければ空配列を設定して終了
 3. 選択されていれば、そのタブIDでフィルタリング
@@ -277,6 +280,7 @@ struct HomeView: View {
   ステップ11で作成したサービスメソッドを使って、全タブを取得します。
 
 - **選択状態の自動調整ロジック**
+
   ```swift
   if let currentId = selectedTabId {
       if !tabs.contains(where: { $0.id == currentId }) {
@@ -286,14 +290,12 @@ struct HomeView: View {
       selectedTabId = tabs.first?.id
   }
   ```
-  
+
   **2つのケースを処理:**
-  
   1. **既に何かタブが選択されている場合（`if let currentId = selectedTabId`）**
      - `tabs.contains(where: { $0.id == currentId })`: 選択中のタブIDが、取得したタブリストに含まれているかチェック
      - 含まれていない場合（タブが削除された場合など）、先頭のタブを選択し直す
      - これにより、「存在しないタブが選択されている」という不整合を防ぎます
-  
   2. **何も選択されていない場合（`else`）**
      - 初回起動時やタブが全削除された後の状態
      - 先頭のタブを自動選択します
@@ -307,6 +309,7 @@ struct HomeView: View {
   タブ一覧の更新に合わせて、選択中のタブのタスクも再読み込みします。これにより、データの整合性が保たれます。
 
 **処理の流れ:**
+
 1. データベースから全タブを取得
 2. 現在選択中のタブが存在するかチェック
 3. 存在しなければ先頭のタブを選択
@@ -409,4 +412,3 @@ struct HomeView: View {
     }
 }
 ```
-

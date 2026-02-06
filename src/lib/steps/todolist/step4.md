@@ -107,4 +107,3 @@ struct EmptyStateView: View {
     EmptyStateView(hasSelectedTab: true)
 }
 ```
-

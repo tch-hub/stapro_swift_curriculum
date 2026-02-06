@@ -23,15 +23,7 @@
 					"title": "import SwiftUI",
 					"description": "SwiftUIは、画面（UI）を構築するためのフレームワークです。Text、Button、VStackなどのビュー部品や、@State、@Bindingなどの状態管理機能を提供します。SwiftUIをimportするとFoundationも自動的に含まれるため、画面を作るファイルではimport SwiftUIだけで十分です。",
 					"code": "import SwiftUI\n\n// SwiftUIのビューを定義\nstruct ContentView: View {\n    @State private var count = 0\n\n    var body: some View {\n        VStack {\n            Text(\"カウント: \\(count)\")\n            Button(\"タップ\") {\n                count += 1\n            }\n        }\n    }\n}",
-					"keywords": [
-						"import",
-						"SwiftUI",
-						"フレームワーク",
-						"UI",
-						"ビュー",
-						"画面",
-						"インポート"
-					]
+					"keywords": ["import", "SwiftUI", "フレームワーク", "UI", "ビュー", "画面", "インポート"]
 				},
 				{
 					"title": "import SwiftData",
@@ -59,40 +51,19 @@
 					"title": "変数 (Variable) - var",
 					"description": "変数は値を格納する「名前付きの箱」です。varキーワードで宣言し、後から値を変更できます。プログラム中でデータを保持・更新する必要がある場合に使用します。",
 					"code": "// 変数の宣言と値の変更\nvar score = 0\nprint(score)  // 0\n\nscore = 100\nprint(score)  // 100",
-					"keywords": [
-						"変数",
-						"variable",
-						"var",
-						"宣言",
-						"代入",
-						"可変"
-					]
+					"keywords": ["変数", "variable", "var", "宣言", "代入", "可変"]
 				},
 				{
 					"title": "定数 (Constant) - let",
 					"description": "定数は一度値を設定すると変更できない「名前付きの箱」です。letキーワードで宣言します。値が変わらないデータ（名前、設定値など）にはletを使うのがSwiftの推奨スタイルです。変更しようとするとコンパイルエラーになります。",
 					"code": "// 定数の宣言\nlet name = \"太郎\"\nprint(name)  // 太郎\n\n// name = \"花子\"  // エラー！定数は変更できない",
-					"keywords": [
-						"定数",
-						"constant",
-						"let",
-						"不変",
-						"immutable"
-					]
+					"keywords": ["定数", "constant", "let", "不変", "immutable"]
 				},
 				{
 					"title": "関数 (Function)",
 					"description": "関数は特定の処理をまとめた再利用可能なコードの塊です。funcキーワードで定義します。引数（入力）を受け取り、戻り値（出力）を返すことができます。同じ処理を何度も書く代わりに、関数として定義して呼び出します。",
 					"code": "// 引数と戻り値のある関数\nfunc greet(name: String) -> String {\n    return \"こんにちは、\\(name)さん！\"\n}\n\nlet message = greet(name: \"太郎\")\nprint(message)  // こんにちは、太郎さん！",
-					"keywords": [
-						"関数",
-						"function",
-						"func",
-						"引数",
-						"戻り値",
-						"return",
-						"メソッド"
-					]
+					"keywords": ["関数", "function", "func", "引数", "戻り値", "return", "メソッド"]
 				},
 				{
 					"title": "引数 (Argument / Parameter)",
@@ -114,25 +85,13 @@
 					"title": "クロージャ (Closure)",
 					"description": "クロージャは名前のない関数（無名関数）です。変数に代入したり、他の関数の引数として渡すことができます。SwiftUIではボタンのアクションやリストの表示など、多くの場面でクロージャを使います。{ } で囲まれたコードブロックがクロージャです。",
 					"code": "// クロージャを変数に代入\nlet greet = { (name: String) -> String in\n    return \"Hello, \\(name)!\"\n}\nprint(greet(\"太郎\"))  // Hello, 太郎!\n\n// 末尾クロージャ（trailing closure）\nlet numbers = [3, 1, 4, 1, 5]\nlet sorted = numbers.sorted { $0 < $1 }\nprint(sorted)  // [1, 1, 3, 4, 5]",
-					"keywords": [
-						"クロージャ",
-						"closure",
-						"無名関数",
-						"ラムダ"
-					]
+					"keywords": ["クロージャ", "closure", "無名関数", "ラムダ"]
 				},
 				{
 					"title": "並べ替え (Sorted)",
 					"description": "配列の要素を特定の順番に並べ替える機能です。引数を渡さない場合は小さい順（数字）やあいうえお順（文字）になります。{ $0 > $1 } のような書き方で、大きい順にしたり、特定のデータ項目で並べ替えたりすることも可能です。ToDoアプリで「日付の新しい順」に並べる際などに使われます。",
 					"code": "let scores = [80, 100, 75]\n\n// 小さい順に並べ替え\nlet ascending = scores.sorted()\nprint(ascending)  // [75, 80, 100]\n\n// 大きい順に並べ替え\nlet descending = scores.sorted { $0 > $1 }\nprint(descending) // [100, 80, 75]",
-					"keywords": [
-						"sorted",
-						"並べ替え",
-						"ソート",
-						"順番",
-						"昇順",
-						"降順"
-					]
+					"keywords": ["sorted", "並べ替え", "ソート", "順番", "昇順", "降順"]
 				},
 				{
 					"title": "トレイリングクロージャ (Trailing Closure)",
@@ -151,14 +110,7 @@
 					"title": "キャプチャ (Capture)",
 					"description": "キャプチャとは、クロージャ（関数）が、その外側にある変数や定数を「捕まえて」、中から自由に使えるようにする仕組みのことです。SwiftUIでは、ボタンが押されたときに外側のスコアを増やしたり、文字を書き換えたりする際によく使われます。専門的には「値や参照を保持する」といいますが、まずは「外のデータを中に持ってこれる便利な機能」と覚えておけばOKです。",
 					"code": "// 外側の変数\nvar score = 0\n\n// クロージャの中で外側のscoreを「キャプチャ」して使う\nlet buttonAction = {\n    score += 1\n    print(\"現在のスコア: \\(score)\")\n}\n\nbuttonAction()  // 現在のスコア: 1\nbuttonAction()  // 現在のスコア: 2",
-					"keywords": [
-						"キャプチャ",
-						"capture",
-						"クロージャ",
-						"変数",
-						"保持",
-						"スコープ"
-					]
+					"keywords": ["キャプチャ", "capture", "クロージャ", "変数", "保持", "スコープ"]
 				}
 			]
 		},
@@ -171,66 +123,31 @@
 					"title": "Int - 整数型",
 					"description": "整数（小数点のない数）を表す型です。年齢、個数、スコアなど、小数が不要な数値に使用します。正の数・負の数・ゼロを扱えます。",
 					"code": "let age: Int = 15\nlet temperature: Int = -5\nlet count = 42  // 型推論でIntになる\nprint(age + count)  // 57",
-					"keywords": [
-						"Int",
-						"整数",
-						"integer",
-						"数値",
-						"数字"
-					]
+					"keywords": ["Int", "整数", "integer", "数値", "数字"]
 				},
 				{
 					"title": "String - 文字列型",
 					"description": "テキストデータを表す型です。ダブルクォーテーション(\")で囲んで定義します。文字列補間 \\() を使って、他の値を文字列に埋め込むことができます。",
 					"code": "let greeting: String = \"こんにちは\"\nlet name = \"太郎\"  // 型推論でStringになる\n\n// 文字列補間\nlet message = \"\\(greeting)、\\(name)さん！\"\nprint(message)  // こんにちは、太郎さん！",
-					"keywords": [
-						"String",
-						"文字列",
-						"テキスト",
-						"text",
-						"string interpolation",
-						"文字列補間"
-					]
+					"keywords": ["String", "文字列", "テキスト", "text", "string interpolation", "文字列補間"]
 				},
 				{
 					"title": "Bool - 論理型",
 					"description": "true（真）またはfalse（偽）の2つの値だけを持つ型です。条件分岐（if文）やフラグ管理に使用します。SwiftUIでは画面の表示/非表示の制御などに頻繁に使われます。",
 					"code": "let isStudent: Bool = true\nlet hasFinished = false  // 型推論でBoolになる\n\nif isStudent {\n    print(\"学生です\")\n}\n// 出力: 学生です",
-					"keywords": [
-						"Bool",
-						"論理型",
-						"boolean",
-						"true",
-						"false",
-						"真偽値",
-						"フラグ"
-					]
+					"keywords": ["Bool", "論理型", "boolean", "true", "false", "真偽値", "フラグ"]
 				},
 				{
 					"title": "Double - 浮動小数点型",
 					"description": "小数点を含む数値を表す型です。身長、体重、価格計算など、精度が必要な数値に使用します。Floatより精度が高く、Swiftでは小数はデフォルトでDouble型になります。",
 					"code": "let height: Double = 165.5\nlet pi = 3.14159  // 型推論でDoubleになる\nlet price: Double = 1980.0\n\nlet tax = price * 0.1\nprint(\"税込: \\(price + tax)円\")  // 税込: 2178.0円",
-					"keywords": [
-						"Double",
-						"浮動小数点",
-						"小数",
-						"Float",
-						"decimal"
-					]
+					"keywords": ["Double", "浮動小数点", "小数", "Float", "decimal"]
 				},
 				{
 					"title": "Array - 配列",
 					"description": "同じ型のデータを順番に並べて管理するコレクションです。[要素の型] で型を表します。インデックス（0から始まる番号）で要素にアクセスします。要素の追加・削除・検索などの操作が可能です。",
 					"code": "// 配列の作成\nvar fruits: [String] = [\"りんご\", \"バナナ\", \"みかん\"]\n\n// 要素へのアクセス（0から始まる）\nprint(fruits[0])  // りんご\n\n// 要素の追加\nfruits.append(\"ぶどう\")\nprint(fruits.count)  // 4",
-					"keywords": [
-						"Array",
-						"配列",
-						"リスト",
-						"list",
-						"コレクション",
-						"collection",
-						"append"
-					]
+					"keywords": ["Array", "配列", "リスト", "list", "コレクション", "collection", "append"]
 				},
 				{
 					"title": "Dictionary - 辞書型",
@@ -259,14 +176,7 @@
 					"title": "構造体 (Struct)",
 					"description": "関連するデータ（プロパティ）と処理（メソッド）をまとめた独自の型です。structキーワードで定義します。SwiftUIのViewはすべて構造体です。値型であり、代入やパラメータ渡しの際にコピーが作られます。",
 					"code": "struct Student {\n    var name: String\n    var grade: Int\n\n    func introduce() -> String {\n        return \"\\(name)は\\(grade)年生です\"\n    }\n}\n\nlet student = Student(name: \"太郎\", grade: 2)\nprint(student.introduce())  // 太郎は2年生です",
-					"keywords": [
-						"構造体",
-						"struct",
-						"structure",
-						"プロパティ",
-						"メソッド",
-						"値型"
-					]
+					"keywords": ["構造体", "struct", "structure", "プロパティ", "メソッド", "値型"]
 				},
 				{
 					"title": "インスタンス (Instance)",
@@ -301,15 +211,7 @@
 					"title": "クラス (Class)",
 					"description": "構造体と似ていますが、参照型です。classキーワードで定義します。継承が可能で、複数の変数が同じインスタンスを共有できます。構造体との最大の違いは、代入時にコピーが作られず同じオブジェクトを参照する点です。",
 					"code": "class Animal {\n    var name: String\n    var sound: String\n\n    init(name: String, sound: String) {\n        self.name = name\n        self.sound = sound\n    }\n\n    func speak() {\n        print(\"\\(name): \\(sound)\")\n    }\n}\n\nlet cat = Animal(name: \"ミケ\", sound: \"ニャー\")\ncat.speak()  // ミケ: ニャー",
-					"keywords": [
-						"クラス",
-						"class",
-						"参照型",
-						"継承",
-						"inheritance",
-						"init",
-						"イニシャライザ"
-					]
+					"keywords": ["クラス", "class", "参照型", "継承", "inheritance", "init", "イニシャライザ"]
 				},
 				{
 					"title": "構造体とクラスの違い",
@@ -330,26 +232,13 @@
 					"title": "プロトコル (Protocol)",
 					"description": "型が満たすべきルール（インターフェース）を定義したものです。protocolキーワードで定義します。プロトコルに準拠(conform)することで、その型が特定の機能を持つことを保証します。SwiftUIのViewプロトコルが代表的な例です。",
 					"code": "// プロトコルの定義\nprotocol Greetable {\n    var name: String { get }\n    func greet() -> String\n}\n\n// プロトコルに準拠する構造体\nstruct Person: Greetable {\n    var name: String\n    func greet() -> String {\n        return \"こんにちは、\\(name)です\"\n    }\n}\n\nlet person = Person(name: \"太郎\")\nprint(person.greet())  // こんにちは、太郎です",
-					"keywords": [
-						"プロトコル",
-						"protocol",
-						"準拠",
-						"conform",
-						"インターフェース",
-						"interface"
-					]
+					"keywords": ["プロトコル", "protocol", "準拠", "conform", "インターフェース", "interface"]
 				},
 				{
 					"title": "列挙型 (Enum)",
 					"description": "関連する値のグループを定義する型です。enumキーワードで定義します。取りうる値が決まっている場合に使用します。例えば曜日、方角、状態など、限られた選択肢を表現するのに最適です。",
 					"code": "enum Weather {\n    case sunny\n    case cloudy\n    case rainy\n}\n\nlet today: Weather = .sunny\n\nswitch today {\ncase .sunny:\n    print(\"晴れです\")\ncase .cloudy:\n    print(\"曇りです\")\ncase .rainy:\n    print(\"雨です\")\n}\n// 出力: 晴れです",
-					"keywords": [
-						"列挙型",
-						"enum",
-						"enumeration",
-						"case",
-						"switch"
-					]
+					"keywords": ["列挙型", "enum", "enumeration", "case", "switch"]
 				},
 				{
 					"title": "オプショナル (Optional)",
@@ -376,15 +265,7 @@
 					"title": "View プロトコル",
 					"description": "SwiftUIで画面に表示されるすべての要素の基本となるプロトコルです。Viewプロトコルに準拠する構造体はbodyプロパティを必ず持ち、そこに画面の内容を記述します。Text, Button, VStackなどはすべてViewプロトコルに準拠しています。",
 					"code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        Text(\"Hello, World!\")\n    }\n}",
-					"keywords": [
-						"View",
-						"ビュー",
-						"body",
-						"some View",
-						"プロトコル",
-						"画面",
-						"UI"
-					]
+					"keywords": ["View", "ビュー", "body", "some View", "プロトコル", "画面", "UI"]
 				},
 				{
 					"title": "モディファイア (Modifier)",
@@ -441,27 +322,13 @@
 					"title": "@State - ビュー内の状態",
 					"description": "@Stateは、そのビュー自身が所有・管理するデータを宣言するために使います。@Stateで宣言した変数の値が変わると、SwiftUIは自動的に画面を再描画します。ボタンを押した回数、テキスト入力の内容、トグルのON/OFFなど、ビュー内部で変化するデータに使います。",
 					"code": "struct CounterView: View {\n    @State private var count = 0\n\n    var body: some View {\n        VStack {\n            Text(\"カウント: \\(count)\")\n            Button(\"増やす\") {\n                count += 1  // 値が変わると画面が自動更新\n            }\n        }\n    }\n}",
-					"keywords": [
-						"@State",
-						"状態",
-						"state",
-						"再描画",
-						"自動更新",
-						"プロパティラッパー"
-					]
+					"keywords": ["@State", "状態", "state", "再描画", "自動更新", "プロパティラッパー"]
 				},
 				{
 					"title": "@Binding - 親子間のデータ共有",
 					"description": "@Bindingは、親ビューが持つ@Stateの値を子ビューから読み書きするための仕組みです。子ビューは自分でデータを持たず、親のデータへの参照を受け取ります。親ビューから渡すときは$を付けます（$count のように）。",
 					"code": "struct ParentView: View {\n    @State private var isOn = false\n\n    var body: some View {\n        ToggleView(isOn: $isOn)  // $を付けてBindingとして渡す\n    }\n}\n\nstruct ToggleView: View {\n    @Binding var isOn: Bool  // 親のデータへの参照\n\n    var body: some View {\n        Toggle(\"スイッチ\", isOn: $isOn)\n    }\n}",
-					"keywords": [
-						"@Binding",
-						"バインディング",
-						"binding",
-						"親子",
-						"共有",
-						"双方向"
-					]
+					"keywords": ["@Binding", "バインディング", "binding", "親子", "共有", "双方向"]
 				},
 				{
 					"title": "@ObservedObject - 外部データの監視",

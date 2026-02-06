@@ -233,4 +233,3 @@ struct ContentView: View {
     ContentView(isInitialized: false, autoInitialize: false)
 }
 ```
-

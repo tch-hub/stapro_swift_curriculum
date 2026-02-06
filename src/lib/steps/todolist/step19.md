@@ -19,7 +19,7 @@ struct HomeView: View {
   - 初期値は空文字列（`""`）
   - `InputView` とバインディングして、入力内容をリアルタイムで同期します
   - タスク追加後は空文字列にリセットして、次の入力に備えます
-  
+
   **`@State` の役割:** この変数が変更されると、SwiftUIが自動的にUIを更新します。ユーザーが文字を入力するたびに、この変数の値が変わります。
 
 ## 2. UIの実装: 入力エリア
@@ -52,12 +52,12 @@ struct HomeView: View {
 
 - **`.safeAreaInset(edge: .bottom)`**
   画面の下部に、コンテンツを押し上げる形で要素を固定配置するモディファイアです。
-  
+
   **他の配置方法との違い:**
   - `.overlay`: コンテンツの上に重ねる（コンテンツが隠れる）
   - `.background`: コンテンツの下に配置
   - **`.safeAreaInset`**: コンテンツを押し上げて、被らないようにする ← 今回使用
-  
+
   **メリット:** リストの最後の項目が入力欄に隠れず、スクロールすれば全て見えます。
 
 - **`edge: .bottom`**
@@ -78,6 +78,7 @@ struct HomeView: View {
   - `{ addTask() }`: 送信ボタンが押された時の処理（トレイリングクロージャ）
 
 **レイアウトの仕組み:**
+
 1. `VStack` でヘッダーとリストを縦に配置
 2. `.safeAreaInset` で下部に入力欄を追加
 3. SwiftUIが自動的にリストの高さを調整
@@ -109,24 +110,26 @@ struct HomeView: View {
 
 - **`guard !newTaskTitle.isEmpty, let selectedTabId = selectedTabId else { return }`**
   複数の条件を同時にチェックする `guard` 文です。カンマ（`,`）で条件を繋げています。
-  
+
   **条件1: `!newTaskTitle.isEmpty`**
   - タイトルが空でないことを確認
   - 空文字列のタスクは作成しません
-  
+
   **条件2: `let selectedTabId = selectedTabId`**
   - オプショナル型の `selectedTabId`（プロパティ）から値を取り出す
   - 成功したら、新しい定数 `selectedTabId` に格納（シャドーイング）
   - 失敗（nilの場合）したら `return` で関数を終了
-  
+
   **シャドーイング（変数の上書き）:**
+
   ```swift
   // プロパティ: UUID? 型（オプショナル）
   @State private var selectedTabId: UUID?
-  
+
   // guard let で取り出した定数: UUID 型（非オプショナル）
   let selectedTabId = selectedTabId
   ```
+
   同じ名前を使うことで、以降のコードでは非オプショナル型として扱えます。
 
 - **`let newTask = ToDoTask(title: newTaskTitle, detail: "", tabId: selectedTabId)`**
@@ -146,6 +149,7 @@ struct HomeView: View {
   タスクリストを再読み込みして、新しく追加したタスクを画面に表示します。
 
 **処理の流れ:**
+
 1. ユーザーが入力欄にタイトルを入力
 2. 送信ボタンをタップ
 3. `addTask()` が呼ばれる
@@ -270,4 +274,3 @@ struct HomeView: View {
     }
 }
 ```
-

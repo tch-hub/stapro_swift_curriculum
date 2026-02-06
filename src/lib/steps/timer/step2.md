@@ -80,6 +80,7 @@ VStack(spacing: 24) {
 - `spacing` や `alignment` を調整して見た目を整えます。
 
 ### コード全体 — ContentView
+
 画面左上のピンマークを押してPreviewを固定表示しておきましょう！
 
 <img src="/images/timer/t21.png" alt="Xcode の設定画面" class="mobile-screenshot" />
@@ -130,4 +131,3 @@ struct ContentView: View {
     ContentView()
 }
 ```
-

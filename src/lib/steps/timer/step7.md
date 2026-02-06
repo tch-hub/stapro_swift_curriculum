@@ -245,4 +245,3 @@ struct ContentView: View {
     ContentView()
 }
 ```
-

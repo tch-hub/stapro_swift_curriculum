@@ -247,4 +247,3 @@ struct InputView: View {
     return PreviewWrapper()
 }
 ```
-

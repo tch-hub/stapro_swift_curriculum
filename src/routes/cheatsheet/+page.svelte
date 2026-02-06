@@ -91,7 +91,7 @@
 				<!-- タイトル一致 -->
 				{#if search.titleMatchSections.length > 0}
 					<li class="menu-title text-xs text-primary">タイトル一致 ({search.titleMatchCount})</li>
-					{#each search.titleMatchSections as section}
+					{#each search.titleMatchSections as section (section.id)}
 						<li>
 							<a
 								href="#{section.id}"
@@ -105,7 +105,7 @@
 							</a>
 							{#if search.matchedCodeBlocks.has(section.id)}
 								<ul class="ml-2">
-									{#each search.matchedCodeBlocks.get(section.id) as blockTitle}
+									{#each search.matchedCodeBlocks.get(section.id) as blockTitle (blockTitle)}
 										{@const blockId = toSafeId(section.id, blockTitle)}
 										<li>
 											<a
@@ -128,7 +128,7 @@
 				<!-- コード一致 -->
 				{#if search.codeMatchSections.length > 0}
 					<li class="menu-title text-xs text-secondary">コード一致 ({search.codeMatchCount})</li>
-					{#each search.codeMatchSections as section}
+					{#each search.codeMatchSections as section (section.id)}
 						<li>
 							<a
 								href="#{section.id}"
@@ -142,7 +142,7 @@
 							</a>
 							{#if search.matchedCodeBlocks.has(section.id)}
 								<ul class="ml-2">
-									{#each search.matchedCodeBlocks.get(section.id) as blockTitle}
+									{#each search.matchedCodeBlocks.get(section.id) as blockTitle (blockTitle)}
 										{@const blockId = toSafeId(section.id, blockTitle)}
 										<li>
 											<a
@@ -168,7 +168,7 @@
 				{/if}
 			{:else}
 				<!-- 検索していない時は通常表示 -->
-				{#each search.filteredSections as section}
+				{#each search.filteredSections as section (section.id)}
 					<li>
 						<a
 							href="#{section.id}"

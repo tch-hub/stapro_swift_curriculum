@@ -242,4 +242,3 @@ struct ToDoListItem: View {
     return PreviewWrapper()
 }
 ```
-

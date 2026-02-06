@@ -22,6 +22,11 @@ export default [
 	},
 	{
 		files: ['**/*.svelte', '**/*.svelte.js'],
-		languageOptions: { parserOptions: { svelteConfig } }
+		languageOptions: { parserOptions: { svelteConfig } },
+		rules: {
+			'svelte/no-at-html-tags': 'off',
+			'svelte/require-each-key': 'error',
+			'svelte/no-navigation-without-resolve': 'off'
+		}
 	}
 ];

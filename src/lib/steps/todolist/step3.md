@@ -166,4 +166,3 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
     return PreviewWrapper()
 }
 ```
-

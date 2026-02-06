@@ -10,45 +10,21 @@
 					"code": "// Swiftでは、定数（let）と変数（var）を宣言できます\n// 定数の宣言（値を変更できない）\nlet schoolName = \"中央中学校\"  // 学校名を定数として宣言\nlet pi = 3.14159  // 円周率も定数\n\n// 変数の宣言（値を変更できる）\nvar score = 85  // スコアを変数として宣言\nvar isStudying = true  // 勉強中かどうかを変数で管理\n\n// データ型を明示的に指定することも可能\nvar height: Double = 165.5  // 身長をDouble型で宣言\nvar weight: Int = 50  // 体重をInt型で宣言\n\n// print関数を使って値を出力\nprint(\"学校名: \\(schoolName)\")  // 文字列補間を使って変数を埋め込み\nprint(\"スコア: \\(score)\")\nprint(\"勉強中: \\(isStudying)\")\nprint(\"身長: \\(height)cm\")\nprint(\"体重: \\(weight)kg\")",
 					"output": "学校名: 中央中学校\nスコア: 85\n勉強中: true\n身長: 165.5cm\n体重: 50kg",
 					"executable": true,
-					"keywords": [
-						"variable",
-						"constant",
-						"let",
-						"var",
-						"宣言",
-						"定義",
-						"変数",
-						"定数"
-					]
+					"keywords": ["variable", "constant", "let", "var", "宣言", "定義", "変数", "定数"]
 				},
 				{
 					"title": "定数への再代入（エラー例）",
 					"code": "// 定数の宣言\nlet schoolName = \"中央中学校\"\n\n// 定数への再代入はエラーになる\nschoolName = \"東京中学校\"",
 					"output": "error: cannot assign to value: 'schoolName' is a 'let' constant\nschoolName = \"東京中学校\"\n^^^^^^^^^^\nnote: change 'let' to 'var' to make it mutable",
 					"executable": true,
-					"keywords": [
-						"error",
-						"reassignment",
-						"let",
-						"change",
-						"変更",
-						"エラー",
-						"再代入"
-					]
+					"keywords": ["error", "reassignment", "let", "change", "変更", "エラー", "再代入"]
 				},
 				{
 					"title": "列挙型（Enum）",
 					"code": "// 列挙型（Enum）は、関連する値をグループ化する型です\n// 基本的な列挙型の定義\nenum Direction {\n    case north  // 北\n    case south  // 南\n    case east   // 東\n    case west   // 西\n}\n\n// 短縮形での定義（1行で複数のcaseを定義）\nenum Direction {\n    case north, south, east, west\n}\n\n// enumの使用例\nlet currentDirection = Direction.north  // 北方向を指定\n\n// switch文を使ってenumの値を処理\nswitch currentDirection {\ncase .north:\n    print(\"北へ進む\")  // northの場合の処理\ncase .south:\n    print(\"南へ進む\")  // southの場合の処理\ncase .east:\n    print(\"東へ進む\")  // eastの場合の処理\ncase .west:\n    print(\"西へ進む\")  // westの場合の処理\n}\n\n// 生の値（raw value）を持つenumの例\nenum Planet: Int {  // Int型のraw valueを持つ\n    case mercury = 1  // 水星\n    case venus = 2    // 金星\n    case earth = 3    // 地球\n    case mars = 4     // 火星\n}\n\nlet earthNumber = Planet.earth.rawValue  // rawValueで数値を取得\nprint(\"地球の番号: \\(earthNumber)\")",
 					"output": "北へ進む\n地球の番号: 3",
 					"executable": true,
-					"keywords": [
-						"enum",
-						"case",
-						"switch",
-						"列挙",
-						"イナム",
-						"エナム"
-					]
+					"keywords": ["enum", "case", "switch", "列挙", "イナム", "エナム"]
 				}
 			]
 		},
@@ -80,26 +56,14 @@
 					"code": "// type(of:)関数を使って変数の型を確認する\nlet number = 42\nlet decimal = 3.14\nlet text = \"Hello\"\nlet flag = true\n\nprint(\"numberの型: \\(type(of: number))\")  // Int型\nprint(\"decimalの型: \\(type(of: decimal))\")  // Double型\nprint(\"textの型: \\(type(of: text))\")      // String型\nprint(\"flagの型: \\(type(of: flag))\")      // Bool型",
 					"output": "numberの型: Int\ndecimalの型: Double\ndecimalの型: String\nflagの型: Bool",
 					"executable": true,
-					"keywords": [
-						"type(of:)",
-						"check",
-						"確認",
-						"型確認"
-					]
+					"keywords": ["type(of:)", "check", "確認", "型確認"]
 				},
 				{
 					"title": "タプル（Tuple）",
 					"code": "// タプルは複数の値をグループ化する型\n// 生徒の情報をタプルで表現\nlet student: (String, Int, String) = (\"太郎\", 13, \"中学1年\")\nlet point: (x: Int, y: Int) = (x: 10, y: 20)\n\n// インデックスでアクセス\nprint(\"名前: \\(student.0)\")  // 最初の要素（太郎）\nprint(\"年齢: \\(student.1)\")  // 2番目の要素（13）\nprint(\"学年: \\(student.2)\")  // 3番目の要素（中学1年）\n\n// ラベル付きでアクセス\nprint(\"X座標: \\(point.x)\")  // xラベルでアクセス\nprint(\"Y座標: \\(point.y)\")  // yラベルでアクセス\n\n// 分解して代入\nlet (name, age, grade) = student\nprint(\"\\(name)は\\(age)歳の\\(grade)生です\")",
 					"output": "名前: 太郎\n年齢: 13\n学年: 中学1年\nX座標: 10\nY座標: 20\n太郎は13歳の中学1年生です",
 					"executable": true,
-					"keywords": [
-						"tuple",
-						"multiple",
-						"values",
-						"pair",
-						"組",
-						"タプル"
-					]
+					"keywords": ["tuple", "multiple", "values", "pair", "組", "タプル"]
 				},
 				{
 					"title": "型の変換（キャスト）",
@@ -121,30 +85,14 @@
 					"code": "// 範囲型は連続した値の範囲を表す型\n// ClosedRangeは開始値と終了値を含む範囲（...演算子）\nlet closedRange: ClosedRange<Int> = 1...5  // 1, 2, 3, 4, 5を含む範囲\nprint(\"ClosedRange: \\(closedRange)\")  // 1...5と表示される\n\n// 範囲を使ったループ\nprint(\"範囲内の値:\")\nfor number in closedRange {\n    print(\"\\(number)\", terminator: \" \")  // 1 2 3 4 5 と出力\n}\nprint()  // 改行\n\n// 範囲に値が含まれるかチェック\nlet testValue = 3\nif closedRange.contains(testValue) {\n    print(\"\\(testValue)は範囲内に含まれます\")  // 3は範囲内に含まれる\n}\n\n// 範囲の境界値を取得\nprint(\"開始値: \\(closedRange.lowerBound)\")  // 1\nprint(\"終了値: \\(closedRange.upperBound)\")  // 5\n\n// 半開範囲（..<演算子）との比較\nlet halfOpenRange = 1..<5  // 1, 2, 3, 4を含む（5を含まない）\nprint(\"Half-open range: \\(halfOpenRange)\")  // 1..<5\n\n// 文字の範囲も可能\nlet charRange: ClosedRange<Character> = \"a\"...\"z\"\nprint(\"文字の範囲: \\(charRange.contains(\\\"m\\\"))\")  // true",
 					"output": "ClosedRange: 1...5\n範囲内の値:\n1 2 3 4 5\n3は範囲内に含まれます\n開始値: 1\n終了値: 5\nHalf-open range: 1..<5\n文字の範囲: true",
 					"executable": true,
-					"keywords": [
-						"range",
-						"closed",
-						"half-open",
-						"...",
-						"..<",
-						"範囲"
-					]
+					"keywords": ["range", "closed", "half-open", "...", "..<", "範囲"]
 				},
 				{
 					"title": "Void型",
 					"code": "// Voidは「値がない」ことを表す特別な型です\n// () と書く「空のタプル」と同じ意味です\n\n// 1. 関数の戻り値（通常は省略されます）\nfunc greet() -> Void {\n    print(\"こんにちは\")\n}\n\n// 2. クロージャの型定義（よく使われます）\n// 「引数なし、戻り値なし」の処理を表現します\n// 例: let onToggle: () -> Void\n\nvar action: () -> Void = {\n    print(\"アクション実行\")\n}\n\n// 実行\ngreet()\naction()",
 					"output": "こんにちは\nアクション実行",
 					"executable": true,
-					"keywords": [
-						"void",
-						"empty",
-						"tuple",
-						"return",
-						"closure",
-						"型",
-						"空",
-						"戻り値なし"
-					]
+					"keywords": ["void", "empty", "tuple", "return", "closure", "型", "空", "戻り値なし"]
 				}
 			]
 		},
@@ -178,32 +126,14 @@
 					"code": "// 比較演算子を使って値の大小や等しさを比較する\nlet x = 5   // 変数xに5を代入\nlet y = 10  // 変数yに10を代入\n\nprint(\"x == y: \\(x == y)\")  // 等しい（xはyと等しいか？）: false\nprint(\"x != y: \\(x != y)\")  // 等しくない（xはyと等しくないか？）: true\nprint(\"x < y: \\(x < y)\")   // より小さい（xはyより小さいか？）: true\nprint(\"x > y: \\(x > y)\")   // より大きい（xはyより大きいか？）: false\nprint(\"x <= y: \\(x <= y)\")  // 以下（xはy以下か？）: true\nprint(\"x >= y: \\(x >= y)\")  // 以上（xはy以上か？）: false",
 					"output": "x == y: false\nx != y: true\nx < y: true\nx > y: false\nx <= y: true\nx >= y: false",
 					"executable": true,
-					"keywords": [
-						"==",
-						"!=",
-						"<",
-						">",
-						"compare",
-						"equal",
-						"比較",
-						"等しい",
-						"大小"
-					]
+					"keywords": ["==", "!=", "<", ">", "compare", "equal", "比較", "等しい", "大小"]
 				},
 				{
 					"title": "三項演算子",
 					"code": "// 三項演算子は条件式 ? 真の値 : 偽の値 の形式で、条件によって値を選択する\nlet score = 85  // テストのスコア\n\n// 条件に基づいて値を選択（60点以上なら合格、そうでなければ不合格）\nlet result = score >= 60 ? \"合格\" : \"不合格\"\nprint(\"テスト結果: \\(result)\")\n\n// 数値の比較（aとbのうち大きい方を選択）\nlet a = 10\nlet b = 20\nlet max = a > b ? a : b  // aがbより大きい場合はa、そうでなければb\nprint(\"大きい方の値: \\(max)\")\n\n// 文字列の選択（学生かどうかに応じてメッセージを選択）\nlet isStudent = true\nlet message = isStudent ? \"学生です\" : \"学生ではありません\"\nprint(message)",
 					"output": "テスト結果: 合格\n大きい方の値: 20\n学生です",
 					"executable": true,
-					"keywords": [
-						"ternary",
-						"?:",
-						"condition",
-						"if-else",
-						"operator",
-						"条件演算子",
-						"三項"
-					]
+					"keywords": ["ternary", "?:", "condition", "if-else", "operator", "条件演算子", "三項"]
 				},
 				{
 					"title": "論理演算子",
@@ -236,28 +166,14 @@
 					"code": "// if文を使って条件分岐を行う\nlet age = 13  // 年齢\n\n// 基本的なif-else文（13歳以上なら中学生、そうでなければ小学生）\nif age >= 13 {\n    print(\"中学生です\")\n} else {\n    print(\"小学生です\")\n}\n\n// 複数の条件をチェックするif-else if-else文\nif age >= 18 {\n    print(\"大人\")  // 18歳以上は大人\n} else if age >= 13 {\n    print(\"中学生\")  // 13-17歳は中学生\n} else {\n    print(\"小学生\")  // 12歳以下は小学生\n}",
 					"output": "中学生です\n中学生",
 					"executable": true,
-					"keywords": [
-						"condition",
-						"else",
-						"branch",
-						"条件",
-						"分岐",
-						"if"
-					]
+					"keywords": ["condition", "else", "branch", "条件", "分岐", "if"]
 				},
 				{
 					"title": "for-inループ",
 					"code": "// for-inループを使ってコレクションの要素を順番に処理する\nlet fruits = [\"りんご\", \"バナナ\", \"オレンジ\"]  // 果物の配列\n\n// 配列の各要素を順番に処理\nfor fruit in fruits {\n    print(\"好きな果物: \\(fruit)\")\n}\n\n// 範囲を使ったループ（1から5までの数字を順番に処理）\nfor i in 1...5 {  // 1, 2, 3, 4, 5の順にiに代入される\n    print(\"\\(i)回目のループ\")\n}",
 					"output": "好きな果物: りんご\n好きな果物: バナナ\n好きな果物: オレンジ\n1回目のループ\n2回目のループ\n3回目のループ\n4回目のループ\n5回目のループ",
 					"executable": true,
-					"keywords": [
-						"loop",
-						"iteration",
-						"repeat",
-						"繰り返し",
-						"ループ",
-						"for"
-					]
+					"keywords": ["loop", "iteration", "repeat", "繰り返し", "ループ", "for"]
 				}
 			]
 		},
@@ -296,28 +212,14 @@
 					"code": "// 通常の関数: 呼び出し時にラベルが必要\nfunc greet(name: String) -> String {\n    return \"こんにちは、\\(name)さん!\"\n}\nprint(greet(name: \"太郎\"))  // ラベル「name:」が必要\n\n// _ をつけた関数: ラベルを省略できる\nfunc hello(_ name: String) -> String {\n    return \"Hello, \\(name)!\"\n}\nprint(hello(\"花子\"))  // ラベルなしで呼べる\n\n// 複数引数での使い分け\nfunc add(_ a: Int, _ b: Int) -> Int {\n    return a + b\n}\nprint(add(3, 5))  // 両方ラベル省略\n\n// SwiftUIでよく見るパターン\n// .onChange(of: value) { _, newValue in ... }\n// Image(systemName: \"star\")  ← systemNameはラベルあり",
 					"output": "こんにちは、太郎さん!\nHello, 花子!\n8",
 					"executable": true,
-					"keywords": [
-						"underscore",
-						"label",
-						"argument",
-						"ラベル",
-						"省略",
-						"アンダースコア",
-						"_"
-					]
+					"keywords": ["underscore", "label", "argument", "ラベル", "省略", "アンダースコア", "_"]
 				},
 				{
 					"title": "値の無視（ワイルドカード）",
 					"code": "// 1. ループで値を使わない場合\nfor _ in 1...3 {\n    print(\"繰り返し\")  // 回数だけ必要で、値は不要\n}\n\n// 2. 戻り値を無視する場合\nfunc doSomething() -> Int {\n    print(\"処理実行\")\n    return 42\n}\nlet _ = doSomething()  // 戻り値を使わないことを明示\n\n// 3. タプルの一部を無視\nlet (name, _, grade) = (\"太郎\", 13, \"中学1年\")\nprint(\"\\(name)は\\(grade)生です\")  // 年齢(13)は無視",
 					"output": "繰り返し\n繰り返し\n繰り返し\n処理実行\n太郎は中学1年生です",
 					"executable": true,
-					"keywords": [
-						"wildcard",
-						"ignore",
-						"discard",
-						"無視",
-						"ワイルドカード"
-					]
+					"keywords": ["wildcard", "ignore", "discard", "無視", "ワイルドカード"]
 				}
 			]
 		},
@@ -331,45 +233,21 @@
 					"code": "// 配列は複数の値を順番に格納するコレクション型\n// 配列の作成（文字列の配列）\nvar fruits = [\"りんご\", \"バナナ\", \"オレンジ\"]  // 果物の名前を格納\nlet numbers = [1, 2, 3, 4, 5]  // 数値の配列\n\n// インデックスを使って要素にアクセス（0から始まる）\nprint(fruits[0])  // 最初の要素（りんご）を出力\nprint(numbers[0]) // 最初の要素（1）を出力\n\n// 要素の追加（appendメソッドを使う）\nfruits.append(\"ぶどう\")  // 配列の末尾にぶどうを追加\nprint(fruits)  // 追加後の配列全体を出力\n\n// 要素数の取得（countプロパティ）\nprint(fruits.count)  // fruits配列の要素数を出力\nprint(numbers.count) // numbers配列の要素数を出力",
 					"output": "りんご\n1\n[\"りんご\", \"バナナ\", \"オレンジ\", \"ぶどう\"]\n4\n5",
 					"executable": true,
-					"keywords": [
-						"array",
-						"list",
-						"append",
-						"count",
-						"index",
-						"リスト",
-						"配列"
-					]
+					"keywords": ["array", "list", "append", "count", "index", "リスト", "配列"]
 				},
 				{
 					"title": "辞書（Dictionary）",
 					"code": "// 辞書はキーと値のペアを格納するコレクション型\n// 辞書の作成（キーが科目名、値が点数の辞書）\nvar scores = [\"数学\": 85, \"英語\": 92, \"国語\": 78]\n\n// キーを使って値を取得（オプショナルバインディングを使用）\nif let mathScore = scores[\"数学\"] {  // 数学の点数を取得しようとする\n    print(\"数学の点数: \\(mathScore)\")  // 取得成功したら出力\n}\n\n// 値の更新または追加\nscores[\"理科\"] = 88  // 理科の点数を追加\nprint(scores)  // 更新後の辞書全体を出力",
 					"output": "数学の点数: 85\n[\"数学\": 85, \"英語\": 92, \"国語\": 78, \"理科\": 88]",
 					"executable": true,
-					"keywords": [
-						"dictionary",
-						"key",
-						"value",
-						"map",
-						"hash",
-						"連想配列",
-						"辞書"
-					]
+					"keywords": ["dictionary", "key", "value", "map", "hash", "連想配列", "辞書"]
 				},
 				{
 					"title": "データの並べ替え（sorted）",
 					"code": "// sorted()を使うと、配列の中身を特定のルールで並べ替えることができます\nlet numbers = [5, 2, 8, 1, 9]\n\n// 1. 基本的な並べ替え（小さい順）\nlet sortedNumbers = numbers.sorted()\nprint(\"小さい順: \\(sortedNumbers)\")\n\n// 2. 特殊な条件での並べ替え（大きい順など）\n// { $0 > $1 } は「前の要素($0)が後ろの要素($1)より大きいか」を比べるという意味です\nlet highToLow = numbers.sorted { $0 > $1 }\nprint(\"大きい順: \\(highToLow)\")\n\n// 3. 文字列の並べ替え（あいうえお順/アルファベット順）\nlet fruits = [\"みかん\", \"りんご\", \"ばなな\"]\nlet sortedFruits = fruits.sorted()\nprint(\"あいうえお順: \\(sortedFruits)\")",
 					"output": "小さい順: [1, 2, 5, 8, 9]\\n大きい順: [9, 8, 5, 2, 1]\\nあいうえお順: [\"ばなな\", \"みかん\", \"りんご\"]",
 					"executable": true,
-					"keywords": [
-						"sort",
-						"order",
-						"arrange",
-						"sequence",
-						"並べ替え",
-						"ソート",
-						"順番"
-					]
+					"keywords": ["sort", "order", "arrange", "sequence", "並べ替え", "ソート", "順番"]
 				}
 			]
 		},
@@ -459,15 +337,7 @@
 					"code": "// 1. \\.self の意味\n// \\.self は「その値自身」を指すKeyPathです\nlet numbers = [10, 20, 30]\n\n// List(numbers, id: \\.self) のように使う場合、\n// 「配列の各要素（数値）そのものを識別子(ID)として使う」という意味になります\n\n\n// 2. プロパティへのKeyPath\nstruct Student {\n    var name: String\n    var grade: Int\n}\n\nlet students = [\n    Student(name: \"太郎\", grade: 1),\n    Student(name: \"花子\", grade: 2),\n    Student(name: \"次郎\", grade: 1)\n]\n\n// map関数などでKeyPathを使うと、クロージャを省略して簡潔に書けます\n// 通常の書き方: students.map { student in student.name }\nlet names = students.map(\\.name)\nprint(\"名前一覧: \\(names)\")\n\n// filterなどでの活用（KeyPathそのものではなく、プロパティ参照として）\n// KeyPath自体は値への「パス」を表す型です\nlet namePath = \\Student.name\nlet taro = students[0]\nprint(\"KeyPathでアクセス: \\(taro[keyPath: namePath])\")",
 					"output": "names: [\"太郎\", \"花子\", \"次郎\"]\nKeyPathでアクセス: 太郎",
 					"executable": true,
-					"keywords": [
-						"keypath",
-						"self",
-						"syntax",
-						"reference",
-						"参照",
-						"キーパス",
-						"\\."
-					]
+					"keywords": ["keypath", "self", "syntax", "reference", "参照", "キーパス", "\\."]
 				}
 			]
 		},
@@ -523,14 +393,7 @@
 					"code": "// print関数はコンソールに値を出力する\nprint(\"Hello, World!\")  // 基本的な出力\nprint(\"名前: 太郎, 年齢: 13\")  // 複数の値をカンマ区切りで出力\n\n// terminatorパラメータで改行を制御（デフォルトは\\n）\nprint(\"こんにちは\", terminator: \"\")  // 改行なしで出力\n\n// 明示的に改行を指定（デフォルトと同じ）\nprint(\"こんにちは\", terminator: \"\\n\")\n\n// 複数の改行を出力\nprint(\"1行目\")  // 1行目出力\nprint(\"2行目\", terminator: \"\\n\\n\")  // 2行目出力後に2回改行\nprint(\"4行目\")  // 4行目出力",
 					"output": "Hello, World!\n名前: 太郎, 年齢: 13\nこんにちはこんにちは\n1行目\n2行目\n\n4行目",
 					"executable": true,
-					"keywords": [
-						"log",
-						"console",
-						"debug",
-						"output",
-						"出力",
-						"プリント"
-					]
+					"keywords": ["log", "console", "debug", "output", "出力", "プリント"]
 				},
 				{
 					"title": "Stringのメソッド",
@@ -555,16 +418,7 @@
 					"code": "import Foundation\n\n// UUID（Universally Unique Identifier）は、世界で唯一の識別子を生成します\n// ランダムなUUIDを生成\nlet id = UUID()\nprint(\"生成されたID: \\(id)\")\n// 出力例: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\n\n// 文字列として取得する場合\nlet idString = id.uuidString\nprint(\"文字列形式: \\(idString)\")\n\n// SwiftUIでの活用例（リスト表示の識別子としてよく使われます）\nstruct TodoItem: Identifiable {\n    let id = UUID()  // インスタンス作成時に自動でユニークなIDを付与\n    var title: String\n}\n\nlet item = TodoItem(title: \"牛乳を買う\")\nprint(\"Todo項目のID: \\(item.id)\")",
 					"output": "生成されたID: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\n文字列形式: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\nTodo項目のID: E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
 					"executable": true,
-					"keywords": [
-						"id",
-						"unique",
-						"identifier",
-						"random",
-						"uuid",
-						"識別子",
-						"一意",
-						"ランダム"
-					]
+					"keywords": ["id", "unique", "identifier", "random", "uuid", "識別子", "一意", "ランダム"]
 				}
 			]
 		},
@@ -578,14 +432,7 @@
 					"code": "import SwiftUI\n\n// @Stateは、ビュー内で変更可能な状態を管理するためのプロパティラッパーです\n// 値が変更されると、ビューが自動的に再描画されます\n\nstruct CounterView: View {\n    // @Stateを使って、カウント値を管理\n    // privateをつけるのが推奨（このビュー内でのみ使用するため）\n    @State private var count = 0\n    \n    var body: some View {\n        VStack {\n            Text(\"カウント: \\(count)\")\n            \n            Button(\"増やす\") {\n                count += 1  // 値を変更するとビューが更新される\n            }\n        }\n    }\n}\n\n// @Stateの特徴:\n// - ビューが所有する「単一の情報源」\n// - 値型（Int, String, Bool, 構造体など）に使用\n// - ビューが再生成されても値は保持される",
 					"output": "（ボタンを押すたびにカウントが1ずつ増える）",
 					"executable": false,
-					"keywords": [
-						"state",
-						"property wrapper",
-						"view",
-						"update",
-						"状態",
-						"再描画"
-					]
+					"keywords": ["state", "property wrapper", "view", "update", "状態", "再描画"]
 				},
 				{
 					"title": "@Binding（双方向データ渡し）",
@@ -607,13 +454,7 @@
 					"code": "import SwiftUI\n\n// TextFieldの例で@Stateと@Bindingの連携を理解する\n\n// 入力フォームの子コンポーネント\nstruct NameInputField: View {\n    @Binding var name: String  // 親から渡される参照\n    \n    var body: some View {\n        TextField(\"名前を入力\", text: $name)\n            .textFieldStyle(.roundedBorder)\n    }\n}\n\n// 親ビュー\nstruct FormView: View {\n    @State private var userName = \"\"  // この状態を親が「所有」\n    \n    var body: some View {\n        VStack(spacing: 20) {\n            // 子ビューに状態の「参照」を渡す\n            NameInputField(name: $userName)\n            \n            // 入力された値をリアルタイムで表示\n            Text(\"こんにちは、\\(userName.isEmpty ? \"ゲスト\" : userName)さん！\")\n        }\n        .padding()\n    }\n}\n\n// まとめ:\n// @State  → 「状態を持つ」側（親）で使う\n// @Binding → 「状態を借りる」側（子）で使う\n// $変数名 → Bindingとして渡すときに使う記法",
 					"output": "（TextFieldに入力すると、下のテキストがリアルタイムで更新される）",
 					"executable": false,
-					"keywords": [
-						"difference",
-						"usage",
-						"pattern",
-						"使い分け",
-						"違い"
-					]
+					"keywords": ["difference", "usage", "pattern", "使い分け", "違い"]
 				},
 				{
 					"title": "@FocusState（フォーカス管理）",
@@ -676,31 +517,14 @@
 					"code": "import SwiftUI\n\n// idパラメータは、各要素を一意に識別するための「キー」です\n// SwiftUIが「どの要素が変更されたか」を判定するために使われます\n\n// パターン1: 値型（String, Int）の場合はid: \\.self を使う\nstruct SimpleView: View {\n    let numbers = [1, 2, 3, 4, 5]\n    \n    var body: some View {\n        VStack {\n            ForEach(numbers, id: \\.self) { num in\n                Text(\"数字: \\(num)\")\n            }\n        }\n    }\n}\n\n// パターン2: 複雑な型（構造体）の場合は、Identifiable に準拠させる\nstruct Student: Identifiable {\n    let id = UUID()  // 各学生に一意なIDを付与\n    var name: String\n    var grade: Int\n}\n\nstruct StudentListView: View {\n    let students = [\n        Student(name: \"太郎\", grade: 1),\n        Student(name: \"花子\", grade: 1),\n        Student(name: \"次郎\", grade: 2)\n    ]\n    \n    var body: some View {\n        VStack {\n            // Identifiableに準拠しているので、idを省略できる\n            ForEach(students) { student in\n                HStack {\n                    Text(student.name)\n                    Text(\"\\(student.grade)年\")\n                        .foregroundStyle(.secondary)\n                }\n                .padding()\n            }\n        }\n    }\n}\n\n// パターン3: プロパティを明示的に指定\nstruct UserView: View {\n    let users = [\n        (id: 1, name: \"太郎\"),\n        (id: 2, name: \"花子\"),\n        (id: 3, name: \"次郎\")\n    ]\n    \n    var body: some View {\n        VStack {\n            ForEach(users, id: \\.id) { user in  // idプロパティをキーとして使用\n                Text(user.name)\n            }\n        }\n    }\n}",
 					"output": "（各パターンで配列の要素がリストアイテムとして表示される）",
 					"executable": false,
-					"keywords": [
-						"id",
-						"key",
-						"identifiable",
-						"uuid",
-						"識別子",
-						"一意",
-						"キー"
-					]
+					"keywords": ["id", "key", "identifiable", "uuid", "識別子", "一意", "キー"]
 				},
 				{
 					"title": "ForEachと@State の組み合わせ",
 					"code": "import SwiftUI\n\n// ForEachで動的にリストを更新する例\n\nstruct TodoListView: View {\n    // Todoアイテムの構造体\n    struct TodoItem: Identifiable {\n        let id = UUID()\n        var title: String\n        var isCompleted: Bool = false\n    }\n    \n    // @Stateで状態を管理\n    @State private var todos: [TodoItem] = [\n        TodoItem(title: \"牛乳を買う\"),\n        TodoItem(title: \"数学の宿題\"),\n        TodoItem(title: \"部屋を片付ける\")\n    ]\n    \n    var body: some View {\n        VStack {\n            Text(\"やることリスト\")\n                .font(.title)\n            \n            // ForEachでリストの各要素をビューとして生成\n            ForEach($todos) { $todo in  // $をつけてBindingとして受け取る\n                HStack {\n                    // チェックボックスの役割\n                    Image(systemName: todo.isCompleted ? \"checkmark.circle.fill\" : \"circle\")\n                        .foregroundStyle(todo.isCompleted ? .green : .gray)\n                        .onTapGesture {\n                            todo.isCompleted.toggle()  // タップで完了状態を切り替え\n                        }\n                    \n                    Text(todo.title)\n                        .strikethrough(todo.isCompleted)  // 完了時は取り消し線を表示\n                    \n                    Spacer()  // スペースを挿入\n                }\n                .padding()\n            }\n            \n            Spacer()\n        }\n    }\n}\n\n// ポイント:\n// - $todosでBindingリストを取得\n// - ForEachの中で$todoでBinding値を受け取る\n// - Bindingを使うことで、子ビューでの変更が親の@Stateに反映される",
 					"output": "（チェックマークをタップすると、アイテムが完了状態に切り替わる）",
 					"executable": false,
-					"keywords": [
-						"dynamic",
-						"update",
-						"binding",
-						"state",
-						"todo",
-						"list",
-						"動的",
-						"更新"
-					]
+					"keywords": ["dynamic", "update", "binding", "state", "todo", "list", "動的", "更新"]
 				},
 				{
 					"title": "ForEachでList・ScrollViewと組み合わせ",

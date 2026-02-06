@@ -164,7 +164,7 @@
 						tabindex="0"
 						class="dropdown-content menu z-[1] mb-2 max-h-[60vh] w-72 flex-nowrap overflow-y-auto rounded-box border border-base-200 bg-base-100 p-2 shadow"
 					>
-						{#each data.allSteps as step, i}
+						{#each data.allSteps as step, i (step.id)}
 							<li>
 								<a
 									href={resolve('/project/' + data.projectId + '/' + step.id)}

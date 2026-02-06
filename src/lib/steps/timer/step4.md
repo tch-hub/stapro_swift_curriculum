@@ -123,4 +123,3 @@ struct TimerDisplayView: View {
     TimerDisplayView(remainingTime: 10 * 60, totalTime: 60 * 60)
 }
 ```
-

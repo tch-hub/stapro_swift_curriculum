@@ -1,24 +1,23 @@
-<script lang="ts">
+<script>
 	import { onMount } from 'svelte';
 
-	import {
-		searchGlobal,
-		getSearchResultDetail,
-		type SearchResult,
-		type SearchResultDetail
-	} from '$lib/services/search';
+	import { searchGlobal, getSearchResultDetail } from '$lib/services/search';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import { base } from '$app/paths';
 
 	let isOpen = $state(false);
 	let query = $state('');
-	let results = $state<SearchResult[]>([]);
-	let selectedResult = $state<SearchResult | null>(null);
-	let previewDetail = $state<SearchResultDetail | undefined>(undefined);
+	/** @type {any[]} */
+	let results = $state([]);
+	/** @type {any} */
+	let selectedResult = $state(null);
+	/** @type {any} */
+	let previewDetail = $state(undefined);
 	/** @type {HTMLDialogElement | null} */
 	let dialog = $state(null);
-	let modalBox = $state<HTMLDivElement | null>(null);
+	/** @type {HTMLDivElement | null} */
+	let modalBox = $state(null);
 
 	let innerHeight = $state(0);
 	let headerHeight = $state(0);
@@ -27,9 +26,13 @@
 	/** localStorage検索履歴 */
 	const HISTORY_KEY = 'globalSearchHistory';
 	const MAX_HISTORY = 20;
-	let savedHistory = $state<string[]>([]);
+	/** @type {string[]} */
+	let savedHistory = $state([]);
 
-	function loadHistory(): string[] {
+	/**
+	 * @returns {string[]}
+	 */
+	function loadHistory() {
 		try {
 			const raw = localStorage.getItem(HISTORY_KEY);
 			return raw ? JSON.parse(raw) : [];
@@ -38,14 +41,20 @@
 		}
 	}
 
-	function saveToHistory(q: string) {
+	/**
+	 * @param {string} q
+	 */
+	function saveToHistory(q) {
 		const trimmed = q.trim();
 		if (!trimmed) return;
 		savedHistory = [trimmed, ...savedHistory.filter((h) => h !== trimmed)].slice(0, MAX_HISTORY);
 		localStorage.setItem(HISTORY_KEY, JSON.stringify(savedHistory));
 	}
 
-	function removeFromHistory(q: string) {
+	/**
+	 * @param {string} q
+	 */
+	function removeFromHistory(q) {
 		savedHistory = savedHistory.filter((h) => h !== q);
 		localStorage.setItem(HISTORY_KEY, JSON.stringify(savedHistory));
 	}
@@ -57,12 +66,12 @@
 
 	/** テキスト選択による再検索用 */
 	let selectionText = $state('');
-	let selectionPos = $state<{ x: number; y: number } | null>(null);
+	/** @type {{ x: number; y: number } | null} */
+	let selectionPos = $state(null);
 
 	/** 検索履歴スタック（前の検索に戻るため） */
-	let searchHistory = $state<
-		{ query: string; selectedResult: SearchResult | null; previewDetail?: SearchResultDetail }[]
-	>([]);
+	/** @type {Array<{ query: string; selectedResult: any; previewDetail?: any }>} */
+	let searchHistory = $state([]);
 
 	let dialogHeight = $derived(
 		innerHeight ? Math.min(headerHeight + contentHeight + 32, innerHeight * 0.8) : 600
@@ -87,7 +96,10 @@
 
 	// ... (keep existing functions close, handleKeydown, etc. unchanged)
 
-	function handleKeydown(e: KeyboardEvent) {
+	/**
+	 * @param {KeyboardEvent} e
+	 */
+	function handleKeydown(e) {
 		// Cmd+K or Ctrl+K to open
 		if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
 			e.preventDefault();
@@ -98,7 +110,10 @@
 		}
 	}
 
-	function handleResultClick(result: SearchResult) {
+	/**
+	 * @param {any} result
+	 */
+	function handleResultClick(result) {
 		saveToHistory(query);
 		selectedResult = result;
 		previewDetail = getSearchResultDetail(result.pagePath, result.sectionId, result.codeBlockIndex);
@@ -322,7 +337,7 @@
 				{:else if query}
 					{#if results.length > 0}
 						<div class="flex flex-col gap-2">
-							{#each results as result}
+							{#each results as result (result.id)}
 								<button
 									class="card bg-base-200 text-left transition-colors hover:bg-base-300"
 									onclick={() => handleResultClick(result)}
@@ -386,7 +401,7 @@
 							</button>
 						</div>
 						<div class="flex flex-col gap-1">
-							{#each savedHistory as historyItem}
+							{#each savedHistory as historyItem (historyItem)}
 								<div
 									class="group flex items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-base-200"
 								>
