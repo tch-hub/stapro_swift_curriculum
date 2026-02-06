@@ -7,15 +7,40 @@
             "codeBlocks": [
                 {
                     "title": "Text - テキストの表示",
-                    "code": "// 基本的なテキスト\nText(\"Hello, World!\")\n\n// Markdown記法のサポート\nText(\"**太字** と *斜体* と [リンク](https://apple.com)\")\n\n// 日付の表示スタイル\nText(Date(), style: .date)     // 2024年1月1日\nText(Date(), style: .time)     // 12:00\nText(Date(), style: .relative) // 2時間前\nText(Date(), style: .timer)    // 0:00 (カウントアップ)\n\n// 数値のフォーマット\nText(1000, format: .currency(code: \"JPY\")) // ¥1,000"
+                    "code": "// 基本的なテキスト\nText(\"Hello, World!\")\n\n// Markdown記法のサポート\nText(\"**太字** と *斜体* と [リンク](https://apple.com)\")\n\n// 日付の表示スタイル\nText(Date(), style: .date)     // 2024年1月1日\nText(Date(), style: .time)     // 12:00\nText(Date(), style: .relative) // 2時間前\nText(Date(), style: .timer)    // 0:00 (カウントアップ)\n\n// 数値のフォーマット\nText(1000, format: .currency(code: \"JPY\")) // ¥1,000",
+                    "keywords": [
+                        "label",
+                        "string",
+                        "font",
+                        "display",
+                        "文字",
+                        "表示"
+                    ]
                 },
                 {
                     "title": "Image - 画像の表示",
-                    "code": "// システムアイコン (SF Symbols)\nImage(systemName: \"star.fill\")\n    .foregroundStyle(.yellow)\n\n// アセット画像\nImage(\"ProfilePicture\")\n    .resizable()        // サイズ変更を許可\n    .aspectRatio(contentMode: .fit) // アスペクト比を維持\n    .frame(width: 100)\n\n// 非同期画像の読み込み\nAsyncImage(url: URL(string: \"https://example.com/icon.png\")) {\n    image in image.resizable()\n} placeholder: {\n    ProgressView()\n}"
+                    "code": "// システムアイコン (SF Symbols)\nImage(systemName: \"star.fill\")\n    .foregroundStyle(.yellow)\n\n// アセット画像\nImage(\"ProfilePicture\")\n    .resizable()        // サイズ変更を許可\n    .aspectRatio(contentMode: .fit) // アスペクト比を維持\n    .frame(width: 100)\n\n// 非同期画像の読み込み\nAsyncImage(url: URL(string: \"https://example.com/icon.png\")) {\n    image in image.resizable()\n} placeholder: {\n    ProgressView()\n}",
+                    "keywords": [
+                        "picture",
+                        "photo",
+                        "icon",
+                        "symbol",
+                        "sf symbols",
+                        "画像",
+                        "アイコン"
+                    ]
                 },
                 {
                     "title": "Button - ボタン",
-                    "code": "// 基本的なボタン\nButton(\"タップして実行\") {\n    print(\"実行されました\")\n}\n\n// テキスト以外のラベル\nButton(action: {\n    // アクション\n}) {\n    HStack {\n        Image(systemName: \"trash\")\n        Text(\"削除\")\n    }\n}\n\n// ロール指定（破壊的なアクションなど）\nButton(\"削除\", role: .destructive) {\n    // 削除処理\n}"
+                    "code": "// 基本的なボタン\nButton(\"タップして実行\") {\n    print(\"実行されました\")\n}\n\n// テキスト以外のラベル\nButton(action: {\n    // アクション\n}) {\n    HStack {\n        Image(systemName: \"trash\")\n        Text(\"削除\")\n    }\n}\n\n// ロール指定（破壊的なアクションなど）\nButton(\"削除\", role: .destructive) {\n    // 削除処理\n}",
+                    "keywords": [
+                        "action",
+                        "tap",
+                        "click",
+                        "interaction",
+                        "ボタン",
+                        "タップ"
+                    ]
                 }
             ]
         },
@@ -26,11 +51,33 @@
             "codeBlocks": [
                 {
                     "title": "Stacks - 水平・垂直・重ね合わせ",
-                    "code": "// 垂直方向（縦）に並べる\nVStack(alignment: .leading, spacing: 10) {\n    Text(\"タイトル\")\n    Text(\"詳細説明\")\n}\n\n// 水平方向（横）に並べる\nHStack {\n    Image(systemName: \"person\")\n    Text(\"ユーザー名\")\n}\n\n// 重ねて配置（奥から手前へ）\nZStack {\n    Rectangle().fill(.blue)\n    Text(\"前面のテキスト\").foregroundStyle(.white)\n}"
+                    "code": "// 垂直方向（縦）に並べる\nVStack(alignment: .leading, spacing: 10) {\n    Text(\"タイトル\")\n    Text(\"詳細説明\")\n}\n\n// 水平方向（横）に並べる\nHStack {\n    Image(systemName: \"person\")\n    Text(\"ユーザー名\")\n}\n\n// 重ねて配置（奥から手前へ）\nZStack {\n    Rectangle().fill(.blue)\n    Text(\"前面のテキスト\").foregroundStyle(.white)\n}",
+                    "keywords": [
+                        "VStack",
+                        "HStack",
+                        "ZStack",
+                        "layout",
+                        "arrange",
+                        "container",
+                        "スタック",
+                        "縦並び",
+                        "横並び",
+                        "重ねる"
+                    ]
                 },
                 {
                     "title": "Spacer & Divider - 余白と区切り",
-                    "code": "// Spacer: 利用可能な空間を埋める\nHStack {\n    Text(\"左端\")\n    Spacer() // ここが広がる\n    Text(\"右端\")\n}\n\n// Divider: 区切り線を表示\nVStack {\n    Text(\"上段\")\n    Divider()\n    Text(\"下段\")\n}"
+                    "code": "// Spacer: 利用可能な空間を埋める\nHStack {\n    Text(\"左端\")\n    Spacer() // ここが広がる\n    Text(\"右端\")\n}\n\n// Divider: 区切り線を表示\nVStack {\n    Text(\"上段\")\n    Divider()\n    Text(\"下段\")\n}",
+                    "keywords": [
+                        "space",
+                        "line",
+                        "separator",
+                        "gap",
+                        "fill",
+                        "余白",
+                        "区切り",
+                        "スペース"
+                    ]
                 }
             ]
         },
@@ -41,15 +88,57 @@
             "codeBlocks": [
                 {
                     "title": "List - リスト表示",
-                    "code": "// 1. 配列からの動的生成（単純なデータ）\nlet items = [\"Apple\", \"Banana\", \"Orange\"]\n\n// id: \\.self の解説\n// 文字列や数値など、一意のIDを持たない単純な型の配列を表示する場合、\n// 「要素そのもの('\\.self')」を識別子として使います。\nList(items, id: \\.self) { item in\n    Text(item)\n}\n\n// 2. 構造体のリスト（推奨）\nstruct Fruit: Identifiable {\n    let id = UUID()     // 一意のID\n    let name: String\n}\n\nlet fruits = [\n    Fruit(name: \"Apple\"),\n    Fruit(name: \"Banana\")\n]\n\n// Identifiableに準拠していれば id指定は不要\nList(fruits) { fruit in\n    Text(fruit.name)\n}\n\n// 3. 静的なリスト\nList {\n    Text(\"設定\")\n    Text(\"プロフィール\")\n}"
+                    "code": "// 1. 配列からの動的生成（単純なデータ）\nlet items = [\"Apple\", \"Banana\", \"Orange\"]\n\n// id: \\.self の解説\n// 文字列や数値など、一意のIDを持たない単純な型の配列を表示する場合、\n// 「要素そのもの('\\.self')」を識別子として使います。\nList(items, id: \\.self) { item in\n    Text(item)\n}\n\n// 2. 構造体のリスト（推奨）\nstruct Fruit: Identifiable {\n    let id = UUID()     // 一意のID\n    let name: String\n}\n\nlet fruits = [\n    Fruit(name: \"Apple\"),\n    Fruit(name: \"Banana\")\n]\n\n// Identifiableに準拠していれば id指定は不要\nList(fruits) { fruit in\n    Text(fruit.name)\n}\n\n// 3. 静的なリスト\nList {\n    Text(\"設定\")\n    Text(\"プロフィール\")\n}",
+                    "keywords": [
+                        "table",
+                        "row",
+                        "collection",
+                        "array",
+                        "display",
+                        "リスト",
+                        "一覧",
+                        "テーブル"
+                    ]
                 },
                 {
                     "title": "TextField - テキスト入力",
-                    "code": "@State var name = \"\"\n\n// 基本的な入力フィールド\nTextField(\"名前を入力\", text: $name)\n    .textFieldStyle(.roundedBorder)\n\n// パスワード入力（伏せ字）\nSecureField(\"パスワード\", text: $password)\n\n// 数値入力キーボード指定\nTextField(\"年齢\", value: $age, format: .number)\n    .keyboardType(.numberPad)"
+                    "code": "@State var name = \"\"\n\n// 基本的な入力フィールド\nTextField(\"名前を入力\", text: $name)\n    .textFieldStyle(.roundedBorder)\n\n// パスワード入力（伏せ字）\nSecureField(\"パスワード\", text: $password)\n\n// 数値入力キーボード指定\nTextField(\"年齢\", value: $age, format: .number)\n    .keyboardType(.numberPad)",
+                    "keywords": [
+                        "input",
+                        "form",
+                        "keyboard",
+                        "text",
+                        "entry",
+                        "入力",
+                        "テキストフィールド"
+                    ]
+                },
+                {
+                    "title": "Picker - 選択肢から選ぶ",
+                    "code": "@State var selection = \"apple\"\nlet fruits = [\"apple\", \"banana\", \"orange\"]\n\n// 基本的なPicker\nPicker(\"フルーツを選択\", selection: $selection) {\n    ForEach(fruits, id: \\.self) { fruit in\n        Text(fruit)\n    }\n}\n\n// label: パラメータについて\n// Pickerの第一引数「label:」はアクセシビリティや\n// Form内での表示ラベルとして使われます。\n// 多くのスタイルでは画面上に表示されませんが、\n// VoiceOverなどの支援技術で読み上げられるため\n// 省略せず適切な説明を設定しましょう。\n\n// スタイルのバリエーション\n.pickerStyle(.segmented)  // セグメント（横並びボタン）\n.pickerStyle(.wheel)      // ホイール（iOS標準）\n.pickerStyle(.menu)       // ドロップダウンメニュー\n.pickerStyle(.inline)     // インライン（List内で展開）",
+                    "keywords": [
+                        "picker",
+                        "select",
+                        "dropdown",
+                        "option",
+                        "choice",
+                        "segmented",
+                        "選択",
+                        "ピッカー",
+                        "ドロップダウン"
+                    ]
                 },
                 {
                     "title": "ScrollView - スクロール",
-                    "code": "// 垂直スクロール\nScrollView {\n    VStack {\n        ForEach(0..<20) { i in\n            Text(\"行 \\(i)\")\n                .frame(maxWidth: .infinity)\n                .padding()\n                .background(.gray.opacity(0.1))\n        }\n    }\n}\n\n// 水平スクロール\nScrollView(.horizontal, showsIndicators: false) {\n    HStack {\n        // ...コンテンツ\n    }\n}"
+                    "code": "// 垂直スクロール\nScrollView {\n    VStack {\n        ForEach(0..<20) { i in\n            Text(\"行 \\(i)\")\n                .frame(maxWidth: .infinity)\n                .padding()\n                .background(.gray.opacity(0.1))\n        }\n    }\n}\n\n// 水平スクロール\nScrollView(.horizontal, showsIndicators: false) {\n    HStack {\n        // ...コンテンツ\n    }\n}",
+                    "keywords": [
+                        "scroll",
+                        "overflow",
+                        "content",
+                        "pan",
+                        "スクロール",
+                        "スクロールビュー"
+                    ]
                 }
             ]
         }
