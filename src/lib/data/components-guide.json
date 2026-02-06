@@ -110,7 +110,7 @@
             "codeBlocks": [
                 {
                     "title": "List - リスト表示",
-                    "code": "// 1. 配列からの動的生成（単純なデータ）\nlet items = [\"Apple\", \"Banana\", \"Orange\"]\n\n// id: \\.self の解説\n// 文字列や数値など、一意のIDを持たない単純な型の配列を表示する場合、\n// 「要素そのもの('\\.self')」を識別子として使います。\nList(items, id: \\.self) { item in\n    Text(item)\n}\n\n// 2. 構造体のリスト（推奨）\nstruct Fruit: Identifiable {\n    let id = UUID()     // 一意のID\n    let name: String\n}\n\nlet fruits = [\n    Fruit(name: \"Apple\"),\n    Fruit(name: \"Banana\")\n]\n\n// Identifiableに準拠していれば id指定は不要\nList(fruits) { fruit in\n    Text(fruit.name)\n}\n\n// 3. 静的なリスト\nList {\n    Text(\"設定\")\n    Text(\"プロフィール\")\n}",
+                    "code": "// 1. 配列からの動的生成（単純なデータ）\nlet items = [\"Apple\", \"Banana\", \"Orange\"]\n\n// id: \\.self の解説\n// 文字列や数値など、一意のIDを持たない単純な型の配列を表示する場合、\n// 「要素そのもの('\\.self')」を識別子として使います。\nList(items, id: \\.self) { item in\n    Text(item)\n}\n\n// 2. 構造体のリスト（推奨）\nstruct Fruit: Identifiable {\n    let id = UUID()     // 一意のID\n    let name: String\n}\n\nlet fruits = [\n    Fruit(name: \"Apple\"),\n    Fruit(name: \"Banana\")\n]\n\n// Identifiableに準拠していれば id指定は不要\nList(fruits) { fruit in\n    Text(fruit.name)\n}\n\n// 3. 削除機能付きのリスト\n// .onDelete を使うことでスワイプ削除が可能になります\nList {\n    ForEach(items, id: \\.self) { item in\n        Text(item)\n    }\n    .onDelete { indexSet in\n        items.remove(atOffsets: indexSet)\n    }\n}\n\n// 4. 静的なリスト\nList {\n    Text(\"設定\")\n    Text(\"プロフィール\")\n}",
                     "keywords": [
                         "table",
                         "row",

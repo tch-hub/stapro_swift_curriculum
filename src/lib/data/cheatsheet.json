@@ -204,6 +204,25 @@
 						"条件演算子",
 						"三項"
 					]
+				},
+				{
+					"title": "論理演算子",
+					"code": "// 論理演算子は、条件を組み合わせるために使います\nlet age = 15\nlet hasTicket = true\n\n// &&（AND）: 両方の条件がtrueのときにtrue\nif age >= 13 && hasTicket {\n    print(\"入場できます\")  // 13歳以上 かつ チケットあり\n}\n\n// ||（OR）: どちらかの条件がtrueのときにtrue\nlet isStudent = true\nlet isSenior = false\nif isStudent || isSenior {\n    print(\"割引が適用されます\")  // 学生 または シニア\n}\n\n// !（NOT）: 条件を反転させる（trueをfalse、falseをtrueに）\nlet isLoggedIn = false\nif !isLoggedIn {\n    print(\"ログインしてください\")  // ログインしていない場合\n}\n\n// 組み合わせの例\nlet score = 85\nlet attendance = 90\nif score >= 80 && attendance >= 80 {\n    print(\"優秀です\")\n} else if score >= 80 || attendance >= 80 {\n    print(\"あと少し\")\n}",
+					"output": "入場できます\n割引が適用されます\nログインしてください\n優秀です",
+					"executable": true,
+					"keywords": [
+						"&&",
+						"||",
+						"!",
+						"and",
+						"or",
+						"not",
+						"logical",
+						"論理",
+						"かつ",
+						"または",
+						"否定"
+					]
 				}
 			]
 		},
@@ -268,6 +287,41 @@
 			]
 		},
 		{
+			"id": "underscore",
+			"title": "_（アンダースコア）",
+			"description": "_（アンダースコア）はSwiftで「無視する・省略する」を意味する特別な記号です。引数ラベルの省略はSwift独自の使い方で、SwiftUI全体で頻出します。",
+			"codeBlocks": [
+				{
+					"title": "引数ラベルの省略（Swift独自）",
+					"code": "// 通常の関数: 呼び出し時にラベルが必要\nfunc greet(name: String) -> String {\n    return \"こんにちは、\\(name)さん!\"\n}\nprint(greet(name: \"太郎\"))  // ラベル「name:」が必要\n\n// _ をつけた関数: ラベルを省略できる\nfunc hello(_ name: String) -> String {\n    return \"Hello, \\(name)!\"\n}\nprint(hello(\"花子\"))  // ラベルなしで呼べる\n\n// 複数引数での使い分け\nfunc add(_ a: Int, _ b: Int) -> Int {\n    return a + b\n}\nprint(add(3, 5))  // 両方ラベル省略\n\n// SwiftUIでよく見るパターン\n// .onChange(of: value) { _, newValue in ... }\n// Image(systemName: \"star\")  ← systemNameはラベルあり",
+					"output": "こんにちは、太郎さん!\nHello, 花子!\n8",
+					"executable": true,
+					"keywords": [
+						"underscore",
+						"label",
+						"argument",
+						"ラベル",
+						"省略",
+						"アンダースコア",
+						"_"
+					]
+				},
+				{
+					"title": "値の無視（ワイルドカード）",
+					"code": "// 1. ループで値を使わない場合\nfor _ in 1...3 {\n    print(\"繰り返し\")  // 回数だけ必要で、値は不要\n}\n\n// 2. 戻り値を無視する場合\nfunc doSomething() -> Int {\n    print(\"処理実行\")\n    return 42\n}\nlet _ = doSomething()  // 戻り値を使わないことを明示\n\n// 3. タプルの一部を無視\nlet (name, _, grade) = (\"太郎\", 13, \"中学1年\")\nprint(\"\\(name)は\\(grade)生です\")  // 年齢(13)は無視",
+					"output": "繰り返し\n繰り返し\n繰り返し\n処理実行\n太郎は中学1年生です",
+					"executable": true,
+					"keywords": [
+						"wildcard",
+						"ignore",
+						"discard",
+						"無視",
+						"ワイルドカード"
+					]
+				}
+			]
+		},
+		{
 			"id": "collections",
 			"title": "コレクション",
 			"description": "複数の値をまとめて扱います。",
@@ -300,6 +354,21 @@
 						"hash",
 						"連想配列",
 						"辞書"
+					]
+				},
+				{
+					"title": "データの並べ替え（sorted）",
+					"code": "// sorted()を使うと、配列の中身を特定のルールで並べ替えることができます\nlet numbers = [5, 2, 8, 1, 9]\n\n// 1. 基本的な並べ替え（小さい順）\nlet sortedNumbers = numbers.sorted()\nprint(\"小さい順: \\(sortedNumbers)\")\n\n// 2. 特殊な条件での並べ替え（大きい順など）\n// { $0 > $1 } は「前の要素($0)が後ろの要素($1)より大きいか」を比べるという意味です\nlet highToLow = numbers.sorted { $0 > $1 }\nprint(\"大きい順: \\(highToLow)\")\n\n// 3. 文字列の並べ替え（あいうえお順/アルファベット順）\nlet fruits = [\"みかん\", \"りんご\", \"ばなな\"]\nlet sortedFruits = fruits.sorted()\nprint(\"あいうえお順: \\(sortedFruits)\")",
+					"output": "小さい順: [1, 2, 5, 8, 9]\\n大きい順: [9, 8, 5, 2, 1]\\nあいうえお順: [\"ばなな\", \"みかん\", \"りんご\"]",
+					"executable": true,
+					"keywords": [
+						"sort",
+						"order",
+						"arrange",
+						"sequence",
+						"並べ替え",
+						"ソート",
+						"順番"
 					]
 				}
 			]
@@ -337,6 +406,23 @@
 						"カプセル化",
 						"隠す"
 					]
+				},
+				{
+					"title": "final（継承・オーバーライドの禁止）",
+					"code": "// finalキーワードは、クラスの継承やメソッドのオーバーライドを禁止します\n// 「これ以上変更させたくない」ときに使います\n\n// === finalクラス：継承できないクラス ===\n\nfinal class MathHelper {\n    func add(_ a: Int, _ b: Int) -> Int {\n        return a + b\n    }\n    \n    func multiply(_ a: Int, _ b: Int) -> Int {\n        return a * b\n    }\n}\n\nlet math = MathHelper()\nprint(\"足し算: \\(math.add(3, 5))\")\nprint(\"掛け算: \\(math.multiply(4, 6))\")\n\n// ❌ 以下はコンパイルエラー（finalクラスは継承できない）\n// class AdvancedMath: MathHelper { }  // error: inheritance from a final class 'MathHelper'\n\n// === finalメソッド：オーバーライドできないメソッド ===\n\nclass Animal {\n    // このメソッドはサブクラスでオーバーライドできない\n    final func breathe() {\n        print(\"呼吸する\")\n    }\n    \n    // このメソッドはオーバーライドできる\n    func speak() {\n        print(\"...\")\n    }\n}\n\nclass Dog: Animal {\n    // ✅ speak()はオーバーライドできる\n    override func speak() {\n        print(\"ワンワン！\")\n    }\n    \n    // ❌ breathe()はfinalなのでオーバーライドできない\n    // override func breathe() { }  // error: instance method overrides a 'final' instance method\n}\n\nlet dog = Dog()\ndog.breathe()  // 親クラスのメソッドがそのまま使われる\ndog.speak()    // オーバーライドされたメソッドが呼ばれる\n\n// === finalプロパティ ===\n\nclass Vehicle {\n    final var wheels: Int  // サブクラスでオーバーライドできないプロパティ\n    var color: String      // オーバーライド可能なプロパティ\n    \n    init(wheels: Int, color: String) {\n        self.wheels = wheels\n        self.color = color\n    }\n}\n\nlet car = Vehicle(wheels: 4, color: \"赤\")\nprint(\"\\(car.color)い車、タイヤ\\(car.wheels)本\")\n\n// まとめ:\n// final class  → そのクラスを継承できない\n// final func   → そのメソッドをオーバーライドできない\n// final var    → そのプロパティをオーバーライドできない\n// finalを使うメリット:\n// - 意図しない変更を防ぐ（安全性の向上）\n// - コンパイラが最適化しやすくなる（パフォーマンス向上）",
+					"output": "足し算: 8\n掛け算: 24\n呼吸する\nワンワン！\n赤い車、タイヤ4本",
+					"executable": true,
+					"keywords": [
+						"final",
+						"inheritance",
+						"override",
+						"class",
+						"prevent",
+						"継承",
+						"オーバーライド",
+						"禁止",
+						"ファイナル"
+					]
 				}
 			]
 		},
@@ -366,7 +452,7 @@
 		{
 			"id": "keypaths",
 			"title": "KeyPathと.self",
-			"description": "プロパティへの参照や、値そのものを指すための構文です。",
+			"description": "\\（バックスラッシュ）はSwift独自のKeyPathリテラル記号で、プロパティへの参照や値そのものを指すために使います。@Environment(\\.colorScheme)やForEach(items, id: \\.self)など、SwiftUI全体で頻出します。",
 			"codeBlocks": [
 				{
 					"title": "KeyPathと.selfの使い方",
@@ -379,7 +465,8 @@
 						"syntax",
 						"reference",
 						"参照",
-						"キーパス"
+						"キーパス",
+						"\\."
 					]
 				}
 			]
@@ -387,7 +474,7 @@
 		{
 			"id": "optionals-error-handling",
 			"title": "オプションとエラー処理",
-			"description": "値が存在しない可能性を扱います。",
+			"description": "値が存在しない可能性を扱います。Swiftでは他の言語のnullの代わりにnilを使います。",
 			"codeBlocks": [
 				{
 					"title": "Optional型",
@@ -404,6 +491,24 @@
 						"!",
 						"アンラップ",
 						"オプショナル"
+					]
+				},
+				{
+					"title": "do-catchと\\(error) - エラー処理",
+					"code": "// do-catch文を使ってエラーを処理する\n// catchブロック内では、暗黙の変数「error」でエラー情報にアクセスできる\n\n// === エラー型の定義 ===\n\nenum ValidationError: Error {\n    case tooShort       // 短すぎる\n    case tooLong        // 長すぎる\n    case invalidFormat  // 形式が不正\n}\n\n// === throwsを使うエラーを投げる関数 ===\n\nfunc validateUsername(_ name: String) throws -> String {\n    if name.count < 3 {\n        throw ValidationError.tooShort\n    }\n    if name.count > 20 {\n        throw ValidationError.tooLong\n    }\n    return name\n}\n\n// === do-catchでエラーを受け取る ===\n\n// 成功するケース\ndo {\n    let validName = try validateUsername(\"太郎\")\n    print(\"ユーザー名: \\(validName)\")\n} catch {\n    // catchブロック内では「error」が自動的に使える\n    // \\(error) で文字列補間してエラー内容を表示\n    print(\"エラーが発生: \\(error)\")\n}\n\n// 失敗するケース\ndo {\n    let invalidName = try validateUsername(\"ab\")\n    print(\"ユーザー名: \\(invalidName)\")\n} catch {\n    // \\(error) はエラーの説明を文字列として埋め込む\n    print(\"エラーが発生: \\(error)\")  // \"エラーが発生: tooShort\"\n}\n\n// === エラーの種類ごとに処理を分ける ===\n\ndo {\n    let name = try validateUsername(\"ab\")\n    print(name)\n} catch ValidationError.tooShort {\n    print(\"ユーザー名が短すぎます（3文字以上必要）\")\n} catch ValidationError.tooLong {\n    print(\"ユーザー名が長すぎます（20文字以下にしてください）\")\n} catch {\n    // その他のエラーをキャッチ\n    // ここでも \\(error) が使える\n    print(\"予期しないエラー: \\(error)\")\n}\n\n// === \\(error) の仕組み ===\n\n// catch { } ブロック内では、Swiftが自動的に「error」という\n// 変数を提供します（明示的に名前をつける必要がない）\n// \\(error) は文字列補間で、エラーの説明文を埋め込みます\n\n// 明示的に名前をつけることも可能\ndo {\n    let name = try validateUsername(\"ab\")\n    print(name)\n} catch let myError {  // errorの代わりにmyErrorという名前で受け取る\n    print(\"カスタム名でキャッチ: \\(myError)\")\n}",
+					"output": "ユーザー名: 太郎\nエラーが発生: tooShort\nユーザー名が短すぎます（3文字以上必要）\nカスタム名でキャッチ: tooShort",
+					"executable": true,
+					"keywords": [
+						"error",
+						"do",
+						"catch",
+						"try",
+						"throw",
+						"throws",
+						"\\(error)",
+						"エラー処理",
+						"例外",
+						"エラーハンドリング"
 					]
 				}
 			]
@@ -523,6 +628,23 @@
 						"フォーカス",
 						"入力欄",
 						"キーボード"
+					]
+				},
+				{
+					"title": "@Environment（環境値の取得）",
+					"code": "import SwiftUI\n\n// @Environmentは、SwiftUIが提供する「環境値」を読み取るためのプロパティラッパーです\n// システム設定やアプリ全体で共有される値にアクセスできます\n\n// === 基本的な使い方 ===\n\nstruct ThemeView: View {\n    // システムのカラースキーム（ライト/ダーク）を取得\n    @Environment(\\.colorScheme) var colorScheme\n    \n    var body: some View {\n        VStack {\n            Text(\"現在のモード\")\n                .font(.headline)\n            \n            if colorScheme == .dark {\n                Text(\"ダークモードです\")\n                    .foregroundStyle(.white)\n            } else {\n                Text(\"ライトモードです\")\n                    .foregroundStyle(.black)\n            }\n        }\n    }\n}\n\n// === よく使う環境値 ===\n\nstruct EnvironmentExamplesView: View {\n    @Environment(\\.colorScheme) var colorScheme        // ライト/ダークモード\n    @Environment(\\.locale) var locale                  // 言語・地域設定\n    @Environment(\\.horizontalSizeClass) var sizeClass  // 画面サイズ（iPhone/iPad判定）\n    \n    var body: some View {\n        VStack(spacing: 12) {\n            Text(\"カラースキーム: \\(colorScheme == .dark ? \"ダーク\" : \"ライト\")\")\n            Text(\"言語: \\(locale.language.languageCode?.identifier ?? \"不明\")\")\n            Text(\"サイズ: \\(sizeClass == .compact ? \"コンパクト\" : \"レギュラー\")\")\n        }\n    }\n}\n\n// === dismiss（画面を閉じる） ===\n\nstruct DetailView: View {\n    // 画面を閉じるためのアクションを取得\n    @Environment(\\.dismiss) var dismiss\n    \n    var body: some View {\n        VStack {\n            Text(\"詳細画面\")\n                .font(.title)\n            \n            Button(\"閉じる\") {\n                dismiss()  // この画面を閉じる\n            }\n        }\n    }\n}\n\n// 使用例: sheetで表示した画面を閉じる\nstruct ParentView: View {\n    @State private var showDetail = false\n    \n    var body: some View {\n        Button(\"詳細を表示\") {\n            showDetail = true\n        }\n        .sheet(isPresented: $showDetail) {\n            DetailView()  // DetailView内でdismiss()を呼ぶと閉じる\n        }\n    }\n}\n\n// === カスタム環境値を渡す ===\n\nstruct ChildView: View {\n    @Environment(\\.font) var font  // 親から渡されたフォントを取得\n    \n    var body: some View {\n        Text(\"このテキストは親のフォント設定を継承します\")\n    }\n}\n\nstruct CustomEnvView: View {\n    var body: some View {\n        VStack {\n            // .environment()モディファイアで子ビューに環境値を渡す\n            ChildView()\n                .environment(\\.font, .title)\n        }\n    }\n}\n\n// まとめ:\n// @Environment(\\.キー名) → システムや親から環境値を取得\n// .environment(\\.キー名, 値) → 子ビューに環境値を渡す\n// よく使うキー:\n//   \\.colorScheme → ライト/ダークモード\n//   \\.dismiss → 画面を閉じるアクション\n//   \\.locale → 言語・地域設定\n//   \\.font → フォント設定",
+					"output": "（環境値に応じてビューの表示が変わる）",
+					"executable": false,
+					"keywords": [
+						"environment",
+						"colorScheme",
+						"dismiss",
+						"locale",
+						"system",
+						"環境",
+						"ダークモード",
+						"画面を閉じる",
+						"環境値"
 					]
 				}
 			],

@@ -16,7 +16,6 @@ struct ToDoListItem: View {
 
 ## 2. プロパティの定義
 
-
 `struct ToDoListItem: View {` の直下に追加してください。
 
 ```swift
@@ -27,6 +26,7 @@ let isCompleted: Bool
 // タップされた時に実行する処理
 let onToggle: () -> Void
 ```
+
 このコードでは、`ToDoListItem` という「部品」を動かすために必要な設定項目（プロパティ）を3つ定義しています。
 
 - **`let title: String`**  

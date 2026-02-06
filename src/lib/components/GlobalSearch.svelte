@@ -5,7 +5,7 @@
 		searchGlobal,
 		getSearchResultDetail,
 		type SearchResult,
-		type Section
+		type SearchResultDetail
 	} from '$lib/services/search';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
@@ -15,13 +15,54 @@
 	let query = $state('');
 	let results = $state<SearchResult[]>([]);
 	let selectedResult = $state<SearchResult | null>(null);
-	let previewSection = $state<Section | undefined>(undefined);
+	let previewDetail = $state<SearchResultDetail | undefined>(undefined);
 	/** @type {HTMLDialogElement | null} */
 	let dialog = $state(null);
+	let modalBox = $state<HTMLDivElement | null>(null);
 
 	let innerHeight = $state(0);
 	let headerHeight = $state(0);
 	let contentHeight = $state(0);
+
+	/** localStorage検索履歴 */
+	const HISTORY_KEY = 'globalSearchHistory';
+	const MAX_HISTORY = 20;
+	let savedHistory = $state<string[]>([]);
+
+	function loadHistory(): string[] {
+		try {
+			const raw = localStorage.getItem(HISTORY_KEY);
+			return raw ? JSON.parse(raw) : [];
+		} catch {
+			return [];
+		}
+	}
+
+	function saveToHistory(q: string) {
+		const trimmed = q.trim();
+		if (!trimmed) return;
+		savedHistory = [trimmed, ...savedHistory.filter((h) => h !== trimmed)].slice(0, MAX_HISTORY);
+		localStorage.setItem(HISTORY_KEY, JSON.stringify(savedHistory));
+	}
+
+	function removeFromHistory(q: string) {
+		savedHistory = savedHistory.filter((h) => h !== q);
+		localStorage.setItem(HISTORY_KEY, JSON.stringify(savedHistory));
+	}
+
+	function clearAllHistory() {
+		savedHistory = [];
+		localStorage.removeItem(HISTORY_KEY);
+	}
+
+	/** テキスト選択による再検索用 */
+	let selectionText = $state('');
+	let selectionPos = $state<{ x: number; y: number } | null>(null);
+
+	/** 検索履歴スタック（前の検索に戻るため） */
+	let searchHistory = $state<
+		{ query: string; selectedResult: SearchResult | null; previewDetail?: SearchResultDetail }[]
+	>([]);
 
 	let dialogHeight = $derived(
 		innerHeight ? Math.min(headerHeight + contentHeight + 32, innerHeight * 0.8) : 600
@@ -58,18 +99,97 @@
 	}
 
 	function handleResultClick(result: SearchResult) {
+		saveToHistory(query);
 		selectedResult = result;
-		previewSection = getSearchResultDetail(result.pagePath, result.sectionId);
+		previewDetail = getSearchResultDetail(result.pagePath, result.sectionId, result.codeBlockIndex);
 	}
 
 	function closePreview() {
 		selectedResult = null;
-		previewSection = undefined;
+		previewDetail = undefined;
+	}
+
+	/** ダイアログ内でのテキスト選択を検知 */
+	function handleSelectionChange() {
+		const sel = window.getSelection();
+		if (!sel || sel.isCollapsed || !modalBox) {
+			selectionText = '';
+			selectionPos = null;
+			return;
+		}
+
+		const text = sel.toString().trim();
+		if (!text || text.length > 100) {
+			selectionText = '';
+			selectionPos = null;
+			return;
+		}
+
+		// 選択範囲がmodal-box内かチェック
+		const range = sel.getRangeAt(0);
+		const rect = range.getBoundingClientRect();
+		const boxRect = modalBox.getBoundingClientRect();
+
+		if (
+			rect.top >= boxRect.top &&
+			rect.bottom <= boxRect.bottom &&
+			rect.left >= boxRect.left &&
+			rect.right <= boxRect.right
+		) {
+			selectionText = text;
+			// modal-box基準の相対位置
+			selectionPos = {
+				x: rect.left + rect.width / 2 - boxRect.left,
+				y: rect.top - boxRect.top - 40
+			};
+		} else {
+			selectionText = '';
+			selectionPos = null;
+		}
+	}
+
+	/** 選択テキストで再検索 */
+	function searchSelection() {
+		if (!selectionText) return;
+
+		// 現在の状態を履歴に保存
+		searchHistory = [
+			...searchHistory,
+			{
+				query,
+				selectedResult,
+				previewDetail
+			}
+		];
+
+		// 選択テキストで新しい検索を実行
+		saveToHistory(selectionText);
+		query = selectionText;
+		selectedResult = null;
+		previewDetail = undefined;
+		selectionText = '';
+		selectionPos = null;
+	}
+
+	/** 前の検索に戻る */
+	function goBackSearch() {
+		if (searchHistory.length === 0) return;
+		const prev = searchHistory[searchHistory.length - 1];
+		searchHistory = searchHistory.slice(0, -1);
+
+		query = prev.query;
+		selectedResult = prev.selectedResult;
+		previewDetail = prev.previewDetail;
 	}
 
 	onMount(() => {
+		savedHistory = loadHistory();
 		window.addEventListener('keydown', handleKeydown);
-		return () => window.removeEventListener('keydown', handleKeydown);
+		document.addEventListener('selectionchange', handleSelectionChange);
+		return () => {
+			window.removeEventListener('keydown', handleKeydown);
+			document.removeEventListener('selectionchange', handleSelectionChange);
+		};
 	});
 </script>
 
@@ -101,10 +221,16 @@
 <dialog
 	bind:this={dialog}
 	class="modal modal-bottom sm:modal-middle"
-	onclose={() => (isOpen = false)}
+	onclose={() => {
+		isOpen = false;
+		searchHistory = [];
+		selectionText = '';
+		selectionPos = null;
+	}}
 >
 	<div
-		class="modal-box flex w-11/12 flex-col overflow-hidden p-0 transition-all duration-300 {selectedResult
+		bind:this={modalBox}
+		class="relative modal-box flex w-11/12 flex-col overflow-hidden p-0 transition-all duration-300 {selectedResult
 			? '!max-w-7xl'
 			: 'max-w-5xl'}"
 		style="height: {dialogHeight}px"
@@ -143,42 +269,55 @@
 					</a>
 				</div>
 			{:else}
-				<h3 class="mb-4 text-lg font-bold">ドキュメント検索</h3>
-				<SearchBar
-					bind:value={query}
-					placeholder="キーワードを入力... (例: VStack, Int, padding)"
-					enableShortcuts={false}
-					showResults={false}
-				/>
+				<div class="mr-8">
+					{#if searchHistory.length > 0}
+						<div class="mb-2 flex items-center gap-2">
+							<button class="btn gap-1 btn-ghost btn-xs" onclick={goBackSearch}>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="h-3 w-3"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M15 19l-7-7 7-7"
+									/>
+								</svg>
+								「{searchHistory[searchHistory.length - 1].query}」に戻る
+							</button>
+						</div>
+					{:else}
+						<h3 class="mb-4 text-lg font-bold">ドキュメント検索</h3>
+					{/if}
+					<SearchBar
+						bind:value={query}
+						placeholder="キーワードを入力... (例: VStack, Int, padding)"
+						enableShortcuts={false}
+						showResults={false}
+					/>
+				</div>
 			{/if}
 		</div>
 
 		<!-- Search Results or Preview -->
 		<div class="flex-1 overflow-y-auto">
 			<div class="p-4" bind:clientHeight={contentHeight}>
-				{#if selectedResult && previewSection}
+				{#if selectedResult && previewDetail}
 					<div class="space-y-6">
 						<div>
-							<h2 class="text-2xl font-bold">{previewSection.title}</h2>
-							<p class="mt-2 text-base-content/80">{previewSection.description}</p>
+							<p class="text-sm text-base-content/60">{previewDetail.sectionTitle}</p>
 						</div>
 
-						{#each previewSection.codeBlocks as block}
-							<div>
-								<CodeBlock
-									title={block.title}
-									code={block.code}
-									executable={false}
-									description={block.description}
-								/>
-							</div>
-						{/each}
-
-						{#if previewSection.afterHtml}
-							<div class="prose max-w-none">
-								{@html previewSection.afterHtml}
-							</div>
-						{/if}
+						<CodeBlock
+							title={previewDetail.codeBlock.title}
+							code={previewDetail.codeBlock.code}
+							executable={false}
+							description={previewDetail.codeBlock.description}
+						/>
 					</div>
 				{:else if query}
 					{#if results.length > 0}
@@ -238,6 +377,59 @@
 							<p>「{query}」に一致する結果は見つかりませんでした</p>
 						</div>
 					{/if}
+				{:else if savedHistory.length > 0}
+					<div>
+						<div class="mb-3 flex items-center justify-between">
+							<h4 class="text-sm font-semibold text-base-content/60">検索履歴</h4>
+							<button class="btn text-base-content/50 btn-ghost btn-xs" onclick={clearAllHistory}>
+								すべて削除
+							</button>
+						</div>
+						<div class="flex flex-col gap-1">
+							{#each savedHistory as historyItem}
+								<div
+									class="group flex items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-base-200"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="h-4 w-4 shrink-0 text-base-content/40"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+										/>
+									</svg>
+									<button
+										class="flex-1 cursor-pointer truncate text-left text-sm"
+										onclick={() => {
+											query = historyItem;
+										}}
+									>
+										{historyItem}
+									</button>
+									<button
+										class="btn btn-circle opacity-0 btn-ghost transition-opacity btn-xs group-hover:opacity-100"
+										onclick={() => removeFromHistory(historyItem)}
+										aria-label="履歴から削除"
+									>
+										<svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M6 18L18 6M6 6l12 12"
+											/>
+										</svg>
+									</button>
+								</div>
+							{/each}
+						</div>
+					</div>
 				{:else}
 					<div class="flex flex-col items-center justify-center py-8 text-base-content/50">
 						<p class="text-center">
@@ -247,8 +439,57 @@
 				{/if}
 			</div>
 		</div>
+
+		<!-- Selection search popup -->
+		{#if isOpen && selectionText && selectionPos}
+			<button
+				class="selection-search-btn btn shadow-lg btn-sm btn-primary"
+				style="left: {selectionPos.x}px; top: {selectionPos.y}px;"
+				onmousedown={(e) => {
+					e.preventDefault();
+					searchSelection();
+				}}
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-3.5 w-3.5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+					/>
+				</svg>
+				「{selectionText.length > 20 ? selectionText.slice(0, 20) + '...' : selectionText}」を検索
+			</button>
+		{/if}
 	</div>
 	<form method="dialog" class="modal-backdrop">
 		<button>close</button>
 	</form>
 </dialog>
+
+<style>
+	.selection-search-btn {
+		position: absolute;
+		z-index: 20;
+		transform: translateX(-50%);
+		white-space: nowrap;
+		animation: fade-in 0.15s ease-out;
+	}
+
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+			transform: translateX(-50%) translateY(4px);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(-50%) translateY(0);
+		}
+	}
+</style>

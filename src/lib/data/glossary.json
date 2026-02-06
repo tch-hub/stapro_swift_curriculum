@@ -1,6 +1,56 @@
 {
 	"sections": [
 		{
+			"id": "imports",
+			"title": "import文とフレームワーク",
+			"description": "Swiftファイルの先頭に書くimport文は、Apple が用意した機能の集まり（フレームワーク）を読み込む宣言です。使いたい機能に応じて適切なフレームワークをimportします。",
+			"codeBlocks": [
+				{
+					"title": "import Foundation",
+					"description": "Foundationは、Swiftの基盤となるフレームワークです。日付(Date)、URL、JSONの変換(JSONDecoder)、タイマー(Timer)、ファイル操作など、アプリ開発に欠かせない基本機能を提供します。import SwiftUIを書くとFoundationも自動的に含まれるため、SwiftUIファイルでは別途importする必要はありません。SwiftUIを使わない純粋なデータ処理用ファイルなどで使用します。",
+					"code": "import Foundation\n\n// 現在の日時を取得\nlet now = Date()\nprint(now)\n\n// URLを作成\nlet url = URL(string: \"https://example.com\")!\nprint(url)\n\n// JSONデータを変換\nlet json = \"{\\\"name\\\": \\\"太郎\\\"}\".data(using: .utf8)!",
+					"keywords": [
+						"import",
+						"Foundation",
+						"フレームワーク",
+						"Date",
+						"URL",
+						"JSON",
+						"インポート"
+					]
+				},
+				{
+					"title": "import SwiftUI",
+					"description": "SwiftUIは、画面（UI）を構築するためのフレームワークです。Text、Button、VStackなどのビュー部品や、@State、@Bindingなどの状態管理機能を提供します。SwiftUIをimportするとFoundationも自動的に含まれるため、画面を作るファイルではimport SwiftUIだけで十分です。",
+					"code": "import SwiftUI\n\n// SwiftUIのビューを定義\nstruct ContentView: View {\n    @State private var count = 0\n\n    var body: some View {\n        VStack {\n            Text(\"カウント: \\(count)\")\n            Button(\"タップ\") {\n                count += 1\n            }\n        }\n    }\n}",
+					"keywords": [
+						"import",
+						"SwiftUI",
+						"フレームワーク",
+						"UI",
+						"ビュー",
+						"画面",
+						"インポート"
+					]
+				},
+				{
+					"title": "import SwiftData",
+					"description": "SwiftDataは、アプリ内にデータを永続的に保存（データベースに保存）するためのフレームワークです。@Modelを付けたクラスが保存対象となり、アプリを閉じてもデータが消えません。ToDoリストやメモ帳など、ユーザーが入力したデータを残しておきたい場合に使います。iOS 17以降で利用できます。",
+					"code": "import SwiftData\nimport SwiftUI\n\n// @Modelで保存するデータを定義\n@Model\nclass Todo {\n    var title: String\n    var isCompleted: Bool\n\n    init(title: String, isCompleted: Bool = false) {\n        self.title = title\n        self.isCompleted = isCompleted\n    }\n}",
+					"keywords": [
+						"import",
+						"SwiftData",
+						"フレームワーク",
+						"@Model",
+						"永続化",
+						"データベース",
+						"保存",
+						"インポート"
+					]
+				}
+			]
+		},
+		{
 			"id": "swift-basics",
 			"title": "Swift基本用語",
 			"description": "Swiftプログラミングの基本的な概念と用語を解説します。",
@@ -9,25 +59,106 @@
 					"title": "変数 (Variable) - var",
 					"description": "変数は値を格納する「名前付きの箱」です。varキーワードで宣言し、後から値を変更できます。プログラム中でデータを保持・更新する必要がある場合に使用します。",
 					"code": "// 変数の宣言と値の変更\nvar score = 0\nprint(score)  // 0\n\nscore = 100\nprint(score)  // 100",
-					"keywords": ["変数", "variable", "var", "宣言", "代入", "可変"]
+					"keywords": [
+						"変数",
+						"variable",
+						"var",
+						"宣言",
+						"代入",
+						"可変"
+					]
 				},
 				{
 					"title": "定数 (Constant) - let",
 					"description": "定数は一度値を設定すると変更できない「名前付きの箱」です。letキーワードで宣言します。値が変わらないデータ（名前、設定値など）にはletを使うのがSwiftの推奨スタイルです。変更しようとするとコンパイルエラーになります。",
 					"code": "// 定数の宣言\nlet name = \"太郎\"\nprint(name)  // 太郎\n\n// name = \"花子\"  // エラー！定数は変更できない",
-					"keywords": ["定数", "constant", "let", "不変", "immutable"]
+					"keywords": [
+						"定数",
+						"constant",
+						"let",
+						"不変",
+						"immutable"
+					]
 				},
 				{
 					"title": "関数 (Function)",
 					"description": "関数は特定の処理をまとめた再利用可能なコードの塊です。funcキーワードで定義します。引数（入力）を受け取り、戻り値（出力）を返すことができます。同じ処理を何度も書く代わりに、関数として定義して呼び出します。",
 					"code": "// 引数と戻り値のある関数\nfunc greet(name: String) -> String {\n    return \"こんにちは、\\(name)さん！\"\n}\n\nlet message = greet(name: \"太郎\")\nprint(message)  // こんにちは、太郎さん！",
-					"keywords": ["関数", "function", "func", "引数", "戻り値", "return", "メソッド"]
+					"keywords": [
+						"関数",
+						"function",
+						"func",
+						"引数",
+						"戻り値",
+						"return",
+						"メソッド"
+					]
+				},
+				{
+					"title": "引数 (Argument / Parameter)",
+					"description": "引数とは、関数やメソッドに外部から渡すデータのことです。関数の定義側で受け取る変数を「パラメータ（仮引数）」、呼び出し側で渡す値を「アーギュメント（実引数）」と呼びますが、まとめて「引数」と呼ぶことが多いです。Swiftでは引数にラベル（名前）を付けるのが特徴で、呼び出し時にラベルを指定します。_ を使うとラベルを省略できます。",
+					"code": "// 基本的な引数の使い方\nfunc greet(name: String) {\n    print(\"こんにちは、\\(name)さん！\")\n}\ngreet(name: \"太郎\")  // name: がラベル（引数ラベル）\n\n// 複数の引数\nfunc add(a: Int, b: Int) -> Int {\n    return a + b\n}\nprint(add(a: 3, b: 5))  // 8\n\n// 引数ラベルと内部名を分ける\nfunc sayHello(to person: String) {\n    print(\"Hello, \\(person)!\")  // 内部ではpersonを使う\n}\nsayHello(to: \"花子\")  // 呼び出し時はtoを使う\n\n// _ で引数ラベルを省略\nfunc double(_ number: Int) -> Int {\n    return number * 2\n}\nprint(double(10))  // ラベルなしで呼べる → 20\n\n// デフォルト引数（省略可能な引数）\nfunc welcome(name: String, greeting: String = \"こんにちは\") {\n    print(\"\\(greeting)、\\(name)さん！\")\n}\nwelcome(name: \"太郎\")                     // こんにちは、太郎さん！\nwelcome(name: \"太郎\", greeting: \"おはよう\")  // おはよう、太郎さん！",
+					"keywords": [
+						"引数",
+						"argument",
+						"parameter",
+						"パラメータ",
+						"ラベル",
+						"label",
+						"デフォルト引数",
+						"仮引数",
+						"実引数"
+					]
 				},
 				{
 					"title": "クロージャ (Closure)",
 					"description": "クロージャは名前のない関数（無名関数）です。変数に代入したり、他の関数の引数として渡すことができます。SwiftUIではボタンのアクションやリストの表示など、多くの場面でクロージャを使います。{ } で囲まれたコードブロックがクロージャです。",
 					"code": "// クロージャを変数に代入\nlet greet = { (name: String) -> String in\n    return \"Hello, \\(name)!\"\n}\nprint(greet(\"太郎\"))  // Hello, 太郎!\n\n// 末尾クロージャ（trailing closure）\nlet numbers = [3, 1, 4, 1, 5]\nlet sorted = numbers.sorted { $0 < $1 }\nprint(sorted)  // [1, 1, 3, 4, 5]",
-					"keywords": ["クロージャ", "closure", "無名関数", "ラムダ", "trailing closure", "末尾クロージャ"]
+					"keywords": [
+						"クロージャ",
+						"closure",
+						"無名関数",
+						"ラムダ"
+					]
+				},
+				{
+					"title": "並べ替え (Sorted)",
+					"description": "配列の要素を特定の順番に並べ替える機能です。引数を渡さない場合は小さい順（数字）やあいうえお順（文字）になります。{ $0 > $1 } のような書き方で、大きい順にしたり、特定のデータ項目で並べ替えたりすることも可能です。ToDoアプリで「日付の新しい順」に並べる際などに使われます。",
+					"code": "let scores = [80, 100, 75]\n\n// 小さい順に並べ替え\nlet ascending = scores.sorted()\nprint(ascending)  // [75, 80, 100]\n\n// 大きい順に並べ替え\nlet descending = scores.sorted { $0 > $1 }\nprint(descending) // [100, 80, 75]",
+					"keywords": [
+						"sorted",
+						"並べ替え",
+						"ソート",
+						"順番",
+						"昇順",
+						"降順"
+					]
+				},
+				{
+					"title": "トレイリングクロージャ (Trailing Closure)",
+					"description": "関数の最後の引数がクロージャの場合、() の外に { } を書ける省略記法です。SwiftUIのコードはほぼすべてこの書き方を使っています。Button、VStack、List、ForEachなど、SwiftUIで見かける { } の多くはトレイリングクロージャです。",
+					"code": "// === 通常の書き方とトレイリングクロージャの比較 ===\n\n// 通常の書き方（actionクロージャが () の中）\nButton(\"タップ\", action: {\n    print(\"ボタンが押されました\")\n})\n\n// トレイリングクロージャ（最後の引数を () の外に出す）\nButton(\"タップ\") {\n    print(\"ボタンが押されました\")\n}\n// ↑ どちらも同じ動作。SwiftUIではこちらが標準的\n\n// === SwiftUIでの例 ===\n\n// VStack: contentがトレイリングクロージャ\nVStack {\n    Text(\"上\")\n    Text(\"下\")\n}\n// ↑ 実際は VStack(content: { Text(\"上\"); Text(\"下\") }) と同じ\n\n// ForEach: 各要素に対するビューがトレイリングクロージャ\nForEach(items, id: \\.self) { item in\n    Text(item)\n}\n\n// sorted: 比較処理がトレイリングクロージャ\nlet sorted = [3, 1, 2].sorted { $0 < $1 }",
+					"keywords": [
+						"トレイリングクロージャ",
+						"trailing closure",
+						"末尾クロージャ",
+						"波括弧",
+						"中括弧",
+						"ブレース"
+					]
+				},
+				{
+					"title": "キャプチャ (Capture)",
+					"description": "キャプチャとは、クロージャ（関数）が、その外側にある変数や定数を「捕まえて」、中から自由に使えるようにする仕組みのことです。SwiftUIでは、ボタンが押されたときに外側のスコアを増やしたり、文字を書き換えたりする際によく使われます。専門的には「値や参照を保持する」といいますが、まずは「外のデータを中に持ってこれる便利な機能」と覚えておけばOKです。",
+					"code": "// 外側の変数\nvar score = 0\n\n// クロージャの中で外側のscoreを「キャプチャ」して使う\nlet buttonAction = {\n    score += 1\n    print(\"現在のスコア: \\(score)\")\n}\n\nbuttonAction()  // 現在のスコア: 1\nbuttonAction()  // 現在のスコア: 2",
+					"keywords": [
+						"キャプチャ",
+						"capture",
+						"クロージャ",
+						"変数",
+						"保持",
+						"スコープ"
+					]
 				}
 			]
 		},
@@ -40,37 +171,82 @@
 					"title": "Int - 整数型",
 					"description": "整数（小数点のない数）を表す型です。年齢、個数、スコアなど、小数が不要な数値に使用します。正の数・負の数・ゼロを扱えます。",
 					"code": "let age: Int = 15\nlet temperature: Int = -5\nlet count = 42  // 型推論でIntになる\nprint(age + count)  // 57",
-					"keywords": ["Int", "整数", "integer", "数値", "数字"]
+					"keywords": [
+						"Int",
+						"整数",
+						"integer",
+						"数値",
+						"数字"
+					]
 				},
 				{
 					"title": "String - 文字列型",
 					"description": "テキストデータを表す型です。ダブルクォーテーション(\")で囲んで定義します。文字列補間 \\() を使って、他の値を文字列に埋め込むことができます。",
 					"code": "let greeting: String = \"こんにちは\"\nlet name = \"太郎\"  // 型推論でStringになる\n\n// 文字列補間\nlet message = \"\\(greeting)、\\(name)さん！\"\nprint(message)  // こんにちは、太郎さん！",
-					"keywords": ["String", "文字列", "テキスト", "text", "string interpolation", "文字列補間"]
+					"keywords": [
+						"String",
+						"文字列",
+						"テキスト",
+						"text",
+						"string interpolation",
+						"文字列補間"
+					]
 				},
 				{
 					"title": "Bool - 論理型",
 					"description": "true（真）またはfalse（偽）の2つの値だけを持つ型です。条件分岐（if文）やフラグ管理に使用します。SwiftUIでは画面の表示/非表示の制御などに頻繁に使われます。",
 					"code": "let isStudent: Bool = true\nlet hasFinished = false  // 型推論でBoolになる\n\nif isStudent {\n    print(\"学生です\")\n}\n// 出力: 学生です",
-					"keywords": ["Bool", "論理型", "boolean", "true", "false", "真偽値", "フラグ"]
+					"keywords": [
+						"Bool",
+						"論理型",
+						"boolean",
+						"true",
+						"false",
+						"真偽値",
+						"フラグ"
+					]
 				},
 				{
 					"title": "Double - 浮動小数点型",
 					"description": "小数点を含む数値を表す型です。身長、体重、価格計算など、精度が必要な数値に使用します。Floatより精度が高く、Swiftでは小数はデフォルトでDouble型になります。",
 					"code": "let height: Double = 165.5\nlet pi = 3.14159  // 型推論でDoubleになる\nlet price: Double = 1980.0\n\nlet tax = price * 0.1\nprint(\"税込: \\(price + tax)円\")  // 税込: 2178.0円",
-					"keywords": ["Double", "浮動小数点", "小数", "Float", "decimal"]
+					"keywords": [
+						"Double",
+						"浮動小数点",
+						"小数",
+						"Float",
+						"decimal"
+					]
 				},
 				{
 					"title": "Array - 配列",
 					"description": "同じ型のデータを順番に並べて管理するコレクションです。[要素の型] で型を表します。インデックス（0から始まる番号）で要素にアクセスします。要素の追加・削除・検索などの操作が可能です。",
 					"code": "// 配列の作成\nvar fruits: [String] = [\"りんご\", \"バナナ\", \"みかん\"]\n\n// 要素へのアクセス（0から始まる）\nprint(fruits[0])  // りんご\n\n// 要素の追加\nfruits.append(\"ぶどう\")\nprint(fruits.count)  // 4",
-					"keywords": ["Array", "配列", "リスト", "list", "コレクション", "collection", "append"]
+					"keywords": [
+						"Array",
+						"配列",
+						"リスト",
+						"list",
+						"コレクション",
+						"collection",
+						"append"
+					]
 				},
 				{
 					"title": "Dictionary - 辞書型",
 					"description": "キーと値のペアでデータを管理するコレクションです。[キーの型: 値の型] で型を表します。キーを使って素早く値を検索できます。設定データやラベル付きデータの管理に便利です。",
 					"code": "// 辞書の作成\nvar scores: [String: Int] = [\n    \"数学\": 85,\n    \"英語\": 92,\n    \"国語\": 78\n]\n\n// 値の取得（Optionalが返る）\nif let mathScore = scores[\"数学\"] {\n    print(\"数学: \\(mathScore)点\")  // 数学: 85点\n}",
-					"keywords": ["Dictionary", "辞書", "辞書型", "キー", "値", "key", "value", "ハッシュ", "マップ"]
+					"keywords": [
+						"Dictionary",
+						"辞書",
+						"辞書型",
+						"キー",
+						"値",
+						"key",
+						"value",
+						"ハッシュ",
+						"マップ"
+					]
 				}
 			]
 		},
@@ -83,37 +259,111 @@
 					"title": "構造体 (Struct)",
 					"description": "関連するデータ（プロパティ）と処理（メソッド）をまとめた独自の型です。structキーワードで定義します。SwiftUIのViewはすべて構造体です。値型であり、代入やパラメータ渡しの際にコピーが作られます。",
 					"code": "struct Student {\n    var name: String\n    var grade: Int\n\n    func introduce() -> String {\n        return \"\\(name)は\\(grade)年生です\"\n    }\n}\n\nlet student = Student(name: \"太郎\", grade: 2)\nprint(student.introduce())  // 太郎は2年生です",
-					"keywords": ["構造体", "struct", "structure", "プロパティ", "メソッド", "値型"]
+					"keywords": [
+						"構造体",
+						"struct",
+						"structure",
+						"プロパティ",
+						"メソッド",
+						"値型"
+					]
+				},
+				{
+					"title": "インスタンス (Instance)",
+					"description": "インスタンスとは、構造体やクラスなどの「型（設計図）」から実際に作られた具体的なデータのことです。型はあくまで設計図であり、それ自体はデータを持ちません。インスタンスを作る（生成する）ことで、初めてデータとして使えるようになります。例えば「Student型」が設計図なら、「太郎」や「花子」がそのインスタンスです。インスタンスの生成は 型名() または 型名(引数) の形で行います。",
+					"code": "// 構造体（設計図）の定義\nstruct Student {\n    var name: String\n    var grade: Int\n    \n    func introduce() {\n        print(\"\\(name)は\\(grade)年生です\")\n    }\n}\n\n// インスタンスの生成（設計図から実体を作る）\nlet taro = Student(name: \"太郎\", grade: 1)   // インスタンス1\nlet hanako = Student(name: \"花子\", grade: 2) // インスタンス2\n\n// 各インスタンスは独立したデータを持つ\ntaro.introduce()    // 太郎は1年生です\nhanako.introduce()  // 花子は2年生です\n\n// クラスでも同じようにインスタンスを作れる\nclass Dog {\n    var name: String\n    init(name: String) {\n        self.name = name\n    }\n    func bark() {\n        print(\"\\(name): ワンワン！\")\n    }\n}\n\nlet pochi = Dog(name: \"ポチ\")  // Dogクラスのインスタンス\npochi.bark()  // ポチ: ワンワン！",
+					"keywords": [
+						"インスタンス",
+						"instance",
+						"生成",
+						"オブジェクト",
+						"object",
+						"初期化",
+						"init",
+						"イニシャライザ"
+					]
+				},
+				{
+					"title": "オブジェクト (Object)",
+					"description": "オブジェクトとは、データ（プロパティ）とそのデータに対する操作（メソッド）をひとまとめにしたものです。「インスタンス」とほぼ同じ意味で使われますが、厳密にはオブジェクトはクラスから生成されたインスタンスを指すことが多いです。Swiftでは構造体のインスタンスも広い意味でオブジェクトと呼ぶことがあります。現実世界の「もの」をプログラムで表現する考え方を「オブジェクト指向プログラミング」と呼びます。",
+					"code": "// 「犬」をオブジェクトとして表現する\nclass Dog {\n    // データ（プロパティ）= 犬の特徴\n    var name: String\n    var age: Int\n    \n    init(name: String, age: Int) {\n        self.name = name\n        self.age = age\n    }\n    \n    // 操作（メソッド）= 犬の行動\n    func bark() {\n        print(\"\\(name): ワンワン！\")\n    }\n    \n    func introduce() {\n        print(\"\\(name)は\\(age)歳の犬です\")\n    }\n}\n\n// オブジェクトの生成\nlet pochi = Dog(name: \"ポチ\", age: 3)  // ポチというオブジェクト\nlet hachi = Dog(name: \"ハチ\", age: 5)  // ハチというオブジェクト\n\n// 各オブジェクトが独立したデータと操作を持つ\npochi.bark()       // ポチ: ワンワン！\nhachi.introduce()  // ハチは5歳の犬です\n\n// オブジェクト = データ + 操作\n// pochi → name:\"ポチ\", age:3 というデータ + bark(), introduce() という操作",
+					"keywords": [
+						"オブジェクト",
+						"object",
+						"オブジェクト指向",
+						"OOP",
+						"データ",
+						"操作",
+						"もの"
+					]
 				},
 				{
 					"title": "クラス (Class)",
 					"description": "構造体と似ていますが、参照型です。classキーワードで定義します。継承が可能で、複数の変数が同じインスタンスを共有できます。構造体との最大の違いは、代入時にコピーが作られず同じオブジェクトを参照する点です。",
 					"code": "class Animal {\n    var name: String\n    var sound: String\n\n    init(name: String, sound: String) {\n        self.name = name\n        self.sound = sound\n    }\n\n    func speak() {\n        print(\"\\(name): \\(sound)\")\n    }\n}\n\nlet cat = Animal(name: \"ミケ\", sound: \"ニャー\")\ncat.speak()  // ミケ: ニャー",
-					"keywords": ["クラス", "class", "参照型", "継承", "inheritance", "init", "イニシャライザ"]
+					"keywords": [
+						"クラス",
+						"class",
+						"参照型",
+						"継承",
+						"inheritance",
+						"init",
+						"イニシャライザ"
+					]
 				},
 				{
 					"title": "構造体とクラスの違い",
 					"description": "構造体は値型（コピーされる）、クラスは参照型（共有される）です。SwiftUIでは主に構造体を使います。データモデルのように複数箇所で同じデータを共有する場合にはクラスを使います。迷ったら構造体を選ぶのがSwiftの推奨です。",
 					"code": "// 値型（構造体）: コピーが作られる\nstruct Point {\n    var x: Int\n    var y: Int\n}\nvar p1 = Point(x: 0, y: 0)\nvar p2 = p1     // コピーが作られる\np2.x = 10\nprint(p1.x)  // 0（p1は変わらない）\nprint(p2.x)  // 10\n\n// 参照型（クラス）: 同じものを共有\nclass Position {\n    var x: Int\n    var y: Int\n    init(x: Int, y: Int) { self.x = x; self.y = y }\n}\nlet pos1 = Position(x: 0, y: 0)\nlet pos2 = pos1  // 同じオブジェクトを参照\npos2.x = 10\nprint(pos1.x)  // 10（pos1も変わる！）",
-					"keywords": ["値型", "参照型", "value type", "reference type", "コピー", "共有", "違い", "比較"]
+					"keywords": [
+						"値型",
+						"参照型",
+						"value type",
+						"reference type",
+						"コピー",
+						"共有",
+						"違い",
+						"比較"
+					]
 				},
 				{
 					"title": "プロトコル (Protocol)",
 					"description": "型が満たすべきルール（インターフェース）を定義したものです。protocolキーワードで定義します。プロトコルに準拠(conform)することで、その型が特定の機能を持つことを保証します。SwiftUIのViewプロトコルが代表的な例です。",
 					"code": "// プロトコルの定義\nprotocol Greetable {\n    var name: String { get }\n    func greet() -> String\n}\n\n// プロトコルに準拠する構造体\nstruct Person: Greetable {\n    var name: String\n    func greet() -> String {\n        return \"こんにちは、\\(name)です\"\n    }\n}\n\nlet person = Person(name: \"太郎\")\nprint(person.greet())  // こんにちは、太郎です",
-					"keywords": ["プロトコル", "protocol", "準拠", "conform", "インターフェース", "interface"]
+					"keywords": [
+						"プロトコル",
+						"protocol",
+						"準拠",
+						"conform",
+						"インターフェース",
+						"interface"
+					]
 				},
 				{
 					"title": "列挙型 (Enum)",
 					"description": "関連する値のグループを定義する型です。enumキーワードで定義します。取りうる値が決まっている場合に使用します。例えば曜日、方角、状態など、限られた選択肢を表現するのに最適です。",
 					"code": "enum Weather {\n    case sunny\n    case cloudy\n    case rainy\n}\n\nlet today: Weather = .sunny\n\nswitch today {\ncase .sunny:\n    print(\"晴れです\")\ncase .cloudy:\n    print(\"曇りです\")\ncase .rainy:\n    print(\"雨です\")\n}\n// 出力: 晴れです",
-					"keywords": ["列挙型", "enum", "enumeration", "case", "switch"]
+					"keywords": [
+						"列挙型",
+						"enum",
+						"enumeration",
+						"case",
+						"switch"
+					]
 				},
 				{
 					"title": "オプショナル (Optional)",
 					"description": "値があるかもしれないし、ないかもしれない（nil）ことを表す型です。型名の後に?を付けて宣言します。値を安全に取り出すにはif letやguard letを使います。SwiftUIでは、データがまだ読み込まれていない状態などを表現するのに使います。",
 					"code": "// オプショナルの宣言\nvar nickname: String? = nil  // 値がない状態\nnickname = \"たっくん\"         // 値を設定\n\n// 安全にアンラップ（if let）\nif let name = nickname {\n    print(\"ニックネーム: \\(name)\")\n} else {\n    print(\"ニックネームなし\")\n}\n// 出力: ニックネーム: たっくん",
-					"keywords": ["オプショナル", "optional", "nil", "アンラップ", "unwrap", "if let", "guard let"]
+					"keywords": [
+						"オプショナル",
+						"optional",
+						"nil",
+						"アンラップ",
+						"unwrap",
+						"if let",
+						"guard let"
+					]
 				}
 			]
 		},
@@ -126,13 +376,59 @@
 					"title": "View プロトコル",
 					"description": "SwiftUIで画面に表示されるすべての要素の基本となるプロトコルです。Viewプロトコルに準拠する構造体はbodyプロパティを必ず持ち、そこに画面の内容を記述します。Text, Button, VStackなどはすべてViewプロトコルに準拠しています。",
 					"code": "import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        Text(\"Hello, World!\")\n    }\n}",
-					"keywords": ["View", "ビュー", "body", "some View", "プロトコル", "画面", "UI"]
+					"keywords": [
+						"View",
+						"ビュー",
+						"body",
+						"some View",
+						"プロトコル",
+						"画面",
+						"UI"
+					]
 				},
 				{
 					"title": "モディファイア (Modifier)",
 					"description": "Viewの見た目や動作を変更するメソッドです。ドット(.)で繋げてチェーンのように書きます。.padding(), .foregroundStyle(), .font() などがあります。適用順序が重要で、順番によって結果が変わることがあります。",
 					"code": "Text(\"スタイル付きテキスト\")\n    .font(.title)              // フォントサイズ\n    .foregroundStyle(.blue)    // 文字色\n    .padding()                 // 余白\n    .background(.yellow)       // 背景色\n    .cornerRadius(10)          // 角丸",
-					"keywords": ["モディファイア", "modifier", "修飾子", "チェーン", "padding", "font", "foregroundStyle"]
+					"keywords": [
+						"モディファイア",
+						"modifier",
+						"修飾子",
+						"チェーン",
+						"padding",
+						"font",
+						"foregroundStyle"
+					]
+				},
+				{
+					"title": "IndexSet",
+					"description": "リスト内の複数の「位置（インデックス）」をまとめて管理するための型です。SwiftUIのListで、スワイプして削除する機能を実装するときによく登場します。例えば「1番目と3番目のデータを消す」という指示を出すための「番号が書かれた付箋の束」のようなものだと考えるとわかりやすいです。普通の配列の削除には使いませんが、Listの削除操作（onDelete）ではこの型、およびその引数名として offsets という名前が標準で使われます。",
+					"code": "// 削除メソッドの例\nfunc delete(at offsets: IndexSet) {\n    // offsets（IndexSet型）を使って、配列からまとめて削除する\n    items.remove(atOffsets: offsets)\n}",
+					"keywords": [
+						"IndexSet",
+						"インデックスセット",
+						"削除",
+						"delete",
+						"offsets",
+						"List",
+						"リスト"
+					]
+				},
+				{
+					"title": "メインスレッド (Main Thread)",
+					"description": "メインスレッドは、アプリの画面描画やユーザー操作（タップ、スワイプなど）を処理する専用の作業ラインです。アプリには複数のスレッド（作業ライン）がありますが、UIの更新は必ずメインスレッドで行う必要があります。時間のかかる処理（ネットワーク通信やデータ読み込みなど）をメインスレッドで実行すると、画面がフリーズしてしまうため、重い処理はバックグラウンドスレッドで行い、結果の画面反映だけをメインスレッドで行うのが基本です。SwiftUIの@MainActorや、DispatchQueue.main.asyncを使ってメインスレッドでの実行を保証します。",
+					"code": "import SwiftUI\n\n// @MainActorを使ってメインスレッドで実行することを保証\n@MainActor\nclass DataManager: ObservableObject {\n    @Published var message = \"読み込み中...\"\n    \n    func loadData() async {\n        // バックグラウンドで重い処理を実行\n        let result = await fetchFromServer()\n        \n        // @MainActorにより、UIの更新は自動的にメインスレッドで行われる\n        message = result\n    }\n    \n    func fetchFromServer() async -> String {\n        try? await Task.sleep(for: .seconds(2))  // 2秒待つ（通信を模擬）\n        return \"データ取得完了！\"\n    }\n}\n\n// ビューでの使用例\nstruct ContentView: View {\n    @StateObject private var manager = DataManager()\n    \n    var body: some View {\n        VStack {\n            Text(manager.message)\n            Button(\"読み込む\") {\n                Task {\n                    await manager.loadData()\n                }\n            }\n        }\n    }\n}\n\n// メインスレッドのポイント:\n// ✅ UIの更新 → メインスレッドで行う\n// ✅ 重い処理 → バックグラウンドで行う\n// ❌ 重い処理をメインスレッドで行う → 画面がフリーズする",
+					"keywords": [
+						"メインスレッド",
+						"main thread",
+						"UI更新",
+						"@MainActor",
+						"バックグラウンド",
+						"スレッド",
+						"非同期",
+						"async",
+						"DispatchQueue"
+					]
 				}
 			]
 		},
@@ -145,19 +441,79 @@
 					"title": "@State - ビュー内の状態",
 					"description": "@Stateは、そのビュー自身が所有・管理するデータを宣言するために使います。@Stateで宣言した変数の値が変わると、SwiftUIは自動的に画面を再描画します。ボタンを押した回数、テキスト入力の内容、トグルのON/OFFなど、ビュー内部で変化するデータに使います。",
 					"code": "struct CounterView: View {\n    @State private var count = 0\n\n    var body: some View {\n        VStack {\n            Text(\"カウント: \\(count)\")\n            Button(\"増やす\") {\n                count += 1  // 値が変わると画面が自動更新\n            }\n        }\n    }\n}",
-					"keywords": ["@State", "状態", "state", "再描画", "自動更新", "プロパティラッパー"]
+					"keywords": [
+						"@State",
+						"状態",
+						"state",
+						"再描画",
+						"自動更新",
+						"プロパティラッパー"
+					]
 				},
 				{
 					"title": "@Binding - 親子間のデータ共有",
 					"description": "@Bindingは、親ビューが持つ@Stateの値を子ビューから読み書きするための仕組みです。子ビューは自分でデータを持たず、親のデータへの参照を受け取ります。親ビューから渡すときは$を付けます（$count のように）。",
 					"code": "struct ParentView: View {\n    @State private var isOn = false\n\n    var body: some View {\n        ToggleView(isOn: $isOn)  // $を付けてBindingとして渡す\n    }\n}\n\nstruct ToggleView: View {\n    @Binding var isOn: Bool  // 親のデータへの参照\n\n    var body: some View {\n        Toggle(\"スイッチ\", isOn: $isOn)\n    }\n}",
-					"keywords": ["@Binding", "バインディング", "binding", "親子", "共有", "双方向"]
+					"keywords": [
+						"@Binding",
+						"バインディング",
+						"binding",
+						"親子",
+						"共有",
+						"双方向"
+					]
 				},
 				{
 					"title": "@ObservedObject - 外部データの監視",
 					"description": "@ObservedObjectは、ObservableObjectプロトコルに準拠したクラスのインスタンスを監視します。@Publishedプロパティが変更されると画面が再描画されます。複数のビューで同じデータを共有する場合や、複雑なデータモデルを扱う場合に使います。",
 					"code": "class UserData: ObservableObject {\n    @Published var name = \"太郎\"\n    @Published var score = 0\n}\n\nstruct ProfileView: View {\n    @ObservedObject var userData: UserData\n\n    var body: some View {\n        VStack {\n            Text(\"名前: \\(userData.name)\")\n            Text(\"スコア: \\(userData.score)\")\n            Button(\"スコアUP\") {\n                userData.score += 10\n            }\n        }\n    }\n}",
-					"keywords": ["@ObservedObject", "ObservableObject", "@Published", "監視", "データモデル", "observe"]
+					"keywords": [
+						"@ObservedObject",
+						"ObservableObject",
+						"@Published",
+						"監視",
+						"データモデル",
+						"observe"
+					]
+				}
+			]
+		},
+		{
+			"id": "data-modeling",
+			"title": "データモデリング",
+			"description": "アプリで扱うデータの構造を設計するための概念を解説します。",
+			"codeBlocks": [
+				{
+					"title": "スキーマ (Schema)",
+					"description": "スキーマとは、データの「設計図」や「構造の定義」のことです。どんなデータを、どんな型で、どのように保存するかを決めたものです。例えばToDoアプリなら「タイトル（文字列）、完了フラグ（真偽値）、作成日（日付）」がスキーマにあたります。Swiftでは構造体やクラスの定義がスキーマの役割を果たし、SwiftDataでは@Modelを付けたクラスがデータベースのスキーマになります。",
+					"code": "import SwiftData\nimport SwiftUI\n\n// === スキーマ = データの設計図 ===\n\n// 構造体によるスキーマ（メモリ上のみ）\nstruct TodoItem: Identifiable {\n    let id = UUID()\n    var title: String        // タイトル（文字列）\n    var isCompleted: Bool    // 完了したか（真偽値）\n    var createdAt: Date      // 作成日（日付）\n}\n\n// SwiftDataによるスキーマ（データベースに永続化）\n@Model\nclass Todo {\n    var title: String        // タイトル\n    var isCompleted: Bool    // 完了フラグ\n    var createdAt: Date      // 作成日時\n\n    init(title: String) {\n        self.title = title\n        self.isCompleted = false\n        self.createdAt = Date()\n    }\n}\n\n// スキーマが決まると:\n// - どんなデータを保存するかが明確になる\n// - データの型が統一される（型安全）\n// - チーム内でデータ構造の認識が揃う",
+					"keywords": [
+						"スキーマ",
+						"schema",
+						"データ構造",
+						"設計図",
+						"@Model",
+						"SwiftData",
+						"モデル",
+						"定義"
+					]
+				},
+				{
+					"title": "ModelContainer / ModelConfiguration - データの保存先",
+					"description": "ModelContainerは、SwiftDataでデータを保存・管理する「入れ物」です。アプリ起動時にModelContainerを作成し、その中にスキーマ（@Modelで定義したクラス）のデータが保存されます。ModelConfigurationはその保存方法を設定するオブジェクトで、保存先のファイル名や、メモリ上のみに保存するか（isStoredInMemoryOnly）などを指定できます。通常はアプリのエントリーポイント（@main）で.modelContainer()モディファイアを使ってセットアップします。",
+					"code": "import SwiftData\nimport SwiftUI\n\n// === 基本的なセットアップ（最もシンプル） ===\n\n@main\nstruct TodoApp: App {\n    var body: some Scene {\n        WindowGroup {\n            ContentView()\n        }\n        // Todoモデルの保存先を自動で作成\n        .modelContainer(for: Todo.self)\n    }\n}\n\n// === ModelConfigurationで保存方法をカスタマイズ ===\n\n// ModelConfigurationで詳細設定\nlet config = ModelConfiguration(\n    \"TodoDatabase\",              // データベースの名前\n    isStoredInMemoryOnly: false  // falseでファイルに保存（デフォルト）\n)\nlet container = try ModelContainer(\n    for: Todo.self,\n    configurations: config\n)\n\n// === プレビュー用にメモリのみの設定 ===\n\n// プレビューではファイルに保存せず、メモリ上のみで動作させる\nlet previewConfig = ModelConfiguration(\n    isStoredInMemoryOnly: true  // trueでメモリのみ（アプリ終了時に消える）\n)\n\n// === ビューでModelContainerのデータを使う ===\n\nstruct ContentView: View {\n    // @Queryでデータを取得（ModelContainerから自動で読み込まれる）\n    @Query var todos: [Todo]\n    // @Environmentでデータの追加・削除に使うcontextを取得\n    @Environment(.modelContext) private var context\n\n    var body: some View {\n        List(todos) { todo in\n            Text(todo.title)\n        }\n    }\n}\n\n// 関係性:\n// ModelConfiguration → 保存方法の設定（ファイル名、メモリのみ等）\n// ModelContainer    → データの入れ物（設定に基づいて作られる）\n// modelContext      → データの追加・削除・更新を行う操作窓口",
+					"keywords": [
+						"ModelContainer",
+						"ModelConfiguration",
+						"modelContainer",
+						"modelContext",
+						"@Query",
+						"コンテナ",
+						"設定",
+						"保存先",
+						"データベース",
+						"永続化"
+					]
 				}
 			]
 		}

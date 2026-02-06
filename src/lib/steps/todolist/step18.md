@@ -15,6 +15,33 @@ private func toggleTaskCompletion(_ task: ToDoTask) {
 }
 ```
 
+**完了切り替えメソッドの仕組み:**
+
+- **`private func toggleTaskCompletion(_ task: ToDoTask)`**
+  タスクオブジェクトを受け取り、その完了状態を反転させる関数です。
+  - `_` は外部引数ラベルを省略する記号。呼び出し時に `toggleTaskCompletion(task)` と書けます
+  - 引数ラベルなしだと `toggleTaskCompletion(someTask)` のように簡潔に書けます
+
+- **`ToDoTaskService.toggleTaskCompletion(task, modelContext: modelContext)`**
+  ステップ10で作成したサービスメソッドを呼び出します。
+  - このメソッド内で `task.isCompleted` が反転され、データベースに保存されます
+  - ビジネスロジック（データ操作）をServiceクラスに分離することで、コードの保守性が向上します
+
+- **`loadTasks()`**
+  データベースの更新後、画面に表示するタスクリストを再読み込みします。
+  
+  **なぜ再読み込みが必要？**
+  SwiftDataは自動的にビューを更新してくれますが、`tasks` 配列は `@State` で管理されているローカルコピーです。データベースの変更を反映するには、明示的に再取得する必要があります。
+
+**データの流れ:**
+1. ユーザーがタスクをタップ
+2. `toggleTaskCompletion(task)` が呼ばれる
+3. Serviceメソッドでデータベースの値を更新
+4. `loadTasks()` でデータベースから最新のタスクリストを取得
+5. `tasks` 配列が更新される
+6. SwiftUIが自動的にUIを再描画
+7. チェックマークの表示が切り替わる
+
 ## 2. UIの修正: アクションの紐付け
 
 `body` の中にある `ToDoListItem` の呼び出し部分を修正し、タップされた時に上記のメソッドを実行するようにします。
@@ -32,6 +59,50 @@ if selectedTabId != nil && !tasks.isEmpty {
     }
 }
 ```
+
+**アクションの紐付けの仕組み:**
+
+- **`ToDoListItem(...) { ... }`**
+  これは**トレイリングクロージャ**という構文です。最後の引数がクロージャ（関数）の場合、括弧の外に書くことができます。
+  
+  通常の書き方:
+  ```swift
+  ToDoListItem(title: task.title, isCompleted: task.isCompleted, onTap: {
+      toggleTaskCompletion(task)
+  })
+  ```
+  
+  トレイリングクロージャを使った書き方（上記のコード）:
+  ```swift
+  ToDoListItem(title: task.title, isCompleted: task.isCompleted) {
+      toggleTaskCompletion(task)
+  }
+  ```
+  
+  **メリット:** コードがすっきりして読みやすくなります。
+
+- **クロージャ内の処理**
+  ```swift
+  {
+      toggleTaskCompletion(task)
+  }
+  ```
+  
+  このクロージャは、`ToDoListItem` がタップされた時に実行されます。
+  - `task` は `CustomList` のループで現在処理中のタスクオブジェクト
+  - タップされると、このタスクを引数として `toggleTaskCompletion` が呼ばれます
+
+- **クロージャのキャプチャ**
+  クロージャは、定義された時点の `task` の値を「キャプチャ」（記憶）します。
+  - 各 `ToDoListItem` は、それぞれ異なるタスクをキャプチャしています
+  - タップされた時、正しいタスクが `toggleTaskCompletion` に渡されます
+
+**イベントの流れ:**
+1. ユーザーが特定のタスク行をタップ
+2. `ToDoListItem` 内部で `onTap` クロージャが実行される
+3. キャプチャされた `task` を使って `toggleTaskCompletion(task)` が呼ばれる
+4. データベースが更新される
+5. `loadTasks()` で画面が更新される
 
 ---
 

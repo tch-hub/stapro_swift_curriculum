@@ -10,6 +10,7 @@ export interface SearchResult {
 	pageTitle: string;
 	pagePath: string;
 	sectionId: string;
+	codeBlockIndex: number;
 	matchType: 'title' | 'keyword' | 'code' | 'description';
 	score: number;
 }
@@ -60,29 +61,16 @@ export function searchGlobal(query: string): SearchResult[] {
 
 	for (const page of PAGES) {
 		for (const section of page.data.sections as Section[]) {
-			// Search in section info
-			if (
+			const sectionMatches =
 				section.title.toLowerCase().includes(normalizedQuery) ||
-				section.description.toLowerCase().includes(normalizedQuery)
-			) {
-				results.push({
-					id: `${page.path}-${section.id}`,
-					title: section.title,
-					description: section.description,
-					pageTitle: page.title,
-					pagePath: page.path,
-					sectionId: section.id,
-					matchType: 'title', // simplistic
-					score: 10
-				});
-			}
+				section.description.toLowerCase().includes(normalizedQuery);
 
-			// Search in code blocks
-			for (const block of section.codeBlocks) {
+			for (let i = 0; i < section.codeBlocks.length; i++) {
+				const block = section.codeBlocks[i];
 				let matchType: SearchResult['matchType'] | null = null;
 				let score = 0;
 
-				// Check title
+				// Check code block title
 				if (block.title.toLowerCase().includes(normalizedQuery)) {
 					matchType = 'title';
 					score = 20;
@@ -97,15 +85,21 @@ export function searchGlobal(query: string): SearchResult[] {
 					matchType = 'code';
 					score = 5;
 				}
+				// Section title/description match
+				else if (sectionMatches) {
+					matchType = 'description';
+					score = 10;
+				}
 
 				if (matchType) {
 					results.push({
-						id: `${page.path}-${section.id}-${block.title}`,
+						id: `${page.path}-${section.id}-${i}`,
 						title: block.title,
-						description: `In ${section.title}`,
+						description: `${section.title}`,
 						pageTitle: page.title,
 						pagePath: page.path,
 						sectionId: section.id,
+						codeBlockIndex: i,
 						matchType,
 						score
 					});
@@ -118,12 +112,29 @@ export function searchGlobal(query: string): SearchResult[] {
 	return results.sort((a, b) => b.score - a.score);
 }
 
-export function getSearchResultDetail(pagePath: string, sectionId: string): Section | undefined {
-	// Find the correct page data
+export interface SearchResultDetail {
+	sectionTitle: string;
+	sectionDescription: string;
+	codeBlock: CodeBlock;
+}
+
+export function getSearchResultDetail(
+	pagePath: string,
+	sectionId: string,
+	codeBlockIndex: number
+): SearchResultDetail | undefined {
 	const page = PAGES.find((p) => p.path === pagePath);
 	if (!page) return undefined;
 
-	// Find the section within that page
 	const section = (page.data.sections as Section[]).find((s) => s.id === sectionId);
-	return section;
+	if (!section) return undefined;
+
+	const codeBlock = section.codeBlocks[codeBlockIndex];
+	if (!codeBlock) return undefined;
+
+	return {
+		sectionTitle: section.title,
+		sectionDescription: section.description,
+		codeBlock
+	};
 }

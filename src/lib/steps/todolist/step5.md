@@ -21,6 +21,7 @@ struct InputView: View {
     }
 }
 ```
+
 このコンポーネントで定義している4つのプロパティについて解説します。
 
 - **`@Binding var text: String`**
@@ -131,7 +132,7 @@ private func handleSubmit() {
   ボタンの色を `isValid` の状態によって切り替えています。
   - `isValid` が `true`（入力あり）なら `Color.accentColor`（青色など）
   - `false`（入力なし）なら `Color(.systemGray4)`（グレー）
-  このようにすることで、ユーザーに「今は押せない」ということを視覚的に伝えます。
+    このようにすることで、ユーザーに「今は押せない」ということを視覚的に伝えます。
 
 - **`.disabled(!isValid)`**
   見た目だけでなく、機能としてもボタンを押せないようにします。

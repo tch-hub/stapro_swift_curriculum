@@ -108,7 +108,10 @@
 	onmousedown={handleOutsideInteraction}
 	onmouseup={handleSelectionChange}
 	onkeyup={handleSelectionChange}
-	onscroll={() => (contextMenu.visible = false)}
+	onscroll={() => {
+		contextMenu.visible = false;
+		selectionPopup.visible = false;
+	}}
 />
 
 {#if contextMenu.visible}

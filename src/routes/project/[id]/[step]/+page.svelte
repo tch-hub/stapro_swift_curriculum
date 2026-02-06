@@ -89,14 +89,6 @@
 	<StepComponent />
 {:else}
 	<div class="container mx-auto px-4 py-8 pb-32">
-		<!-- パンくずリスト（簡易版） -->
-		<div class="breadcrumbs mb-6 text-sm">
-			<ul>
-				<li><a href={resolve('/project/' + data.projectId)}>プロジェクト概要</a></li>
-				<li>{data.title}</li>
-			</ul>
-		</div>
-
 		<header class="mb-8 text-center">
 			<h1 class="mb-4 text-4xl font-bold">{data.title}</h1>
 			<p class="text-lg opacity-90">{data.summary}</p>
