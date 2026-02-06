@@ -24,6 +24,7 @@
 	function handleKeydown(event) {
 		if (event.key === 'Escape' && value) {
 			event.preventDefault();
+			value = '';
 			onClear();
 			inputRef?.blur();
 		}
@@ -56,6 +57,11 @@
 		window.addEventListener('keydown', handleGlobalKeydown);
 		return () => window.removeEventListener('keydown', handleGlobalKeydown);
 	});
+	function handleClearClick() {
+		value = '';
+		onClear();
+		inputRef?.focus();
+	}
 </script>
 
 <div class="search-bar" role="search">
@@ -83,7 +89,11 @@
 			aria-describedby={showResults ? 'search-results-count' : undefined}
 		/>
 		{#if value}
-			<button class="btn btn-circle btn-ghost btn-xs" onclick={onClear} aria-label="検索をクリア">
+			<button
+				class="btn btn-circle btn-ghost btn-xs"
+				onclick={handleClearClick}
+				aria-label="検索をクリア"
+			>
 				<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
 					<path
 						stroke-linecap="round"

@@ -79,6 +79,34 @@
 						"移動",
 						"オフセット"
 					]
+				},
+				{
+					"title": "rotationEffect() - 回転",
+					"code": "// ビューを回転させる\nText(\"回転テキスト\")\n    .rotationEffect(.degrees(45))  // 時計回りに45度回転\n    .rotationEffect(.radians(.pi)) // ラジアン指定も可能（180度）\n\n// 基準点を指定して回転\nRectangle()\n    .frame(width: 100, height: 50)\n    .rotationEffect(.degrees(90), anchor: .bottomLeading) // 左下を中心に回転\n\n// 3D回転\nText(\"3D回転\")\n    .rotation3DEffect(\n        .degrees(45),\n        axis: (x: 1.0, y: 0.0, z: 0.0) // X軸を中心に回転\n    )",
+					"keywords": [
+						"rotate",
+						"angle",
+						"degree",
+						"turn",
+						"3d",
+						"回転",
+						"角度",
+						"回す"
+					]
+				},
+				{
+					"title": "resizable() - 画像のサイズ変更",
+					"code": "// 画像をリサイズ可能にする\nImage(systemName: \"star.fill\")\n    .resizable()\n    .frame(width: 50, height: 50)\n\n// アスペクト比を維持して収める（fit）\nImage(\"example\")\n    .resizable()\n    .scaledToFit()     // 枠内に収まるようにリサイズ\n    .frame(width: 200, height: 100)\n    .background(.gray.opacity(0.3))\n\n// アスペクト比を維持して埋める（fill）\nImage(\"example\")\n    .resizable()\n    .scaledToFill()    // 枠を埋めるようにリサイズ\n    .frame(width: 200, height: 100)\n    .clipped()         // はみ出した部分をカット",
+					"keywords": [
+						"image",
+						"scale",
+						"aspect",
+						"fit",
+						"fill",
+						"画像",
+						"リサイズ",
+						"アスペクト比"
+					]
 				}
 			]
 		},
@@ -223,6 +251,20 @@
 						"進捗",
 						"プログレス",
 						"円グラフ"
+					]
+				},
+				{
+					"title": "stroke() - 線の描画",
+					"code": "// 形状の輪郭を描画\nCircle()\n    .stroke(Color.blue)            // 青い線\n\n// 線の太さを指定\nRectangle()\n    .stroke(Color.red, lineWidth: 5) // 太さ5ptの赤い線\n\n// スタイルの詳細設定\nCircle()\n    .stroke(\n        Color.green,\n        style: StrokeStyle(\n            lineWidth: 10,\n            lineCap: .round,       // 端の形状（丸）\n            lineJoin: .round,      // 角の形状（丸）\n            dash: [10, 5]          // 点線（10pt線、5pt空白）\n        )\n    )\n\n// 枠線を重ねる（borderの代わり）\nText(\"丸い枠線\")\n    .padding()\n    .overlay(\n        Capsule()\n            .stroke(.orange, lineWidth: 2)\n    )",
+					"keywords": [
+						"line",
+						"outline",
+						"border",
+						"shape",
+						"線",
+						"輪郭",
+						"ストローク",
+						"点線"
 					]
 				},
 				{

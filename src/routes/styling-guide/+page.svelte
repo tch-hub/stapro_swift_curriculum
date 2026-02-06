@@ -1,14 +1,11 @@
 <script>
 	import { base } from '$app/paths';
 	import { afterNavigate } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import { tick, onMount } from 'svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import stylingData from '$lib/data/styling-guide.json';
 	import { createSearch, toSafeId, highlightText } from '$lib/composables/useSearch.svelte.js';
-
-	// ローディング状態の管理
-	let isLoading = $state(true);
 
 	// JSONからセクションを取得
 	const sections = stylingData.sections;
@@ -16,18 +13,22 @@
 	// 検索機能を初期化
 	const search = createSearch(sections);
 
-	// ページマウント時にローディングを開始
-	onMount(() => {
-		setTimeout(() => {
-			isLoading = false;
-			// ローディング完了後にURLのハッシュに基づいてスクロール
-			const hash = window.location.hash.substring(1);
-			if (hash) {
-				setTimeout(() => {
-					scrollToSection(hash);
-				}, 100);
-			}
-		}, 800);
+	// ページマウント時にURLのハッシュに基づいてスクロール
+	onMount(async () => {
+		const hash = window.location.hash.substring(1);
+		if (hash) {
+			await tick();
+			scrollToSection(hash);
+		}
+	});
+
+	// SvelteKit内部ナビゲーション時のハッシュスクロール対応
+	afterNavigate(async ({ to }) => {
+		if (to?.url?.hash) {
+			const hash = to.url.hash.substring(1);
+			await tick();
+			scrollToSection(hash);
+		}
 	});
 
 	// SvelteKit内部ナビゲーション時のハッシュスクロール対応
@@ -193,122 +194,102 @@
 
 	<!-- メインコンテンツ -->
 	<main class="flex-1 p-4 lg:ml-80">
-		{#if isLoading}
-			<!-- ローディングアニメーション -->
-			<div class="flex min-h-[50vh] flex-col items-center justify-center space-y-4">
-				<div class="loading loading-lg loading-spinner text-primary"></div>
-				<p class="text-lg text-base-content/70">スタイリングガイドを読み込み中...</p>
-				<div class="flex space-x-1">
-					<div class="h-2 w-2 animate-bounce rounded-full bg-primary"></div>
-					<div
-						class="h-2 w-2 animate-bounce rounded-full bg-primary"
-						style="animation-delay: 0.1s"
-					></div>
-					<div
-						class="h-2 w-2 animate-bounce rounded-full bg-primary"
-						style="animation-delay: 0.2s"
-					></div>
+		<div class="container mx-auto">
+			<!-- イントロダクション -->
+			<div class="card mb-6 bg-base-100 shadow-xl">
+				<div class="card-body">
+					<h2 class="card-title">
+						<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+							<path
+								fill-rule="evenodd"
+								d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z"
+								clip-rule="evenodd"
+							></path>
+						</svg>
+						SwiftUIスタイリングガイド
+					</h2>
+					<p class="mb-4">
+						SwiftUIでUIの見た目をカスタマイズするための修飾子（Modifier）をまとめたリファレンスです。
+						各修飾子はビューに対してチェーンで適用でき、宣言的にスタイルを定義できます。
+					</p>
+
+					<!-- モバイル用検索バー -->
+					<div class="lg:hidden">
+						<SearchBar
+							bind:value={search.searchQuery}
+							placeholder="修飾子を検索..."
+							resultCount={search.resultCount}
+							isSearching={search.isSearching}
+							showResults={true}
+							onClear={search.clearSearch}
+						/>
+					</div>
+
+					<div class="alert alert-info">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							class="h-6 w-6 shrink-0 stroke-current"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+							></path>
+						</svg>
+						<span
+							>修飾子の適用順序は重要です。例えば <code>.padding().background()</code> と
+							<code>.background().padding()</code> では結果が異なります。</span
+						>
+					</div>
 				</div>
 			</div>
-		{:else}
-			<div class="container mx-auto">
-				<!-- イントロダクション -->
-				<div class="card mb-6 bg-base-100 shadow-xl">
-					<div class="card-body">
-						<h2 class="card-title">
-							<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
-								<path
-									fill-rule="evenodd"
-									d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z"
-									clip-rule="evenodd"
-								></path>
-							</svg>
-							SwiftUIスタイリングガイド
-						</h2>
-						<p class="mb-4">
-							SwiftUIでUIの見た目をカスタマイズするための修飾子（Modifier）をまとめたリファレンスです。
-							各修飾子はビューに対してチェーンで適用でき、宣言的にスタイルを定義できます。
-						</p>
 
-						<!-- モバイル用検索バー -->
-						<div class="lg:hidden">
-							<SearchBar
-								bind:value={search.searchQuery}
-								placeholder="修飾子を検索..."
-								resultCount={search.resultCount}
-								isSearching={search.isSearching}
-								showResults={true}
-								onClear={search.clearSearch}
+			<!-- 検索結果がない場合 -->
+			{#if search.searchQuery && search.filteredSections.length === 0}
+				<div class="card bg-base-100 shadow-xl">
+					<div class="card-body items-center text-center">
+						<svg
+							class="h-16 w-16 text-base-content/30"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
 							/>
-						</div>
-
-						<div class="alert alert-info">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								class="h-6 w-6 shrink-0 stroke-current"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-								></path>
-							</svg>
-							<span
-								>修飾子の適用順序は重要です。例えば <code>.padding().background()</code> と
-								<code>.background().padding()</code> では結果が異なります。</span
-							>
-						</div>
+						</svg>
+						<h3 class="text-lg font-semibold">
+							「{search.searchQuery}」に一致する項目が見つかりません
+						</h3>
+						<p class="text-base-content/70">別のキーワードで検索してみてください</p>
+						<button class="btn mt-2 btn-sm btn-primary" onclick={search.clearSearch}
+							>検索をクリア</button
+						>
 					</div>
 				</div>
+			{/if}
 
-				<!-- 検索結果がない場合 -->
-				{#if search.searchQuery && search.filteredSections.length === 0}
-					<div class="card bg-base-100 shadow-xl">
-						<div class="card-body items-center text-center">
-							<svg
-								class="h-16 w-16 text-base-content/30"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-								/>
-							</svg>
-							<h3 class="text-lg font-semibold">「{search.searchQuery}」に一致する項目が見つかりません</h3>
-							<p class="text-base-content/70">別のキーワードで検索してみてください</p>
-							<button class="btn mt-2 btn-sm btn-primary" onclick={search.clearSearch}>検索をクリア</button
-							>
-						</div>
+			<!-- 各セクションをJSONから動的に生成 -->
+			{#each search.filteredSections as section (section.id)}
+				<div id={section.id} class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">{section.title}</h2>
+						<p>{section.description}</p>
+
+						{#each section.codeBlocks as codeBlock (codeBlock.title)}
+							<div id={toSafeId(section.id, codeBlock.title)}>
+								<CodeBlock title={codeBlock.title} code={codeBlock.code} executable={false} />
+							</div>
+						{/each}
 					</div>
-				{/if}
-
-				<!-- 各セクションをJSONから動的に生成 -->
-				{#each search.filteredSections as section (section.id)}
-					<div
-						id={section.id}
-						class="card mb-6 bg-base-100 shadow-xl"
-						style="content-visibility: auto; contain-intrinsic-size: 1px 500px;"
-					>
-						<div class="card-body">
-							<h2 class="card-title">{section.title}</h2>
-							<p>{section.description}</p>
-
-							{#each section.codeBlocks as codeBlock (codeBlock.title)}
-								<div id={toSafeId(section.id, codeBlock.title)}>
-									<CodeBlock title={codeBlock.title} code={codeBlock.code} executable={false} />
-								</div>
-							{/each}
-						</div>
-					</div>
-				{/each}
-			</div>
-		{/if}
+				</div>
+			{/each}
+		</div>
 	</main>
 </div>

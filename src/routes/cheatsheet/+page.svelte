@@ -1,13 +1,11 @@
 <script>
 	import { base } from '$app/paths';
-	import { onMount } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
+	import { tick, onMount } from 'svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import cheatsheetData from '$lib/data/cheatsheet.json';
 	import { createSearch, toSafeId, highlightText } from '$lib/composables/useSearch.svelte.js';
-
-	// ローディング状態の管理
-	let isLoading = $state(true);
 
 	// JSONからセクションを取得
 	const sections = cheatsheetData.sections;
@@ -15,18 +13,22 @@
 	// 検索機能を初期化
 	const search = createSearch(sections);
 
-	// ページマウント時にローディングを開始
-	onMount(() => {
-		setTimeout(() => {
-			isLoading = false;
-			// ローディング完了後にURLのハッシュに基づいてスクロール
-			const hash = window.location.hash.substring(1);
-			if (hash) {
-				setTimeout(() => {
-					scrollToSection(hash);
-				}, 100);
-			}
-		}, 800);
+	// ページマウント時にURLのハッシュに基づいてスクロール
+	onMount(async () => {
+		const hash = window.location.hash.substring(1);
+		if (hash) {
+			await tick();
+			scrollToSection(hash);
+		}
+	});
+
+	// SvelteKit内部ナビゲーション時のハッシュスクロール対応
+	afterNavigate(async ({ to }) => {
+		if (to?.url?.hash) {
+			const hash = to.url.hash.substring(1);
+			await tick();
+			scrollToSection(hash);
+		}
 	});
 
 	// サイドバーのリンククリック時のスクロール関数
@@ -185,131 +187,111 @@
 
 	<!-- メインコンテンツ -->
 	<main class="flex-1 p-4 lg:ml-80">
-		{#if isLoading}
-			<!-- ローディングアニメーション -->
-			<div class="flex min-h-[50vh] flex-col items-center justify-center space-y-4">
-				<div class="loading loading-lg loading-spinner text-primary"></div>
-				<p class="text-lg text-base-content/70">swift基本構文を読み込み中...</p>
-				<div class="flex space-x-1">
-					<div class="h-2 w-2 animate-bounce rounded-full bg-primary"></div>
-					<div
-						class="h-2 w-2 animate-bounce rounded-full bg-primary"
-						style="animation-delay: 0.1s"
-					></div>
-					<div
-						class="h-2 w-2 animate-bounce rounded-full bg-primary"
-						style="animation-delay: 0.2s"
-					></div>
+		<div class="container mx-auto">
+			<!-- SwiftFiddle実行の解説 -->
+			<div id="how-to-use" class="card mb-6 bg-base-100 shadow-xl">
+				<div class="card-body">
+					<h2 class="card-title">
+						<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+							<path
+								fill-rule="evenodd"
+								d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+								clip-rule="evenodd"
+							></path>
+						</svg>
+						SwiftFiddleで実行できます
+					</h2>
+					<p class="mb-4">
+						このページのSwiftコードは、オンライン実行環境「SwiftFiddle」で実際に動かして試すことができます。
+					</p>
+
+					<div class="grid gap-4 md:grid-cols-2">
+						<div class="space-y-2">
+							<h3 class="text-lg font-semibold">使い方</h3>
+							<ol class="list-inside list-decimal space-y-1 text-sm">
+								<li>各コードブロックの右上にある実行ボタンをクリックする</li>
+								<li>
+									<a
+										href="https://swiftfiddle.com"
+										target="_blank"
+										rel="noopener noreferrer"
+										class="link link-accent">SwiftFiddle</a
+									>を開く
+								</li>
+								<li>このページのコードをコピー</li>
+								<li>SwiftFiddleに貼り付けて実行</li>
+								<li>結果が右側に表示されます</li>
+								<li>clear consoleボタンで右側の結果をリセットできます</li>
+							</ol>
+						</div>
+					</div>
+
+					<!-- モバイル用検索バー -->
+					<div class="mt-4 lg:hidden">
+						<SearchBar
+							bind:value={search.searchQuery}
+							placeholder="文法を検索..."
+							resultCount={search.resultCount}
+							isSearching={search.isSearching}
+							showResults={true}
+							onClear={search.clearSearch}
+						/>
+					</div>
 				</div>
 			</div>
-		{:else}
-			<div class="container mx-auto">
-				<!-- SwiftFiddle実行の解説 -->
-				<div id="how-to-use" class="card mb-6 bg-base-100 shadow-xl">
-					<div class="card-body">
-						<h2 class="card-title">
-							<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
-								<path
-									fill-rule="evenodd"
-									d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-									clip-rule="evenodd"
-								></path>
-							</svg>
-							SwiftFiddleで実行できます
-						</h2>
-						<p class="mb-4">
-							このページのSwiftコードは、オンライン実行環境「SwiftFiddle」で実際に動かして試すことができます。
-						</p>
 
-						<div class="grid gap-4 md:grid-cols-2">
-							<div class="space-y-2">
-								<h3 class="text-lg font-semibold">使い方</h3>
-								<ol class="list-inside list-decimal space-y-1 text-sm">
-									<li>各コードブロックの右上にある実行ボタンをクリックする</li>
-									<li>
-										<a
-											href="https://swiftfiddle.com"
-											target="_blank"
-											rel="noopener noreferrer"
-											class="link link-accent">SwiftFiddle</a
-										>を開く
-									</li>
-									<li>このページのコードをコピー</li>
-									<li>SwiftFiddleに貼り付けて実行</li>
-									<li>結果が右側に表示されます</li>
-									<li>clear consoleボタンで右側の結果をリセットできます</li>
-								</ol>
-							</div>
-						</div>
-
-						<!-- モバイル用検索バー -->
-						<div class="mt-4 lg:hidden">
-							<SearchBar
-								bind:value={search.searchQuery}
-								placeholder="文法を検索..."
-								resultCount={search.resultCount}
-								isSearching={search.isSearching}
-								showResults={true}
-								onClear={search.clearSearch}
+			<!-- 検索結果がない場合 -->
+			{#if search.searchQuery && search.filteredSections.length === 0}
+				<div class="card bg-base-100 shadow-xl">
+					<div class="card-body items-center text-center">
+						<svg
+							class="h-16 w-16 text-base-content/30"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
 							/>
-						</div>
+						</svg>
+						<h3 class="text-lg font-semibold">
+							「{search.searchQuery}」に一致する項目が見つかりません
+						</h3>
+						<p class="text-base-content/70">別のキーワードで検索してみてください</p>
+						<button class="btn mt-2 btn-sm btn-primary" onclick={search.clearSearch}
+							>検索をクリア</button
+						>
 					</div>
 				</div>
+			{/if}
 
-				<!-- 検索結果がない場合 -->
-				{#if search.searchQuery && search.filteredSections.length === 0}
-					<div class="card bg-base-100 shadow-xl">
-						<div class="card-body items-center text-center">
-							<svg
-								class="h-16 w-16 text-base-content/30"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+			<!-- 各セクションをJSONから動的に生成 -->
+			{#each search.filteredSections as section (section.id)}
+				<div id={section.id} class="card mb-6 bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">{section.title}</h2>
+						<p>{section.description}</p>
+
+						{#each section.codeBlocks as codeBlock (codeBlock.title)}
+							<div id={toSafeId(section.id, codeBlock.title)}>
+								<CodeBlock
+									title={codeBlock.title}
+									code={codeBlock.code}
+									output={codeBlock.output}
+									executable={codeBlock.executable}
 								/>
-							</svg>
-							<h3 class="text-lg font-semibold">「{search.searchQuery}」に一致する項目が見つかりません</h3>
-							<p class="text-base-content/70">別のキーワードで検索してみてください</p>
-							<button class="btn mt-2 btn-sm btn-primary" onclick={search.clearSearch}>検索をクリア</button
-							>
-						</div>
+							</div>
+						{/each}
+
+						{#if section.afterHtml}
+							{@html section.afterHtml}
+						{/if}
 					</div>
-				{/if}
-
-				<!-- 各セクションをJSONから動的に生成 -->
-				{#each search.filteredSections as section (section.id)}
-					<div
-						id={section.id}
-						class="card mb-6 bg-base-100 shadow-xl"
-						style="content-visibility: auto; contain-intrinsic-size: 1px 500px;"
-					>
-						<div class="card-body">
-							<h2 class="card-title">{section.title}</h2>
-							<p>{section.description}</p>
-
-							{#each section.codeBlocks as codeBlock (codeBlock.title)}
-								<div id={toSafeId(section.id, codeBlock.title)}>
-									<CodeBlock
-										title={codeBlock.title}
-										code={codeBlock.code}
-										output={codeBlock.output}
-										executable={codeBlock.executable}
-									/>
-								</div>
-							{/each}
-
-							{#if section.afterHtml}
-								{@html section.afterHtml}
-							{/if}
-						</div>
-					</div>
-				{/each}
-			</div>
-		{/if}
+				</div>
+			{/each}
+		</div>
 	</main>
 </div>

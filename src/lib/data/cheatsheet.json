@@ -414,6 +414,22 @@
                         "大文字",
                         "小文字"
                     ]
+                },
+                {
+                    "title": "UUID() - 一意なIDの生成",
+                    "code": "import Foundation\n\n// UUID（Universally Unique Identifier）は、世界で唯一の識別子を生成します\n// ランダムなUUIDを生成\nlet id = UUID()\nprint(\"生成されたID: \\(id)\")\n// 出力例: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\n\n// 文字列として取得する場合\nlet idString = id.uuidString\nprint(\"文字列形式: \\(idString)\")\n\n// SwiftUIでの活用例（リスト表示の識別子としてよく使われます）\nstruct TodoItem: Identifiable {\n    let id = UUID()  // インスタンス作成時に自動でユニークなIDを付与\n    var title: String\n}\n\nlet item = TodoItem(title: \"牛乳を買う\")\nprint(\"Todo項目のID: \\(item.id)\")",
+                    "output": "生成されたID: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\n文字列形式: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\nTodo項目のID: E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
+                    "executable": true,
+                    "keywords": [
+                        "id",
+                        "unique",
+                        "identifier",
+                        "random",
+                        "uuid",
+                        "識別子",
+                        "一意",
+                        "ランダム"
+                    ]
                 }
             ]
         },
