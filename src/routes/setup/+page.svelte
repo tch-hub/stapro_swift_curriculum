@@ -1,8 +1,12 @@
 <script>
 	import { base, resolve } from '$app/paths';
+	import { onMount } from 'svelte';
 
 	// 現在のステップを管理する変数
 	let currentStep = 0;
+
+	// OSの検出結果を管理
+	let isMac = true; // デフォルトはtrueにしてサーバーサイドでエラーにならないように
 
 	// ステップデータの定義
 	const steps = [
@@ -11,6 +15,13 @@
 		{ title: '初期設定', completed: true },
 		{ title: '動作確認', completed: false }
 	];
+
+	// クライアントサイドでOSを検出
+	onMount(() => {
+		const platform = navigator.platform.toLowerCase();
+		const userAgent = navigator.userAgent.toLowerCase();
+		isMac = platform.includes('mac') || userAgent.includes('mac');
+	});
 </script>
 
 <div class="container mx-auto px-4 py-8" data-base={base}>
@@ -29,24 +40,28 @@
 					<span class="mr-2 badge badge-lg badge-primary">STEP 1</span>
 					システム要件確認
 				</h2>
-				<div class="alert alert-info">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						class="h-6 w-6 shrink-0 stroke-current"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-						></path></svg
-					>
-					<div>
-						<h3 class="font-bold">重要！</h3>
-						<p>Swiftの開発には<strong>Mac</strong>が必要です。WindowsやLinuxでは開発できません。</p>
+				{#if !isMac}
+					<div class="alert alert-info">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							class="h-6 w-6 shrink-0 stroke-current"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+							></path></svg
+						>
+						<div>
+							<h3 class="font-bold">重要！</h3>
+							<p>
+								Swiftの開発には<strong>Mac</strong>が必要です。WindowsやLinuxでは開発できません。
+							</p>
+						</div>
 					</div>
-				</div>
+				{/if}
 				<div class="overflow-x-auto">
 					<table class="table table-zebra">
 						<thead>

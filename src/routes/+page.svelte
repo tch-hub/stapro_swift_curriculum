@@ -21,7 +21,7 @@
 			checked: false,
 			tutorialUrl: null,
 			quizUrl: '/quiz',
-			cheatsheetUrl: '/cheatsheet'
+			referenceUrl: '/reference'
 		},
 		{
 			id: 2,
@@ -294,7 +294,7 @@
 	<div class="mb-8 text-center">
 		<h2 class="mb-4 text-3xl font-bold">学習の流れ</h2>
 		<p class="mb-6 text-lg">
-			以下の順序で学習を進めてください。チュートリアルと練習問題は同時並行で進められます。swift基本構文は補助教材として随時参照できます。
+			以下の順序で学習を進めてください。チュートリアルと練習問題は同時並行で進められます。リファレンスは補助教材として随時参照できます。
 		</p>
 		<ul class="steps steps-vertical lg:steps-horizontal">
 			<li class="step">環境構築</li>
@@ -336,8 +336,8 @@
 									{lesson.id === 0 ? '環境構築' : 'チュートリアル'}
 								</a>
 							{/if}
-							{#if lesson.cheatsheetUrl}
-								<a href={resolve(lesson.cheatsheetUrl)} class="btn btn-primary">Swift基本構文</a>
+							{#if lesson.referenceUrl}
+								<a href={resolve(lesson.referenceUrl)} class="btn btn-primary">リファレンス</a>
 							{/if}
 							{#if lesson.quizUrl}
 								<a href={resolve(lesson.quizUrl)} class="btn btn-secondary">練習問題</a>

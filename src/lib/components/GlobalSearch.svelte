@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 
 	import { searchGlobal, getSearchResultDetail } from '$lib/services/search';
+	import { toSafeId } from '$lib/composables/useSearch.svelte.js';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import { base } from '$app/paths';
@@ -116,7 +117,12 @@
 	function handleResultClick(result) {
 		saveToHistory(query);
 		selectedResult = result;
-		previewDetail = getSearchResultDetail(result.pagePath, result.sectionId, result.codeBlockIndex);
+		previewDetail = getSearchResultDetail(
+			result.pagePath,
+			result.tabId,
+			result.sectionId,
+			result.codeBlockIndex
+		);
 	}
 
 	function closePreview() {
@@ -274,10 +280,16 @@
 						</svg>
 						戻る
 					</button>
-					<span class="flex-1 truncate font-bold">{selectedResult.title}</span>
+					<div class="flex min-w-0 flex-1 items-center gap-2">
+						<span class="truncate font-bold">{selectedResult.title}</span>
+						<span class="badge shrink-0 badge-outline badge-sm">{selectedResult.tabLabel}</span>
+					</div>
 					<a
 						class="btn btn-sm btn-primary"
-						href="{base}{selectedResult.pagePath}#{selectedResult.sectionId}"
+						href="{base}{selectedResult.pagePath}?tab={selectedResult.tabId}#{toSafeId(
+							selectedResult.sectionId,
+							selectedResult.title
+						)}"
 						target="_blank"
 					>
 						ページを開く
@@ -343,31 +355,33 @@
 									onclick={() => handleResultClick(result)}
 								>
 									<div class="card-body p-4">
-										<div class="flex items-start justify-between">
-											<div>
+										<div class="flex items-start justify-between gap-3">
+											<div class="min-w-0 flex-1">
 												<h4 class="flex items-center gap-2 font-bold">
-													{result.title}
-													<span class="badge badge-outline badge-sm text-xs font-normal"
-														>{result.pageTitle}</span
+													<span class="truncate">{result.title}</span>
+													<span class="badge shrink-0 badge-outline badge-sm text-xs font-normal"
+														>{result.tabLabel}</span
 													>
 												</h4>
 												<p class="mt-1 line-clamp-2 text-sm text-base-content/70">
 													{result.description}
 												</p>
 											</div>
-											{#if result.matchType !== 'description'}
-												<span
-													class="badge badge-sm"
-													class:badge-primary={result.matchType === 'title'}
-													class:badge-secondary={result.matchType === 'keyword'}
-												>
-													{result.matchType === 'title'
-														? 'タイトル一致'
-														: result.matchType === 'keyword'
-															? 'キーワード'
-															: 'コード'}
-												</span>
-											{/if}
+											<div class="flex shrink-0 flex-col items-end gap-1">
+												{#if result.matchType !== 'description'}
+													<span
+														class="badge badge-sm"
+														class:badge-primary={result.matchType === 'title'}
+														class:badge-secondary={result.matchType === 'keyword'}
+													>
+														{result.matchType === 'title'
+															? 'タイトル一致'
+															: result.matchType === 'keyword'
+																? 'キーワード'
+																: 'コード'}
+													</span>
+												{/if}
+											</div>
 										</div>
 									</div>
 								</button>

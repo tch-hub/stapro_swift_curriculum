@@ -9,6 +9,8 @@ export interface SearchResult {
 	description: string;
 	pageTitle: string;
 	pagePath: string;
+	tabId: string;
+	tabLabel: string;
 	sectionId: string;
 	codeBlockIndex: number;
 	matchType: 'title' | 'keyword' | 'code' | 'description';
@@ -33,23 +35,31 @@ interface CodeBlock {
 const PAGES = [
 	{
 		data: componentsData,
-		title: 'コンポーネントガイド',
-		path: '/components-guide'
+		title: 'リファレンス',
+		path: '/reference',
+		tabId: 'components',
+		tabLabel: 'コンポーネント'
 	},
 	{
 		data: cheatsheetData,
-		title: 'swiftガイド',
-		path: '/cheatsheet'
+		title: 'リファレンス',
+		path: '/reference',
+		tabId: 'cheatsheet',
+		tabLabel: '基本文法'
 	},
 	{
 		data: stylingData,
-		title: 'スタイリングガイド',
-		path: '/styling-guide'
+		title: 'リファレンス',
+		path: '/reference',
+		tabId: 'styling',
+		tabLabel: 'スタイリング'
 	},
 	{
 		data: glossaryData,
-		title: '用語解説',
-		path: '/glossary'
+		title: 'リファレンス',
+		path: '/reference',
+		tabId: 'glossary',
+		tabLabel: '用語解説'
 	}
 ];
 
@@ -93,11 +103,13 @@ export function searchGlobal(query: string): SearchResult[] {
 
 				if (matchType) {
 					results.push({
-						id: `${page.path}-${section.id}-${i}`,
+						id: `${page.path}-${page.tabId}-${section.id}-${i}`,
 						title: block.title,
 						description: `${section.title}`,
 						pageTitle: page.title,
 						pagePath: page.path,
+						tabId: page.tabId,
+						tabLabel: page.tabLabel,
 						sectionId: section.id,
 						codeBlockIndex: i,
 						matchType,
@@ -120,10 +132,11 @@ export interface SearchResultDetail {
 
 export function getSearchResultDetail(
 	pagePath: string,
+	tabId: string,
 	sectionId: string,
 	codeBlockIndex: number
 ): SearchResultDetail | undefined {
-	const page = PAGES.find((p) => p.path === pagePath);
+	const page = PAGES.find((p) => p.path === pagePath && p.tabId === tabId);
 	if (!page) return undefined;
 
 	const section = (page.data.sections as Section[]).find((s) => s.id === sectionId);
