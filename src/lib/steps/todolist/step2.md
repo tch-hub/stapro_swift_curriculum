@@ -1,10 +1,14 @@
 # ステップ2: タスクコンポーネントを作る(ToDoListItem.swift)
 
+### ステップ2終了時の完成イメージ
+
+<img src="/images/todolist/ToDoListItem.png" alt="ToDoListItemの完成イメージ" class="mobile-screenshot-top" />
+
 ## 1. 土台の作成
 
 まず、`ToDoListItem.swift` の中身を以下のように書き換えて土台を作ります。
 
-```swift
+```swif ttitle="Components/ToDoListItem.swift"
 import SwiftUI
 
 struct ToDoListItem: View {
@@ -13,6 +17,11 @@ struct ToDoListItem: View {
     }
 }
 ```
+
+`import SwiftUI`
+SwiftUIをよみこむことで、TextやButtonなどの便利な機能を使えるようになります。  
+`body`という部分は、画面に何を表示するかを書くところです。
+ToDoListItemという構造体を作ります。これはアプリの画面のメイン部分です。Viewというルールに従って作ります。
 
 ## 2. プロパティの定義
 
@@ -72,6 +81,8 @@ let onToggle: () -> Void
 
 `HStack` の中に、完了状態に応じて見た目が変わるチェックボックス（円）を追加します。以下のコードを `// ここにチェックボックスとテキストを追加します` の部分に記述してください。
 
+<img src="/images/todolist/check.png" alt="ToDoListItemの完成イメージ" class="mobile-screenshot" />
+
 ```swift
                 // チェックボックス部分
                 ZStack {
@@ -94,10 +105,14 @@ let onToggle: () -> Void
                     }
                 }
                 .padding(.leading, 4)
+
 ```
 
 - `ZStack`: 要素を重ねて表示します。ここでは円の枠の上にチェックマークを重ねています。
-- `.stroke(...)`: 円の枠線を描画します。`isCompleted` が `true` の時はアクセントカラーになります。
+- `.stroke(...)`: 円の枠線を描画します。
+- `isCompleted` が `true` の時はアクセントカラー(SwiftUI が環境として用意していて、accentColorは何も指定しなければデフォルト値の青が使われる)になります。
+- `isCompleted` が`false`の時はセカンダリーカラー(SwiftUI が環境として用意していて、secondaryは何も指定しなければデフォルト値のグレーが使われる)になります。
+- `if isCompleted {...}`:もしisCompletedがtrueだったらチェック付き丸アイコンの画像を表示します。この画像はApple が用意している、完了を表すチェック付きの丸アイコン（システム標準アイコン）です。
 
 ## 5. UIの実装: テキスト
 
@@ -160,8 +175,6 @@ Xcodeのキャンバスで動作確認ができるように、プレビュー用
 ---
 
 ## コード全体
-
-<img src="/images/todolist/ToDoListItem.png" alt="ToDoListItemの完成イメージ" class="mobile-screenshot" />
 
 ### Components/ToDoListItem.swift
 

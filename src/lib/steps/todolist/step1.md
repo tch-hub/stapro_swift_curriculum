@@ -122,6 +122,8 @@ struct ToDoListApp: App {
 ```
 
 ### Views/ContentView.swift
+<img src="/images/todolist/step1.png" alt="ToDoListItemの完成イメージ" class="mobile-screenshot" />
+
 
 ```swift
 import SwiftUI
@@ -137,3 +139,4 @@ struct ContentView: View {
     ContentView()
 }
 ```
+画面左上のピンマークを押してPreviewを固定表示しておきましょう！

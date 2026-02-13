@@ -204,36 +204,328 @@
 			"codeBlocks": [
 				{
 					"title": "セマンティックカラー",
-					"code": "// テキスト用のセマンティックカラー\nText(\"Primary\").foregroundStyle(.primary)       // メインのテキスト色\nText(\"Secondary\").foregroundStyle(.secondary)   // 補助的なテキスト色\nText(\"Tertiary\").foregroundStyle(.tertiary)     // さらに薄いテキスト色\n\n// アクセントカラー\nButton(\"アクセント\") { }\n    .tint(.accentColor)           // アプリのテーマカラー\n\n// ライト/ダークモード対応\n// これらの色は自動的にモードに合わせて変化します",
+					"code": "// テキスト用のセマンティックカラー\nText(\"Primary\").foregroundStyle(.primary)       // メインのテキスト色\nText(\"Secondary\").foregroundStyle(.secondary)   // 補助的なテキスト色\nText(\"Tertiary\").foregroundStyle(.tertiary)     // さらに薄いテキスト色\nText(\"Quaternary\").foregroundStyle(.quaternary) // 最も薄いテキスト色\n\n// アクセントカラー\nButton(\"アクセント\") { }\n    .tint(.accentColor)           // アプリのテーマカラー\n\n// ライト/ダークモード対応\n// これらの色は自動的にモードに合わせて変化します",
 					"keywords": [
 						"theme",
 						"mode",
 						"dynamic",
 						"meaning",
+						"semantic",
+						"adaptive",
+						"primary",
+						"secondary",
 						"意味的",
+						"セマンティック",
 						"ダークモード",
-						"ライトモード"
+						"ライトモード",
+						"自動対応",
+						"階層"
 					]
 				},
 				{
-					"title": "システムカラー",
-					"code": "// UIKitのシステムカラーを使用\nText(\"システム背景\")\n    .padding()\n    .background(Color(.systemBackground))         // 背景色\n\nText(\"セカンダリ背景\")\n    .padding()\n    .background(Color(.secondarySystemBackground))  // 二次背景色\n\nText(\"グループ背景\")\n    .padding()\n    .background(Color(.systemGroupedBackground))   // グループ背景色\n\n// グレースケール\nText(\"グレー\").foregroundStyle(Color(.systemGray))\nText(\"グレー2\").foregroundStyle(Color(.systemGray2))\nText(\"グレー3\").foregroundStyle(Color(.systemGray3))\nText(\"グレー4\").foregroundStyle(Color(.systemGray4))\nText(\"グレー5\").foregroundStyle(Color(.systemGray5))\nText(\"グレー6\").foregroundStyle(Color(.systemGray6))",
-					"keywords": ["uikit", "background", "gray", "system", "システム", "背景"]
+					"title": "primary - プライマリーカラー",
+					"code": "// Color.primaryはシステムが提供する最も目立つテキスト色\n// 標準的なコンテンツの表示に使用\n// ライト/ダークモードに自動対応\n\n// === 基本的な使い方 ===\n\n// テキストの色として使用（通常はデフォルト）\nText(\"メインコンテンツ\")\n    .foregroundStyle(.primary)  // 通常のテキスト色\n\n// 図形の色として使用\nCircle()\n    .fill(Color.primary)\n    .frame(width: 50, height: 50)\n\n// === 実践的な使用例 ===\n\n// タイトルや見出し\nText(\"記事タイトル\")\n    .font(.title)\n    .foregroundStyle(.primary)\n\n// メインのボディテキスト\nText(\"これはメインの本文テキストです。通常の文章に使用します。\")\n    .font(.body)\n    .foregroundStyle(.primary)\n\n// アイコンの色\nImage(systemName: \"house.fill\")\n    .foregroundStyle(.primary)\n\n// 完了/未完了の切り替え\nText(taskTitle)\n    .foregroundStyle(isCompleted ? .secondary : .primary)\n\n// === 実装のポイント ===\n\n// 1. 最も重要な情報に使用（タイトル、本文など）\n// 2. .foregroundStyle()を指定しない場合のデフォルト値\n// 3. ライトモード: ほぼ黒、ダークモード: ほぼ白\n// 4. 最もコントラストが高く、読みやすい色",
+					"keywords": [
+						"primary",
+						"main",
+						"text",
+						"default",
+						"foreground",
+						"プライマリー",
+						"メイン",
+						"主要色",
+						"標準",
+						"デフォルト",
+						"黒",
+						"白",
+						"本文"
+					]
+				},
+				{
+					"title": "accentColor - アクセントカラー",
+					"code": "// Color.accentColorはアプリのメインテーマカラー\n// Assets.xcassetsで定義されたAccent Colorが使われる\n// 指定されていない場合は、デフォルトで青色が使用される\n\n// === 基本的な使い方 ===\n\n// テキストや図形の色としての使用\nText(\"アクセントカラー\")\n    .foregroundStyle(Color.accentColor)\n\nCircle()\n    .fill(Color.accentColor)\n    .frame(width: 50, height: 50)\n\n// ボタンの色として使用\nButton(\"ボタン\") { }\n    .buttonStyle(.borderedProminent)\n    .tint(.accentColor)  // または .accentColor を省略可能（デフォルト）\n\n// === 実践的な使用例 ===\n\n// チェックボックスの色（完了状態）\nCircle()\n    .stroke(\n        isCompleted ? Color.accentColor : Color.secondary,\n        lineWidth: 2\n    )\n    .frame(width: 24, height: 24)\n\n// チェックマーク\nImage(systemName: \"checkmark.circle.fill\")\n    .foregroundStyle(Color.accentColor)\n\n// 強調表示したいアイコン\nImage(systemName: \"star.fill\")\n    .foregroundStyle(Color.accentColor)\n    .font(.title)\n\n// プログレスバー\nProgressView(value: 0.7)\n    .tint(Color.accentColor)\n\n// === 実装のポイント ===\n\n// 1. アプリ全体で統一感を出すために使用\n// 2. 重要な操作や選択状態の表示に使用\n// 3. Assets.xcassetsでLight/Dark両方のアクセントカラーを定義可能\n// 4. カスタマイズしない場合はシステムの青色が使われる",
+					"keywords": [
+						"accentColor",
+						"accent",
+						"theme",
+						"main color",
+						"tint",
+						"brand",
+						"アクセントカラー",
+						"テーマカラー",
+						"強調色",
+						"ブランドカラー",
+						"青",
+						"選択",
+						"完了"
+					]
+				},
+				{
+					"title": "secondary - セカンダリーカラー",
+					"code": "// Color.secondaryはシステムが提供する補助的な色\n// メインのコンテンツよりも目立たせたくない要素に使用\n// ライト/ダークモードに自動対応\n\n// === 基本的な使い方 ===\n\n// テキストの色として使用（説明文や補足情報など）\nText(\"メインテキスト\")\n    .foregroundStyle(.primary)\nText(\"補足情報\")\n    .foregroundStyle(.secondary)  // 薄いグレー系の色\n\n// 図形の色として使用\nCircle()\n    .fill(Color.secondary)\n    .frame(width: 50, height: 50)\n\n// 枠線の色として使用\nRectangle()\n    .stroke(Color.secondary, lineWidth: 1)\n\n// === 実践的な使用例 ===\n\n// 未完了タスクのチェックボックス\nCircle()\n    .stroke(\n        isCompleted ? Color.accentColor : Color.secondary,\n        lineWidth: 2\n    )\n    .frame(width: 24, height: 24)\n\n// 完了済みタスクのテキスト（薄く表示）\nText(title)\n    .foregroundStyle(isCompleted ? .secondary : .primary)\n    .strikethrough(isCompleted, color: .secondary)\n\n// 説明文やキャプション\nVStack(alignment: .leading) {\n    Text(\"タイトル\")\n        .font(.headline)\n        .foregroundStyle(.primary)\n    Text(\"これは説明文です\")\n        .font(.caption)\n        .foregroundStyle(.secondary)\n}\n\n// アイコンの色（控えめな表示）\nImage(systemName: \"info.circle\")\n    .foregroundStyle(.secondary)\n\n// 区切り線\nDivider()\n    .background(Color.secondary.opacity(0.3))\n\n// プレースホルダーテキスト\nif text.isEmpty {\n    Text(\"入力してください\")\n        .foregroundStyle(.secondary)\n}\n\n// === 実装のポイント ===\n\n// 1. プライマリー情報と区別したい補助的な情報に使用\n// 2. ライト/ダークモードで自動的に見やすい色に調整される\n// 3. ライトモード: 薄いグレー、ダークモード: 明るいグレー\n// 4. アクセシビリティを考慮した読みやすいコントラストを保つ",
+					"keywords": [
+						"secondary",
+						"gray",
+						"grey",
+						"subtle",
+						"muted",
+						"caption",
+						"セカンダリー",
+						"第2",
+						"グレー",
+						"補助色",
+						"薄い色",
+						"説明文",
+						"キャプション"
+					]
+				},
+				{
+					"title": "tertiary - ターシャリーカラー",
+					"code": "// Color.tertiaryはセカンダリーよりもさらに薄い色\n// 3番目の重要度の情報に使用\n// ライト/ダークモードに自動対応\n\n// === 基本的な使い方 ===\n\n// テキストの色として使用\nText(\"プライマリー\")\n    .foregroundStyle(.primary)\nText(\"セカンダリー\")\n    .foregroundStyle(.secondary)\nText(\"ターシャリー\")\n    .foregroundStyle(.tertiary)  // さらに薄いグレー\n\n// === 実践的な使用例 ===\n\n// 階層的な情報表示\nVStack(alignment: .leading) {\n    Text(\"タイトル\")\n        .font(.headline)\n        .foregroundStyle(.primary)      // 最も目立つ\n    \n    Text(\"サブタイトル\")\n        .font(.subheadline)\n        .foregroundStyle(.secondary)    // やや控えめ\n    \n    Text(\"補足情報\")\n        .font(.caption)\n        .foregroundStyle(.tertiary)     // 最も控えめ\n}\n\n// プレースホルダーやヒントテキスト\nif items.isEmpty {\n    Text(\"データがありません\")\n        .foregroundStyle(.tertiary)\n        .italic()\n}\n\n// 無効化された要素\nButton(\"無効なボタン\") { }\n    .disabled(true)\n    .foregroundStyle(.tertiary)\n\n// タイムスタンプやメタ情報\nText(\"投稿日: 2025年1月1日\")\n    .font(.caption2)\n    .foregroundStyle(.tertiary)\n\n// === 実装のポイント ===\n\n// 1. 重要度の低い補足情報に使用\n// 2. プレースホルダーや無効状態の表示に最適\n// 3. ライトモード: とても薄いグレー、ダークモード: やや明るいグレー\n// 4. 背景に対して控えめなコントラスト",
+					"keywords": [
+						"tertiary",
+						"third",
+						"gray",
+						"grey",
+						"placeholder",
+						"disabled",
+						"hint",
+						"ターシャリー",
+						"第3",
+						"3番目",
+						"グレー",
+						"薄い",
+						"プレースホルダー",
+						"ヒント",
+						"無効",
+						"メタ情報"
+					]
+				},
+				{
+					"title": "quaternary - クォータナリーカラー",
+					"code": "// Color.quaternaryは最も薄いシステムカラー\n// 4番目の重要度の情報に使用\n// ライト/ダークモードに自動対応\n\n// === 基本的な使い方 ===\n\n// テキストの色として使用\nText(\"クォータナリー\")\n    .foregroundStyle(.quaternary)  // 最も薄い色\n\n// === 実践的な使用例 ===\n\n// 4段階の情報階層\nVStack(alignment: .leading, spacing: 4) {\n    Text(\"1. プライマリー情報\")\n        .foregroundStyle(.primary)\n    Text(\"2. セカンダリー情報\")\n        .foregroundStyle(.secondary)\n    Text(\"3. ターシャリー情報\")\n        .foregroundStyle(.tertiary)\n    Text(\"4. クォータナリー情報\")\n        .foregroundStyle(.quaternary)   // 最も控えめ\n}\n\n// 背景パターンや装飾\nRectangle()\n    .fill(Color.quaternary)\n    .frame(height: 1)  // 非常に薄い区切り線\n\n// 透かし文字\nText(\"DRAFT\")\n    .font(.system(size: 60, weight: .bold))\n    .foregroundStyle(.quaternary)\n    .rotationEffect(.degrees(-45))\n    .opacity(0.3)\n\n// 無効化された要素の背景\nText(\"利用不可\")\n    .padding()\n    .background(Color.quaternary.opacity(0.5))\n    .cornerRadius(8)\n\n// === 実装のポイント ===\n\n// 1. 最も目立たせたくない情報に使用\n// 2. 背景パターンや装飾的な要素に最適\n// 3. ライトモード: 非常に薄いグレー、ダークモード: 暗めのグレー\n// 4. 過度に使用すると見えにくくなるため注意",
+					"keywords": [
+						"quaternary",
+						"fourth",
+						"lightest",
+						"faint",
+						"watermark",
+						"クォータナリー",
+						"第4",
+						"4番目",
+						"最も薄い",
+						"かすかな",
+						"透かし",
+						"装飾"
+					]
+				},
+				{
+					"title": "システム背景色",
+					"code": "// UIKitのシステム背景色\n// ライト/ダークモードに自動対応\n\n// === 標準背景色 ===\n\n// .systemBackground - 標準の背景色（最も明るい層）\nVStack {\n    Text(\"メインコンテンツ\")\n}\n.padding()\n.background(Color(.systemBackground))\n\n// .secondarySystemBackground - 2番目の背景色（カードやセル）\nVStack {\n    Text(\"カード\")\n}\n.padding()\n.background(Color(.secondarySystemBackground))\n.cornerRadius(10)\n\n// .tertiarySystemBackground - 3番目の背景色（入れ子の要素）\nVStack {\n    Text(\"入れ子のコンテンツ\")\n}\n.padding()\n.background(Color(.tertiarySystemBackground))\n.cornerRadius(8)\n\n// === グループ化された背景色 ===\n\n// .systemGroupedBackground - グループ化リストの背景\nList {\n    Text(\"項目\")\n}\n.background(Color(.systemGroupedBackground))\n.listStyle(.grouped)\n\n// .secondarySystemGroupedBackground - グループ化リストのセル背景\nVStack {\n    Text(\"セクション\")\n}\n.padding()\n.background(Color(.secondarySystemGroupedBackground))\n\n// .tertiarySystemGroupedBackground - グループ化リストの入れ子背景\nVStack {\n    Text(\"入れ子\")\n}\n.padding()\n.background(Color(.tertiarySystemGroupedBackground))\n\n// === 実践的な使用例 ===\n\n// カード風のデザイン\nVStack {\n    // 背景全体\n    ScrollView {\n        VStack(spacing: 16) {\n            // カード1\n            VStack(alignment: .leading) {\n                Text(\"タイトル\").font(.headline)\n                Text(\"説明文\").font(.caption)\n            }\n            .padding()\n            .frame(maxWidth: .infinity, alignment: .leading)\n            .background(Color(.secondarySystemBackground))\n            .cornerRadius(12)\n            \n            // カード2\n            VStack(alignment: .leading) {\n                Text(\"タイトル\").font(.headline)\n                Text(\"説明文\").font(.caption)\n            }\n            .padding()\n            .frame(maxWidth: .infinity, alignment: .leading)\n            .background(Color(.secondarySystemBackground))\n            .cornerRadius(12)\n        }\n        .padding()\n    }\n    .background(Color(.systemBackground))\n}\n\n// === 実装のポイント ===\n\n// 1. 階層的なUIデザインを作成する際に使用\n// 2. ライト/ダークモードで自動的に適切な色に変化\n// 3. 標準背景色は一般的な画面、グループ背景色は設定画面などに最適\n// 4. Apple標準アプリと同じ見た目を実現できる",
+					"keywords": [
+						"background",
+						"system",
+						"grouped",
+						"card",
+						"layer",
+						"container",
+						"systemBackground",
+						"secondarySystemBackground",
+						"tertiarySystemBackground",
+						"systemGroupedBackground",
+						"secondarySystemGroupedBackground",
+						"tertiarySystemGroupedBackground",
+						"背景色",
+						"システム背景",
+						"カード",
+						"レイヤー",
+						"階層",
+						"画面",
+						"設定"
+					]
+				},
+				{
+					"title": "システムラベル色",
+					"code": "// UIKitのシステムラベル色\n// .primary, .secondary等と同様の階層カラー\n// UIColorとして使用する際に明示的に指定\n\n// === 基本的な使い方 ===\n\n// .label - プライマリーラベル色（.primaryと同等）\nText(\"メインラベル\")\n    .foregroundStyle(Color(.label))\n\n// .secondaryLabel - セカンダリーラベル色\nText(\"補助ラベル\")\n    .foregroundStyle(Color(.secondaryLabel))\n\n// .tertiaryLabel - ターシャリーラベル色\nText(\"第3ラベル\")\n    .foregroundStyle(Color(.tertiaryLabel))\n\n// .quaternaryLabel - クォータナリーラベル色\nText(\"第4ラベル\")\n    .foregroundStyle(Color(.quaternaryLabel))\n\n// === 実装のポイント ===\n\n// 1. SwiftUIでは通常 .primary, .secondary などを使う\n// 2. UIKitとの互換性が必要な場合に使用\n// 3. Color(.label) と .primary は同じ色",
+					"keywords": [
+						"label",
+						"secondaryLabel",
+						"tertiaryLabel",
+						"quaternaryLabel",
+						"text",
+						"uikit",
+						"compatibility",
+						"ラベル色",
+						"テキスト色",
+						"互換性",
+						"旧API"
+					]
+				},
+				{
+					"title": "システムフィル色",
+					"code": "// システムフィル色は半透明の塗りつぶし色\n// ボタンやセルの背景に使用\n// 背景が透けて見えるため、重ねて使うのに適している\n\n// === 基本的な使い方 ===\n\n// .systemFill - 標準フィル色\nButton(\"ボタン\") { }\n    .padding()\n    .background(Color(.systemFill))\n    .cornerRadius(8)\n\n// .secondarySystemFill - セカンダリーフィル色\nButton(\"ボタン\") { }\n    .padding()\n    .background(Color(.secondarySystemFill))\n    .cornerRadius(8)\n\n// .tertiarySystemFill - ターシャリーフィル色\nButton(\"ボタン\") { }\n    .padding()\n    .background(Color(.tertiarySystemFill))\n    .cornerRadius(8)\n\n// .quaternarySystemFill - クォータナリーフィル色（最も薄い）\nButton(\"ボタン\") { }\n    .padding()\n    .background(Color(.quaternarySystemFill))\n    .cornerRadius(8)\n\n// === 実践的な使用例 ===\n\n// タグやバッジ\nText(\"NEW\")\n    .font(.caption)\n    .padding(.horizontal, 8)\n    .padding(.vertical, 4)\n    .background(Color(.secondarySystemFill))\n    .cornerRadius(4)\n\n// ホバー状態のボタン\nButton(\"選択\") { }\n    .padding()\n    .background(isHovered ? Color(.tertiarySystemFill) : Color.clear)\n    .cornerRadius(8)\n\n// === 実装のポイント ===\n\n// 1. 半透明なので背景が透けて見える\n// 2. 階層的なUIに適している\n// 3. ボタンの通常状態やホバー状態に使用\n// 4. ライト/ダークモードで自動調整",
+					"keywords": [
+						"fill",
+						"systemFill",
+						"secondarySystemFill",
+						"tertiarySystemFill",
+						"quaternarySystemFill",
+						"button",
+						"background",
+						"translucent",
+						"overlay",
+						"badge",
+						"tag",
+						"フィル",
+						"塗りつぶし",
+						"半透明",
+						"オーバーレイ",
+						"バッジ",
+						"タグ",
+						"ボタン背景"
+					]
+				},
+				{
+					"title": "システムグレースケール",
+					"code": "// システムグレー色\n// ライト/ダークモードで色が変わらない固定グレー\n// （他のシステムカラーと異なり、モード非対応）\n\n// === グレースケール（薄い順） ===\n\n// .systemGray - 標準グレー\nCircle()\n    .fill(Color(.systemGray))\n    .frame(width: 50, height: 50)\n\n// .systemGray2 - やや薄いグレー\nCircle()\n    .fill(Color(.systemGray2))\n    .frame(width: 50, height: 50)\n\n// .systemGray3 - 中間グレー\nCircle()\n    .fill(Color(.systemGray3))\n    .frame(width: 50, height: 50)\n\n// .systemGray4 - やや明るいグレー\nCircle()\n    .fill(Color(.systemGray4))\n    .frame(width: 50, height: 50)\n\n// .systemGray5 - 明るいグレー\nCircle()\n    .fill(Color(.systemGray5))\n    .frame(width: 50, height: 50)\n\n// .systemGray6 - 最も明るいグレー\nCircle()\n    .fill(Color(.systemGray6))\n    .frame(width: 50, height: 50)\n\n// === 実践的な使用例 ===\n\n// 固定色が必要な場合（デザインの一貫性）\nRectangle()\n    .fill(Color(.systemGray4))\n    .frame(height: 1)  // 常に同じグレーの区切り線\n\n// グレースケールの背景\nVStack {\n    Text(\"コンテンツ\")\n}\n.padding()\n.background(Color(.systemGray6))\n.cornerRadius(10)\n\n// === 実装のポイント ===\n\n// 1. ライト/ダークモードで色が変わらない\n// 2. 番号が大きいほど明るい（.systemGray6が最も明るい）\n// 3. ダークモードでも見た目を統一したい場合に使用\n// 4. 通常は .secondary などのセマンティックカラーを推奨",
+					"keywords": [
+						"gray",
+						"grey",
+						"systemGray",
+						"systemGray2",
+						"systemGray3",
+						"systemGray4",
+						"systemGray5",
+						"systemGray6",
+						"fixed",
+						"constant",
+						"scale",
+						"グレー",
+						"灰色",
+						"固定色",
+						"モード非対応",
+						"グレースケール",
+						"段階"
+					]
+				},
+				{
+					"title": "その他のシステムカラー",
+					"code": "// その他の便利なシステムカラー\n\n// === .placeholderText - プレースホルダー用テキスト色 ===\n\n// テキストフィールドのプレースホルダー\nif text.isEmpty {\n    Text(\"名前を入力してください\")\n        .foregroundStyle(Color(.placeholderText))\n}\n\n// 空の状態のメッセージ\nif items.isEmpty {\n    VStack {\n        Image(systemName: \"tray\")\n            .font(.largeTitle)\n        Text(\"データがありません\")\n    }\n    .foregroundStyle(Color(.placeholderText))\n}\n\n// === .separator - 区切り線の色 ===\n\n// 標準的な区切り線（半透明）\nRectangle()\n    .fill(Color(.separator))\n    .frame(height: 1)\n\n// リスト内の区切り線\nVStack {\n    Text(\"項目1\")\n    Divider()\n        .background(Color(.separator))\n    Text(\"項目2\")\n}\n\n// === .opaqueSeparator - 不透明な区切り線の色 ===\n\n// 不透明な区切り線\nRectangle()\n    .fill(Color(.opaqueSeparator))\n    .frame(height: 1)\n\n// === .link - リンク用テキスト色 ===\n\n// リンクテキスト\nText(\"利用規約を読む\")\n    .foregroundStyle(Color(.link))\n    .underline()\n\nButton(\"ヘルプを表示\") { }\n    .foregroundStyle(Color(.link))\n\n// === 実践的な使用例 ===\n\n// カスタムテキストフィールド\nstruct CustomTextField: View {\n    @State private var text = \"\"\n    let placeholder: String\n    \n    var body: some View {\n        ZStack(alignment: .leading) {\n            if text.isEmpty {\n                Text(placeholder)\n                    .foregroundStyle(Color(.placeholderText))\n            }\n            TextField(\"\", text: $text)\n        }\n        .padding()\n        .background(Color(.secondarySystemBackground))\n        .cornerRadius(8)\n    }\n}\n\n// セクション区切り\nVStack(spacing: 0) {\n    Text(\"セクション1\")\n        .padding()\n    \n    Rectangle()\n        .fill(Color(.separator))\n        .frame(height: 1)\n    \n    Text(\"セクション2\")\n        .padding()\n}\n\n// === 実装のポイント ===\n\n// 1. .placeholderText - 入力欄のヒントテキストに使用\n// 2. .separator - 半透明の区切り線（ListやDivider）\n// 3. .opaqueSeparator - 不透明な区切り線\n// 4. .link - クリック可能なリンクテキスト（青色）",
+					"keywords": [
+						"placeholder",
+						"placeholderText",
+						"separator",
+						"opaqueSeparator",
+						"link",
+						"divider",
+						"hint",
+						"empty",
+						"hyperlink",
+						"プレースホルダー",
+						"区切り線",
+						"リンク",
+						"ヒント",
+						"空状態",
+						"入力欄",
+						"ハイパーリンク"
+					]
+				},
+				{
+					"title": "システムカラー（旧API）",
+					"code": "// UIKitのシステムカラーを使用\n// これらは Color(.systemBackground) のように UIColor として使用\n// SwiftUIの .primary, .secondary などを使う方が推奨される\n\n// === 背景色 ===\nText(\"システム背景\")\n    .padding()\n    .background(Color(.systemBackground))         // 背景色\n\nText(\"セカンダリ背景\")\n    .padding()\n    .background(Color(.secondarySystemBackground))  // 二次背景色\n\nText(\"グループ背景\")\n    .padding()\n    .background(Color(.systemGroupedBackground))   // グループ背景色\n\n// === グレースケール ===\nText(\"グレー\").foregroundStyle(Color(.systemGray))\nText(\"グレー2\").foregroundStyle(Color(.systemGray2))\nText(\"グレー3\").foregroundStyle(Color(.systemGray3))\nText(\"グレー4\").foregroundStyle(Color(.systemGray4))\nText(\"グレー5\").foregroundStyle(Color(.systemGray5))\nText(\"グレー6\").foregroundStyle(Color(.systemGray6))\n\n// === 注意点 ===\n// SwiftUIでは以下を推奨：\n// - Color(.systemBackground) より .background を使用\n// - Color(.label) より .primary を使用\n// - Color(.systemGray) より .secondary を使用",
+					"keywords": [
+						"uikit",
+						"background",
+						"systemBackground",
+						"secondarySystemBackground",
+						"systemGroupedBackground",
+						"gray",
+						"grey",
+						"systemGray",
+						"systemGray2",
+						"systemGray3",
+						"systemGray4",
+						"systemGray5",
+						"systemGray6",
+						"system",
+						"legacy",
+						"deprecated",
+						"システム",
+						"背景",
+						"旧API",
+						"互換性",
+						"非推奨"
+					]
 				},
 				{
 					"title": "標準カラー",
 					"code": "// SwiftUIの標準カラー\nText(\"Red\").foregroundStyle(.red)\nText(\"Orange\").foregroundStyle(.orange)\nText(\"Yellow\").foregroundStyle(.yellow)\nText(\"Green\").foregroundStyle(.green)\nText(\"Mint\").foregroundStyle(.mint)\nText(\"Teal\").foregroundStyle(.teal)\nText(\"Cyan\").foregroundStyle(.cyan)\nText(\"Blue\").foregroundStyle(.blue)\nText(\"Indigo\").foregroundStyle(.indigo)\nText(\"Purple\").foregroundStyle(.purple)\nText(\"Pink\").foregroundStyle(.pink)\nText(\"Brown\").foregroundStyle(.brown)\nText(\"White\").foregroundStyle(.white)\nText(\"Black\").foregroundStyle(.black)\nText(\"Gray\").foregroundStyle(.gray)\nText(\"Clear\").foregroundStyle(.clear)    // 透明",
-					"keywords": ["preset", "basic", "white", "black", "red", "blue", "標準", "色", "カラー"]
+					"keywords": [
+						"preset",
+						"basic",
+						"white",
+						"black",
+						"red",
+						"blue",
+						"green",
+						"yellow",
+						"orange",
+						"purple",
+						"pink",
+						"標準",
+						"色",
+						"カラー",
+						"基本色",
+						"赤",
+						"青",
+						"緑",
+						"黄",
+						"オレンジ",
+						"紫",
+						"ピンク",
+						"白",
+						"黒",
+						"透明"
+					]
 				},
 				{
 					"title": "グラデーション",
 					"code": "// 線形グラデーション\nRectangle()\n    .fill(\n        LinearGradient(\n            colors: [.blue, .purple],\n            startPoint: .topLeading,\n            endPoint: .bottomTrailing\n        )\n    )\n    .frame(height: 100)\n\n// 放射状グラデーション\nCircle()\n    .fill(\n        RadialGradient(\n            colors: [.yellow, .orange, .red],\n            center: .center,\n            startRadius: 0,\n            endRadius: 100\n        )\n    )\n    .frame(width: 200, height: 200)\n\n// 角度グラデーション\nCircle()\n    .fill(\n        AngularGradient(\n            colors: [.red, .yellow, .green, .blue, .purple, .red],\n            center: .center\n        )\n    )\n    .frame(width: 200, height: 200)",
-					"keywords": ["linear", "radial", "angular", "color", "グラデーション", "線形", "円形"]
+					"keywords": [
+						"linear",
+						"radial",
+						"angular",
+						"color",
+						"gradient",
+						"effect",
+						"グラデーション",
+						"線形",
+						"円形",
+						"放射状",
+						"角度",
+						"グラデ",
+						"色の変化"
+					]
 				},
 				{
 					"title": "カスタムカラー",
 					"code": "// RGB値で色を作成\nlet customRed = Color(red: 1.0, green: 0.2, blue: 0.2)\n\n// 16進数から色を作成\nlet hexColor = Color(red: 0x3A / 255, green: 0x86 / 255, blue: 0xFF / 255)\n\n// 透明度を設定\nlet semiTransparent = Color.blue.opacity(0.5)\n\n// Assets.xcassets でカラーセットを定義した場合\n// let assetColor = Color(\"MyCustomColor\")",
-					"keywords": ["rgb", "hex", "assets", "color set", "カスタム", "自作", "16進数"]
+					"keywords": [
+						"rgb",
+						"hex",
+						"assets",
+						"color set",
+						"opacity",
+						"alpha",
+						"custom",
+						"カスタム",
+						"自作",
+						"16進数",
+						"透明度",
+						"アセット",
+						"カラーセット",
+						"オリジナル"
+					]
 				}
 			]
 		},
