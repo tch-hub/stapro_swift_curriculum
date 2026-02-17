@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { fade, scale } from 'svelte/transition';
+	import GameContainer from './shared/GameContainer.svelte';
+	import ScoreBox from './shared/ScoreBox.svelte';
+	import GameTile from './shared/GameTile.svelte';
+	import GameOverlay from './shared/GameOverlay.svelte';
 
 	const SIZE = 4;
 
@@ -10,7 +14,7 @@
 	let bestScore = $state(0);
 	let isFocused = $state(false);
 	let isInitialized = $state(false);
-	let gameContainer: HTMLDivElement;
+	let gameContainer = $state<HTMLDivElement | null>(null);
 
 	// Derived
 	// ライツアウトは通常「すべて消灯」を目指すが、実装によっては「すべて点灯」の場合もある。
@@ -112,105 +116,42 @@
 	}
 </script>
 
-<div
-	class="color-base-100 mockup-window w-full border border-base-300 p-4"
-	onclick={() => gameContainer?.focus()}
-	role="button"
-	tabindex="-1"
-	onkeydown={() => {}}
+<GameContainer
+	title="Lights Out"
+	subtitle="全てのライトを消そう"
+	bind:isFocused
+	bind:gameContainer
+	gridSize={SIZE}
+	onReset={() => reset()}
+	onKeyDown={handleKey}
 >
-	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-	<div
-		class="mx-auto max-w-sm ring-offset-2 transition-all outline-none"
-		tabindex="0"
-		role="application"
-		aria-label="Lights Out Game Board"
-		bind:this={gameContainer}
-		onkeydown={handleKey}
-		onfocus={() => (isFocused = true)}
-		onblur={() => (isFocused = false)}
-	>
-		<div class="mb-4 flex items-center justify-between">
-			<div>
-				<h2 class="text-3xl font-bold text-base-content">Lights Out</h2>
-				<p class="text-xs text-base-content/60">全てのライトを消そう</p>
-			</div>
-			<div class="flex gap-2 text-right">
-				{@render scoreBox('Moves', moves)}
-				{@render scoreBox('Best', bestScore === 0 ? '-' : bestScore)}
-			</div>
-		</div>
+	{#snippet scoreBoard()}
+		<ScoreBox label="Moves" value={moves} />
+		<ScoreBox label="Best" value={bestScore === 0 ? '-' : bestScore} />
+	{/snippet}
 
-		<div
-			class="relative aspect-square touch-none rounded-lg border border-base-content/10 bg-base-300/50 p-2 select-none"
-		>
-			{#if isGameWon}
-				<div
-					transition:fade={{ duration: 200 }}
-					class="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-lg bg-accent/90 text-accent-content backdrop-blur-sm"
-				>
-					<div class="mb-4 text-4xl font-bold drop-shadow-md">Cleared!</div>
-					<div class="mb-2 text-lg">Moves: {moves}</div>
-					<div class="flex gap-3">
-						{@render btn('Play Again', () => reset(), true)}
-					</div>
+	{#snippet overlay()}
+		<GameOverlay
+			visible={isGameWon}
+			title="Cleared!"
+			message={`Moves: ${moves}`}
+			primaryAction={{ label: 'Play Again', onclick: () => reset() }}
+		/>
+	{/snippet}
+
+	{#snippet gameBoard()}
+		{#each grid as row, r}
+			{#each row as isOn, c}
+				<div class="h-full w-full" in:scale={{ duration: 200, start: 0.9 }}>
+					<GameTile
+						active={isOn}
+						onclick={() => handleClick(r, c)}
+						class={isOn ? 'text-4xl text-warning-content' : ''}
+						icon={isOn ? 'lightbulb' : ''}
+						aria-label={`Toggle light at row ${r}, column ${c}, currently ${isOn ? 'on' : 'off'}`}
+					/>
 				</div>
-			{/if}
-
-			<div class="grid h-full gap-2" style="grid-template-columns: repeat({SIZE}, minmax(0, 1fr));">
-				{#each grid as row, r}
-					{#each row as isOn, c}
-						<button
-							class="relative h-full w-full rounded-md shadow-sm transition-all duration-300 active:scale-95
-                            {isOn
-								? 'border border-warning-content/20 bg-warning text-warning-content shadow-[0_0_15px_oklch(var(--wa)/0.6)]'
-								: 'border border-base-content/5 bg-base-300/50 text-base-content/20'}"
-							onclick={() => handleClick(r, c)}
-							aria-label={`Toggle light at row ${r}, column ${c}, currently ${isOn ? 'on' : 'off'}`}
-						>
-							<!-- Bulb icon or just color -->
-							<div class="absolute inset-0 flex items-center justify-center">
-								{#if isOn}
-									<span in:scale={{ duration: 200 }} class="text-2xl">💡</span>
-								{/if}
-							</div>
-						</button>
-					{/each}
-				{/each}
-			</div>
-		</div>
-
-		<div class="mt-4 flex items-center justify-between text-sm text-base-content/60">
-			<div>
-				{#if !isFocused}
-					<span class="animate-pulse font-bold text-primary">クリックして開始</span>
-				{/if}
-			</div>
-			<button class="transition-colors hover:text-primary hover:underline" onclick={() => reset()}>
-				リセット
-			</button>
-		</div>
-	</div>
-</div>
-
-{#snippet scoreBox(label, value)}
-	<div class="flex min-w-[70px] flex-col items-center justify-center rounded bg-base-200 p-2">
-		<div class="text-[10px] tracking-widest uppercase opacity-70">{label}</div>
-		<div class="text-lg font-bold">{value}</div>
-	</div>
-{/snippet}
-
-{#snippet btn(text, act, primary)}
-	<button
-		class="rounded-full px-6 py-2 font-bold shadow-sm transition hover:scale-105 active:scale-95 {primary
-			? 'bg-base-100 text-base-content hover:bg-base-200'
-			: 'hover:bg-neutral-focus bg-neutral text-neutral-content'}"
-		onclick={(e) => {
-			e.stopPropagation();
-			act();
-		}}
-	>
-		{text}
-	</button>
-{/snippet}
+			{/each}
+		{/each}
+	{/snippet}
+</GameContainer>

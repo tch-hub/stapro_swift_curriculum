@@ -8,7 +8,14 @@
 		active = false,
 		disabled = false,
 		isSolved = false, // If true, apply accent color
-		class: className = '' // Allow passing extra classes
+		class: className = '', // Allow passing extra classes
+		icon, // Material Symbols icon name
+
+		// Flip functionality
+		back, // Snippet for the back of the card (initial view)
+		isFlipped = false,
+
+		...rest // Allow passing arbitrary attributes like aria-label
 	}: {
 		children?: Snippet;
 		onclick?: () => void;
@@ -17,6 +24,12 @@
 		disabled?: boolean;
 		isSolved?: boolean;
 		class?: string;
+		icon?: string;
+
+		back?: Snippet;
+		isFlipped?: boolean;
+
+		[key: string]: any;
 	} = $props();
 
 	// Color mapping
@@ -33,13 +46,72 @@
 	let colorClass = $derived(
 		isSolved ? colorMap['accent'] : active ? colorMap['warning'] : colorMap[color]
 	);
+
+	let baseButtonClass = $derived(
+		'relative h-full w-full rounded-md transition-all disabled:pointer-events-none disabled:opacity-50 ' +
+			className
+	);
+
+	// Classes for static (non-flippable) mode
+	let staticClass = $derived(
+		`flex items-center justify-center border text-xl font-bold shadow-sm active:scale-95 ${colorClass}`
+	);
+
+	// Classes for flip wrapper
+	let flipWrapperClass =
+		'perspective-1000 outline-none focus-visible:ring-2 focus-visible:ring-primary';
 </script>
 
 <button
-	class="flex h-full w-full items-center justify-center rounded-md border text-xl font-bold shadow-sm transition-all active:scale-95 disabled:pointer-events-none disabled:opacity-50 {colorClass} {className}"
+	class="{baseButtonClass} {back ? flipWrapperClass : staticClass}"
 	{onclick}
 	tabindex="-1"
 	{disabled}
+	{...rest}
 >
-	{@render children?.()}
+	{#if back}
+		<div
+			class="transform-style-3d relative h-full w-full duration-500 {isFlipped
+				? 'rotate-y-180'
+				: ''}"
+		>
+			<!-- Back of card (Initial view) -->
+			<!-- When not flipped (0deg), this is visible. It's the "back" of the card conceptually (e.g. the pattern), but visually the front-facing side initially. -->
+			<div
+				class="absolute inset-0 flex items-center justify-center rounded-md border text-xl font-bold shadow-sm backface-hidden {colorClass}"
+			>
+				{@render back()}
+			</div>
+
+			<!-- Front of card (Revealed view) -->
+			<!-- When flipped (180deg), this becomes visible. It's the "content" of the card. -->
+			<div
+				class="absolute inset-0 flex rotate-y-180 transform items-center justify-center rounded-md border-2 border-primary bg-base-100 text-4xl shadow-md backface-hidden"
+			>
+				{@render children?.()}
+			</div>
+		</div>
+	{:else}
+		{#if icon}
+			<span class="material-symbols-outlined select-none" style="font-size: inherit;">
+				{icon}
+			</span>
+		{/if}
+		{@render children?.()}
+	{/if}
 </button>
+
+<style>
+	.perspective-1000 {
+		perspective: 1000px;
+	}
+	.transform-style-3d {
+		transform-style: preserve-3d;
+	}
+	.backface-hidden {
+		backface-visibility: hidden;
+	}
+	.rotate-y-180 {
+		transform: rotateY(180deg);
+	}
+</style>
