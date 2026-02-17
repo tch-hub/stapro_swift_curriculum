@@ -19,7 +19,23 @@
 	}: {
 		children?: Snippet;
 		onclick?: () => void;
-		color?: 'default' | 'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'error';
+		color?:
+			| 'default'
+			| 'primary'
+			| 'secondary'
+			| 'accent'
+			| 'success'
+			| 'warning'
+			| 'error'
+			| 'gradient1'
+			| 'gradient2'
+			| 'gradient3'
+			| 'gradient4'
+			| 'gradient5'
+			| 'gradient6'
+			| 'gradient7'
+			| 'gradient8'
+			| 'gradient9';
 		active?: boolean; // If true, apply 'active' styling (e.g. pressed state or toggle)
 		disabled?: boolean;
 		isSolved?: boolean;
@@ -35,6 +51,15 @@
 	// Color mapping
 	const colorMap = {
 		default: 'bg-base-200 text-base-content hover:bg-base-300 border-base-content/10',
+		gradient1: 'bg-primary/10 text-base-content hover:bg-primary/20 border-primary/10',
+		gradient2: 'bg-primary/20 text-base-content hover:bg-primary/30 border-primary/20',
+		gradient3: 'bg-primary/30 text-base-content hover:bg-primary/40 border-primary/30',
+		gradient4: 'bg-primary/40 text-base-content hover:bg-primary/50 border-primary/40',
+		gradient5: 'bg-primary/50 text-primary-content hover:bg-primary/60 border-primary/50',
+		gradient6: 'bg-primary/60 text-primary-content hover:bg-primary/70 border-primary/60',
+		gradient7: 'bg-primary/70 text-primary-content hover:bg-primary/80 border-primary/70',
+		gradient8: 'bg-primary/80 text-primary-content hover:bg-primary/90 border-primary/80',
+		gradient9: 'bg-primary/90 text-primary-content hover:bg-primary border-primary/90',
 		primary: 'bg-primary text-primary-content hover:bg-primary/90 border-primary',
 		secondary: 'bg-secondary text-secondary-content hover:bg-secondary/90 border-secondary',
 		accent: 'bg-accent text-accent-content hover:bg-accent/90 border-accent',
@@ -60,6 +85,12 @@
 	// Classes for flip wrapper
 	let flipWrapperClass =
 		'perspective-1000 outline-none focus-visible:ring-2 focus-visible:ring-primary';
+
+	let frontFaceClass = $derived(
+		isSolved
+			? `absolute inset-0 flex rotate-y-180 transform items-center justify-center rounded-md border-2 ${colorClass} text-4xl shadow-md backface-hidden`
+			: 'absolute inset-0 flex rotate-y-180 transform items-center justify-center rounded-md border-2 border-primary bg-base-100 text-4xl shadow-md backface-hidden'
+	);
 </script>
 
 <button
@@ -71,7 +102,7 @@
 >
 	{#if back}
 		<div
-			class="transform-style-3d relative h-full w-full duration-500 {isFlipped
+			class="transform-style-3d relative h-full w-full transition-transform duration-500 {isFlipped
 				? 'rotate-y-180'
 				: ''}"
 		>
@@ -85,9 +116,7 @@
 
 			<!-- Front of card (Revealed view) -->
 			<!-- When flipped (180deg), this becomes visible. It's the "content" of the card. -->
-			<div
-				class="absolute inset-0 flex rotate-y-180 transform items-center justify-center rounded-md border-2 border-primary bg-base-100 text-4xl shadow-md backface-hidden"
-			>
+			<div class={frontFaceClass}>
 				{@render children?.()}
 			</div>
 		</div>

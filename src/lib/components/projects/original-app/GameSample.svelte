@@ -49,7 +49,7 @@
 	{/snippet}
 
 	{#snippet gameBoard(_, i)}
-		<GameTile onclick={() => handleClick(i)}>
+		<GameTile onclick={() => handleClick(i)} color="primary">
 			{i + 1}
 		</GameTile>
 	{/snippet}

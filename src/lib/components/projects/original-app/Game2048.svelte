@@ -4,6 +4,7 @@
 	import GameContainer from './shared/GameContainer.svelte';
 	import ScoreBox from './shared/ScoreBox.svelte';
 	import GameOverlay from './shared/GameOverlay.svelte';
+	import GameTile from './shared/GameTile.svelte';
 
 	const SIZE = 4;
 
@@ -151,25 +152,50 @@
 		}
 	}
 
-	// Helpers
-	const getTileColor = (v: number) => {
-		if (v > 2048)
-			return 'bg-neutral text-neutral-content text-xl shadow-lg border border-neutral-content/20';
-		return (
-			{
-				2: 'bg-base-200 text-base-content font-bold border border-base-300',
-				4: 'bg-base-300 text-base-content font-bold border border-base-content/10',
-				8: 'bg-warning/20 text-warning-content font-bold border border-warning/30',
-				16: 'bg-warning/40 text-warning-content font-bold border border-warning/50',
-				32: 'bg-warning/60 text-warning-content font-bold border border-warning/70',
-				64: 'bg-warning text-warning-content font-bold',
-				128: 'bg-error/60 text-error-content text-3xl font-bold',
-				256: 'bg-error/80 text-error-content text-3xl font-bold',
-				512: 'bg-error text-error-content text-3xl font-bold',
-				1024: 'bg-secondary text-secondary-content text-2xl font-bold',
-				2048: 'bg-accent text-accent-content text-2xl font-bold shadow-[0_0_15px_oklch(var(--a)/0.5)]'
-			}[v] || 'bg-base-200 text-base-content'
-		);
+	// タイルの色を決定するマップ (GameTile.svelteの色名を参照)
+	const colorMap: Record<
+		number,
+		| 'default'
+		| 'gradient1'
+		| 'gradient2'
+		| 'gradient3'
+		| 'gradient4'
+		| 'gradient5'
+		| 'gradient6'
+		| 'gradient7'
+		| 'gradient8'
+		| 'gradient9'
+		| 'primary'
+	> = {
+		2: 'default',
+		4: 'gradient1',
+		8: 'gradient2',
+		16: 'gradient3',
+		32: 'gradient4',
+		64: 'gradient5',
+		128: 'gradient6',
+		256: 'gradient7',
+		512: 'gradient8',
+		1024: 'gradient9',
+		2048: 'primary'
+	};
+
+	// ヘルパー関数: 値に対応する色を返す
+	const getTileColor = (
+		v: number
+	):
+		| 'default'
+		| 'gradient1'
+		| 'gradient2'
+		| 'gradient3'
+		| 'gradient4'
+		| 'gradient5'
+		| 'gradient6'
+		| 'gradient7'
+		| 'gradient8'
+		| 'gradient9'
+		| 'primary' => {
+		return colorMap[v] || 'default';
 	};
 </script>
 
@@ -209,20 +235,19 @@
 	{#snippet gameBoard(cell, i)}
 		{@const r = Math.floor(i / SIZE)}
 		{@const c = i % SIZE}
-		<div class="relative h-full w-full rounded-md bg-base-200/50">
+		<GameTile
+			color={cell > 0 ? getTileColor(cell) : 'default'}
+			disabled={cell === 0}
+			aria-label={`2048 tile at row ${r}, column ${c}, value ${cell || 'empty'}`}
+		>
 			{#if cell > 0}
 				{#key `${r}-${c}-${cell}`}
-					<div
-						class="absolute inset-0 flex items-center justify-center rounded-md font-bold transition-all duration-100 {getTileColor(
-							cell
-						)}"
-						in:scale={{ duration: 150, start: 0.5 }}
-					>
+					<div in:scale={{ duration: 200, start: 0.5 }} style="display: contents;">
 						{cell}
 					</div>
 				{/key}
 			{/if}
-		</div>
+		</GameTile>
 	{/snippet}
 
 	{#snippet controls()}

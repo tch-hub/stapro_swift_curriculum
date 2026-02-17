@@ -115,14 +115,14 @@
 						bestScore = moves;
 					}
 				}
-			}, 500);
+			}, 300);
 		} else {
 			setTimeout(() => {
 				cards[firstIndex].isFlipped = false;
 				cards[secondIndex].isFlipped = false;
 				flippedIndices = [];
 				isProcessing = false;
-			}, 1000);
+			}, 500);
 		}
 	}
 
@@ -172,23 +172,17 @@
 			onclick={() => handleCardClick(i)}
 			disabled={isProcessing}
 			isFlipped={card.isFlipped || card.isMatched}
-			color="secondary"
+			isSolved={card.isMatched}
 			aria-label={card.isMatched || card.isFlipped
 				? `Card ${i + 1}, matched or flipped, value ${card.value}`
 				: `Card ${i + 1}, hidden`}
 		>
 			{#snippet back()}
-				<div class="text-2xl font-bold">?</div>
+				<div></div>
 			{/snippet}
-
-			{#if card.isFlipped || card.isMatched}
-				<span
-					in:scale={{ duration: 200, start: 0.5 }}
-					class="material-symbols-outlined text-4xl select-none"
-				>
-					{getCardContent(card.value)}
-				</span>
-			{/if}
+			<span class="material-symbols-outlined text-4xl select-none">
+				{getCardContent(card.value)}
+			</span>
 		</GameTile>
 	{/snippet}
 </GameContainer>
