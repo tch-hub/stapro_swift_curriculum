@@ -1,6 +1,8 @@
 <script>
 	import OriginalAppDemo from '$lib/components/OriginalAppDemo.svelte';
 	import ProjectSteps from './ProjectSteps.svelte';
+	import Game2048 from './original-app/Game2048.svelte';
+	import Game15Puzzle from './original-app/Game15Puzzle.svelte';
 
 	const originalAppSteps = [
 		{
@@ -145,6 +147,11 @@
 					</div>
 				</div>
 			</div>
+			<!-- 2048ゲーム -->
+			<Game2048 />
+
+			<!-- 15パズル -->
+			<Game15Puzzle />
 		</div>
 	</section>
 

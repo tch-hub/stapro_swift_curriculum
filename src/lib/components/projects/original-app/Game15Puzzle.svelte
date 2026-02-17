@@ -1,0 +1,276 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { flip } from 'svelte/animate';
+	import { fade, scale } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
+
+	const SIZE = 4;
+
+	// State (Svelte 5 Runes)
+	// 0 represents the empty tile
+	let tiles = $state(Array.from({ length: SIZE * SIZE }, (_, i) => (i + 1) % (SIZE * SIZE)));
+	let moves = $state(0);
+	let bestScore = $state(0); // Lower is better for 15 puzzle
+	let isFocused = $state(false);
+	let gameContainer: HTMLDivElement;
+	let touchStart = { x: 0, y: 0 };
+	let isInitialized = $state(false);
+
+	// Derived State
+	const isSolved = $derived(
+		tiles.every((tile, index) => tile === (index + 1) % (SIZE * SIZE)) && tiles[15] === 0
+	);
+
+	// Persistence (自動保存)
+	$effect(() => {
+		if (isInitialized) {
+			localStorage.setItem('15-puzzle-state', JSON.stringify({ tiles, moves, bestScore }));
+		}
+	});
+
+	onMount(() => {
+		try {
+			const saved = JSON.parse(localStorage.getItem('15-puzzle-state') || 'null');
+			if (saved?.tiles && saved.tiles.length === 16) {
+				tiles = saved.tiles;
+				moves = saved.moves;
+				bestScore = saved.bestScore || 0;
+			} else {
+				reset();
+			}
+		} catch {
+			reset();
+		}
+		isInitialized = true;
+		gameContainer?.focus();
+	});
+
+	// Game Logic
+	function reset(fullReset = false) {
+		if (fullReset) bestScore = 0;
+		moves = 0;
+		// Initialize solved state
+		tiles = Array.from({ length: SIZE * SIZE }, (_, i) => (i + 1) % (SIZE * SIZE));
+		shuffle();
+	}
+
+	function shuffle() {
+		// Shuffle by performing random valid moves to ensure solvability
+		let previousIndex = -1;
+		let emptyIndex = tiles.indexOf(0);
+		let shuffleMoves = 100;
+
+		while (shuffleMoves > 0) {
+			const neighbors = getNeighbors(emptyIndex);
+			// Prevent undoing the immediate last move to make shuffling more effective
+			const validNeighbors = neighbors.filter((n) => n !== previousIndex);
+			const randomNeighbor = validNeighbors[Math.floor(Math.random() * validNeighbors.length)];
+
+			if (randomNeighbor !== undefined) {
+				// Swap without animation or checking win condition
+				[tiles[emptyIndex], tiles[randomNeighbor]] = [tiles[randomNeighbor], tiles[emptyIndex]];
+				previousIndex = emptyIndex;
+				emptyIndex = randomNeighbor;
+				shuffleMoves--;
+			}
+		}
+		moves = 0; // Reset moves count after shuffle
+	}
+
+	function getNeighbors(index: number): number[] {
+		const neighbors = [];
+		const row = Math.floor(index / SIZE);
+		const col = index % SIZE;
+
+		if (row > 0) neighbors.push(index - SIZE); // Up
+		if (row < SIZE - 1) neighbors.push(index + SIZE); // Down
+		if (col > 0) neighbors.push(index - 1); // Left
+		if (col < SIZE - 1) neighbors.push(index + 1); // Right
+
+		return neighbors;
+	}
+
+	function move(tileIndex: number) {
+		if (isSolved && moves > 0) return; // Don't move if already won (unless it was just loaded as valid)
+
+		const emptyIndex = tiles.indexOf(0);
+		const neighbors = getNeighbors(emptyIndex);
+
+		if (neighbors.includes(tileIndex)) {
+			// Swap
+			const newTiles = [...tiles];
+			[newTiles[emptyIndex], newTiles[tileIndex]] = [newTiles[tileIndex], newTiles[emptyIndex]];
+			tiles = newTiles;
+			moves++;
+
+			// Check win
+			if (isSolved) {
+				if (bestScore === 0 || moves < bestScore) {
+					bestScore = moves;
+				}
+			}
+		}
+	}
+
+	function handleKey(e: KeyboardEvent) {
+		if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+			e.preventDefault();
+			const emptyIndex = tiles.indexOf(0);
+			const row = Math.floor(emptyIndex / SIZE);
+			const col = emptyIndex % SIZE;
+			let targetIndex = -1;
+
+			// Logic matches the direction the user wants a TILE to move
+			// e.g. ArrowUp means user wants a tile BELOW the empty space to move UP (into the empty space)
+			// So we look for the neighbor 'Down' from the empty space.
+			if (e.key === 'ArrowUp' && row < SIZE - 1) targetIndex = emptyIndex + SIZE;
+			if (e.key === 'ArrowDown' && row > 0) targetIndex = emptyIndex - SIZE;
+			if (e.key === 'ArrowLeft' && col < SIZE - 1) targetIndex = emptyIndex + 1;
+			if (e.key === 'ArrowRight' && col > 0) targetIndex = emptyIndex - 1;
+
+			if (targetIndex !== -1) {
+				move(targetIndex);
+			}
+		}
+	}
+
+	function handleTouch(e: TouchEvent, type: 'start' | 'end') {
+		if (type === 'start') {
+			touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+		} else if (touchStart.x || touchStart.y) {
+			const dx = e.changedTouches[0].clientX - touchStart.x;
+			const dy = e.changedTouches[0].clientY - touchStart.y;
+			if (Math.abs(dx) > 30 || Math.abs(dy) > 30) {
+				const emptyIndex = tiles.indexOf(0);
+				const row = Math.floor(emptyIndex / SIZE);
+				const col = emptyIndex % SIZE;
+				let targetIndex = -1;
+
+				if (Math.abs(dx) > Math.abs(dy)) {
+					// Horizontal swipe
+					if (dx > 0 && col > 0)
+						targetIndex = emptyIndex - 1; // Swipe Right -> move Left tile into empty
+					else if (dx < 0 && col < SIZE - 1) targetIndex = emptyIndex + 1; // Swipe Left -> move Right tile into empty
+				} else {
+					// Vertical swipe
+					if (dy > 0 && row > 0)
+						targetIndex = emptyIndex - SIZE; // Swipe Down -> move Up tile into empty
+					else if (dy < 0 && row < SIZE - 1) targetIndex = emptyIndex + SIZE; // Swipe Up -> move Down tile into empty
+				}
+
+				if (targetIndex !== -1) {
+					move(targetIndex);
+				}
+			}
+		}
+	}
+</script>
+
+<div
+	class="color-base-100 mockup-window w-full border border-base-300 p-4"
+	onclick={() => gameContainer?.focus()}
+	role="button"
+	tabindex="-1"
+	onkeydown={() => {}}
+>
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+	<div
+		class="mx-auto max-w-sm ring-offset-2 transition-all outline-none"
+		tabindex="0"
+		role="application"
+		aria-label="15 Puzzle Game Board"
+		bind:this={gameContainer}
+		onkeydown={handleKey}
+		onfocus={() => (isFocused = true)}
+		onblur={() => (isFocused = false)}
+	>
+		<div class="mb-4 flex items-center justify-between">
+			<div>
+				<h2 class="text-3xl font-bold text-base-content">15 Puzzle</h2>
+				<p class="text-xs text-base-content/60">数字を順番に並べよう</p>
+			</div>
+			<div class="flex gap-2 text-right">
+				{@render scoreBox('Moves', moves)}
+				{@render scoreBox('Best', bestScore === 0 ? '-' : bestScore)}
+			</div>
+		</div>
+
+		<div
+			class="relative aspect-square touch-none rounded-lg border border-base-content/10 bg-base-300/50 p-2 select-none"
+			ontouchstart={(e) => handleTouch(e, 'start')}
+			ontouchend={(e) => handleTouch(e, 'end')}
+		>
+			{#if isSolved && moves > 0}
+				<div
+					transition:fade={{ duration: 200 }}
+					class="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-lg bg-accent/90 text-accent-content backdrop-blur-sm"
+				>
+					<div class="mb-4 text-4xl font-bold drop-shadow-md">Solved!</div>
+					<div class="mb-2 text-lg">Moves: {moves}</div>
+					<div class="flex gap-3">
+						{@render btn('Play Again', () => reset(), true)}
+					</div>
+				</div>
+			{/if}
+
+			<div class="grid h-full grid-cols-4 grid-rows-4 gap-2">
+				{#each tiles as tile, i (tile)}
+					<!-- Using a button here for better semantics and interactivity on individual tiles -->
+					<div animate:flip={{ duration: 200, easing: cubicOut }} class="h-full w-full">
+						{#if tile !== 0}
+							<button
+								class="flex h-full w-full items-center justify-center rounded-md text-2xl
+                                font-bold shadow-sm transition-colors active:scale-95
+                                {isSolved
+									? 'bg-accent text-accent-content'
+									: 'border border-base-content/10 bg-base-200 text-base-content hover:bg-base-300'}"
+								onclick={() => move(tiles.indexOf(tile))}
+								tabindex="-1"
+							>
+								{tile}
+							</button>
+						{/if}
+						<!-- Empty slot renders nothing visible but takes up space in grid -->
+					</div>
+				{/each}
+			</div>
+		</div>
+
+		<div class="mt-4 flex items-center justify-between text-sm text-base-content/60">
+			<div>
+				{#if !isFocused}
+					<span class="animate-pulse font-bold text-primary">クリックして開始</span>
+				{:else}
+					<span class="mr-2 inline-block rounded bg-base-300 px-2 py-1 text-xs"
+						>矢印キー or スワイプ</span
+					>
+				{/if}
+			</div>
+			<button class="transition-colors hover:text-primary hover:underline" onclick={() => reset()}>
+				リセット
+			</button>
+		</div>
+	</div>
+</div>
+
+{#snippet scoreBox(label, value)}
+	<div class="flex min-w-[70px] flex-col items-center justify-center rounded bg-base-200 p-2">
+		<div class="text-[10px] tracking-widest uppercase opacity-70">{label}</div>
+		<div class="text-lg font-bold">{value}</div>
+	</div>
+{/snippet}
+
+{#snippet btn(text, act, primary)}
+	<button
+		class="rounded-full px-6 py-2 font-bold shadow-sm transition hover:scale-105 active:scale-95 {primary
+			? 'bg-base-100 text-base-content hover:bg-base-200'
+			: 'hover:bg-neutral-focus bg-neutral text-neutral-content'}"
+		onclick={(e) => {
+			e.stopPropagation();
+			act();
+		}}
+	>
+		{text}
+	</button>
+{/snippet}
