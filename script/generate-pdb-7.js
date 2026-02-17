@@ -3,7 +3,7 @@
 // 実行:
 // node --max-old-space-size=4096 generate-pdb.js
 
-const fs = require("fs");
+import fs from "fs";
 
 const SIZE = 4;
 const N = 16;
