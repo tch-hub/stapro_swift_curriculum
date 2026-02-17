@@ -3,6 +3,9 @@
 	import ProjectSteps from './ProjectSteps.svelte';
 	import Game2048 from './original-app/Game2048.svelte';
 	import Game15Puzzle from './original-app/Game15Puzzle.svelte';
+	import GameConcentration from './original-app/GameConcentration.svelte';
+	import GameLightsOut from './original-app/GameLightsOut.svelte';
+	import GameSample from './original-app/GameSample.svelte';
 
 	const originalAppSteps = [
 		{
@@ -152,6 +155,15 @@
 
 			<!-- 15パズル -->
 			<Game15Puzzle />
+
+			<!-- 神経衰弱 -->
+			<GameConcentration />
+
+			<!-- ライツアウト -->
+			<GameLightsOut />
+
+			<!-- サンプルゲーム -->
+			<GameSample />
 		</div>
 	</section>
 
