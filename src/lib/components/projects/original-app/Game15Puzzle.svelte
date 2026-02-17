@@ -1,21 +1,27 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { cubicOut } from 'svelte/easing';
+	import { SvelteMap } from 'svelte/reactivity';
 	import GameContainer from './shared/GameContainer.svelte';
 	import ScoreBox from './shared/ScoreBox.svelte';
 	import GameOverlay from './shared/GameOverlay.svelte';
 
 	const SIZE = 4;
+	const CELL_COUNT = SIZE * SIZE;
+	const GOAL_TILES = Array.from({ length: CELL_COUNT }, (_, i) => (i + 1) % CELL_COUNT);
+	const GOAL_KEY = GOAL_TILES.join(',');
 
 	let pdb1: Uint8Array;
 	let pdb2: Uint8Array;
 	let pdb3: Uint8Array;
 	let pdbReady = $state(false);
+	let pdbLoadFailed = $state(false);
 
 	// State (Svelte 5 Runes)
 	// 0 represents the empty tile
-	let tiles = $state(Array.from({ length: SIZE * SIZE }, (_, i) => (i + 1) % (SIZE * SIZE)));
+	let tiles = $state([...GOAL_TILES]);
 	let moves = $state(0);
 	let bestScore = $state(0); // Lower is better for 15 puzzle
 	let isFocused = $state(false);
@@ -24,9 +30,21 @@
 	let isInitialized = $state(false);
 
 	// Derived State
-	const isSolved = $derived(
-		tiles.every((tile, index) => tile === (index + 1) % (SIZE * SIZE)) && tiles[15] === 0
-	);
+	const isSolved = $derived(isGoalState(tiles));
+
+	function isGoalState(state: number[]) {
+		return getStateKey(state) === GOAL_KEY;
+	}
+
+	function getStateKey(state: number[]) {
+		return state.join(',');
+	}
+
+	function swapState(state: number[], indexA: number, indexB: number) {
+		const next = [...state];
+		[next[indexA], next[indexB]] = [next[indexB], next[indexA]];
+		return next;
+	}
 
 	// Heuristic: Manhattan Distance + Linear Conflict (Optimized)
 	function calculateHeuristic(currentTiles: number[]) {
@@ -80,11 +98,6 @@
 	const fact = [1];
 	for (let i = 1; i <= 16; i++) fact[i] = fact[i - 1] * i;
 
-	function perm(n: number, k: number) {
-		if (k < 0 || k > n) return 0;
-		return fact[n] / fact[n - k];
-	}
-
 	// Optimization: bitCount for 32-bit integer
 	function bitCount(n: number) {
 		n = n - ((n >>> 1) & 0x55555555);
@@ -134,49 +147,176 @@
 		return pdb1[r1] + pdb2[r2] + pdb3[r3];
 	}
 
-	const estimatedMoves = $derived(heuristicPDB(tiles));
-
 	let exactMoves = $state<number | null>(null);
 	let isComputing = $state(false);
 
 	let solveVersion = 0;
+	let solveDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+	const EXACT_SOLVE_DEBOUNCE_MS = 150;
+	const exactCache = new SvelteMap<string, number>();
+	const prefetchingKeys = new SvelteMap<string, boolean>();
+	let prefetchVersion = 0;
+	let prefetchTimer: ReturnType<typeof setTimeout> | null = null;
+	const PREFETCH_DELAY_MS = 60;
+	const PREFETCH_MAX_STATES = 12;
 
 	$effect(() => {
 		const currentTiles = [...tiles];
-		exactMoves = null;
+		const cacheKey = getStateKey(currentTiles);
 
-		if (currentTiles.every((t, i) => (i === 15 ? t === 0 : t === i + 1))) {
+		if (solveDebounceTimer) {
+			clearTimeout(solveDebounceTimer);
+			solveDebounceTimer = null;
+		}
+
+		if (!pdbReady && !pdbLoadFailed) {
+			isComputing = false;
+			return;
+		}
+
+		if (exactCache.has(cacheKey)) {
+			exactMoves = exactCache.get(cacheKey) ?? null;
+			isComputing = false;
+			scheduleNextStatePrefetch(currentTiles);
+			return;
+		}
+
+		// 既にソルブ済みなら即座に反映して計算中フラグを解除する
+		if (isGoalState(currentTiles)) {
 			exactMoves = 0;
+			exactCache.set(cacheKey, 0);
+			isComputing = false;
 			return;
 		}
 
 		const version = ++solveVersion;
-		isComputing = true;
+		// キャッシュ未ヒット時は前回値を維持し、初回だけローディング表示する
+		isComputing = exactMoves === null;
 
-		(async () => {
-			const result = await solve15Async(currentTiles);
+		solveDebounceTimer = setTimeout(() => {
+			if (version !== solveVersion) return;
 
-			if (version === solveVersion) {
-				exactMoves = result;
-				isComputing = false;
-			}
-		})();
+			isComputing = true;
+
+			(async () => {
+				try {
+					if (prefetchingKeys.has(cacheKey)) {
+						return;
+					}
+					const result = await solve15Async(currentTiles, () => version === solveVersion);
+					if (version === solveVersion && result !== Infinity) {
+						exactCache.set(cacheKey, result);
+						exactMoves = result;
+						scheduleNextStatePrefetch(currentTiles);
+					}
+				} catch (err) {
+					// エラー時はコンソールに出力して計算中フラグを解除する
+					console.error('solve15Async failed', err);
+				} finally {
+					if (version === solveVersion) {
+						isComputing = false;
+					}
+				}
+			})();
+		}, EXACT_SOLVE_DEBOUNCE_MS);
 	});
 
-	// Simple IDA* implementation
-	async function solve15Async(startTiles: number[]): Promise<number> {
-		const SIZE = 4;
+	const NEIGHBORS_BY_INDEX = Array.from({ length: CELL_COUNT }, (_, index) => {
+		const neighbors: number[] = [];
+		const row = Math.floor(index / SIZE);
+		const col = index % SIZE;
+		if (row > 0) neighbors.push(index - SIZE);
+		if (row < SIZE - 1) neighbors.push(index + SIZE);
+		if (col > 0) neighbors.push(index - 1);
+		if (col < SIZE - 1) neighbors.push(index + 1);
+		return neighbors;
+	});
+
+	function getNeighborStates(state: number[]): number[][] {
+		const emptyIndex = state.indexOf(0);
+		const neighbors = getNeighbors(emptyIndex);
+		return neighbors.map((neighborIndex) => swapState(state, emptyIndex, neighborIndex));
+	}
+
+	function getPrefetchTargetsTwoPly(sourceTiles: number[]) {
+		const sourceKey = getStateKey(sourceTiles);
+		const level1 = getNeighborStates(sourceTiles);
+		const results: number[][] = [];
+		const seen: Record<string, true> = {};
+
+		const addState = (state: number[]) => {
+			const key = getStateKey(state);
+			if (key === sourceKey) return;
+			if (seen[key]) return;
+			seen[key] = true;
+			results.push(state);
+		};
+
+		for (const state of level1) addState(state);
+		for (const state of level1) {
+			for (const state2 of getNeighborStates(state)) {
+				addState(state2);
+				if (results.length >= PREFETCH_MAX_STATES) {
+					return results;
+				}
+			}
+		}
+
+		return results;
+	}
+
+	function scheduleNextStatePrefetch(sourceTiles: number[]) {
+		if (!pdbReady && !pdbLoadFailed) return;
+
+		if (prefetchTimer) {
+			clearTimeout(prefetchTimer);
+			prefetchTimer = null;
+		}
+
+		const source = [...sourceTiles];
+		const version = ++prefetchVersion;
+
+		prefetchTimer = setTimeout(() => {
+			void prefetchNextStates(source, version);
+		}, PREFETCH_DELAY_MS);
+	}
+
+	async function prefetchNextStates(sourceTiles: number[], version: number) {
+		const nextStates = getPrefetchTargetsTwoPly(sourceTiles);
+
+		for (const nextState of nextStates) {
+			if (version !== prefetchVersion) return;
+
+			const key = getStateKey(nextState);
+			if (exactCache.has(key)) continue;
+			if (prefetchingKeys.has(key)) continue;
+
+			prefetchingKeys.set(key, true);
+
+			try {
+				const result = await solve15Async(nextState, () => version === prefetchVersion);
+				if (version !== prefetchVersion) return;
+				if (result === Infinity) return;
+
+				exactCache.set(key, result);
+			} finally {
+				prefetchingKeys.delete(key);
+			}
+			await new Promise(requestAnimationFrame);
+		}
+	}
+
+	async function solve15Async(startTiles: number[], isCurrent: () => boolean): Promise<number> {
 		const tiles = [...startTiles];
 		let blank = tiles.indexOf(0);
-
-		const opposite = [1, 0, 3, 2]; // U,D,L,R
-		const dirs = [-4, 4, -1, 1];
 
 		let bound = heuristicPDB(tiles);
 		let nodeCounter = 0;
 		const YIELD_INTERVAL = 1000;
 
-		async function search(g: number, h: number, prevMove: number): Promise<number> {
+		async function search(g: number, h: number, previousBlank: number): Promise<number> {
+			if (!isCurrent()) return Infinity;
+
 			const f = g + h;
 			if (f > bound) return f;
 			if (h === 0) return -1;
@@ -188,18 +328,8 @@
 				await new Promise(requestAnimationFrame);
 			}
 
-			const row = (blank / 4) | 0;
-			const col = blank % 4;
-
-			for (let move = 0; move < 4; move++) {
-				if (prevMove !== -1 && move === opposite[prevMove]) continue;
-
-				if (move === 0 && row === 0) continue;
-				if (move === 1 && row === 3) continue;
-				if (move === 2 && col === 0) continue;
-				if (move === 3 && col === 3) continue;
-
-				const next = blank + dirs[move];
+			for (const next of getNeighbors(blank)) {
+				if (next === previousBlank) continue;
 				const tile = tiles[next];
 
 				// swap
@@ -211,7 +341,7 @@
 				const oldBlank = blank;
 				blank = next;
 
-				const tRes = await search(g + 1, newH, move);
+				const tRes = await search(g + 1, newH, oldBlank);
 
 				blank = oldBlank;
 
@@ -219,6 +349,7 @@
 				tiles[next] = tile;
 				tiles[blank] = 0;
 
+				if (tRes === Infinity) return Infinity;
 				if (tRes === -1) return -1;
 				if (tRes < min) min = tRes;
 			}
@@ -227,9 +358,12 @@
 		}
 
 		while (true) {
+			if (!isCurrent()) return Infinity;
+
 			nodeCounter = 0;
 			const t = await search(0, heuristicPDB(tiles), -1);
 			if (t === -1) return bound;
+			if (t === Infinity) return Infinity;
 			bound = t;
 		}
 	}
@@ -259,10 +393,14 @@
 
 		try {
 			const [r1, r2, r3] = await Promise.all([
-				fetch('/pdb6_1.bin'),
-				fetch('/pdb6_2.bin'),
-				fetch('/pdb6_3.bin')
+				fetch(`${base}/pdb6_1.bin`),
+				fetch(`${base}/pdb6_2.bin`),
+				fetch(`${base}/pdb6_3.bin`)
 			]);
+
+			if (!r1.ok || !r2.ok || !r3.ok) {
+				throw new Error('Failed to fetch one or more PDB files');
+			}
 
 			pdb1 = new Uint8Array(await r1.arrayBuffer());
 			pdb2 = new Uint8Array(await r2.arrayBuffer());
@@ -271,6 +409,7 @@
 			pdbReady = true;
 			console.log('PDB loaded');
 		} catch (e) {
+			pdbLoadFailed = true;
 			console.error('PDB load failed', e);
 		}
 	});
@@ -279,8 +418,22 @@
 	function reset(fullReset = false) {
 		if (fullReset) bestScore = 0;
 		moves = 0;
+		solveVersion++;
+		if (solveDebounceTimer) {
+			clearTimeout(solveDebounceTimer);
+			solveDebounceTimer = null;
+		}
+		prefetchVersion++;
+		if (prefetchTimer) {
+			clearTimeout(prefetchTimer);
+			prefetchTimer = null;
+		}
+		prefetchingKeys.clear();
+		exactCache.clear();
+		exactMoves = null;
+		isComputing = false;
 		// Initialize solved state
-		tiles = Array.from({ length: SIZE * SIZE }, (_, i) => (i + 1) % (SIZE * SIZE));
+		tiles = [...GOAL_TILES];
 		shuffle();
 	}
 
@@ -308,16 +461,7 @@
 	}
 
 	function getNeighbors(index: number): number[] {
-		const neighbors = [];
-		const row = Math.floor(index / SIZE);
-		const col = index % SIZE;
-
-		if (row > 0) neighbors.push(index - SIZE); // Up
-		if (row < SIZE - 1) neighbors.push(index + SIZE); // Down
-		if (col > 0) neighbors.push(index - 1); // Left
-		if (col < SIZE - 1) neighbors.push(index + 1); // Right
-
-		return neighbors;
+		return NEIGHBORS_BY_INDEX[index];
 	}
 
 	function move(tileIndex: number) {
@@ -402,16 +546,14 @@
 	bind:isFocused
 	bind:gameContainer
 	gridSize={SIZE}
+	items={tiles}
 	onReset={() => reset()}
 	onKeyDown={handleKey}
 	ontouchstart={(e) => handleTouch(e, 'start')}
 	ontouchend={(e) => handleTouch(e, 'end')}
 >
 	{#snippet scoreBoard()}
-		<ScoreBox
-			label="残り"
-			value={exactMoves !== null ? exactMoves : isComputing ? '...' : estimatedMoves}
-		/>
+		<ScoreBox label="残り" value={exactMoves ?? '-'} loading={isComputing && exactMoves === null} />
 		<ScoreBox label="Moves" value={moves} />
 		<ScoreBox label="Best" value={bestScore === 0 ? '-' : bestScore} />
 	{/snippet}
@@ -425,28 +567,24 @@
 		/>
 	{/snippet}
 
-	{#snippet gameBoard()}
-		{#each tiles as tile, i (tile)}
-			<!-- Using a button here for better semantics and interactivity on individual tiles -->
-			<div animate:flip={{ duration: 200, easing: cubicOut }} class="h-full w-full">
-				{#if tile !== 0}
-					<button
-						class="flex h-full w-full items-center justify-center rounded-md text-2xl
-						font-bold shadow-sm transition-colors active:scale-95
-						{isSolved
-							? 'bg-accent text-accent-content'
-							: tile === i + 1
-								? 'bg-success text-success-content'
-								: 'border border-base-content/10 bg-base-200 text-base-content hover:bg-base-300'}"
-						onclick={() => move(tiles.indexOf(tile))}
-						tabindex="-1"
-					>
-						{tile}
-					</button>
-				{/if}
-				<!-- Empty slot renders nothing visible but takes up space in grid -->
-			</div>
-		{/each}
+	{#snippet gameBoard(tile, i)}
+		<div class="h-full w-full">
+			{#if tile !== 0}
+				<button
+					class="flex h-full w-full items-center justify-center rounded-md text-2xl
+					font-bold shadow-sm transition-colors active:scale-95
+					{isSolved
+						? 'bg-accent text-accent-content'
+						: tile === i + 1
+							? 'bg-success text-success-content'
+							: 'border border-base-content/10 bg-base-200 text-base-content hover:bg-base-300'}"
+					onclick={() => move(tiles.indexOf(tile))}
+					tabindex="-1"
+				>
+					{tile}
+				</button>
+			{/if}
+		</div>
 	{/snippet}
 
 	{#snippet controls()}

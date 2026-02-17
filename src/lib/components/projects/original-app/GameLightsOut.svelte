@@ -10,11 +10,15 @@
 
 	// State
 	let grid = $state(Array.from({ length: SIZE }, () => Array(SIZE).fill(false)));
-	let moves = $state(0);
-	let bestScore = $state(0);
+	let actualClicks = $state(0);
+	let bestScore = $state(-1);
+	let minMoves = $state(0);
 	let isFocused = $state(false);
 	let isInitialized = $state(false);
 	let gameContainer = $state<HTMLDivElement | null>(null);
+
+	// 表示用のムーブス（最短手数からカウントダウン）
+	const moves = $derived(minMoves - actualClicks);
 
 	// Derived
 	// ライツアウトは通常「すべて消灯」を目指すが、実装によっては「すべて点灯」の場合もある。
@@ -28,7 +32,7 @@
 				'lightsout-state',
 				JSON.stringify({
 					grid,
-					moves,
+					actualClicks,
 					bestScore
 				})
 			);
@@ -40,8 +44,8 @@
 			const saved = JSON.parse(localStorage.getItem('lightsout-state') || 'null');
 			if (saved?.grid && saved.grid.length === SIZE) {
 				grid = saved.grid;
-				moves = saved.moves;
-				bestScore = saved.bestScore || 0;
+				actualClicks = saved.actualClicks || 0;
+				bestScore = saved.bestScore || -1;
 			} else {
 				reset();
 			}
@@ -52,29 +56,113 @@
 		gameContainer?.focus();
 	});
 
+	// グリッドを一意の状態に変換する (Boolean配列 -> 数値)
+	function gridToState(gridToConvert: boolean[][]): number {
+		let state = 0;
+		let bit = 0;
+		for (let r = 0; r < SIZE; r++) {
+			for (let c = 0; c < SIZE; c++) {
+				if (gridToConvert[r][c]) {
+					state |= 1 << bit;
+				}
+				bit++;
+			}
+		}
+		return state;
+	}
+
+	// 状態から隣接する状態を生成する
+	function getNextStates(state: number): number[] {
+		const nextStates: number[] = [];
+		for (let r = 0; r < SIZE; r++) {
+			for (let c = 0; c < SIZE; c++) {
+				const newState = state ^ getToggleMask(r, c);
+				nextStates.push(newState);
+			}
+		}
+		return nextStates;
+	}
+
+	// 指定された位置をクリックした時のマスク値を取得する
+	function getToggleMask(r: number, c: number): number {
+		let mask = 0;
+		const setBit = (row: number, col: number) => {
+			if (row >= 0 && row < SIZE && col >= 0 && col < SIZE) {
+				mask |= 1 << (row * SIZE + col);
+			}
+		};
+		setBit(r, c);
+		setBit(r - 1, c);
+		setBit(r + 1, c);
+		setBit(r, c - 1);
+		setBit(r, c + 1);
+		return mask;
+	}
+
+	// BFSで最短手数を計算する
+	function calculateMinMoves(gridToSolve: boolean[][]): number {
+		const initialState = gridToState(gridToSolve);
+		const goalState = 0; // すべて消灯
+
+		if (initialState === goalState) {
+			return 0;
+		}
+
+		const visited = new Set<number>();
+		const queue: Array<{ state: number; moves: number }> = [{ state: initialState, moves: 0 }];
+		visited.add(initialState);
+
+		while (queue.length > 0) {
+			const { state, moves: currentMoves } = queue.shift()!;
+
+			for (const nextState of getNextStates(state)) {
+				if (nextState === goalState) {
+					return currentMoves + 1;
+				}
+
+				if (!visited.has(nextState)) {
+					visited.add(nextState);
+					queue.push({ state: nextState, moves: currentMoves + 1 });
+				}
+			}
+		}
+
+		// これは到達不可能な状態を意味する（生成時は発生しないはず）
+		return -1;
+	}
+
 	function reset(resetBest = false) {
-		if (resetBest) bestScore = 0;
-		moves = 0;
+		if (resetBest) bestScore = -1;
+		actualClicks = 0;
 
-		// Create a soluble board by starting with all lights off and simulating random clicks
-		// This ensures the puzzle is always solvable
-		const newGrid = Array.from({ length: SIZE }, () => Array(SIZE).fill(false));
+		// 最短手数が4以上になるまで盤面を生成する
+		let newGrid: boolean[][];
+		let calculatedMinMoves: number;
 
-		// Apply random moves
-		for (let i = 0; i < 20; i++) {
-			const r = Math.floor(Math.random() * SIZE);
-			const c = Math.floor(Math.random() * SIZE);
-			toggleCell(newGrid, r, c);
-		}
+		do {
+			// Create a soluble board by starting with all lights off and simulating random clicks
+			// This ensures the puzzle is always solvable
+			newGrid = Array.from({ length: SIZE }, () => Array(SIZE).fill(false));
 
-		// If simply by chance we ended up with all lights off, do it again
-		if (newGrid.every((row) => row.every((cell) => !cell))) {
-			const r = Math.floor(Math.random() * SIZE);
-			const c = Math.floor(Math.random() * SIZE);
-			toggleCell(newGrid, r, c);
-		}
+			// Apply random moves
+			for (let i = 0; i < 20; i++) {
+				const r = Math.floor(Math.random() * SIZE);
+				const c = Math.floor(Math.random() * SIZE);
+				toggleCell(newGrid, r, c);
+			}
+
+			// If simply by chance we ended up with all lights off, do it again
+			if (newGrid.every((row) => row.every((cell) => !cell))) {
+				const r = Math.floor(Math.random() * SIZE);
+				const c = Math.floor(Math.random() * SIZE);
+				toggleCell(newGrid, r, c);
+			}
+
+			calculatedMinMoves = calculateMinMoves(newGrid);
+		} while (calculatedMinMoves < 4);
 
 		grid = newGrid;
+		minMoves = calculatedMinMoves;
 	}
 
 	function toggleCell(targetGrid: boolean[][], r: number, c: number) {
@@ -100,11 +188,12 @@
 		toggleCell(newGrid, r, c);
 		grid = newGrid;
 
-		moves++;
+		actualClicks++;
 
 		if (isGameWon) {
-			if (bestScore === 0 || moves < bestScore) {
-				bestScore = moves;
+			const difference = actualClicks - minMoves;
+			if (bestScore === -1 || difference < bestScore) {
+				bestScore = difference;
 			}
 		}
 	}
@@ -128,7 +217,7 @@
 >
 	{#snippet scoreBoard()}
 		<ScoreBox label="Moves" value={moves} />
-		<ScoreBox label="Best" value={bestScore === 0 ? '-' : bestScore} />
+		<ScoreBox label="Best" value={bestScore === -1 ? '-' : `+${bestScore}`} />
 	{/snippet}
 
 	{#snippet overlay()}
