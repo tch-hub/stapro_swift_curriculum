@@ -16,7 +16,8 @@
 		scoreBoard,
 		gameBoard,
 		overlay,
-		controls
+		controls,
+		items
 	}: {
 		title: string;
 		subtitle: string;
@@ -29,9 +30,11 @@
 		ontouchend?: (e: TouchEvent) => void;
 
 		scoreBoard?: Snippet;
-		gameBoard?: Snippet;
+		gameBoard?: Snippet<[any, number]>;
 		overlay?: Snippet;
 		controls?: Snippet;
+
+		items?: any[];
 	} = $props();
 </script>
 
@@ -88,10 +91,16 @@
 					class="grid h-full gap-2"
 					style="grid-template-columns: repeat({gridSize}, minmax(0, 1fr)); grid-template-rows: repeat({gridSize}, minmax(0, 1fr));"
 				>
-					{@render gameBoard?.()}
+					{#if items}
+						{#each items as item, i}
+							{@render gameBoard?.(item, i)}
+						{/each}
+					{:else}
+						{@render gameBoard?.(undefined, -1)}
+					{/if}
 				</div>
 			{:else}
-				{@render gameBoard?.()}
+				{@render gameBoard?.(undefined, -1)}
 			{/if}
 		</div>
 

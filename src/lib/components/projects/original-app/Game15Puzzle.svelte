@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { flip } from 'svelte/animate';
-	import { fade, scale } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
+	import GameContainer from './shared/GameContainer.svelte';
+	import ScoreBox from './shared/ScoreBox.svelte';
+	import GameOverlay from './shared/GameOverlay.svelte';
 
 	const SIZE = 4;
 
@@ -14,11 +16,10 @@
 	// State (Svelte 5 Runes)
 	// 0 represents the empty tile
 	let tiles = $state(Array.from({ length: SIZE * SIZE }, (_, i) => (i + 1) % (SIZE * SIZE)));
-	// ... (lines 16-83 skipped)
 	let moves = $state(0);
 	let bestScore = $state(0); // Lower is better for 15 puzzle
 	let isFocused = $state(false);
-	let gameContainer: HTMLDivElement;
+	let gameContainer: HTMLDivElement | undefined = $state();
 	let touchStart = { x: 0, y: 0 };
 	let isInitialized = $state(false);
 
@@ -320,7 +321,9 @@
 	}
 
 	function move(tileIndex: number) {
-		if (isSolved && moves > 0) return; // Don't move if already won (unless it was just loaded as valid)
+		// ソルブ状態での移動は、ソルブ状態が初期ロードされた場合などは許可するが、
+		// ゲームプレイとして完了した後の意図しない移動は防ぐべきかもしれない。
+		// ここでは元のロジックを踏襲する。
 
 		const emptyIndex = tiles.indexOf(0);
 		const neighbors = getNeighbors(emptyIndex);
@@ -343,15 +346,13 @@
 
 	function handleKey(e: KeyboardEvent) {
 		if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-			e.preventDefault();
+			// GameContainer prevents default for these keys if onKeyDown is passed
 			const emptyIndex = tiles.indexOf(0);
 			const row = Math.floor(emptyIndex / SIZE);
 			const col = emptyIndex % SIZE;
 			let targetIndex = -1;
 
 			// Logic matches the direction the user wants a TILE to move
-			// e.g. ArrowUp means user wants a tile BELOW the empty space to move UP (into the empty space)
-			// So we look for the neighbor 'Down' from the empty space.
 			if (e.key === 'ArrowUp' && row < SIZE - 1) targetIndex = emptyIndex + SIZE;
 			if (e.key === 'ArrowDown' && row > 0) targetIndex = emptyIndex - SIZE;
 			if (e.key === 'ArrowLeft' && col < SIZE - 1) targetIndex = emptyIndex + 1;
@@ -395,117 +396,68 @@
 	}
 </script>
 
-<div
-	class="color-base-100 mockup-window w-full border border-base-300 p-4"
-	onclick={() => gameContainer?.focus()}
-	role="button"
-	tabindex="-1"
-	onkeydown={() => {}}
+<GameContainer
+	title="15 Puzzle"
+	subtitle="数字を順番に並べよう"
+	bind:isFocused
+	bind:gameContainer
+	gridSize={SIZE}
+	onReset={() => reset()}
+	onKeyDown={handleKey}
+	ontouchstart={(e) => handleTouch(e, 'start')}
+	ontouchend={(e) => handleTouch(e, 'end')}
 >
-	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-	<div
-		class="mx-auto max-w-sm ring-offset-2 transition-all outline-none"
-		tabindex="0"
-		role="application"
-		aria-label="15 Puzzle Game Board"
-		bind:this={gameContainer}
-		onkeydown={handleKey}
-		onfocus={() => (isFocused = true)}
-		onblur={() => (isFocused = false)}
-	>
-		<div class="mb-4 flex items-center justify-between">
-			<div>
-				<h2 class="text-3xl font-bold text-base-content">15 Puzzle</h2>
-				<p class="text-xs text-base-content/60">数字を順番に並べよう</p>
-			</div>
-			<div class="flex gap-2 text-right">
-				{@render scoreBox(
-					'残り',
-					exactMoves !== null ? exactMoves : isComputing ? '...' : estimatedMoves
-				)}
-				{@render scoreBox('Moves', moves)}
-				{@render scoreBox('Best', bestScore === 0 ? '-' : bestScore)}
-			</div>
-		</div>
+	{#snippet scoreBoard()}
+		<ScoreBox
+			label="残り"
+			value={exactMoves !== null ? exactMoves : isComputing ? '...' : estimatedMoves}
+		/>
+		<ScoreBox label="Moves" value={moves} />
+		<ScoreBox label="Best" value={bestScore === 0 ? '-' : bestScore} />
+	{/snippet}
 
-		<div
-			class="relative aspect-square touch-none rounded-lg border border-base-content/10 bg-base-300/50 p-2 select-none"
-			ontouchstart={(e) => handleTouch(e, 'start')}
-			ontouchend={(e) => handleTouch(e, 'end')}
-		>
-			{#if isSolved && moves > 0}
-				<div
-					transition:fade={{ duration: 200 }}
-					class="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-lg bg-accent/90 text-accent-content backdrop-blur-sm"
-				>
-					<div class="mb-4 text-4xl font-bold drop-shadow-md">Solved!</div>
-					<div class="mb-2 text-lg">Moves: {moves}</div>
-					<div class="flex gap-3">
-						{@render btn('Play Again', () => reset(), true)}
-					</div>
-				</div>
-			{/if}
+	{#snippet overlay()}
+		<GameOverlay
+			visible={isSolved && moves > 0}
+			title="Solved!"
+			message={`Moves: ${moves}`}
+			primaryAction={{ label: 'Play Again', onclick: () => reset() }}
+		/>
+	{/snippet}
 
-			<div class="grid h-full grid-cols-4 grid-rows-4 gap-2">
-				{#each tiles as tile, i (tile)}
-					<!-- Using a button here for better semantics and interactivity on individual tiles -->
-					<div animate:flip={{ duration: 200, easing: cubicOut }} class="h-full w-full">
-						{#if tile !== 0}
-							<button
-								class="flex h-full w-full items-center justify-center rounded-md text-2xl
-                                font-bold shadow-sm transition-colors active:scale-95
-                                {isSolved
-									? 'bg-accent text-accent-content'
-									: tile === i + 1
-										? 'bg-success text-success-content'
-										: 'border border-base-content/10 bg-base-200 text-base-content hover:bg-base-300'}"
-								onclick={() => move(tiles.indexOf(tile))}
-								tabindex="-1"
-							>
-								{tile}
-							</button>
-						{/if}
-						<!-- Empty slot renders nothing visible but takes up space in grid -->
-					</div>
-				{/each}
-			</div>
-		</div>
-
-		<div class="mt-4 flex items-center justify-between text-sm text-base-content/60">
-			<div>
-				{#if !isFocused}
-					<span class="animate-pulse font-bold text-primary">クリックして開始</span>
-				{:else}
-					<span class="mr-2 inline-block rounded bg-base-300 px-2 py-1 text-xs"
-						>矢印キー or スワイプ</span
+	{#snippet gameBoard()}
+		{#each tiles as tile, i (tile)}
+			<!-- Using a button here for better semantics and interactivity on individual tiles -->
+			<div animate:flip={{ duration: 200, easing: cubicOut }} class="h-full w-full">
+				{#if tile !== 0}
+					<button
+						class="flex h-full w-full items-center justify-center rounded-md text-2xl
+						font-bold shadow-sm transition-colors active:scale-95
+						{isSolved
+							? 'bg-accent text-accent-content'
+							: tile === i + 1
+								? 'bg-success text-success-content'
+								: 'border border-base-content/10 bg-base-200 text-base-content hover:bg-base-300'}"
+						onclick={() => move(tiles.indexOf(tile))}
+						tabindex="-1"
 					>
+						{tile}
+					</button>
 				{/if}
+				<!-- Empty slot renders nothing visible but takes up space in grid -->
 			</div>
-			<button class="transition-colors hover:text-primary hover:underline" onclick={() => reset()}>
-				リセット
-			</button>
+		{/each}
+	{/snippet}
+
+	{#snippet controls()}
+		<div class="flex items-center gap-2 text-xs">
+			<div class="flex gap-1">
+				<kbd class="kbd kbd-sm">←</kbd>
+				<kbd class="kbd kbd-sm">↓</kbd>
+				<kbd class="kbd kbd-sm">↑</kbd>
+				<kbd class="kbd kbd-sm">→</kbd>
+			</div>
+			<span>or スワイプ</span>
 		</div>
-	</div>
-</div>
-
-{#snippet scoreBox(label, value)}
-	<div class="flex min-w-[70px] flex-col items-center justify-center rounded bg-base-200 p-2">
-		<div class="text-[10px] tracking-widest uppercase opacity-70">{label}</div>
-		<div class="text-lg font-bold">{value}</div>
-	</div>
-{/snippet}
-
-{#snippet btn(text, act, primary)}
-	<button
-		class="rounded-full px-6 py-2 font-bold shadow-sm transition hover:scale-105 active:scale-95 {primary
-			? 'bg-base-100 text-base-content hover:bg-base-200'
-			: 'hover:bg-neutral-focus bg-neutral text-neutral-content'}"
-		onclick={(e) => {
-			e.stopPropagation();
-			act();
-		}}
-	>
-		{text}
-	</button>
-{/snippet}
+	{/snippet}
+</GameContainer>

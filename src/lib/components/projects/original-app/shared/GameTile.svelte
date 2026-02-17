@@ -92,12 +92,14 @@
 			</div>
 		</div>
 	{:else}
-		{#if icon}
-			<span class="material-symbols-outlined select-none" style="font-size: inherit;">
-				{icon}
-			</span>
-		{/if}
-		{@render children?.()}
+		<div class="absolute inset-0 flex items-center justify-center">
+			{#if icon}
+				<span class="material-symbols-outlined select-none" style="font-size: inherit;">
+					{icon}
+				</span>
+			{/if}
+			{@render children?.()}
+		</div>
 	{/if}
 </button>
 

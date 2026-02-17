@@ -29,6 +29,7 @@
 	bind:isFocused
 	bind:gameContainer
 	gridSize={4}
+	items={Array(16)}
 	onReset={() => reset()}
 	onKeyDown={(e) => {
 		if (e.key === 'Enter' || e.key === ' ') handleClick();
@@ -47,12 +48,10 @@
 		/>
 	{/snippet}
 
-	{#snippet gameBoard()}
-		{#each Array(16) as _, i}
-			<GameTile onclick={() => handleClick(i)}>
-				{i + 1}
-			</GameTile>
-		{/each}
+	{#snippet gameBoard(_, i)}
+		<GameTile onclick={() => handleClick(i)}>
+			{i + 1}
+		</GameTile>
 	{/snippet}
 
 	{#snippet controls()}

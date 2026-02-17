@@ -122,6 +122,7 @@
 	bind:isFocused
 	bind:gameContainer
 	gridSize={SIZE}
+	items={grid.flat()}
 	onReset={() => reset()}
 	onKeyDown={handleKey}
 >
@@ -139,19 +140,15 @@
 		/>
 	{/snippet}
 
-	{#snippet gameBoard()}
-		{#each grid as row, r}
-			{#each row as isOn, c}
-				<div class="h-full w-full" in:scale={{ duration: 200, start: 0.9 }}>
-					<GameTile
-						active={isOn}
-						onclick={() => handleClick(r, c)}
-						class={isOn ? 'text-4xl text-warning-content' : ''}
-						icon={isOn ? 'lightbulb' : ''}
-						aria-label={`Toggle light at row ${r}, column ${c}, currently ${isOn ? 'on' : 'off'}`}
-					/>
-				</div>
-			{/each}
-		{/each}
+	{#snippet gameBoard(isOn, i)}
+		{@const r = Math.floor(i / SIZE)}
+		{@const c = i % SIZE}
+		<GameTile
+			active={isOn}
+			onclick={() => handleClick(r, c)}
+			class={isOn ? 'text-4xl text-warning-content' : ''}
+			icon={isOn ? 'lightbulb' : ''}
+			aria-label={`Toggle light at row ${r}, column ${c}, currently ${isOn ? 'on' : 'off'}`}
+		/>
 	{/snippet}
 </GameContainer>

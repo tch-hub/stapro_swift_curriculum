@@ -148,6 +148,7 @@
 	bind:isFocused
 	bind:gameContainer
 	gridSize={SIZE}
+	items={cards}
 	onReset={() => reset()}
 	onKeyDown={handleKey}
 >
@@ -165,30 +166,29 @@
 		/>
 	{/snippet}
 
-	{#snippet gameBoard()}
-		{#each cards as card, i (card.id)}
-			<GameTile
-				onclick={() => handleCardClick(i)}
-				disabled={isProcessing}
-				isFlipped={card.isFlipped || card.isMatched}
-				color="secondary"
-				aria-label={card.isMatched || card.isFlipped
-					? `Card ${i + 1}, matched or flipped, value ${card.value}`
-					: `Card ${i + 1}, hidden`}
-			>
-				{#snippet back()}
-					<div class="text-2xl font-bold">?</div>
-				{/snippet}
+	{#snippet gameBoard(card, i)}
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<GameTile
+			onclick={() => handleCardClick(i)}
+			disabled={isProcessing}
+			isFlipped={card.isFlipped || card.isMatched}
+			color="secondary"
+			aria-label={card.isMatched || card.isFlipped
+				? `Card ${i + 1}, matched or flipped, value ${card.value}`
+				: `Card ${i + 1}, hidden`}
+		>
+			{#snippet back()}
+				<div class="text-2xl font-bold">?</div>
+			{/snippet}
 
-				{#if card.isFlipped || card.isMatched}
-					<span
-						in:scale={{ duration: 200, start: 0.5 }}
-						class="material-symbols-outlined text-4xl select-none"
-					>
-						{getCardContent(card.value)}
-					</span>
-				{/if}
-			</GameTile>
-		{/each}
+			{#if card.isFlipped || card.isMatched}
+				<span
+					in:scale={{ duration: 200, start: 0.5 }}
+					class="material-symbols-outlined text-4xl select-none"
+				>
+					{getCardContent(card.value)}
+				</span>
+			{/if}
+		</GameTile>
 	{/snippet}
 </GameContainer>
