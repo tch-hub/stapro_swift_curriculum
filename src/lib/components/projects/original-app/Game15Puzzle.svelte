@@ -6,9 +6,15 @@
 
 	const SIZE = 4;
 
+	let pdb1: Uint8Array;
+	let pdb2: Uint8Array;
+	let pdb3: Uint8Array;
+	let pdbReady = $state(false);
+
 	// State (Svelte 5 Runes)
 	// 0 represents the empty tile
 	let tiles = $state(Array.from({ length: SIZE * SIZE }, (_, i) => (i + 1) % (SIZE * SIZE)));
+	// ... (lines 16-83 skipped)
 	let moves = $state(0);
 	let bestScore = $state(0); // Lower is better for 15 puzzle
 	let isFocused = $state(false);
@@ -25,12 +31,6 @@
 	function calculateHeuristic(currentTiles: number[]) {
 		let md = 0;
 		let lc = 0;
-
-		const rows = [0, 0, 0, 0];
-		const rowLt = [0, 0, 0, 0]; // optimization to avoid array allocation
-		const cols = [0, 0, 0, 0];
-		// bitmasks or simple arrays could work, but let's stick to simple loops for clarity and safety
-		// Re-implementing with pre-allocated arrays if performance is needed, but for 16 tiles simple loops are fine.
 
 		// Map simplified for performance (flattened)
 		for (let i = 0; i < 16; i++) {
@@ -76,136 +76,155 @@
 		return md + 2 * lc;
 	}
 
-	const estimatedMoves = $derived(calculateHeuristic(tiles));
+	const fact = [1];
+	for (let i = 1; i <= 16; i++) fact[i] = fact[i - 1] * i;
+
+	function perm(n: number, k: number) {
+		if (k < 0 || k > n) return 0;
+		return fact[n] / fact[n - k];
+	}
+
+	function rankPattern(state: number[], pattern: number[]) {
+		const items = [0, ...pattern];
+		let rank = 0;
+		let available = 0xffff;
+
+		for (let i = 0; i < items.length; i++) {
+			const val = items[i];
+			const pos = state.indexOf(val);
+
+			let count = 0;
+			for (let j = 0; j < pos; j++) {
+				if ((available >> j) & 1) count++;
+			}
+
+			const n = 16 - 1 - i;
+			const k = items.length - 1 - i;
+
+			rank += count * perm(n, k);
+
+			available &= ~(1 << pos);
+		}
+		return rank;
+	}
+
+	const pattern1 = [1, 2, 3, 4, 5];
+	const pattern2 = [6, 7, 8, 9, 10];
+	const pattern3 = [11, 12, 13, 14, 15];
+
+	function heuristicPDB(state: number[]) {
+		if (!pdbReady) return calculateHeuristic(state);
+
+		const r1 = rankPattern(state, pattern1);
+		const r2 = rankPattern(state, pattern2);
+		const r3 = rankPattern(state, pattern3);
+
+		if (pdb1[r1] === 255 || pdb2[r2] === 255 || pdb3[r3] === 255) {
+			return calculateHeuristic(state);
+		}
+
+		return pdb1[r1] + pdb2[r2] + pdb3[r3];
+	}
+
+	const estimatedMoves = $derived(heuristicPDB(tiles));
 
 	let exactMoves = $state<number | null>(null);
 	let isComputing = $state(false);
 
 	let solveVersion = 0;
 
-$effect(() => {
-    const currentTiles = [...tiles];
-    exactMoves = null;
+	$effect(() => {
+		const currentTiles = [...tiles];
+		exactMoves = null;
 
-    if (
-        currentTiles.every((t, i) => (i === 15 ? t === 0 : t === i + 1))
-    ) {
-        exactMoves = 0;
-        return;
-    }
+		if (currentTiles.every((t, i) => (i === 15 ? t === 0 : t === i + 1))) {
+			exactMoves = 0;
+			return;
+		}
 
-    const version = ++solveVersion;
-    isComputing = true;
+		const version = ++solveVersion;
+		isComputing = true;
 
-    (async () => {
-        const result = await solve15Async(currentTiles);
+		(async () => {
+			const result = await solve15Async(currentTiles);
 
-        if (version === solveVersion) {
-            exactMoves = result;
-            isComputing = false;
-        }
-    })();
-});
+			if (version === solveVersion) {
+				exactMoves = result;
+				isComputing = false;
+			}
+		})();
+	});
 
 	// Simple IDA* implementation
-async function solve15Async(startTiles: number[]): Promise<number> {
-    const SIZE = 4;
-    const tiles = [...startTiles];
-    let blank = tiles.indexOf(0);
+	async function solve15Async(startTiles: number[]): Promise<number> {
+		const SIZE = 4;
+		const tiles = [...startTiles];
+		let blank = tiles.indexOf(0);
 
-    const goalRow = new Array(16);
-    const goalCol = new Array(16);
-    for (let i = 0; i < 15; i++) {
-        goalRow[i + 1] = (i / 4) | 0;
-        goalCol[i + 1] = i % 4;
-    }
+		const opposite = [1, 0, 3, 2]; // U,D,L,R
+		const dirs = [-4, 4, -1, 1];
 
-    function manhattan(): number {
-        let h = 0;
-        for (let i = 0; i < 16; i++) {
-            const t = tiles[i];
-            if (t === 0) continue;
-            const r = (i / 4) | 0;
-            const c = i % 4;
-            h += Math.abs(r - goalRow[t]) + Math.abs(c - goalCol[t]);
-        }
-        return h;
-    }
+		let bound = heuristicPDB(tiles);
+		let nodeCounter = 0;
+		const YIELD_INTERVAL = 1000;
 
-    const opposite = [1, 0, 3, 2]; // U,D,L,R
-    const dirs = [-4, 4, -1, 1];
+		async function search(g: number, h: number, prevMove: number): Promise<number> {
+			const f = g + h;
+			if (f > bound) return f;
+			if (h === 0) return -1;
 
-    let bound = manhattan();
-    let nodeCounter = 0;
-    const YIELD_INTERVAL = 1000;
+			let min = Infinity;
 
-    async function search(g: number, h: number, prevMove: number): Promise<number> {
-        const f = g + h;
-        if (f > bound) return f;
-        if (h === 0) return -1;
+			nodeCounter++;
+			if (nodeCounter % YIELD_INTERVAL === 0) {
+				await new Promise(requestAnimationFrame);
+			}
 
-        let min = Infinity;
+			const row = (blank / 4) | 0;
+			const col = blank % 4;
 
-        nodeCounter++;
-        if (nodeCounter % YIELD_INTERVAL === 0) {
-            await new Promise(requestAnimationFrame);
-        }
+			for (let move = 0; move < 4; move++) {
+				if (prevMove !== -1 && move === opposite[prevMove]) continue;
 
-        const row = (blank / 4) | 0;
-        const col = blank % 4;
+				if (move === 0 && row === 0) continue;
+				if (move === 1 && row === 3) continue;
+				if (move === 2 && col === 0) continue;
+				if (move === 3 && col === 3) continue;
 
-        for (let move = 0; move < 4; move++) {
-            if (prevMove !== -1 && move === opposite[prevMove]) continue;
+				const next = blank + dirs[move];
+				const tile = tiles[next];
 
-            if (move === 0 && row === 0) continue;
-            if (move === 1 && row === 3) continue;
-            if (move === 2 && col === 0) continue;
-            if (move === 3 && col === 3) continue;
+				// swap
+				tiles[blank] = tile;
+				tiles[next] = 0;
 
-            const next = blank + dirs[move];
-            const tile = tiles[next];
+				const newH = heuristicPDB(tiles);
 
-            // swap
-            tiles[blank] = tile;
-            tiles[next] = 0;
+				const oldBlank = blank;
+				blank = next;
 
-            const oldDist =
-                Math.abs(((next / 4) | 0) - goalRow[tile]) +
-                Math.abs((next % 4) - goalCol[tile]);
+				const tRes = await search(g + 1, newH, move);
 
-            const newDist =
-                Math.abs(((blank / 4) | 0) - goalRow[tile]) +
-                Math.abs((blank % 4) - goalCol[tile]);
+				blank = oldBlank;
 
-            const newH = h - oldDist + newDist;
+				// undo
+				tiles[next] = tile;
+				tiles[blank] = 0;
 
-            const oldBlank = blank;
-            blank = next;
+				if (tRes === -1) return -1;
+				if (tRes < min) min = tRes;
+			}
 
-            const tRes = await search(g + 1, newH, move);
+			return min;
+		}
 
-            blank = oldBlank;
-
-            // undo
-            tiles[next] = tile;
-            tiles[blank] = 0;
-
-            if (tRes === -1) return -1;
-            if (tRes < min) min = tRes;
-        }
-
-        return min;
-    }
-
-    while (true) {
-        nodeCounter = 0;
-        const t = await search(0, manhattan(), -1);
-        if (t === -1) return bound;
-        bound = t;
-    }
-}
-
-
+		while (true) {
+			nodeCounter = 0;
+			const t = await search(0, heuristicPDB(tiles), -1);
+			if (t === -1) return bound;
+			bound = t;
+		}
+	}
 
 	// Persistence (自動保存)
 	$effect(() => {
@@ -214,7 +233,7 @@ async function solve15Async(startTiles: number[]): Promise<number> {
 		}
 	});
 
-	onMount(() => {
+	onMount(async () => {
 		try {
 			const saved = JSON.parse(localStorage.getItem('15-puzzle-state') || 'null');
 			if (saved?.tiles && saved.tiles.length === 16) {
@@ -229,6 +248,23 @@ async function solve15Async(startTiles: number[]): Promise<number> {
 		}
 		isInitialized = true;
 		gameContainer?.focus();
+
+		try {
+			const [r1, r2, r3] = await Promise.all([
+				fetch('/pdb5_1.bin'),
+				fetch('/pdb5_2.bin'),
+				fetch('/pdb5_3.bin')
+			]);
+
+			pdb1 = new Uint8Array(await r1.arrayBuffer());
+			pdb2 = new Uint8Array(await r2.arrayBuffer());
+			pdb3 = new Uint8Array(await r3.arrayBuffer());
+
+			pdbReady = true;
+			console.log('PDB loaded');
+		} catch (e) {
+			console.error('PDB load failed', e);
+		}
 	});
 
 	// Game Logic
