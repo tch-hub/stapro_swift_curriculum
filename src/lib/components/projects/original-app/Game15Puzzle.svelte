@@ -21,6 +21,192 @@
 		tiles.every((tile, index) => tile === (index + 1) % (SIZE * SIZE)) && tiles[15] === 0
 	);
 
+	// Heuristic: Manhattan Distance + Linear Conflict (Optimized)
+	function calculateHeuristic(currentTiles: number[]) {
+		let md = 0;
+		let lc = 0;
+
+		const rows = [0, 0, 0, 0];
+		const rowLt = [0, 0, 0, 0]; // optimization to avoid array allocation
+		const cols = [0, 0, 0, 0];
+		// bitmasks or simple arrays could work, but let's stick to simple loops for clarity and safety
+		// Re-implementing with pre-allocated arrays if performance is needed, but for 16 tiles simple loops are fine.
+
+		// Map simplified for performance (flattened)
+		for (let i = 0; i < 16; i++) {
+			const tile = currentTiles[i];
+			if (tile === 0) continue;
+
+			// Current
+			const row = (i / SIZE) | 0;
+			const col = i % SIZE;
+
+			// Target (1-based value -> 0-based index)
+			const targetIndex = tile - 1;
+			const targetRow = (targetIndex / SIZE) | 0;
+			const targetCol = targetIndex % SIZE;
+
+			md += Math.abs(row - targetRow) + Math.abs(col - targetCol);
+
+			// Linear Conflict
+			if (row === targetRow) {
+				for (let k = i + 1; k < (row + 1) * SIZE; k++) {
+					const other = currentTiles[k];
+					if (other !== 0) {
+						const otherTargetRow = ((other - 1) / SIZE) | 0;
+						if (otherTargetRow === row && tile > other) {
+							lc++;
+						}
+					}
+				}
+			}
+			if (col === targetCol) {
+				for (let k = i + SIZE; k < 16; k += SIZE) {
+					const other = currentTiles[k];
+					if (other !== 0) {
+						const otherTargetCol = (other - 1) % SIZE;
+						if (otherTargetCol === col && tile > other) {
+							lc++;
+						}
+					}
+				}
+			}
+		}
+
+		return md + 2 * lc;
+	}
+
+	const estimatedMoves = $derived(calculateHeuristic(tiles));
+
+	let exactMoves = $state<number | null>(null);
+	let isComputing = $state(false);
+
+	let solveVersion = 0;
+
+$effect(() => {
+    const currentTiles = [...tiles];
+    exactMoves = null;
+
+    if (
+        currentTiles.every((t, i) => (i === 15 ? t === 0 : t === i + 1))
+    ) {
+        exactMoves = 0;
+        return;
+    }
+
+    const version = ++solveVersion;
+    isComputing = true;
+
+    (async () => {
+        const result = await solve15Async(currentTiles);
+
+        if (version === solveVersion) {
+            exactMoves = result;
+            isComputing = false;
+        }
+    })();
+});
+
+	// Simple IDA* implementation
+async function solve15Async(startTiles: number[]): Promise<number> {
+    const SIZE = 4;
+    const tiles = [...startTiles];
+    let blank = tiles.indexOf(0);
+
+    const goalRow = new Array(16);
+    const goalCol = new Array(16);
+    for (let i = 0; i < 15; i++) {
+        goalRow[i + 1] = (i / 4) | 0;
+        goalCol[i + 1] = i % 4;
+    }
+
+    function manhattan(): number {
+        let h = 0;
+        for (let i = 0; i < 16; i++) {
+            const t = tiles[i];
+            if (t === 0) continue;
+            const r = (i / 4) | 0;
+            const c = i % 4;
+            h += Math.abs(r - goalRow[t]) + Math.abs(c - goalCol[t]);
+        }
+        return h;
+    }
+
+    const opposite = [1, 0, 3, 2]; // U,D,L,R
+    const dirs = [-4, 4, -1, 1];
+
+    let bound = manhattan();
+    let nodeCounter = 0;
+    const YIELD_INTERVAL = 1000;
+
+    async function search(g: number, h: number, prevMove: number): Promise<number> {
+        const f = g + h;
+        if (f > bound) return f;
+        if (h === 0) return -1;
+
+        let min = Infinity;
+
+        nodeCounter++;
+        if (nodeCounter % YIELD_INTERVAL === 0) {
+            await new Promise(requestAnimationFrame);
+        }
+
+        const row = (blank / 4) | 0;
+        const col = blank % 4;
+
+        for (let move = 0; move < 4; move++) {
+            if (prevMove !== -1 && move === opposite[prevMove]) continue;
+
+            if (move === 0 && row === 0) continue;
+            if (move === 1 && row === 3) continue;
+            if (move === 2 && col === 0) continue;
+            if (move === 3 && col === 3) continue;
+
+            const next = blank + dirs[move];
+            const tile = tiles[next];
+
+            // swap
+            tiles[blank] = tile;
+            tiles[next] = 0;
+
+            const oldDist =
+                Math.abs(((next / 4) | 0) - goalRow[tile]) +
+                Math.abs((next % 4) - goalCol[tile]);
+
+            const newDist =
+                Math.abs(((blank / 4) | 0) - goalRow[tile]) +
+                Math.abs((blank % 4) - goalCol[tile]);
+
+            const newH = h - oldDist + newDist;
+
+            const oldBlank = blank;
+            blank = next;
+
+            const tRes = await search(g + 1, newH, move);
+
+            blank = oldBlank;
+
+            // undo
+            tiles[next] = tile;
+            tiles[blank] = 0;
+
+            if (tRes === -1) return -1;
+            if (tRes < min) min = tRes;
+        }
+
+        return min;
+    }
+
+    while (true) {
+        nodeCounter = 0;
+        const t = await search(0, manhattan(), -1);
+        if (t === -1) return bound;
+        bound = t;
+    }
+}
+
+
+
 	// Persistence (自動保存)
 	$effect(() => {
 		if (isInitialized) {
@@ -191,6 +377,10 @@
 				<p class="text-xs text-base-content/60">数字を順番に並べよう</p>
 			</div>
 			<div class="flex gap-2 text-right">
+				{@render scoreBox(
+					'残り',
+					exactMoves !== null ? exactMoves : isComputing ? '...' : estimatedMoves
+				)}
 				{@render scoreBox('Moves', moves)}
 				{@render scoreBox('Best', bestScore === 0 ? '-' : bestScore)}
 			</div>
@@ -224,7 +414,9 @@
                                 font-bold shadow-sm transition-colors active:scale-95
                                 {isSolved
 									? 'bg-accent text-accent-content'
-									: 'border border-base-content/10 bg-base-200 text-base-content hover:bg-base-300'}"
+									: tile === i + 1
+										? 'bg-success text-success-content'
+										: 'border border-base-content/10 bg-base-200 text-base-content hover:bg-base-300'}"
 								onclick={() => move(tiles.indexOf(tile))}
 								tabindex="-1"
 							>
