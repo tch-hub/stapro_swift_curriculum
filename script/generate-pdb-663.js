@@ -1,14 +1,14 @@
-// generate-pdb-555.js
+// generate-pdb-663.js
 import fs from "fs";
 import path from "path";
 
-// 5-5-5分割
+// 6-6-3分割
 const patterns = [
-    [1, 2, 3, 4, 5],
-    [6, 7, 8, 9, 10],
-    [11, 12, 13, 14, 15]
+    [1, 2, 3, 4, 5, 6],
+    [7, 8, 9, 10, 11, 12],
+    [13, 14, 15]
 ];
-const names = ["pdb5_1", "pdb5_2", "pdb5_3"];
+const names = ["pdb6_1", "pdb6_2", "pdb6_3"];
 
 // 順列計算 P(n, k)
 const fact = [1];
@@ -65,11 +65,10 @@ function generate(pattern, name) {
 
     const goal = Array.from({ length: 16 }, (_, i) => (i + 1) % 16);
 
-    // 0-1 BFS using two queues
+    // 0-1 BFS
     let currentQueue = [];
     let nextQueue = [];
 
-    // 初期状態
     const startRank = rankPattern(goal, pattern);
     pdb[startRank] = 0;
     currentQueue.push({ state: goal, blank: 15 });
@@ -77,12 +76,21 @@ function generate(pattern, name) {
     let dist = 0;
     let visited = 1;
 
+    // 進捗表示用
+    let lastLogTime = Date.now();
+
     while (currentQueue.length > 0 || nextQueue.length > 0) {
         if (currentQueue.length === 0) {
             currentQueue = nextQueue;
             nextQueue = [];
             dist++;
-            console.log(`${name}: dist ${dist}, queue size ${currentQueue.length}, visited ${visited}`);
+
+            const now = Date.now();
+            if (now - lastLogTime > 5000) { // 5秒ごとにログ
+                console.log(`${name}: dist ${dist}, queue size ${currentQueue.length}, visited ${visited}/${totalStates} (${Math.round(visited / totalStates * 100)}%)`);
+                lastLogTime = now;
+            }
+
             if (dist >= 255) break;
         }
 
@@ -90,8 +98,6 @@ function generate(pattern, name) {
 
         for (const next of neighbors(blank)) {
             const tile = state[next];
-            // パターンに含まれるタイルが動く場合のみコスト1
-            // パターン外のタイルが動く（=空白移動のみ）場合はコスト0
             const isPatternTile = pattern.includes(tile);
             const moveCost = isPatternTile ? 1 : 0;
 
@@ -100,7 +106,6 @@ function generate(pattern, name) {
 
             const r = rankPattern(newState, pattern);
 
-            // 未訪問なら更新
             if (pdb[r] === 255) {
                 pdb[r] = dist + moveCost;
                 if (moveCost === 0) {
@@ -122,6 +127,8 @@ function generate(pattern, name) {
     try {
         for (let i = 0; i < 3; i++) {
             generate(patterns[i], names[i]);
+            // GC
+            if (global.gc) global.gc(); // if exposed
             await new Promise(r => setTimeout(r, 1000));
         }
         console.log("ALL DONE");

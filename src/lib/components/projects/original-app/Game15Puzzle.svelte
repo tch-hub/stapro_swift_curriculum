@@ -84,8 +84,14 @@
 		return fact[n] / fact[n - k];
 	}
 
-	function rankPattern(state: number[], pattern: number[]) {
-		const items = [0, ...pattern];
+	// Optimization: bitCount for 32-bit integer
+	function bitCount(n: number) {
+		n = n - ((n >>> 1) & 0x55555555);
+		n = (n & 0x33333333) + ((n >>> 2) & 0x33333333);
+		return Math.imul((n + (n >>> 4)) & 0x0f0f0f0f, 0x01010101) >>> 24;
+	}
+
+	function rankPattern(state: number[], items: number[]) {
 		let rank = 0;
 		let available = 0xffff;
 
@@ -93,31 +99,32 @@
 			const val = items[i];
 			const pos = state.indexOf(val);
 
-			let count = 0;
-			for (let j = 0; j < pos; j++) {
-				if ((available >> j) & 1) count++;
-			}
+			// Count available slots before pos
+			const mask = available & ((1 << pos) - 1);
+			const count = bitCount(mask);
 
 			const n = 16 - 1 - i;
 			const k = items.length - 1 - i;
 
-			rank += count * perm(n, k);
+			// perm(n, k) is fact[n] / fact[n-k]
+			rank += count * (fact[n] / fact[n - k]);
 
 			available &= ~(1 << pos);
 		}
 		return rank;
 	}
 
-	const pattern1 = [1, 2, 3, 4, 5];
-	const pattern2 = [6, 7, 8, 9, 10];
-	const pattern3 = [11, 12, 13, 14, 15];
+	// Pre-allocate items arrays (including 0 for blank)
+	const items1 = [0, 1, 2, 3, 4, 5, 6]; // 6-6-3
+	const items2 = [0, 7, 8, 9, 10, 11, 12];
+	const items3 = [0, 13, 14, 15];
 
 	function heuristicPDB(state: number[]) {
 		if (!pdbReady) return calculateHeuristic(state);
 
-		const r1 = rankPattern(state, pattern1);
-		const r2 = rankPattern(state, pattern2);
-		const r3 = rankPattern(state, pattern3);
+		const r1 = rankPattern(state, items1);
+		const r2 = rankPattern(state, items2);
+		const r3 = rankPattern(state, items3);
 
 		if (pdb1[r1] === 255 || pdb2[r2] === 255 || pdb3[r3] === 255) {
 			return calculateHeuristic(state);
@@ -251,9 +258,9 @@
 
 		try {
 			const [r1, r2, r3] = await Promise.all([
-				fetch('/pdb5_1.bin'),
-				fetch('/pdb5_2.bin'),
-				fetch('/pdb5_3.bin')
+				fetch('/pdb6_1.bin'),
+				fetch('/pdb6_2.bin'),
+				fetch('/pdb6_3.bin')
 			]);
 
 			pdb1 = new Uint8Array(await r1.arrayBuffer());
