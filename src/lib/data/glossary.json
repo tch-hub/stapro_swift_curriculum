@@ -269,7 +269,7 @@
 				},
 				{
 					"title": "モディファイア (Modifier)",
-					"description": "Viewの見た目や動作を変更するメソッドです。ドット(.)で繋げてチェーンのように書きます。.padding(), .foregroundStyle(), .font() などがあります。適用順序が重要で、順番によって結果が変わることがあります。",
+					"description": "Swiftのモディファイアとは、画面の部品（View）に見た目や動きを追加するための設定です。文字の色を変える、余白をつける、サイズを整えるなど、Viewの後ろに書いた .font や .foregroundStyle のように各種設定を重ねていきます。並べた順番で結果が変わるため、順序にも注意が必要です。",
 					"code": "Text(\"スタイル付きテキスト\")\n    .font(.title)              // フォントサイズ\n    .foregroundStyle(.blue)    // 文字色\n    .padding()                 // 余白\n    .background(.yellow)       // 背景色\n    .cornerRadius(10)          // 角丸",
 					"keywords": [
 						"モディファイア",

@@ -487,6 +487,20 @@
 						"画面を閉じる",
 						"環境値"
 					]
+				},
+				{
+					"title": "@ViewBuilder（複数ビューを組み合わせる）",
+					"code": "import SwiftUI\n\n// @ViewBuilder を使うと複数のビューを 1 つの結果としてまとめられる\nstruct CustomColumn<Content: View>: View {\n    let content: () -> Content\n    \n    var body: some View {\n        VStack(spacing: 12) {\n            content()\n        }\n    }\n    \n    init(@ViewBuilder content: @escaping () -> Content) {\n        self.content = content\n    }\n}\n\n// @ViewBuilder の関数を定義すると、条件分岐でビューを増やせる\n@ViewBuilder\nfunc detailRows() -> some View {\n    Text(\"名前: 太郎\")\n    Text(\"学年: 中学1年\")\n    if Bool.random() {\n        Text(\"ランダムで表示される補足\")\n    }\n}\n\nstruct ViewBuilderExample: View {\n    var body: some View {\n        CustomColumn {\n            detailRows()\n            Text(\"この行も@ViewBuilderの中で追加\")\n        }\n    }\n}\n\n// ポイント:\n// - 複数の View を return できる\n// - if や switch で条件付きビューを返せる\n// - SwiftUI のクロージャでは暗黙的に使われている",
+					"output": "（複数行が縦に並び、条件に応じたTextが表示される）",
+					"executable": false,
+					"keywords": [
+						"viewbuilder",
+						"result builder",
+						"function builder",
+						"conditional",
+						"複数ビュー",
+						"カスタム"
+					]
 				}
 			],
 			"afterHtml": "<div class=\"mt-8\"><h3 class=\"mb-4 text-xl font-bold\">@Stateと@Bindingの関係</h3><div class=\"overflow-x-auto\"><table class=\"table w-full rounded-box table-zebra bg-base-200\"><thead><tr class=\"bg-base-300\"><th class=\"text-base text-base-content\">項目</th><th class=\"text-base text-base-content\">@State</th><th class=\"text-base text-base-content\">@Binding</th></tr></thead><tbody><tr><td class=\"font-bold\">役割</td><td>状態を「所有」する</td><td>状態を「参照」する</td></tr><tr><td class=\"font-bold\">使う場所</td><td>親ビュー（状態の発生源）</td><td>子ビュー（状態を受け取る側）</td></tr><tr><td class=\"font-bold\">宣言方法</td><td><code class=\"rounded bg-base-300 px-1\">@State private var value = 初期値</code></td><td><code class=\"rounded bg-base-300 px-1\">@Binding var value: 型</code></td></tr><tr><td class=\"font-bold\">渡し方</td><td>-</td><td><code class=\"rounded bg-base-300 px-1\">$変数名</code>で渡す</td></tr><tr><td class=\"font-bold\">初期値</td><td>必要</td><td>不要（親から受け取る）</td></tr></tbody></table></div></div>"

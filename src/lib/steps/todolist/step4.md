@@ -1,5 +1,9 @@
 # ステップ4: 空の状態を表示するコンポーネントを作る(EmptyStateView.swift)
 
+### ステップ4終了時の完成イメージ
+
+<img src="/images/todolist/EmptyStateView.png" alt="EmptyStateViewの完成イメージ" class="mobile-screenshot-top" />
+
 ## 1. 基本的な構造を書く
 
 `Components/EmptyStateView.swift` を開き、以下の基本的な構造を記述します。
@@ -67,8 +71,6 @@ var body: some View {
 ---
 
 ## コード全体
-
-<img src="/images/todolist/EmptyStateView.png" alt="EmptyStateViewの完成イメージ" class="mobile-screenshot" />
 
 ### Components/EmptyStateView.swift
 

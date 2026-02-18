@@ -17,8 +17,8 @@ export const todolistSteps: TodolistStep[] = [
 	},
 	{
 		id: 'step3',
-		title: 'ステップ3: どのリストにも使えるCustomList(CustomList.swift)',
-		summary: '汎用リストコンポーネントを作成します。'
+		title: 'ステップ3: リストコンポーネントを作る(CustomList.swift)',
+		summary: 'リストの見た目をカスタマイズします。'
 	},
 	{
 		id: 'step4',

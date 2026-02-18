@@ -116,7 +116,8 @@ let onToggle: () -> Void
 
 ## 5. UIの実装: テキスト
 
-チェックボックスの右側にタスク名を表示させます。`ZStack` の閉じ括弧 `}` の後ろに追加してください。
+チェックボックスの右側にタスク名を表示させます。`ZStack` の閉じ括弧 `}` の後ろに追加してください。この画像のようにタスク名を表示させる箇所です。
+<img src="/images/todolist/2-5.png" alt="ToDoListItemの完成イメージ" class="mobile-screenshot" />
 
 ```swift
                 // タスク名のテキスト
@@ -145,9 +146,7 @@ Xcodeのキャンバスで動作確認ができるように、プレビュー用
     // 状態変化を確認するためのラッパー
     struct PreviewWrapper: View {
         @State private var items = [
-            (id: UUID(), title: "タップで状態切り替え", isCompleted: false),
-            (id: UUID(), title: "完了したタスク", isCompleted: true),
-            (id: UUID(), title: "長いタスク名の場合の表示確認テスト", isCompleted: false)
+            (id: UUID(), title: "タップで状態切り替え", isCompleted: false)
         ]
 
         var body: some View {
@@ -170,15 +169,15 @@ Xcodeのキャンバスで動作確認ができるように、プレビュー用
 ```
 
 - `#Preview`: このブロック内に書いたコードがXcodeのプレビュー画面に表示されます。
-- `PreviewWrapper`: `ToDoListItem` だけでは状態（完了/未完了）を保持できないため、プレビュー用に仮の状態管理を行うビューを作っています。
+- `PreviewWrapper`: `ToDoListItem` だけでは状態（完了/未完了）を保持できないため、プレビュー用に仮の状態管理を行うビューを作っています。  
+  ※ このコードは、実際のアプリ本体には必須ではありませんが、プレビュー上で動作や状態変化を確認するためのテスト用ラッパーとして書かれています。  
+  ※ サンプルのタスクデータを用意し、リスト表示やチェック状態の切り替えが正しく動くかを、実行せずに確認できるようにしています。
 
 ---
 
 ## コード全体
 
-### Components/ToDoListItem.swift
-
-```swift
+```swift title="Components/ToDoListItem.swift"
 import SwiftUI
 
 struct ToDoListItem: View {
@@ -232,9 +231,7 @@ struct ToDoListItem: View {
 #Preview {
     struct PreviewWrapper: View {
         @State private var items = [
-            (id: UUID(), title: "タップで状態切り替え", isCompleted: false),
-            (id: UUID(), title: "開発チームに連絡する", isCompleted: true),
-            (id: UUID(), title: "ジムに行く", isCompleted: false)
+            (id: UUID(), title: "タップで状態切り替え", isCompleted: false)
         ]
 
         var body: some View {

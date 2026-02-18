@@ -1,19 +1,23 @@
-# ステップ3: どのリストにも使えるCustomList(CustomList.swift)
+# ステップ3: リストコンポーネントを作る(CustomList.swift)
 
-## 1. 基本構造の作成
+### ステップ3終了時の完成イメージ
 
-`Components/CustomList.swift` を以下のように書き換えて、汎用的に使える構造体（ジェネリクス）の土台を作ります。
+<img src="/images/todolist/CustomList.png" alt="CustomListの完成イメージ" class="mobile-screenshot-top" />
+
+## 1. 土台の作成
+
+まず、`Components/CustomList.swift` の中身を以下のように書き換えて土台を作ります。
 
 ```swift
 import SwiftUI
 
 struct CustomList<T: Identifiable, RowContent: View>: View {
-    // データを保持する配列
     let items: [T]
-    // スワイプ削除時のアクション（必要な場合のみ）
+    // リストのアイテムを保持する配列
     let onDelete: ((IndexSet) -> Void)?
-    // 各行の見た目を作るためのクロージャ
+    // リストのアイテムを削除するときの処理(step20で使います)
     @ViewBuilder let rowContent: (T) -> RowContent
+    // リストのアイテムを表示するための関数
 
     var body: some View {
         List {
@@ -24,8 +28,8 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
 }
 ```
 
-- `<T: Identifiable, RowContent: View>`: `T` は表示するデータ（IDを持っている必要がある）、`RowContent` は行の見た目（View）を表すジェネリクスです。これにより、どんなデータ型でもリスト表示できるようになります。
-- `@ViewBuilder`: クロージャ内で複数のViewを返せるようにするための属性です。
+- `<T: Identifiable, RowContent: View>`: `T` はリストで表示するアイテム、`RowContent` は各行の見た目の型を指定します。どんなデータでも同じ書き方で表示できるようにするための仕組みです。
+- `@ViewBuilder`: 複数のリストのアイテムをまとめて書けるようにするための指定の方法です。
 
 ## 2. リストの中身を実装
 
@@ -102,8 +106,6 @@ rowContent(item)
 ---
 
 ## コード全体
-
-<img src="/images/todolist/CustomList.png" alt="CustomListの完成イメージ" class="mobile-screenshot" />
 
 ```swift title="Components/CustomList.swift"
 import SwiftUI
