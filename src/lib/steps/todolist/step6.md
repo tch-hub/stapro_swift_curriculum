@@ -1,5 +1,9 @@
 # ステップ6: タブ選択ヘッダーを作る(TabHeaderView.swift)
 
+### ステップ6終了時の完成イメージ
+
+<img src="/images/todolist/TabHeaderView.png" alt="TabHeaderViewの完成イメージ" class="mobile-screenshot-top" />
+
 ## 1. 基本構造とデータ型の定義
 
 `Components/TabHeaderView.swift` を開き、まずはタブを表すデータ型とコンポーネントの骨組みを作ります。
@@ -173,8 +177,6 @@ struct TabHeaderView: View {
 ---
 
 ## コード全体
-
-<img src="/images/todolist/TabHeaderView.png" alt="TabHeaderViewの完成イメージ" class="mobile-screenshot" />
 
 ### Components/TabHeaderView.swift
 

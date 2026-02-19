@@ -11,6 +11,23 @@
 					"keywords": ["margin", "space", "inset", "余白", "パディング", "間隔"]
 				},
 				{
+					"title": "EdgeInsets - 4辺の余白を指定",
+					"code": "// EdgeInsets()は、ビューの上下左右の余白を個別に指定する構造体\n// 主に padding() や listRowInsets() の引数として使用される\n\n// === 基本的な使い方 ===\n\n// すべてのパラメータを指定\nText(\"カスタム余白\")\n    .padding(EdgeInsets(\n        top: 10,      // 上\n        leading: 20,  // 左（RTL対応）\n        bottom: 10,   // 下\n        trailing: 20  // 右（RTL対応）\n    ))\n\n// === 括弧内を書かない場合 ===\n\n// EdgeInsets()と括弧内を空にすると、すべての値が 0 になる\nText(\"余白なし\")\n    .padding(EdgeInsets())\n    // これは .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)) と同じ\n    // 結果的に余白がまったく追加されない\n\n// === 部分的にnilを指定する場合 ===\n\n// listRowInsets()では、nilを指定して特定の辺のデフォルト値を保持できる\nList {\n    Text(\"例1\")\n        .listRowInsets(EdgeInsets(\n            top: 0,\n            leading: nil,    // デフォルト値を使用\n            bottom: 0,\n            trailing: 0\n        ))\n}\n\n// === 対称的な余白の指定方法 ===\n\n// すべて同じ値\nText(\"全方向10pt\")\n    .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))\n    // .padding(10) と同じ結果\n\n// 上下と左右が同じ\nText(\"上下10pt、左右20pt\")\n    .padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))\n\n// === 実践的な例 ===\n\n// リスト行で背景が画面端まで広がる場合\nstruct FullWidthListView: View {\n    var body: some View {\n        List {\n            VStack {\n                HStack {\n                    Image(systemName: \"star.fill\")\n                    Text(\"おすすめ\")\n                }\n            }\n            .padding(.vertical, 12)\n            .background(Color.yellow.opacity(0.2))\n            .listRowInsets(EdgeInsets(\n                top: 0,\n                leading: 0,    // 左の余白なし\n                bottom: 0,\n                trailing: 0    // 右の余白なし\n            ))\n            // このEdgeInsets()により、背景が左右いっぱいに広がる\n        }\n    }\n}\n\n// 特定の辺のみカスタマイズ\nstruct CustomPaddingView: View {\n    var body: some View {\n        VStack {\n            // 上下のみに余白を追加\n            Text(\"テキスト\")\n                .padding(EdgeInsets(\n                    top: 20,\n                    leading: 0,\n                    bottom: 20,\n                    trailing: 0\n                ))\n            \n            // 左右のみに余白を追加\n            Text(\"テキスト\")\n                .padding(EdgeInsets(\n                    top: 0,\n                    leading: 20,\n                    bottom: 0,\n                    trailing: 20\n                ))\n        }\n    }\n}\n\n// === EdgeInsets() と EdgeInsets の違い ===\n\n// EdgeInsets() - 初期化時にすべてのパラメータが 0 になる（引数なし）\nlet emptyInsets = EdgeInsets()\n// top: 0, leading: 0, bottom: 0, trailing: 0\n\n// EdgeInsets(top:, leading:, bottom:, trailing:) - 各値を指定\nlet customInsets = EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)\n\n// === 実装のポイント ===\n\n// 1. padding()で4辺を個別に指定したい場合に使用\n// 2. 括弧内を空にすると、すべての値が 0 になる\n// 3. listRowInsets()では nil を指定してデフォルト値を保持できる\n// 4. leading / trailing は、RTL（右から左）言語にも対応している\n// 5. left / right ではなく leading / trailing を使う（国際化対応）",
+					"keywords": [
+						"EdgeInsets",
+						"insets",
+						"padding",
+						"margins",
+						"top",
+						"leading",
+						"bottom",
+						"trailing",
+						"余白",
+						"4辺",
+						"個別指定"
+					]
+				},
+				{
 					"title": "frame() - サイズの指定",
 					"code": "// frame()でサイズを指定\nText(\"固定サイズ\")\n    .frame(width: 200, height: 100)     // 幅200pt、高さ100pt\n\nText(\"最小・最大サイズ\")\n    .frame(minWidth: 100, maxWidth: 300)  // 幅の範囲を指定\n\nText(\"親に合わせる\")\n    .frame(maxWidth: .infinity)           // 親の幅いっぱいに広がる\n\nText(\"配置を指定\")\n    .frame(width: 200, height: 100, alignment: .topLeading)  // 左上に配置",
 					"keywords": ["size", "width", "height", "dimension", "サイズ", "大きさ", "幅", "高さ"]
@@ -625,6 +642,20 @@
 					]
 				},
 				{
+					"title": "listRowSeparator() - リスト行の区切り線",
+					"code": "// listRowSeparator()はリスト行の区切り線の表示/非表示を制御する修飾子\n// iOS 15以降で利用可能\n\n// === 基本的な使用方法 ===\n\n// デフォルト（区切り線表示）\nList {\n    Text(\"項目1\")\n    Text(\"項目2\")\n    Text(\"項目3\")\n}\n\n// 区切り線を非表示\nList {\n    Text(\"区切り線なし1\")\n    Text(\"区切り線なし2\")\n    Text(\"区切り線なし3\")\n}\n.listRowSeparator(.hidden)            // すべての行の区切り線を非表示\n\n// === 部分的に区切り線を制御 ===\n\n// 特定の行のみ区切り線を非表示\nList {\n    Text(\"最初の項目\")\n    \n    Text(\"区切り線なし\")\n        .listRowSeparator(.hidden)    // この行だけ区切り線なし\n    \n    Text(\"最後の項目\")\n}\n\n// 複数の行を非表示\nList {\n    ForEach(0..<10, id: \\.self) { index in\n        Text(\"項目 \\(index + 1)\")\n            .listRowSeparator(index == 9 ? .hidden : .visible)  // 最後の行のみ非表示\n    }\n}\n\n// === 区切り線の色とインセットを変更 ===\n\n// iOS 16以降で区切り線のカスタマイズも可能\nList {\n    Text(\"項目1\")\n    Text(\"項目2\")\n}\n.listRowSeparator(.visible, edges: .bottom)  // 下線のみ表示\n\n// === 実践的な例 ===\n\n// セクション分けされたリスト\nstruct SectionedListView: View {\n    var body: some View {\n        List {\n            Section(header: Text(\"設定\")) {\n                Text(\"アカウント\")\n                Text(\"通知\")\n                Text(\"プライバシー\")\n            }\n            \n            Section(header: Text(\"サポート\")) {\n                Text(\"よくある質問\")\n                Text(\"お問い合わせ\")\n                Text(\"利用規約\")\n                    .listRowSeparator(.hidden)  // 最後の行は区切り線なし\n            }\n        }\n    }\n}\n\n// グループ化リストで区切り線を非表示\nList {\n    Text(\"カード1\")\n    Text(\"カード2\")\n    Text(\"カード3\")\n}\n.listStyle(.grouped)\n.listRowSeparator(.hidden)            // グループ化リストのすべての区切り線を非表示\n\n// カスタムセパレータ挿入\nstruct CustomSeparatorListView: View {\n    let items = [\"A\", \"B\", \"C\", \"D\"]\n    \n    var body: some View {\n        List(items, id: \\.self) { item in\n            VStack {\n                Text(item)\n                    .font(.headline)\n                \n                // 区切り線を非表示にして、カスタムセパレータを手動で追加\n                Divider()\n                    .foregroundStyle(.blue)\n            }\n            .listRowSeparator(.hidden)  // デフォルトの区切り線を非表示\n        }\n    }\n}\n\n// === 区切り線の表示/非表示の判定 ===\n\nList {\n    ForEach(Array(items.enumerated()), id: \\.element) { index, item in\n        Text(item)\n            // 最後の項目以外に区切り線を表示\n            .listRowSeparator(\n                index < items.count - 1 ? .visible : .hidden\n            )\n    }\n}\n\n// === 実装のポイント ===\n\n// 1. List全体に適用すると、すべての行に反映される\n// 2. 特定の行に適用して、その行のみを制御できる\n// 3. セクション化されたリストでも行単位で制御可能\n// 4. .visible と .hidden で明示的に制御\n// 5. 区切り線なしの場合、visually separatedされないため注意が必要",
+					"keywords": [
+						"separator",
+						"divider",
+						"line",
+						"hidden",
+						"visible",
+						"区切り線",
+						"セパレータ",
+						"行区切り"
+					]
+				},
+				{
 					"title": "textFieldStyle() - テキストフィールドスタイル",
 					"code": "// テキストフィールドスタイルの種類\n@State private var text = \"\"\n\nTextField(\"プレースホルダー\", text: $text)\n    // デフォルトスタイル（指定なし）\n\nTextField(\"Plain\", text: $text)\n    .textFieldStyle(.plain)           // 枠線なし\n\nTextField(\"Rounded Border\", text: $text)\n    .textFieldStyle(.roundedBorder)   // 角丸の枠線\n\n// テキストフィールドのカスタマイズ\nTextField(\"カスタム\", text: $text)\n    .padding()\n    .background(Color(.secondarySystemBackground))\n    .cornerRadius(10)\n    .overlay(\n        RoundedRectangle(cornerRadius: 10)\n            .stroke(Color.blue, lineWidth: 1)\n    )",
 					"keywords": ["appearance", "border", "input", "field", "入力欄", "テキストフィールド"]
@@ -673,6 +704,103 @@
 						"タイトル",
 						"ツールバー",
 						"画面遷移"
+					]
+				}
+			]
+		},
+		{
+			"id": "icons",
+			"title": "SF Symbols（アイコン）",
+			"description": "SwiftUIで使用できるシステムアイコン（SF Symbols）のスタイリング方法です。",
+			"codeBlocks": [
+				{
+					"title": "Image(systemName:) - SF Symbolsの基本",
+					"code": "// SF Symbolsを表示する基本的な方法\n// systemName引数にアイコン名を指定\n\n// === 基本的な使い方 ===\n\n// チェックマークアイコン\nImage(systemName: \"checkmark.circle\")\n\n// リストアイコン\nImage(systemName: \"list.bullet\")\n\n// スター（お気に入り）\nImage(systemName: \"star.fill\")\n\n// 設定（ギア）\nImage(systemName: \"gear\")\n\n// ハート\nImage(systemName: \"heart.fill\")\n\n// === よく使用されるアイコン名 ===\n\n// チェック関連\nImage(systemName: \"checkmark\")         // チェックマーク\nImage(systemName: \"checkmark.circle\") // 丸いチェック\nImage(systemName: \"checkmark.circle.fill\") // 塗りつぶされた丸いチェック\nImage(systemName: \"xmark\")             // バツ印\nImage(systemName: \"xmark.circle\")     // 丸いバツ\n\n// リスト関連\nImage(systemName: \"list.bullet\")      // 箇条書きリスト\nImage(systemName: \"list.number\")      // 番号付きリスト\nImage(systemName: \"checklist\")        // チェックリスト\n\n// 追加・削除\nImage(systemName: \"plus\")              // プラス\nImage(systemName: \"plus.circle\")      // 丸いプラス\nImage(systemName: \"plus.circle.fill\") // 塗りつぶされた丸いプラス\nImage(systemName: \"minus\")             // マイナス\nImage(systemName: \"trash\")             // ゴミ箱\n\n// UI制御\nImage(systemName: \"slider.horizontal.3\") // スライダー\nImage(systemName: \"toggle.2\")          // トグルスイッチ\nImage(systemName: \"square.and.pencil\") // 編集\n\n// === 複合的な使用例 ===\n\n// アイコン付きボタン\nButton(action: {}) {\n    HStack {\n        Image(systemName: \"star.fill\")\n        Text(\"お気に入り\")\n    }\n}\n\n// アイコン付きラベル\nLabel(\"完了\", systemImage: \"checkmark.circle.fill\")",
+					"keywords": [
+						"icon",
+						"symbol",
+						"systemName",
+						"SF",
+						"image",
+						"checkmark.circle",
+						"list.bullet",
+						"star.fill",
+						"gear",
+						"heart.fill",
+						"checkmark.circle.fill",
+						"xmark.circle",
+						"plus",
+						"minus",
+						"trash",
+						"アイコン",
+						"シンボル"
+					]
+				},
+				{
+					"title": ".font() - アイコンのサイズと太さ指定",
+					"code": "// アイコンのサイズか太さを指定する\n\n// === システムフォントスタイルでサイズ指定 ===\n\n// 小サイズ\nImage(systemName: \"checkmark.circle\")\n    .font(.caption)       // 12pt\n\n// 中サイズ\nImage(systemName: \"checkmark.circle\")\n    .font(.body)          // 17pt\n\n// 大サイズ\nImage(systemName: \"checkmark.circle\")\n    .font(.title)         // 28pt\n\n// 最大サイズ\nImage(systemName: \"checkmark.circle\")\n    .font(.largeTitle)    // 34pt\n\n// === カスタムサイズ指定 ===\n\n// 特定の大きさに設定\nImage(systemName: \"checkmark.circle\")\n    .font(.system(size: 48))  // 48ptに設定\n\n// === 太さ（weight）の指定 ===\n\n// デフォルト（regular）\nImage(systemName: \"checkmark.circle\")\n    .font(.system(size: 24))\n\n// 太文字\nImage(systemName: \"checkmark.circle\")\n    .font(.system(size: 24, weight: .bold))\n\n// 細文字\nImage(systemName: \"checkmark.circle\")\n    .font(.system(size: 24, weight: .light))\n\n// === 実践的な例 ===\n\n// タスク完了画面のアイコン\nVStack {\n    Image(systemName: \"checkmark.circle\")\n        .font(.system(size: 60))  // 大きく表示\n        .foregroundStyle(.green)\n    \n    Text(\"完了しました\")\n        .font(.title2)\n}\n\n// リスト内のステータスアイコン\nHStack {\n    Image(systemName: \"checkmark.circle.fill\")  // 完了済み\n        .font(.system(size: 20))\n        .foregroundStyle(.green)\n    \n    Text(\"タスク1\")\n}\n\n// ナビゲーション用のアイコン\nButton(action: {}) {\n    Image(systemName: \"list.bullet\")\n        .font(.system(size: 18, weight: .semibold))\n        .foregroundStyle(.blue)\n}",
+					"keywords": [
+						"size",
+						"weight",
+						"font",
+						"scale",
+						"bold",
+						"checkmark.circle",
+						"checkmark.circle.fill",
+						"list.bullet",
+						"サイズ",
+						"太さ",
+						"フォント"
+					]
+				},
+				{
+					"title": ".foregroundStyle() - アイコンの色指定",
+					"code": "// アイコンの色を指定する\n\n// === 基本的な色を使用 ===\n\n// 赤\nImage(systemName: \"checkmark.circle\")\n    .foregroundStyle(.red)\n\n// 青\nImage(systemName: \"list.bullet\")\n    .foregroundStyle(.blue)\n\n// 緑（完了を表現）\nImage(systemName: \"checkmark.circle.fill\")\n    .foregroundStyle(.green)\n\n// グレー（無効状態）\nImage(systemName: \"xmark.circle\")\n    .foregroundStyle(.gray)\n\n// === カスタムカラー ===\n\n// RGB値で指定\nImage(systemName: \"star.fill\")\n    .foregroundStyle(Color(red: 1.0, green: 0.8, blue: 0.0))  // 黄色\n\n// 透明度付き\nImage(systemName: \"checkbox.circle\")\n    .foregroundStyle(.blue.opacity(0.7))\n\n// === アクセントカラー ===\n\n// アプリで定義されたアクセントカラー\nImage(systemName: \"gear\")\n    .foregroundStyle(.accentColor)\n\n// === グラデーション ===\n\n// 線形グラデーション\nImage(systemName: \"heart.fill\")\n    .foregroundStyle(\n        LinearGradient(\n            colors: [.red, .pink],\n            startPoint: .topLeading,\n            endPoint: .bottomTrailing\n        )\n    )\n\n// === 実践的な例 ===\n\n// ステータスを色で表現\nHStack(spacing: 12) {\n    // 完了\n    Image(systemName: \"checkmark.circle.fill\")\n        .foregroundStyle(.green)\n    \n    // 未完了\n    Image(systemName: \"circle\")\n        .foregroundStyle(.gray)\n    \n    // エラー\n    Image(systemName: \"xmark.circle.fill\")\n        .foregroundStyle(.red)\n}\n\n// 画面内でのアイコンの色分け\nVStack(spacing: 16) {\n    // 肯定的なアクション（完了）\n    Image(systemName: \"checkmark.circle\")\n        .font(.system(size: 32))\n        .foregroundStyle(.green)\n    \n    // 否定的なアクション（キャンセル）\n    Image(systemName: \"xmark.circle\")\n        .font(.system(size: 32))\n        .foregroundStyle(.red)\n    \n    // 中立的なアクション（設定）\n    Image(systemName: \"gear\")\n        .font(.system(size: 32))\n        .foregroundStyle(.blue)\n}",
+					"keywords": [
+						"color",
+						"foregroundColor",
+						"style",
+						"tint",
+						"checkmark.circle",
+						"checkmark.circle.fill",
+						"xmark.circle",
+						"list.bullet",
+						"star.fill",
+						"gear",
+						"heart.fill",
+						"色",
+						"カラー",
+						"着色"
+					]
+				},
+				{
+					"title": "複合修飾子 - アイコンの完全なスタイリング",
+					"code": "// 複数の修飾子を組み合わせてアイコンを完全にスタイリング\n\n// === 基本的な組み合わせ ===\n\n// サイズ + 色\nImage(systemName: \"star.fill\")\n    .font(.system(size: 24))\n    .foregroundStyle(.yellow)\n\n// サイズ + 色 + パディング\nImage(systemName: \"checkmark.circle.fill\")\n    .font(.system(size: 32))\n    .foregroundStyle(.green)\n    .padding(12)\n    .background(\n        Circle()\n            .fill(.green.opacity(0.1))\n    )\n    .clipShape(Circle())\n\n// === 複雑なスタイリング例 ===\n\n// タスク完了表示\nVStack(spacing: 16) {\n    Image(systemName: \"checkmark.circle\")\n        .font(.system(size: 60, weight: .bold))\n        .foregroundStyle(.green)\n    \n    Text(\"完了しました\")\n        .font(.title2)\n        .fontWeight(.semibold)\n}\n.padding(32)\n.background(\n    RoundedRectangle(cornerRadius: 16)\n        .fill(.green.opacity(0.1))\n)\n\n// リストアイテムのステータスアイコン\nHStack(spacing: 12) {\n    Image(systemName: \"checkmark.circle.fill\")\n        .font(.system(size: 20, weight: .semibold))\n        .foregroundStyle(.green)\n    \n    VStack(alignment: .leading, spacing: 4) {\n        Text(\"タスク1\")\n            .font(.headline)\n        Text(\"完了日時: 2026年2月19日\")\n            .font(.caption)\n            .foregroundStyle(.gray)\n    }\n    \n    Spacer()\n}\n.padding()\n.background(\n    RoundedRectangle(cornerRadius: 8)\n        .fill(Color(.systemGray6))\n)\n\n// トグルボタン\nButton(action: {}) {\n    HStack(spacing: 8) {\n        Image(systemName: \"checkmark.circle.fill\")\n            .font(.system(size: 18))\n            .foregroundStyle(.blue)\n        \n        Text(\"マーク\")\n            .font(.callout)\n            .fontWeight(.medium)\n    }\n    .padding(.vertical, 8)\n    .padding(.horizontal, 12)\n    .background(\n        RoundedRectangle(cornerRadius: 6)\n            .stroke(.blue, lineWidth: 1.5)\n    )\n}\n\n// EmptyState表示\nVStack(spacing: 16) {\n    Image(systemName: \"list.bullet\")\n        .font(.system(size: 48))\n        .foregroundStyle(.gray)\n    \n    Text(\"タスクがありません\")\n        .font(.headline)\n        .foregroundStyle(.gray)\n    \n    Text(\"新しいタスクを追加してください\")\n        .font(.caption)\n        .foregroundStyle(.gray.opacity(0.7))\n}\n.frame(maxWidth: .infinity, maxHeight: .infinity)",
+					"keywords": [
+						"combination",
+						"composite",
+						"multiple",
+						"modifier",
+						"複合",
+						"結合",
+						"パッケージング"
+					]
+				},
+				{
+					"title": "scaleEffect() - アイコンのスケーリング",
+					"code": "// scaleEffect()を使用してアイコンを拡大・縮小する\n\n// === 基本的なスケーリング ===\n\n// 1.5倍に拡大\nImage(systemName: \"star.fill\")\n    .scaleEffect(1.5)\n\n// 0.8倍に縮小\nImage(systemName: \"checkmark.circle\")\n    .scaleEffect(0.8)\n\n// === X軸とY軸を別々に指定 ===\n\n// X方向のみ2倍（横長）\nImage(systemName: \"arrow.right\")\n    .scaleEffect(x: 2.0, y: 1.0)\n\n// Y方向のみ2倍（縦長）\nImage(systemName: \"arrow.up\")\n    .scaleEffect(x: 1.0, y: 2.0)\n\n// === アニメーションと組み合わせ ===\n\nstruct ScaleAnimationExample: View {\n    @State private var isPressed = false\n    \n    var body: some View {\n        Button(action: {\n            isPressed.toggle()\n        }) {\n            Image(systemName: \"heart.fill\")\n                .font(.system(size: 32))\n                .foregroundStyle(.red)\n                .scaleEffect(isPressed ? 1.2 : 1.0)  // タップで拡大\n                .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isPressed)\n        }\n    }\n}\n\n// === 実践的な例 ===\n\n// ハイライト表示\nImage(systemName: \"star.fill\")\n    .font(.system(size: 24))\n    .foregroundStyle(.yellow)\n    .scaleEffect(1.2)  // 少し大きく表示\n\n// 注目を集めるアイコン\nVStack {\n    Image(systemName: \"exclamationmark.circle.fill\")\n        .font(.system(size: 40))\n        .foregroundStyle(.orange)\n        .scaleEffect(1.1)\n    \n    Text(\"注意\")\n        .font(.headline)\n}\n\n// === fontと併用する場合 ===\n\n// font()で基本サイズを設定してからscaleEffect()で調整\nImage(systemName: \"checkmark.circle\")\n    .font(.system(size: 24))\n    .scaleEffect(1.5)  // 24 * 1.5 = 36ptになる\n    .foregroundStyle(.green)",
+					"keywords": [
+						"scale",
+						"size",
+						"zoom",
+						"enlarge",
+						"shrink",
+						"star.fill",
+						"checkmark.circle",
+						"heart.fill",
+						"拡大",
+						"縮小",
+						"スケール"
 					]
 				}
 			]

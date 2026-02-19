@@ -26,6 +26,8 @@ struct EmptyStateView: View {
 
 `body` の中身を書き換えて、タブの選択状態に応じた表示（アイコンとメッセージ）を作ります。
 
+<img src="/images/todolist/4-2.png" alt="HomeViewの完成イメージ" class="mobile-screenshot" />
+
 ```swift
 var body: some View {
     if hasSelectedTab {
@@ -57,6 +59,7 @@ var body: some View {
 - `hasSelectedTab` が `true`: 「タスクはまだありません」を表示
 - `hasSelectedTab` が `false`: 「タブを選択してください」を表示
 - `.frame(maxWidth: .infinity, maxHeight: .infinity)`: 画面いっぱいに広げて、コンテンツを中央に配置します。
+- `systemName`はApple が用意している、完了を表すチェック付きの丸アイコンとリストアイコンです。
 
 ## 3. プレビュー機能を追加する
 
@@ -68,13 +71,16 @@ var body: some View {
 }
 ```
 
+- `#Preview`: このブロック内に書いたコードがXcodeのプレビュー画面に表示されます。
+
+  ※ このコードは、実際のアプリ本体には必須ではありませんが、プレビュー上で動作や状態変化を確認するためのテスト用ラッパーとして書かれています。  
+  ※ 実行せずに確認できるようにしています。
+
 ---
 
 ## コード全体
 
-### Components/EmptyStateView.swift
-
-```swift
+```swift title="Components/EmptyStateView.swift"
 import SwiftUI
 
 struct EmptyStateView: View {

@@ -129,6 +129,31 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="card mb-8 bg-base-100 shadow-xl">
+			<div class="card-body">
+				<h2 class="card-title text-2xl">SF Symbolsアプリをダウンロード</h2>
+				<p class="mb-4 text-lg">Swiftでアイコンを使用する際に便利なツールです。</p>
+
+				<div class="card bg-base-200">
+					<div class="card-body">
+						<h3 class="card-title">App Storeからインストール</h3>
+						<ol class="list-inside list-decimal space-y-2">
+							<li>
+								<a href="https://developer.apple.com/jp/sf-symbols/" class="underline"
+									>ダウンロードリンク</a
+								>からSF Symbolsアプリをダウンロードします
+							</li>
+							<li>「ダウンロード」ボタンをクリック</li>
+							<li>ダウンロードが完了したら、Launchpadから「SF Symbols」を起動</li>
+							<li>
+								Xcodeで使用したいシンボルを検索して、その名前をコピーして利用することができます
+							</li>
+						</ol>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="mb-4 flex justify-between">
 			<button class="btn btn-outline" onclick={() => currentStep--}>前のステップ</button>
 			<button class="btn btn-primary" onclick={() => currentStep++}>次のステップ</button>

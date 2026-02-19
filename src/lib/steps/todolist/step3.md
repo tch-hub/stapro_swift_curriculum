@@ -33,7 +33,9 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
 
 ## 2. リストの中身を実装
 
-`List` の中身を実装します。削除機能が有効な場合とそうでない場合で処理を分けます。
+`List` の中身を実装します。
+
+> このコードはSwift コンパイラや Xcode のプレビュータブがエラーにならないようにするためだけに用意しています。
 
 ```swift
 List {
@@ -53,9 +55,14 @@ List {
 .listStyle(.plain)
 ```
 
+- この `if let onDelete = onDelete` の分岐は、削除の処理が渡されている場合だけ `onDelete` を呼び出せるようにするためです。`onDelete` が nil のままでも `List` と `ForEach` は表示されるので、タップだけで使う場合や次のステップまで削除機能を後回しにするケースでもエラーになりません。
+- `ForEach(items)` の中では `rowContent(item)` で任意の行を描画し、削除に対応できる場合は `.onDelete(perform: onDelete)` を追加してスワイプで削除できるようにしています。
+
 ## 3. リストの区切り線を調整
 
 デフォルトの区切り線を消して、スッキリした見た目にします。`rowContent(item)` の直後に以下のモディファイアを追加してください（`if` 側と `else` 側の両方の `rowContent(item)` に適用します）。
+
+<img src="/images/todolist/3-3.png" alt="ToDoListItemの完成イメージ" class="mobile-screenshot" />
 
 ```swift
 rowContent(item)
@@ -102,6 +109,11 @@ rowContent(item)
     return PreviewWrapper()
 }
 ```
+- `#Preview`: このブロック内に書いたコードがXcodeのプレビュー画面に表示されます。
+
+  ※ このコードは、実際のアプリ本体には必須ではありませんが、プレビュー上で動作や状態変化を確認するためのテスト用ラッパーとして書かれています。  
+  ※ サンプルのタスクデータを用意し、リスト表示が正しく動くかを、実行せずに確認できるようにしています。
+
 
 ---
 
