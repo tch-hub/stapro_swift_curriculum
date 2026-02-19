@@ -661,6 +661,20 @@
 					"keywords": ["appearance", "border", "input", "field", "入力欄", "テキストフィールド"]
 				},
 				{
+					"title": "axis - テキストフィールドの展開方向",
+					"code": "// axis パラメータはTextFieldが複数行になった場合の展開方向を制御する\n// iOS 16以降で利用可能\n\n// === 基本的な使い方 ===\n\n@State private var text = \"\"\n\n// デフォルト（単行）\nTextField(\"1行のみ\", text: $text)\n\n// === axis: .vertical（縦方向展開） ===\n\n// 複数行になると上下方向に拡張される\nTextField(\"説明を入力\", text: $text, axis: .vertical)\n    .padding()\n\n// === axis: .horizontal（横方向展開）===\n\n// 複数行になると左右方向に拡張される（テキストが折り返される）\nTextField(\"横方向\", text: $text, axis: .horizontal)\n\n// === 実践的な例 ===\n\n// チャットアプリのメッセージ入力\nstruct MessageInputView: View {\n    @State private var message = \"\"\n    \n    var body: some View {\n        HStack(alignment: .bottom, spacing: 12) {\n            // 複数行対応の入力欄\n            TextField(\"メッセージを入力...\", text: $message, axis: .vertical)\n                .padding(.vertical, 10)\n                .padding(.horizontal, 16)\n                .background(\n                    Capsule()\n                        .fill(Color(.secondarySystemBackground))\n                )\n                .lineLimit(3...8)  // 最小3行、最大8行\n            \n            Button(action: sendMessage) {\n                Image(systemName: \"arrow.up.circle.fill\")\n                    .font(.system(size: 32))\n            }\n        }\n        .padding()\n    }\n    \n    private func sendMessage() {\n        // 送信処理\n    }\n}\n\n// タスク説明の入力\nstruct TaskDescriptionView: View {\n    @State private var description = \"\"\n    \n    var body: some View {\n        VStack(alignment: .leading) {\n            Text(\"タスクの説明\")\n                .font(.headline)\n            \n            TextField(\"詳細を入力してください\", text: $description, axis: .vertical)\n                .padding()\n                .background(Color(.secondarySystemBackground))\n                .cornerRadius(8)\n                .lineLimit(3...5)  // 複数行に対応\n        }\n    }\n}\n\n// === axis と lineLimit の組み合わせ ===\n\n// 最小行数を設定（常に複数行になる）\nTextField(\"最小3行\", text: $text, axis: .vertical)\n    .lineLimit(3...)           // 最小3行\n    .padding()\n\n// 最大行数を制限\nTextField(\"最大5行\", text: $text, axis: .vertical)\n    .lineLimit(1...5)          // 1～5行\n    .padding()\n\n// === axis の違い ===\n\n// axis: .vertical（推奨）\n// - テキストが複数行になると、フィールドの高さが自動で拡張される\n// - チャットやメッセージ入力に最適\nTextField(\"複数行入力\", text: $text, axis: .vertical)\n\n// axis: .horizontal\n// - テキストが折り返され、フィールドの幅内に収まる\n// - 従来のテキストフィールドの動作\nTextField(\"単行\", text: $text, axis: .horizontal)\n\n// === 実装のポイント ===\n\n// 1. axis: .vertical で複数行入力に対応\n// 2. axis: .horizontal は従来のテキストフィールド動作\n// 3. lineLimit() と組み合わせて行数を制限できる\n// 4. .vertical + lineLimit(3...) で最小3行、上限なしの入力欄を実現\n// 5. padding() や background() と組み合わせてスタイリング可能",
+					"keywords": [
+						"axis",
+						"vertical",
+						"horizontal",
+						"multiline",
+						"複数行",
+						"展開",
+						"方向",
+						"テキストフィールド"
+					]
+				},
+				{
 					"title": "toggleStyle() - トグルスタイル",
 					"code": "// トグルスタイルの種類\n@State private var isOn = false\n\nToggle(\"自動\", isOn: $isOn)\n    .toggleStyle(.automatic)          // 自動（プラットフォームに応じて）\n\nToggle(\"スイッチ\", isOn: $isOn)\n    .toggleStyle(.switch)             // スイッチ型\n\nToggle(\"ボタン\", isOn: $isOn)\n    .toggleStyle(.button)             // ボタン型\n\n// トグルの色を変更\nToggle(\"カスタム色\", isOn: $isOn)\n    .toggleStyle(.switch)\n    .tint(.purple)                    // 紫色のトグル",
 					"keywords": ["switch", "button", "appearance", "input", "トグル", "スイッチ"]

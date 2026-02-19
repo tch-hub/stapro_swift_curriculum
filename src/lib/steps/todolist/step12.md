@@ -1,5 +1,9 @@
 # ステップ12: タブ管理画面を作る(TabManageView.swift)
 
+### ステップ12終了時の完成イメージ
+
+<img src="/images/todolist/TabManageView.png" alt="タブ管理画面の完成イメージ" class="mobile-screenshot-top" />
+
 ## 1. 基本的な構造とデータ管理
 
 `Views/TabmanageView.swift` を開き、基本的な構造を作ります。
@@ -186,8 +190,6 @@ struct TabManageView: View {
 ---
 
 ## コード全体
-
-<img src="/images/todolist/TabManageView.png" alt="タブ管理画面の完成イメージ" class="mobile-screenshot" />
 
 ### Views/TabmanageView.swift
 

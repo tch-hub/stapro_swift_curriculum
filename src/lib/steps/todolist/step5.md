@@ -48,10 +48,12 @@ struct InputView: View {
 ```swift
 // キーボードのフォーカス状態を管理
 @FocusState private var isFocused: Bool
+
 // 入力が空でないか判定（空白のみは無効）
 private var isValid: Bool {
     !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
 }
+
 // 送信時の処理
 private func handleSubmit() {
     guard isValid else { return } // 無効なら何もしない
@@ -62,20 +64,23 @@ private func handleSubmit() {
 ここで行っている3つの処理について解説します。
 
 - **`@FocusState private var isFocused: Bool`**
-  キーボードが出ているか（入力中か）どうかを管理する変数です。
+  入力中かどうかを管理する変数です。
   - 後ほど `TextField` に `.focused($isFocused)` と紐付けることで、プログラムからキーボードを閉じたり開いたりできるようになります。
 
 - **`private var isValid: Bool`**
-  「入力内容が有効かどうか」を判定する変数です（Computed Property）。
+  「入力内容が有効かどうか」を判定する変数です。
   - `trimmingCharacters` を使って、スペースや改行だけの入力を「無効（空）」とみなすようにしています。これにより、空のタスクが作られるのを防ぎます。
+  - `whitespacesAndNewlines`でスペースと改行を削除しています。
+  - `!text.isEmpty`で入力欄が空かどうかを判定しています。
 
 - **`private func handleSubmit()`**
   送信ボタンが押されたり、Enterキーが押されたりした時に呼ぶ関数です。
   - `guard isValid else { return }` というのは、「もし無効なら、ここで帰る（何もしない）」というガード（門番）の役割です。有効な場合だけ `onAdd()` を実行します。
+- 入力欄からスペースなどを削除した後に空かどうかを判定することでスペースだけの入力値にならないようにしています。
 
 ## 3. UIの実装: 入力エリアと背景
 
-`body` の中身を書き換えて、レイアウトの土台を作ります。半透明の背景の上に、要素を横並びにする `HStack` を配置します。
+`body` の中身を書き換えて、レイアウトの土台を作ります。半透明の背景の上に、入力欄と送信ボタンを横並びにする `HStack` を配置します。
 
 ```swift
     var body: some View {
@@ -108,6 +113,7 @@ private func handleSubmit() {
                 .onSubmit { handleSubmit() } // キーボードのEnterキーで送信
 ```
 
+- `TextField(axis: .vertical)`テキストが長くなって複数行になった場合に入力欄の高さを自動で調整します。
 - `Capsule()`: メッセージアプリのように、入力欄の背景を丸くしています。
 - `.onSubmit`: ソフトウェアキーボードの「確定」ボタンが押された時の動作を指定します。
 
@@ -155,7 +161,7 @@ private func handleSubmit() {
 #Preview {
     struct PreviewWrapper: View {
         @State var text = ""
-        @State var tasks: [String] = ["リストアイテム1", "リストアイテム2"]
+        @State var tasks: [String] = ["入力欄にテキストを入力すると", "リストにアイテムを追加できます"]
 
         var body: some View {
             ZStack(alignment: .bottom) {
@@ -173,6 +179,11 @@ private func handleSubmit() {
     return PreviewWrapper()
 }
 ```
+
+- `#Preview`: このブロック内に書いたコードがXcodeのプレビュー画面に表示されます。
+
+  ※ このコードは、実際のアプリ本体には必須ではありませんが、プレビュー上で動作や状態変化を確認するためのテスト用ラッパーとして書かれています。  
+  ※ 実行せずに確認できるようにしています。
 
 ---
 
@@ -234,7 +245,7 @@ struct InputView: View {
 #Preview {
     struct PreviewWrapper: View {
         @State var text = ""
-        @State var tasks: [String] = ["リストアイテム1", "リストアイテム2"]
+        @State var tasks: [String] = ["入力欄にテキストを入力すると", "リストにアイテムを追加できます"]
 
         var body: some View {
             ZStack(alignment: .bottom) {

@@ -132,6 +132,20 @@
 					"keywords": ["String", "文字列", "テキスト", "text", "string interpolation", "文字列補間"]
 				},
 				{
+					"title": "trimmingCharacters(_:) - 文字列の先頭と末尾を削除",
+					"description": "文字列の前後から指定した文字を削除するメソッドです。ユーザーが入力したテキストの余分なスペースや改行を取り除く際によく使います。.whitespaces を指定するとスペースと改行が削除されます。.whitespacesAndNewlines を指定するとスペース、タブ、改行がすべて削除されます。",
+					"code": "// === 基本的な使い方 ===\n\n// スペースを削除\nlet text = \"  Hello  \"\nlet trimmed = text.trimmingCharacters(in: .whitespaces)\nprint(\"'\\(trimmed)'\")  // 'Hello'\n\n// スペースと改行を削除\nlet textWithNewline = \" \\nHello\\n \"\nlet trimmed2 = textWithNewline.trimmingCharacters(in: .whitespacesAndNewlines)\nprint(\"'\\(trimmed2)'\")  // 'Hello'\n\n// === 実践的な例: ユーザー入力の処理 ===\n\nstruct SearchView: View {\n    @State private var searchText = \"\"\n    \n    var body: some View {\n        VStack {\n            TextField(\"検索\", text: $searchText)\n                .padding()\n            \n            Button(\"検索する\") {\n                // 前後のスペースを削除してから検索\n                let cleanedText = searchText.trimmingCharacters(in: .whitespacesAndNewlines)\n                if !cleanedText.isEmpty {\n                    print(\"検索キーワード: \\(cleanedText)\")\n                }\n            }\n        }\n    }\n}\n\n// === 複数の文字を削除 ===\n\n// カンマを含むカスタム文字セットで削除\nlet text3 = \",,Hello,World,,\"\nlet trimmed3 = text3.trimmingCharacters(in: CharacterSet(charactersIn: \",\"))\nprint(trimmed3)  // 'Hello,World'\n\n// === ToDoアプリでの使用例 ===\n\nstruct TodoInputView: View {\n    @State private var todoText = \"\"\n    @Environment(.modelContext) private var context\n    \n    func addTodo() {\n        // 空白を除去した内容を確認\n        let trimmedTitle = todoText.trimmingCharacters(in: .whitespacesAndNewlines)\n        \n        // 空の場合は追加しない\n        guard !trimmedTitle.isEmpty else { return }\n        \n        let newTodo = Todo(title: trimmedTitle)\n        context.insert(newTodo)\n        todoText = \"\"  // 入力欄をリセット\n    }\n    \n    var body: some View {\n        HStack {\n            TextField(\"新しいタスク\", text: $todoText)\n            Button(\"追加\") {\n                addTodo()\n            }\n        }\n        .padding()\n    }\n}",
+					"keywords": [
+						"trimmingCharacters",
+						"削除",
+						"whitespaces",
+						"whitespacesAndNewlines",
+						"スペース",
+						"改行",
+						"テキスト処理"
+					]
+				},
+				{
 					"title": "Bool - 論理型",
 					"description": "true（真）またはfalse（偽）の2つの値だけを持つ型です。条件分岐（if文）やフラグ管理に使用します。SwiftUIでは画面の表示/非表示の制御などに頻繁に使われます。",
 					"code": "let isStudent: Bool = true\nlet hasFinished = false  // 型推論でBoolになる\n\nif isStudent {\n    print(\"学生です\")\n}\n// 出力: 学生です",
@@ -309,6 +323,42 @@
 						"非同期",
 						"async",
 						"DispatchQueue"
+					]
+				},
+				{
+					"title": "onSubmit - フォーム送信時の処理",
+					"description": "onSubmitは、フォームやテキストフィールドで確定キーを押したときに実行される処理を指定するモディファイアです。ユーザーが『完了』『改行』『検索』などのキーを押したときに、テキストを送信したり、データを保存したりする際に使います。TextFieldやSecureFieldに付けることで、入力終了時の動作をカスタマイズできます。",
+					"code": "import SwiftUI\n\n// === 基本的な使い方 ===\n\nstruct SearchView: View {\n    @State private var searchText = \"\"\n    \n    var body: some View {\n        TextField(\"検索キーワード\", text: $searchText)\n            .textFieldStyle(.roundedBorder)\n            .padding()\n            .onSubmit {\n                // 確定キーが押されたときの処理\n                performSearch(searchText)\n            }\n    }\n    \n    func performSearch(_ query: String) {\n        print(\"検索実行: \\(query)\")\n    }\n}\n\n// === ToDoアプリでの使用例 ===\n\nstruct TodoInputView: View {\n    @State private var todoText = \"\"\n    @Environment(.modelContext) private var context\n    \n    func addTodo() {\n        let trimmedTitle = todoText.trimmingCharacters(in: .whitespacesAndNewlines)\n        guard !trimmedTitle.isEmpty else { return }\n        \n        let newTodo = Todo(title: trimmedTitle)\n        context.insert(newTodo)\n        todoText = \"\"  // 入力欄をリセット\n    }\n    \n    var body: some View {\n        HStack {\n            TextField(\"新しいタスク\", text: $todoText)\n                .textFieldStyle(.roundedBorder)\n                .onSubmit {\n                    // EnterキーやDoneキーで追加\n                    addTodo()\n                }\n            \n            Button(\"追加\") {\n                addTodo()\n            }\n        }\n        .padding()\n    }\n}\n\n// === 複数のフィールドで使い分ける ===\n\nstruct LoginView: View {\n    @State private var email = \"\"\n    @State private var password = \"\"\n    \n    var body: some View {\n        VStack {\n            TextField(\"メールアドレス\", text: $email)\n                .textFieldStyle(.roundedBorder)\n                .onSubmit {\n                    // メール入力後は次のフィールドへ\n                    // (通常はTabキーで自動移動される)\n                }\n            \n            SecureField(\"パスワード\", text: $password)\n                .textFieldStyle(.roundedBorder)\n                .onSubmit {\n                    // パスワード入力後はログイン処理\n                    login()\n                }\n            \n            Button(\"ログイン\") {\n                login()\n            }\n        }\n        .padding()\n    }\n    \n    func login() {\n        print(\"ログイン: \\(email)\")\n    }\n}\n\n// === onSubmitのポイント ===\n// ✅ TextFieldやSecureFieldに付与する\n// ✅ ユーザーが確定キー（DoneやReturn）を押したとき実行\n// ✅ ボタンと組み合わせて複数の実行方法を用意すると親切\n// ✅ 入力値の検証やデータ保存に使用",
+					"keywords": [
+						"onSubmit",
+						"フォーム",
+						"送信",
+						"TextField",
+						"SecureField",
+						"確定キー",
+						"Enter",
+						"Return",
+						"Done"
+					]
+				},
+				{
+					"title": "Vertical / Horizontal - レイアウトの方向",
+					"description": "VerticalとHorizontalは、ビューの配置方向や修飾子の適用方向を指定するための定数です。VStack（垂直配置）とHStack（水平配置）で使い分けたり、padding()やspacing()で上下左右の方向を指定する際に使われます。Vertical（垂直）は上下方向、Horizontal（水平）は左右方向を意味します。",
+					"code": "import SwiftUI\n\n// === VStack と HStack での的用 ===\n\n// VStack: 要素を垂直（上から下へ）に配置\nVStack {\n    Text(\"上から\")\n    Text(\"順番に\")\n    Text(\"並ぶ\")\n}\n\n// HStack: 要素を水平（左から右へ）に配置\nHStack {\n    Text(\"左から\")\n    Text(\"順番に\")\n    Text(\"並ぶ\")\n}\n\n// === padding() で方向を指定 ===\n\n// 全方向に余白を追加\nText(\"パディング\")\n    .padding()                    // すべての辺に余白\n\n// 上下の余白のみ\nText(\"上下の余白\")\n    .padding(.vertical, 16)       // 上と下に16ptの余白\n\n// 左右の余白のみ\nText(\"左右の余白\")\n    .padding(.horizontal, 20)     // 左と右に20ptの余白\n\n// === spacing() で方向を指定 ===\n\n// VStack内の要素間の間隔（垂直方向）\nVStack(spacing: 10) {\n    Text(\"要素1\")\n    Text(\"要素2\")\n    Text(\"要素3\")  // 各要素間に10ptの間隔\n}\n\n// HStack内の要素間の間隔（水平方向）\nHStack(spacing: 10) {\n    Text(\"要素1\")\n    Text(\"要素2\")\n    Text(\"要素3\")  // 各要素間に10ptの間隔\n}\n\n// === 実践的な例 ===\n\n// ボタン周りの余白設定\nstruct ButtonView: View {\n    var body: some View {\n        Button(\"送信\") { }\n            .buttonStyle(.borderedProminent)\n            .padding(.vertical, 12)      // 上下の余白\n            .padding(.horizontal, 32)    // 左右の余白\n    }\n}\n\n// フォーム入力欄の配置\nstruct FormView: View {\n    @State private var email = \"\"\n    @State private var password = \"\"\n    \n    var body: some View {\n        VStack(spacing: 16) {\n            TextField(\"メール\", text: $email)\n                .padding(.horizontal, 12)\n                .padding(.vertical, 8)\n                .textFieldStyle(.roundedBorder)\n            \n            SecureField(\"パスワード\", text: $password)\n                .padding(.horizontal, 12)\n                .padding(.vertical, 8)\n                .textFieldStyle(.roundedBorder)\n            \n            Button(\"ログイン\") { }\n                .buttonStyle(.borderedProminent)\n                .padding(.vertical, 16)\n        }\n        .padding()  // VStack全体の余白\n    }\n}\n\n// リスト行の水平余白\nstruct ListView: View {\n    var body: some View {\n        List {\n            HStack {\n                Image(systemName: \"star.fill\")\n                Text(\"お気に入り\")\n            }\n            .padding(.horizontal, 0)     // 左右の余白をなくして全幅表示\n            .padding(.vertical, 12)      // 上下に余白を保持\n        }\n    }\n}\n\n// === Axis 値として使用（ScrollView など） ===\n\n// 垂直スクロール\nScrollView(.vertical) {\n    VStack {\n        ForEach(0..<100, id: \\.self) { index in\n            Text(\"行 \\(index)\")\n        }\n    }\n}\n\n// 水平スクロール\nScrollView(.horizontal) {\n    HStack {\n        ForEach(0..<20, id: \\.self) { index in\n            Text(\"列 \\(index)\")\n        }\n    }\n}\n\n// === horizontal と vertical の使い分け ===\n// vertical: 上下方向に関する設定（.padding(.vertical)）\n// horizontal: 左右方向に関する設定（.padding(.horizontal)）\n// VStack: 要素を縦（vertical）に並べる\n// HStack: 要素を横（horizontal）に並べる",
+					"keywords": [
+						"Vertical",
+						"Horizontal",
+						"方向",
+						"direction",
+						"Axis",
+						"padding",
+						"spacing",
+						"VStack",
+						"HStack",
+						"垂直",
+						"水平",
+						"上下",
+						"左右"
 					]
 				}
 			]

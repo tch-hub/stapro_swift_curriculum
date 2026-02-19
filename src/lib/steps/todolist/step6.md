@@ -135,7 +135,7 @@ struct TabHeaderView: View {
 
 ## 5. プレビューの作成
 
-動作確認用のプレビューを追加します。ダミーデータを作って表示します。
+最後に、ファイルの末尾にプレビュー用のコードを追加して動作を確認します。
 
 ```swift
 #Preview {
@@ -174,13 +174,20 @@ struct TabHeaderView: View {
 }
 ```
 
+- `#Preview`: このブロック内に書いたコードがXcodeのプレビュー画面に表示されます。
+
+  ※ このコードは、実際のアプリ本体には必須ではありませんが、プレビュー上で動作や状態変化を確認するためのテスト用ラッパーとして書かれています。  
+  ※ 実行せずに確認できるようにしています。
+
 ---
 
 ## コード全体
 
+<img src="/images/todolist/TabHeaderView.png" alt="TabHeaderViewの完成イメージ" class="mobile-screenshot" />
+
 ### Components/TabHeaderView.swift
 
-```swift
+```swift title="Components/TabHeaderView.swift"
 import SwiftUI
 
 struct TabHeaderView: View {
