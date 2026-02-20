@@ -15,7 +15,7 @@ class ToDoTaskService {
 
 ## 2. タスクの追加と更新
 
-タスクの作成（insert）と更新（save）を行うメソッドを追加します。
+データベースにタスクを作成するメソッドと（insert）とデータベースに保存されているタスクの情報を更新するメソッド（save）を追加します。
 `class ToDoTaskService {` の中に記述してください。
 
 ```swift title="Services/ToDoTaskService.swift"
@@ -42,17 +42,24 @@ class ToDoTaskService {
 - **`static func`**
   関数を宣言しています。
 
+- **メソッドのパラメータ（`_ tab: ToDoTask, to modelContext: ModelContext`）**
+  メソッドに渡す情報（引数）を指定しています。
+  - `_ task: ToDoTask` ：関数内で使用する`task`という変数に`ToDoTask`型（ステップ7で定義した型）を付けています。
+  - `to modelContext: ModelContext` ：関数内で使用する`modelContext`という変数に`ModelContext`型(SwiftDataで用意されている型であるため覚える必要はありません)を付けています。
+
 - **`ModelContext`**
   データベースとの「窓口」です。データの追加・削除・変更はすべてこのコンテキストを通して行います。
 
 - **操作の流れ**
-  1.  **`context.insert(task)`**: 新しいデータを「保存待ちリスト」に追加します。
-  2.  **`try? context.save()`**: 変更内容を実際にデータベースファイルに書き込みます。エラーが起きてもアプリが落ちないように `try?` をつけています。
+  1.  **`modelContext.insert(task)`**: 新しいデータを「保存待ちリスト」に追加します。
+  2.  **`try? modelContext.save()`**: 変更内容を実際にデータベースファイルに書き込みます。Swift のエラーハンドリング構文で「エラー内容は無視する」という意味になるので、仮にエラーが起こっても処理が止まらないようにしています。
 
 ## 3. タスクの削除
 
-タスクの削除機能を追加します。
+データベースからタスクの削除をする機能を追加します。
 個別の削除と、タブごとの一括削除を用意します。
+
+class ToDoTaskService {...} の中の末尾に記述してください。
 
 ```swift title="Services/ToDoTaskService.swift"
     // タスクを削除する
@@ -76,25 +83,40 @@ class ToDoTaskService {
     }
 ```
 
+- **`@MainActor`**
+  「メインスレッド（画面描画を担当する場所）」で実行することを強制するマークです。このアプリでは`ContentView`で関数をつかうために書いています。
+
+- **`static func`**
+  関数を宣言しています。
+
+- **メソッドのパラメータ（`_ tab: ToDoTask, from modelContext: ModelContext`）**
+  メソッドに渡す情報（引数）を指定しています。
+  - `_ task: ToDoTask` ：関数内で使用する`task`という変数に`ToDoTask`型（ステップ7で定義した型）を付けています。
+  - `to modelContext: ModelContext` ：関数内で使用する`modelContext`という変数に`ModelContext`型(SwiftDataで用意されている型であるため覚える必要はありません)を付けています。
+
+- **`ModelContext`**
+  データベースとの「窓口」です。データの追加・削除・変更はすべてこのコンテキストを通して行います。
+
 **一括削除の仕組み（`deleteAllTasks`）の解説:**
 
 1.  **`#Predicate { $0.tabId == tabId }`**:
-    「条件」を作るための機能です。「タスクの `tabId` が、引数で渡された `tabId` と同じもの」だけを対象にする、というフィルターを定義しています。
+    「どれを削除するのか」という条件です。「このタブID（`$0.tabId`）に属するタスク」という指定をしています。
 
 2.  **`FetchDescriptor`**:
-    「データの探し方」をまとめた設定書です。先ほどの条件（Predicate）をセットして、「この条件に合うタスクを探してきて！」という命令を作ります。
+    「データの探し方」をまとめた説明書です。先ほどの条件をセットして、「この条件に合うタスクを探してね」という指令書を作ります。
 
 3.  **`modelContext.fetch(descriptor)`**:
-    設定書（descriptor）に基づいて、実際にデータベースからデータを探してきます。見つかったデータは配列（リスト）として返ってきます。
+    説明書に従って、実際にデータベースからタスクを探します。見つかったデータは全部リスト（配列）として返ってきます。
 
 4.  **`tasks.forEach { ... }`**:
-    見つかったタスクを1つずつ順番に `delete`（削除予約）していきます。最後に `save()` することで、まとめて削除が実行されます。
+    見つかったタスクを1つずつ順番に `delete`（削除マーク）していきます。最後に `save()` することで、実際に削除が確定します。
 
 ## 4. 完了状態の切り替え
 
-タスクの完了/未完了を切り替えるメソッドを追加します。
+データベースに保存されているタスクの完了/未完了を切り替えるメソッドを追加します。
+class ToDoTaskService {...} の中の末尾に記述してください。
 
-```swift
+```swift title="Services/ToDoTaskService.swift"
     // 完了状態を切り替える
     @MainActor
     static func toggleTaskCompletion(_ task: ToDoTask, modelContext: ModelContext) {
@@ -103,13 +125,8 @@ class ToDoTaskService {
     }
 ```
 
-**完了状態の切り替えの仕組み:**
-
 - **`task.isCompleted.toggle()`**:
   `Bool`型（true/false）の値を反転させる便利なメソッドです。`true` なら `false` に、`false` なら `true` に切り替わります。
-
-- **なぜ `save()` だけで更新できるのか？**
-  SwiftDataは「オブジェクトの変更を自動追跡」してくれます。つまり、`task.isCompleted` を変更した時点で「このデータが変わった」と認識され、`save()` を呼ぶだけで変更がデータベースに反映されます。`update()` のような特別なメソッドは不要です。
 
 ---
 
@@ -138,18 +155,18 @@ class ToDoTaskService {
     }
 
     @MainActor
-    static func toggleTaskCompletion(_ task: ToDoTask, modelContext: ModelContext) {
-        task.isCompleted.toggle()
-        try? modelContext.save()
-    }
-
-    @MainActor
     static func deleteAllTasks(for tabId: UUID, from modelContext: ModelContext) {
         let descriptor = FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })
         if let tasks = try? modelContext.fetch(descriptor) {
             tasks.forEach { modelContext.delete($0) }
             try? modelContext.save()
         }
+    }
+
+    @MainActor
+    static func toggleTaskCompletion(_ task: ToDoTask, modelContext: ModelContext) {
+        task.isCompleted.toggle()
+        try? modelContext.save()
     }
 }
 ```

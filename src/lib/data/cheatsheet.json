@@ -395,6 +395,24 @@
 						"例外",
 						"エラーハンドリング"
 					]
+				},
+				{
+					"title": "try、try?、try! の使い分け",
+					"code": "// throws関数でエラーが発生する可能性がある関数を定義\nenum FileError: Error {\n    case fileNotFound\n    case permissionDenied\n    case unknownError\n}\n\nfunc readFile(name: String) throws -> String {\n    if name.isEmpty {\n        throw FileError.fileNotFound  // エラーを投げる\n    }\n    return \"ファイルの内容: \\(name)\"\n}\n\n// === try: エラーをキャッチして処理する（推奨） ===\n// do-catch内で使い、エラーが発生した場合の処理を書く\nprint(\"--- try の使用例 ---\")\ndo {\n    let content = try readFile(name: \"data.txt\")\n    print(content)\n} catch FileError.fileNotFound {\n    print(\"ファイルが見つかりません\")\n} catch FileError.permissionDenied {\n    print(\"ファイルへのアクセス権がありません\")\n} catch {\n    print(\"予期しないエラー: \\(error)\")\n}\n\n// === try?: エラーを無視してnil を返す ===\n// エラーが発生した場合、値の代わりに nil が返される\n// 結果はOptional型（型?)になる\nprint(\"\\n--- try? の使用例 ---\")\nif let content = try? readFile(name: \"data.txt\") {\n    print(content)  // 成功時に実行\n} else {\n    print(\"ファイルの読み込みに失敗しました\")\n}\n\n// try?は結果がOptionalになるので、if letで扱うことが多い\nlet result = try? readFile(name: \"missing.txt\")\nprint(\"結果: \\(result ?? \\\"nil (エラー発生)\\\")\")  // nil (エラー発生)\n\n// === try!: エラーが発生しないと確信するときに使う（危険） ===\n// エラーが発生すると、アプリがクラッシュする\n// 絶対に エラーが発生しないと確信できる場合だけ使用\nprint(\"\\n--- try! の使用例 ---\")\nlet safeContent = try! readFile(name: \"config.txt\")\nprint(safeContent)\n\n// 注意: 以下のコードはエラーが発生してクラッシュしてしまう\n// let crash = try! readFile(name: \"\")  // ← fatal error になる\n\n// === 使い分けの比較 ===\nprint(\"\\n--- 使い分けのまとめ ---\")\nprint(\"try:   エラーの種類に応じて処理を分ける（推奨）\")\nprint(\"try?:  エラーは無視して、成功/失敗だけを判定\")\nprint(\"try!:  エラーは絶対発生しないと確信できる場合のみ\")  \nprint(\"       （使うべき場面は限定的、できるだけ避ける）\")",
+					"output": "--- try の使用例 ---\nファイルが見つかりません\n\n--- try? の使用例 ---\nファイルの読み込みに失敗しました\n結果: nil (エラー発生)\n\n--- try! の使用例 ---\nファイルの内容: config.txt\n\n--- 使い分けのまとめ ---\ntry:   エラーの種類に応じて処理を分ける（推奨）\ntry?:  エラーは無視して、成功/失敗だけを判定\ntry!:  エラーは絶対発生しないと確信できる場合のみ\n       （使うべき場面は限定的、できるだけ避ける）",
+					"executable": true,
+					"keywords": [
+						"try",
+						"try?",
+						"try!",
+						"error",
+						"throws",
+						"do-catch",
+						"optional",
+						"強制",
+						"エラーハンドリング",
+						"例外処理"
+					]
 				}
 			]
 		},
