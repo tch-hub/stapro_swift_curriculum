@@ -2,10 +2,10 @@
 
 ## 1. 初期データの定義
 
-`SwiftData/Constants.swift` を開き、初期タブとそれに紐づくタスクのリストを定義します。
+`SwiftData/Constants.swift` を開き、タブとそれに紐づくタスクのリストを定義します。
 以下のコードを記述してください。
 
-```swift
+```swift title="SwiftData/Constants.swift"
 import Foundation
 
 // 初期データの定義：タブ名と、それに紐づくタスク名のリスト

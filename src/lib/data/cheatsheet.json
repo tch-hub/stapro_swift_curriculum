@@ -199,6 +199,21 @@
 						"引数",
 						"戻り値"
 					]
+				},
+				{
+					"title": "静的メソッド（static func）",
+					"code": "// staticキーワードはインスタンスを作らずにクラス名から直接関数を呼べるようにします\n\n// === 基本的な使い方 ===\n\nclass MathHelper {\n    // 通常のメソッド（インスタンスが必要）\n    func multiply(a: Int, b: Int) -> Int {\n        return a * b\n    }\n    \n    // staticメソッド（インスタンス不要）\n    static func add(a: Int, b: Int) -> Int {\n        return a + b\n    }\n}\n\n// 呼び出し方の比較\nlet helper = MathHelper()  // インスタンスを作成\nprint(\"5 × 3 = \\(helper.multiply(a: 5, b: 3))\")  // インスタンスから呼ぶ\nprint(\"5 + 3 = \\(MathHelper.add(a: 5, b: 3))\")   // クラス名から直接呼ぶ\n\n// === ToDoタスクサービスの例 ===\n\nclass ToDoTaskService {\n    // タスクを追加する（インスタンス不要）\n    static func addTask(title: String) -> String {\n        return \"タスク『\\(title)』を追加しました\"\n    }\n    \n    // タスクを削除する（インスタンス不要）\n    static func deleteTask(id: Int) -> String {\n        return \"タスク（ID:\\(id)）を削除しました\"\n    }\n}\n\n// staticメソッドは直接クラス名で呼べるので便利\nprint(ToDoTaskService.addTask(title: \"勉強\"))\nprint(ToDoTaskService.deleteTask(id: 1))\n\n// === staticプロパティの例 ===\n\nclass Configuration {\n    // 全インスタンスで共通の値\n    static let appName = \"ToDoApp\"\n    static let version = \"1.0.0\"\n    // インスタンスごとに異なる値\n    var userId: String\n    \n    init(userId: String) {\n        self.userId = userId\n    }\n}\n\nprint(\"アプリ: \\(Configuration.appName) v\\(Configuration.version)\")",
+					"output": "5 × 3 = 15\n5 + 3 = 8\nタスク『勉強』を追加しました\nタスク（ID:1）を削除しました\nアプリ: ToDoApp v1.0.0",
+					"executable": true,
+					"keywords": [
+						"static",
+						"func",
+						"class method",
+						"インスタンス不要",
+						"静的",
+						"クラスメソッド",
+						"サービス"
+					]
 				}
 			]
 		},
@@ -770,6 +785,66 @@
 				}
 			],
 			"afterHtml": "<div class=\"mt-8\"><h3 class=\"mb-4 text-xl font-bold\">self を使う場面まとめ</h3><div class=\"overflow-x-auto\"><table class=\"table w-full rounded-box table-zebra bg-base-200\"><thead><tr class=\"bg-base-300\"><th class=\"text-base text-base-content\">場面</th><th class=\"text-base text-base-content\">使う理由</th><th class=\"text-base text-base-content\">例</th></tr></thead><tbody><tr><td class=\"font-bold\">init で パラメータ = プロパティ</td><td>区別を明確にする</td><td><code class=\"rounded bg-base-300 px-1\">self.name = name</code></td></tr><tr><td class=\"font-bold\">複数のインスタンスを比較</td><td>「どのインスタンスか」を明示</td><td><code class=\"rounded bg-base-300 px-1\">self.age == other.age</code></td></tr><tr><td class=\"font-bold\">インスタンス全体を渡す</td><td>メソッドから関数へ</td><td><code class=\"rounded bg-base-300 px-1\">function(self)</code></td></tr><tr><td class=\"font-bold\">mutating で全体置換</td><td>値型で新しい値に初期化し直す</td><td><code class=\"rounded bg-base-300 px-1\">self = Type(...)</code></td></tr><tr><td class=\"font-bold\">クロージャ内での参照</td><td>メモリリーク防止 [weak self]</td><td><code class=\"rounded bg-base-300 px-1\">{ [weak self] in ... }</code></td></tr></tbody></table></div></div>"
+		},
+		{
+			"id": "swiftdata-persistence",
+			"title": "SwiftData（データ永続化）",
+			"description": "ModelContextを使ってデータベース操作を行います。Swiftでデータを保存・読み込み・削除するための基本操作を学びます。",
+			"codeBlocks": [
+				{
+					"title": "modelContext.insert（データ追加）",
+					"code": "// 【modelContext.insert() の役割】\n// insert() は新しいデータをDBに追加する「準備」をします。\n// ⚠️ この時点ではまだDB には書き込まれていません！\n// save() を呼ぶことで初めて確定します。\n//\n// 【流れ】\n// ステップ1: ToDoTask インスタンスを作成する\n// ステップ2: insert(task) で「追加待ちリスト」に追加\n// ステップ3: save() で「待ちリスト」の内容をDB に確定\n//\n// 【複数データを追加するときは？】\n// 複数回 insert() してから、最後に1回だけ save() すると\n// 効率的です！\n\nimport Foundation\nimport SwiftData\n\n// ToDoタスクモデル\n@Model\nfinal class ToDoTask {\n    var title: String\n    var isCompleted: Bool = false\n    \n    init(title: String, isCompleted: Bool = false) {\n        self.title = title\n        self.isCompleted = isCompleted\n    }\n}\n\n// ModelContextを使ったデータ追加\n@MainActor\nfunc addNewTask(title: String, to modelContext: ModelContext) {\n    // 1. 新しいタスクを作成\n    let newTask = ToDoTask(title: title)\n    \n    // 2. insert() で「保存待ちリスト」に追加\n    // まだこの時点ではデータベースに書き込まれない\n    modelContext.insert(newTask)\n    \n    // 3. save() でデータベースに永続化\n    try? modelContext.save()\n    \n    print(\"タスク『\\(title)』を追加しました\")\n}\n\n// 複数のタスクを一度に追加\n@MainActor\nfunc addMultipleTasks(titles: [String], to modelContext: ModelContext) {\n    for title in titles {\n        let task = ToDoTask(title: title)\n        modelContext.insert(task)  // 複数追加してから...\n    }\n    try? modelContext.save()  // 一度に保存すると効率的\n}",
+					"output": "タスク『宿題を終わらせる』を追加しました",
+					"executable": false,
+					"keywords": [
+						"modelContext",
+						"insert",
+						"save",
+						"database",
+						"データ追加",
+						"永続化",
+						"SwiftData"
+					]
+				},
+				{
+					"title": "modelContext.delete（データ削除）",
+					"code": "import Foundation\nimport SwiftData\n\n// 単一のタスクを削除\n@MainActor\nfunc deleteTask(_ task: ToDoTask, from modelContext: ModelContext) {\n    // delete() で削除対象にマーク\n    modelContext.delete(task)\n    \n    // save() で変更を永続化\n    try? modelContext.save()\n    \n    print(\"タスクを削除しました\")\n}\n\n// 条件に合うすべてのタスクを削除（例：完了済みのタスク）\n@MainActor\nfunc deleteCompletedTasks(from modelContext: ModelContext) {\n    // FetchDescriptor で削除対象を指定\n    let descriptor = FetchDescriptor<ToDoTask>(\n        predicate: #Predicate { $0.isCompleted == true }\n    )\n    \n    // 条件に合うデータを取得して削除\n    if let completedTasks = try? modelContext.fetch(descriptor) {\n        for task in completedTasks {\n            modelContext.delete(task)\n        }\n        try? modelContext.save()\n        print(\"\\(completedTasks.count)個の完了済みタスクを削除しました\")\n    }\n}",
+					"output": "タスクを削除しました\n2個の完了済みタスクを削除しました",
+					"executable": false,
+					"keywords": [
+						"delete",
+						"remove",
+						"predicate",
+						"削除",
+						"条件削除",
+						"SwiftData",
+						"modelContext"
+					]
+				},
+				{
+					"title": "modelContext.save（データ保存）",
+					"code": "import Foundation\nimport SwiftData\n\n@Model\nfinal class ToDoTask {\n    var title: String\n    var isCompleted: Bool = false\n    \n    init(title: String, isCompleted: Bool = false) {\n        self.title = title\n        self.isCompleted = isCompleted\n    }\n}\n\n// save() は変更をデータベースに記録する\n@MainActor\nfunc updateTask(_ task: ToDoTask, newTitle: String, modelContext: ModelContext) {\n    // 1. プロパティを変更\n    task.title = newTitle\n    task.isCompleted = true\n    \n    // 2. save() で変更をデータベースに反映\n    // SwiftDataは自動追跡なので、save() だけで十分\n    // insert() や update() の呼び出しは不要\n    try? modelContext.save()\n    \n    print(\"タスクを更新しました: \\(newTitle)\")\n}\n\n// try-catch でエラー処理\n@MainActor\nfunc saveWithErrorHandling(task: ToDoTask, modelContext: ModelContext) {\n    do {\n        // save() が失敗する可能性がある場合\n        try modelContext.save()\n        print(\"保存成功\")\n    } catch {\n        // エラーが発生した場合の処理\n        print(\"保存失敗: \\(error.localizedDescription)\")\n    }\n}",
+					"output": "タスクを更新しました: 宿題を終わらせる\n保存成功",
+					"executable": false,
+					"keywords": ["save", "persist", "database", "commit", "保存", "永続化", "変更反映"]
+				},
+				{
+					"title": "modelContext.fetch（データ取得）",
+					"code": "import Foundation\nimport SwiftData\n\n@Model\nfinal class ToDoTask {\n    var title: String\n    var isCompleted: Bool = false\n    \n    init(title: String, isCompleted: Bool = false) {\n        self.title = title\n        self.isCompleted = isCompleted\n    }\n}\n\n// すべてのタスクを取得\n@MainActor\nfunc getAllTasks(from modelContext: ModelContext) -> [ToDoTask] {\n    // FetchDescriptor: 「データの取得方法」を指定する設定書\n    let descriptor = FetchDescriptor<ToDoTask>()\n    \n    if let tasks = try? modelContext.fetch(descriptor) {\n        return tasks\n    }\n    return []\n}\n\n// 条件付きでデータを取得\n@MainActor\nfunc getUncompletedTasks(from modelContext: ModelContext) -> [ToDoTask] {\n    // #Predicate: 「取得する条件」を定義\n    // $0 は対象となる各要素を表す\n    let descriptor = FetchDescriptor<ToDoTask>(\n        predicate: #Predicate { $0.isCompleted == false }\n    )\n    \n    if let tasks = try? modelContext.fetch(descriptor) {\n        return tasks\n    }\n    return []\n}\n\n// ソート付きでデータを取得\n@MainActor\nfunc getTasksSorted(from modelContext: ModelContext) -> [ToDoTask] {\n    // SortDescriptor で並べ替え順序を指定\n    let sortDescriptor = SortDescriptor(\\ToDoTask.title)\n    let descriptor = FetchDescriptor<ToDoTask>(sortBy: [sortDescriptor])\n    \n    if let tasks = try? modelContext.fetch(descriptor) {\n        return tasks  // titleでアルファベット順にソート済み\n    }\n    return []\n}",
+					"output": "// tasks = [ ToDoTask(title: \"宿題を終わらせる\", isCompleted: false), ... ]",
+					"executable": false,
+					"keywords": [
+						"fetch",
+						"query",
+						"FetchDescriptor",
+						"Predicate",
+						"取得",
+						"照会",
+						"データベース検索"
+					]
+				}
+			],
+			"afterHtml": "<div class=\"mt-8\"><h3 class=\"mb-4 text-xl font-bold\">ModelContextの基本操作フロー</h3><p class=\"mb-4 text-sm text-base-content/70\">データベース操作は3つのステップで進みます。insert()やdelete()で「変更待ちリスト」に追加して、最後にsave()で全部をデータベースに一括反映する流れです。</p><div class=\"mb-6 p-4 bg-base-100 rounded-lg border border-base-300\"><div class=\"text-sm font-mono text-left\"><p class=\"mb-2\">【基本的な流れ】</p><p class=\"mb-2\">1️⃣ insert(task)     → 新しいデータを「追加待ちリスト」に入れる</p><p class=\"mb-2\">2️⃣ delete(task)     → 不要なデータを「削除待ちリスト」に入れる</p><p class=\"mb-2\">3️⃣ save()           → リストに入ってるものすべてをDB に確定する</p></div></div><div class=\"overflow-x-auto mb-6\"><table class=\"table w-full rounded-box table-zebra bg-base-200\"><thead><tr class=\"bg-base-300\"><th class=\"text-base text-base-content\">操作</th><th class=\"text-base text-base-content\">説明</th><th class=\"text-base text-base-content\">タイミング</th><th class=\"text-base text-base-content\">使用例</th></tr></thead><tbody><tr><td class=\"font-bold\">insert()</td><td>新しいデータを追加する準備（確定ではない）</td><td>データ作成直後</td><td><code class=\"rounded bg-base-300 px-1\">modelContext.insert(task)</code></td></tr><tr><td class=\"font-bold\">delete()</td><td>データを削除する準備（確定ではない）</td><td>削除前に呼び出す</td><td><code class=\"rounded bg-base-300 px-1\">modelContext.delete(task)</code></td></tr><tr><td class=\"font-bold\">save()</td><td>insert/delete/変更をすべてDB に確定</td><td>すべての操作後</td><td><code class=\"rounded bg-base-300 px-1\">try? modelContext.save()</code></td></tr><tr><td class=\"font-bold\">fetch()</td><td>条件に合うデータをDB から検索取得</td><td>データを読む必要があるとき</td><td><code class=\"rounded bg-base-300 px-1\">modelContext.fetch(descriptor)</code></td></tr><tr><td class=\"font-bold\">@MainActor</td><td>メインスレッド でのみ実行することを強制</td><td>Swift UI で画面更新が必要なメソッド</td><td><code class=\"rounded bg-base-300 px-1\">@MainActor func addTask(...)</code></td></tr></tbody></table></div><div class=\"p-4 bg-success/10 border border-success rounded-lg\"><p class=\"text-sm font-bold mb-2\">💡 重要ポイント</p><p class=\"text-sm\"><strong>insert() と delete() だけでは確定しない</strong> - これらは「待ちリスト」に入れるだけです。必ず <code class=\"rounded bg-base-300 px-1\">save()</code> を呼ぶことでデータベースに反映されます。複数の操作をまとめて、最後に1回だけ save() を呼ぶと効率的です。</p></div></div>"
 		}
 	]
 }

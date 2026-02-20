@@ -4,7 +4,7 @@
 
 `Services/ToDoTaskService.swift` を開き、タスクの追加・更新・削除などのロジックをまとめるクラスを作成します。
 
-```swift
+```swift title="Services/ToDoTaskService.swift"
 import Foundation
 import SwiftData
 
@@ -18,7 +18,7 @@ class ToDoTaskService {
 タスクの作成（insert）と更新（save）を行うメソッドを追加します。
 `class ToDoTaskService {` の中に記述してください。
 
-```swift
+```swift title="Services/ToDoTaskService.swift"
     // タスクを追加する
     @MainActor
     static func addTask(_ task: ToDoTask, to modelContext: ModelContext) {
@@ -27,7 +27,7 @@ class ToDoTaskService {
         try? modelContext.save()
     }
 
-    // タスクを更新する（変更を確定する）
+    // タスクを更新する
     @MainActor
     static func updateTask(_ task: ToDoTask, modelContext: ModelContext) {
         try? modelContext.save()
@@ -37,10 +37,10 @@ class ToDoTaskService {
 このコードで登場する重要なキーワードについて解説します。
 
 - **`@MainActor`**
-  「メインスレッド（画面描画を担当する場所）」で実行することを強制するマークです。SwiftDataの操作はUIの更新と密接に関わることが多いため、安全のためにメインスレッドで行うのが一般的です。
+  「メインスレッド（画面描画を担当する場所）」で実行することを強制するマークです。このアプリでは`ContentView`で関数をつかうために書いています。
 
 - **`static func`**
-  「クラスのインスタンスを作らなくても呼べる関数」です。`Service.addTask(...)` のように、サービスを初期化せずに直接機能を使えるようにして、コードをシンプルにしています。
+  関数を宣言しています。
 
 - **`ModelContext`**
   データベースとの「窓口」です。データの追加・削除・変更はすべてこのコンテキストを通して行います。
@@ -54,7 +54,7 @@ class ToDoTaskService {
 タスクの削除機能を追加します。
 個別の削除と、タブごとの一括削除を用意します。
 
-```swift
+```swift title="Services/ToDoTaskService.swift"
     // タスクを削除する
     @MainActor
     static func deleteTask(_ task: ToDoTask, from modelContext: ModelContext) {
