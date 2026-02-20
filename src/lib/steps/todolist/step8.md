@@ -14,18 +14,20 @@ import SwiftData
 // @Modelをつけることで、タブの情報もデータベースに保存できるようにする
 @Model
 final class ToDoTab: Identifiable {
-    // タブごとの一意のID
+
     var id: UUID = UUID()
-    // タブの名前
+    // タブごとの一意のID
     var name: String = ""
-    // 作成日時
+    // タブの名前
     var createdAt: Date = Date()
+    // 作成日時
 
     // 新しいタブを作成する時の初期設定
     init(name: String) {
         self.name = name
-        // 作成日時を現在時刻に設定
+
         self.createdAt = Date()
+        // 作成日時を現在時刻に設定
     }
 }
 ```

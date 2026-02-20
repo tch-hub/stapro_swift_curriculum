@@ -719,6 +719,24 @@
 						"ツールバー",
 						"画面遷移"
 					]
+				},
+				{
+					"title": "Menu - メニューボタン",
+					"code": "// Menu はタップするとアクションのリストが表示されるコンポーネント\n// ツールバーなどでよく使用される\n\n// === 基本的な使い方 ===\n\n// シンプルなメニュー\nMenu(\"メニュー\") {\n    Button(\"編集\") { }\n    Button(\"削除\") { }\n    Button(\"共有\") { }\n}\n\n// アイコン付きメニュー\nMenu {\n    Button(action: {}) {\n        Label(\"編集\", systemImage: \"pencil\")\n    }\n    Button(action: {}) {\n        Label(\"削除\", systemImage: \"trash\")\n    }\n    Button(action: {}) {\n        Label(\"共有\", systemImage: \"square.and.arrow.up\")\n    }\n} label: {\n    Image(systemName: \"ellipsis.circle\")\n        .font(.system(size: 24))\n}\n\n// === テキストと一緒に表示 ===\n\nMenu {\n    Button(\"昇順\") { }\n    Button(\"降順\") { }\n    Button(\"名前順\") { }\n} label: {\n    HStack {\n        Image(systemName: \"arrow.up.arrow.down\")\n        Text(\"ソート\")\n    }\n}\n\n// === セクション分け ===\n\nMenu(\"その他\") {\n    Section(\"編集\") {\n        Button(\"編集\", action: { })\n        Button(\"複製\", action: { })\n    }\n    \n    Section(\"削除\") {\n        Button(\"ゴミ箱へ移動\", action: { })\n        Button(\"完全に削除\", action: { })\n    }\n}\n\n// === 破壊的なアクション（赤色） ===\n\nMenu(\"アクション\") {\n    Button(\"完了\", action: { })\n    \n    Button(role: .destructive) {\n        Label(\"削除\", systemImage: \"trash\")\n    } action: {\n        // 削除処理\n    }\n}\n\n// === ツールバー内での使用（最も一般的） ===\n\nstruct ContentView: View {\n    @State private var sortBy = \"名前\"\n    \n    var body: some View {\n        NavigationStack {\n            List {\n                Text(\"項目1\")\n                Text(\"項目2\")\n                Text(\"項目3\")\n            }\n            .navigationTitle(\"リスト\")\n            .toolbar {\n                ToolbarItem(placement: .topBarTrailing) {\n                    Menu {\n                        Button(\"名前順\") { sortBy = \"名前\" }\n                        Button(\"日付順\") { sortBy = \"日付\" }\n                        Button(\"サイズ順\") { sortBy = \"サイズ\" }\n                    } label: {\n                        Image(systemName: \"arrow.up.arrow.down\")\n                    }\n                }\n            }\n        }\n    }\n}\n\n// === 実践的な例：複数のアクション ===\n\nstruct ArticleOptionsMenu: View {\n    @State private var isShowing = false\n    let articleId: String\n    \n    var body: some View {\n        Menu {\n            Button(action: { }) {\n                Label(\"読む\", systemImage: \"book\")\n            }\n            \n            Button(action: { }) {\n                Label(\"共有\", systemImage: \"square.and.arrow.up\")\n            }\n            \n            Button(action: { }) {\n                Label(\"お気に入り\", systemImage: \"star\")\n            }\n            \n            Divider()\n            \n            Button(role: .destructive, action: { }) {\n                Label(\"削除\", systemImage: \"trash\")\n            }\n        } label: {\n            Image(systemName: \"ellipsis\")\n                .foregroundStyle(.blue)\n        }\n    }\n}\n\n// === Pickerのメニュースタイル との違い ===\n\n// Menu は単なるボタンのリスト\nMenu(\"アクション\") {\n    Button(\"アクション1\") { }\n    Button(\"アクション2\") { }\n}\n\n// Picker でメニュースタイルを使用すると、選択状態を管理できる\n@State private var selection = 0\nlet options = [\"オプション1\", \"オプション2\", \"オプション3\"]\n\nPicker(\"選択\", selection: $selection) {\n    ForEach(0..<options.count, id: \\.self) { index in\n        Text(options[index]).tag(index)\n    }\n}\n.pickerStyle(.menu)  // メニューのような表示だが、選択状態を管理",
+					"keywords": [
+						"menu",
+						"action",
+						"dropdown",
+						"ellipsis",
+						"toolbar",
+						"button",
+						"options",
+						"メニュー",
+						"アクション",
+						"ドロップダウン",
+						"ボタン",
+						"その他"
+					]
 				}
 			]
 		},

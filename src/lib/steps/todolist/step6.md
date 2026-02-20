@@ -59,9 +59,6 @@ struct TabHeaderView: View {
 
 ## 2. UIの実装: レイアウトの枠組み
 
-````
-
-
 `body` の中身を実装します。横並びのレイアウトを作り、左側にタブ切り替えメニュー、右側に管理ボタンを配置します。
 
 ```swift
@@ -82,37 +79,36 @@ struct TabHeaderView: View {
              Divider() // 下に境界線を引く
         }
     }
-````
+```
 
 ## 3. UIの実装: タブ切り替えメニュー
 
 `Menu` と `Picker` を使って、タップすると選択肢が出てくるドロップダウンメニューを作ります。`// ①ここにタブ切り替えメニューを追加します` の部分に記述してください。
 
 ```swift
-            Menu {
-                Picker("タブ", selection: $selectedTabId) {
-                    ForEach(tabs) { tab in
-                        Text(tab.name)
-                            .tag(Optional(tab.id))
-                    }
-                }
-            } label: {
-                // メニューの見た目（ラベル）
-                HStack(spacing: 6) {
-                    Text(selectedTabName)
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.primary)
-
-                    Image(systemName: "chevron.down")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .contentShape(Rectangle()) // タップ領域を確保
-            }
+Menu {
+    Picker("タブ", selection: $selectedTabId) {
+        ForEach(tabs) { tab in
+            Text(tab.name)
+                .tag(Optional(tab.id))
+        }
+    }
+} label: {
+    // メニューの見た目（ラベル）
+    HStack(spacing: 6) {
+        Text(selectedTabName)
+            .font(.title3)
+            .fontWeight(.bold)
+            .foregroundStyle(.primary)
+        Image(systemName: "chevron.down")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+    }
+    .contentShape(Rectangle()) // タップ領域を確保
+}
 ```
 
-- `Menu`: タップするとメニューを開きます。
+- `Menu`: SwiftUIで定義されたMenuコンポーネントで、タップ時にメニューが表示されます。
 - `Picker`: メニューの中身として、タブの選択肢を表示します。
 - `label`: メニューが閉じている時の見た目を定義します。現在のタブ名と下向き矢印を表示します。
 
@@ -121,17 +117,20 @@ struct TabHeaderView: View {
 ヘッダーの右端に、タブ追加などの管理画面へ移動するためのボタンを配置します。`// ②ここに管理ボタンを追加します` の部分です。
 
 ```swift
-            Button(action: onManageTabs) {
-                Image(systemName: "slider.horizontal.3")
-                    .font(.system(size: 20))
-                    .foregroundStyle(.primary)
-                    .padding(8)
-                    .background(
-                        Circle()
-                            .fill(Color(.secondarySystemBackground))
-                    )
-            }
+Button(action: onManageTabs) {
+    Image(systemName: "slider.horizontal.3")
+        .font(.system(size: 20))
+        .foregroundStyle(.primary)
+        .padding(8)
+        .background(
+            Circle()
+                .fill(Color(.secondarySystemBackground))
+        )
+}
 ```
+
+- `action: onManageTabs`：ボタンが押されたときに関数が実行されます。関数の処理は今後のステップで作成します。
+- `Image(systemName: "slider.horizontal.3")`：SwiftUIで用意されている画像を表示します。
 
 ## 5. プレビューの作成
 
@@ -184,8 +183,6 @@ struct TabHeaderView: View {
 ## コード全体
 
 <img src="/images/todolist/TabHeaderView.png" alt="TabHeaderViewの完成イメージ" class="mobile-screenshot" />
-
-### Components/TabHeaderView.swift
 
 ```swift title="Components/TabHeaderView.swift"
 import SwiftUI

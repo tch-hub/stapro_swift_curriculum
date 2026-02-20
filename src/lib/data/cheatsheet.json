@@ -571,6 +571,205 @@
 					]
 				}
 			]
+		},
+		{
+			"id": "swiftui-identifiable",
+			"title": "Identifiable（識別可能プロトコル）",
+			"description": "ForEachやListで各要素を一意に識別するためのプロトコルです。データ型に `id` プロパティを自動的に提供します。",
+			"codeBlocks": [
+				{
+					"title": "Identifiableの基本",
+					"code": "import SwiftUI\n\n// Identifiableはプロトコルで、型に一意の識別子を持たせます\n// 次の2つが必要:\n// 1. Identifiable プロトコルに準拠\n// 2. id という名前のプロパティを定義\n\nstruct Student: Identifiable {\n    // id プロパティは、各インスタンスを一意に識別するために使われます\n    let id = UUID()  // UUIDは「世界で唯一の識別子」を生成\n    \n    // その他のプロパティ\n    var name: String\n    var grade: Int\n}\n\n// インスタンスを作成\nlet student1 = Student(name: \"太郎\", grade: 1)\nlet student2 = Student(name: \"花子\", grade: 1)\n\nprint(\"学生1のID: \\(student1.id)\")\nprint(\"学生2のID: \\(student2.id)\")\nprint(\"IDが異なる: \\(student1.id != student2.id)\")  // true\n\n// Identifiableに準拠するメリット:\n// - ForEachでid指定を省略できる\n// - List や TabView でも直接使える\n// - 各要素の変更を正確に追跡できる",
+					"output": "学生1のID: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX\n学生2のID: YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY\nIDが異なる: true",
+					"executable": true,
+					"keywords": ["identifiable", "protocol", "id", "unique", "識別", "プロトコル", "一意"]
+				},
+				{
+					"title": "ForEachでIdentifiableを使う",
+					"code": "import SwiftUI\n\nstruct Book: Identifiable {\n    let id = UUID()  // Identifiableに必須の id プロパティ\n    var title: String\n    var author: String\n}\n\nstruct BookListView: View {\n    let books = [\n        Book(title: \"吾輩は猫である\", author: \"夏目漱石\"),\n        Book(title: \"羅生門\", author: \"芥川龍之介\"),\n        Book(title: \"こころ\", author: \"夏目漱石\")\n    ]\n    \n    var body: some View {\n        VStack(spacing: 10) {\n            Text(\"本の一覧\")\n                .font(.title2)\n            \n            // ✅ Identifiableに準拠しているので、id:を省略できる\n            ForEach(books) { book in\n                VStack(alignment: .leading, spacing: 4) {\n                    Text(book.title)\n                        .font(.headline)\n                    Text(\"著者: \\(book.author)\")\n                        .font(.caption)\n                        .foregroundStyle(.secondary)\n                }\n                .frame(maxWidth: .infinity, alignment: .leading)\n                .padding()\n                .background(Color(.systemGray6))\n                .cornerRadius(8)\n            }\n        }\n        .padding()\n    }\n}\n\n// 比較:\n// ❌ Identifiableに準拠していない場合\n// ForEach(books, id: \\.id) { book in ... }  // idを明示的に指定\n\n// ✅ Identifiableに準拠した場合\n// ForEach(books) { book in ... }  // idを省略できて簡潔",
+					"output": "（本のタイトルと著者がカード形式で表示される）",
+					"executable": false,
+					"keywords": ["foreach", "list", "efficient", "省略", "簡潔", "フォーエッチ"]
+				},
+				{
+					"title": "数値IDでIdentifiableを実装",
+					"code": "import SwiftUI\n\n// id プロパティの型は UUID でなく、Int など他の型でもOK\n// 必要なのは「一意である（重複しない）」ことだけです\n\nstruct User: Identifiable {\n    let id: Int  // 整数のIDを使う（例: データベースからのID）\n    var name: String\n    var email: String\n}\n\nstruct UserListView: View {\n    // データベースから取得したと想定\n    let users = [\n        User(id: 1, name: \"太郎\", email: \"taro@example.com\"),\n        User(id: 2, name: \"花子\", email: \"hanako@example.com\"),\n        User(id: 3, name: \"次郎\", email: \"jiro@example.com\")\n    ]\n    \n    var body: some View {\n        VStack {\n            Text(\"ユーザー一覧\")\n                .font(.title)\n            \n            List {\n                ForEach(users) { user in\n                    HStack {\n                        VStack(alignment: .leading, spacing: 4) {\n                            Text(user.name)\n                                .font(.headline)\n                            Text(user.email)\n                                .font(.caption)\n                                .foregroundStyle(.secondary)\n                        }\n                        Spacer()\n                        // IDをバッジで表示\n                        Text(\"#\\(user.id)\")\n                            .font(.caption2)\n                            .padding(.horizontal, 8)\n                            .padding(.vertical, 4)\n                            .background(.blue)\n                            .foregroundStyle(.white)\n                            .cornerRadius(4)\n                    }\n                }\n            }\n        }\n    }\n}\n\n// id の型は:\n// - UUID（ランダムで絶対重複しない）\n// - Int（データベースやサーバーの ID）\n// - String（メールアドレスなど一意な文字列）\n// など、重複しさえすれば何でもOK",
+					"output": "（ユーザー情報がID付きで一覧表示される）",
+					"executable": false,
+					"keywords": ["id", "int", "type", "database", "ユーザー", "データベース"]
+				},
+				{
+					"title": "@Stateと組み合わせた動的リスト",
+					"code": "import SwiftUI\n\nstruct Task: Identifiable {\n    let id = UUID()  // 追加・削除時も ID は変わらない\n    var title: String\n    var isCompleted: Bool = false\n}\n\nstruct TodoView: View {\n    @State private var tasks: [Task] = [\n        Task(title: \"数学の宿題\"),\n        Task(title: \"英語の勉強\"),\n        Task(title: \"部屋を片付ける\")\n    ]\n    \n    @State private var newTaskTitle = \"\"\n    \n    var body: some View {\n        VStack {\n            // 新規タスク入力\n            HStack {\n                TextField(\"新しいタスク\", text: $newTaskTitle)\n                    .textFieldStyle(.roundedBorder)\n                \n                Button(\"追加\") {\n                    if !newTaskTitle.isEmpty {\n                        tasks.append(Task(title: newTaskTitle))\n                        newTaskTitle = \"\"  // 入力をクリア\n                    }\n                }\n                .buttonStyle(.borderedProminent)\n            }\n            .padding()\n            \n            // タスク一覧\n            List {\n                ForEach($tasks) { $task in\n                    HStack {\n                        // チェックボックス\n                        Image(systemName: task.isCompleted ? \"checkmark.circle.fill\" : \"circle\")\n                            .foregroundStyle(task.isCompleted ? .green : .gray)\n                            .onTapGesture {\n                                task.isCompleted.toggle()\n                            }\n                        \n                        // タスクテキスト（完了時は取り消し線）\n                        Text(task.title)\n                            .strikethrough(task.isCompleted)\n                        \n                        Spacer()\n                    }\n                }\n                .onDelete { indexSet in\n                    tasks.remove(atOffsets: indexSet)  // 削除機能\n                }\n            }\n        }\n    }\n}\n\n// ポイント:\n// - UUID() で各タスクが一意な ID を持つ\n// - 追加・削除してもIDは変わらない\n// - List の スワイプ削除機能が正確に動作する",
+					"output": "（タスク追加・完了・削除ができるTODOリスト）",
+					"executable": false,
+					"keywords": ["state", "dynamic", "list", "add", "delete", "動的", "追加", "削除"]
+				},
+				{
+					"title": "既存の型を Identifiable にする拡張",
+					"code": "import SwiftUI\n\n// 既にあるシンプルな構造体\nstruct Course {\n    var name: String\n    var credits: Int\n}\n\n// extension で Identifiable に準拠させる\n// （元の定義は変えずに機能を追加）\nextension Course: Identifiable {\n    var id: String {\n        // コースの名前を ID として使う\n        // 複数の同名コースがない場合に有効\n        name\n    }\n}\n\nstruct CourseListView: View {\n    let courses = [\n        Course(name: \"数学\", credits: 4),\n        Course(name: \"英語\", credits: 3),\n        Course(name: \"理科\", credits: 4)\n    ]\n    \n    var body: some View {\n        VStack {\n            Text(\"開講科目\")\n                .font(.title)\n            \n            ForEach(courses) { course in\n                HStack {\n                    Text(course.name)\n                        .font(.headline)\n                    Spacer()\n                    Text(\"\\(course.credits)単位\")\n                        .foregroundStyle(.secondary)\n                }\n                .padding()\n                .background(Color(.systemGray6))\n            }\n        }\n        .padding()\n    }\n}\n\n// extension で Identifiable を追加するメリット:\n// - 元の構造体の定義を変えない\n// - 必要に応じて複数の場所で使える\n// - 既存のコードに影響を与えない",
+					"output": "（科目一覧が単位数とともに表示される）",
+					"executable": false,
+					"keywords": ["extension", "protocol", "conform", "拡張", "準拠", "エクステンション"]
+				},
+				{
+					"title": "Identifiable vs id: \\.self の使い分け",
+					"code": "import SwiftUI\n\n// === 場面1: シンプルな値型（String, Int） ===\n// → id: \\.self を使う方がシンプル\n\nstruct SimpleListView: View {\n    let fruits = [\"りんご\", \"バナナ\", \"オレンジ\"]\n    \n    var body: some View {\n        VStack {\n            ForEach(fruits, id: \\.self) { fruit in\n                Text(fruit)\n            }\n        }\n    }\n}\n\n// === 場面2: 複雑な型（構造体）の場合 ===\n// → Identifiable に準拠させる方が安全で読みやすい\n\nstruct Student: Identifiable {\n    let id = UUID()\n    var name: String\n    var age: Int\n    var grade: String\n}\n\nstruct StudentListView: View {\n    let students = [\n        Student(name: \"太郎\", age: 13, grade: \"中学1年\"),\n        Student(name: \"花子\", age: 14, grade: \"中学2年\")\n    ]\n    \n    var body: some View {\n        VStack {\n            // Identifiable に準拠しているので id: を省略\n            ForEach(students) { student in\n                Text(\"\\(student.name) (\\(student.age)歳)\")\n            }\n        }\n    }\n}\n\n// === 場面3: 一時的なインデックス取得 ===\n// → indexed() ヘルパーを使う\n\nstruct IndexedListView: View {\n    let items = [\"第1項\", \"第2項\", \"第3項\"]\n    \n    var body: some View {\n        VStack {\n            ForEach(Array(items.enumerated()), id: \\.offset) { index, item in\n                HStack {\n                    Text(\"\\(index + 1): \")\n                        .foregroundStyle(.secondary)\n                    Text(item)\n                }\n            }\n        }\n    }\n}\n\n// 使い分けの目安:\n// - 値型（String, Int）: id: \\.self\n// - 参照型或いは複雑な型: Identifiable に準拠\n// - リスト要素の削除が必要: UUID を使う\n// - スタティックなID: 整数或いは文字列を使う",
+					"output": "（各パターンがそれぞれ正しく表示される）",
+					"executable": false,
+					"keywords": ["self", "difference", "choice", "string", "int", "使い分け", "判断", "比較"]
+				}
+			],
+			"afterHtml": "<div class=\"mt-8\"><h3 class=\"mb-4 text-xl font-bold\">Identifiable が必須な場面</h3><div class=\"overflow-x-auto\"><table class=\"table w-full rounded-box table-zebra bg-base-200\"><thead><tr class=\"bg-base-300\"><th class=\"text-base text-base-content\">場面</th><th class=\"text-base text-base-content\">説明</th><th class=\"text-base text-base-content\">理由</th></tr></thead><tbody><tr><td class=\"font-bold\">List 内のForEach</td><td><code class=\"rounded bg-base-300 px-1\">List { ForEach(items) {...} }</code></td><td>リスト要素の削除・移動を正確に追跡</td></tr><tr><td class=\"font-bold\">TabView 内</td><td>タブの各ビュー要素</td><td>タブの状態管理が正確になる</td></tr><tr><td class=\"font-bold\">@State での配列管理</td><td>追加・削除・編集がある場合</td><td>UUID で一意性を確保</td></tr><tr><td class=\"font-bold\">アニメーション</td><td>要素の削除・追加時</td><td>ID が変わらないことで スムーズなアニメーション</td></tr></tbody></table></div></div>"
+		},
+		{
+			"id": "initializer",
+			"title": "初期化メソッド（init）",
+			"description": "initはクラスや構造体の「新しいインスタンスを作成するとき」に自動的に呼ばれる特別なメソッドです。インスタンスの初期状態をセットアップします。",
+			"codeBlocks": [
+				{
+					"title": "initの基本",
+					"code": "// initはインスタンスを作成するときに呼ばれるメソッド\n// 「初期化子（initializer）」とも呼ばれます\n\nstruct Student {\n    var name: String\n    var age: Int\n    var grade: String\n    \n    // 初期化メソッド（init）\n    init(name: String, age: Int, grade: String) {\n        // 受け取った値をプロパティに代入\n        self.name = name\n        self.age = age\n        self.grade = grade\n        print(\"\\(name)という学生が作成されました\")\n    }\n}\n\n// initを使ってインスタンスを作成\nlet student1 = Student(name: \"太郎\", age: 13, grade: \"中学1年\")\nlet student2 = Student(name: \"花子\", age: 14, grade: \"中学2年\")\n\nprint(\"\\(student1.name)は\\(student1.age)歳です\")\nprint(\"\\(student2.name)は\\(student2.age)歳です\")",
+					"output": "太郎という学生が作成されました\n花子という学生が作成されました\n太郎は13歳です\n花子は14歳です",
+					"executable": true,
+					"keywords": [
+						"init",
+						"initializer",
+						"constructor",
+						"initialization",
+						"生成",
+						"初期化",
+						"作成"
+					]
+				},
+				{
+					"title": "デフォルト値を使ったinit",
+					"code": "// プロパティに初期値を設定しておくと、initを省略できる\n\nstruct Book {\n    var title: String\n    var author: String\n    var publishedYear: Int = 2024  // デフォルト値を設定\n    var isAvailable: Bool = true   // デフォルト値を設定\n    \n    // initを明示的に定義しない場合、Swiftが自動で生成する\n    // （デフォルト初期化子：memberwise initializer）\n}\n\n// デフォルト初期化子を使ってインスタンスを作成\nlet book1 = Book(title: \"Swift入門\", author: \"Aさん\")\n// publishedYearはデフォルト値2024、isAvailableはtrueが使われる\n\nlet book2 = Book(title: \"データベース設計\", author: \"Bさん\", publishedYear: 2020)\n// publishedYearを明示的に指定、isAvailableはデフォルト値true\n\nlet book3 = Book(title: \"アルゴリズム\", author: \"Cさん\", publishedYear: 2019, isAvailable: false)\n// すべてのプロパティを指定\n\nprint(\"\\(book1.title): \\(book1.publishedYear)年発行, 貸出可: \\(book1.isAvailable)\")\nprint(\"\\(book2.title): \\(book2.publishedYear)年発行, 貸出可: \\(book2.isAvailable)\")\nprint(\"\\(book3.title): \\(book3.publishedYear)年発行, 貸出可: \\(book3.isAvailable)\")",
+					"output": "Swift入門: 2024年発行, 貸出可: true\nデータベース設計: 2020年発行, 貸出可: true\nアルゴリズム: 2019年発行, 貸出可: false",
+					"executable": true,
+					"keywords": ["default", "value", "デフォルト", "初期値", "省略"]
+				},
+				{
+					"title": "複数のinitを定義（オーバーロード）",
+					"code": "// 複数の異なる形式のinitを定義できる\n// （異なるパラメータで複数の初期化方法を提供）\n\nstruct Point {\n    var x: Double\n    var y: Double\n    \n    // init1: x と y を指定する方法\n    init(x: Double, y: Double) {\n        self.x = x\n        self.y = y\n    }\n    \n    // init2: 1つの値で x と y の両方を設定する方法\n    init(value: Double) {\n        self.x = value\n        self.y = value\n    }\n    \n    // init3: 何も指定しない場合は原点(0, 0)に初期化\n    init() {\n        self.x = 0\n        self.y = 0\n    }\n}\n\n// 異なる初期化方法を使用\nlet point1 = Point(x: 3, y: 4)  // init1を使用\nlet point2 = Point(value: 5)     // init2を使用\nlet point3 = Point()             // init3を使用\n\nprint(\"Point1: (\\(point1.x), \\(point1.y))\")\nprint(\"Point2: (\\(point2.x), \\(point2.y))\")\nprint(\"Point3: (\\(point3.x), \\(point3.y))\")",
+					"output": "Point1: (3.0, 4.0)\nPoint2: (5.0, 5.0)\nPoint3: (0.0, 0.0)",
+					"executable": true,
+					"keywords": ["overload", "multiple", "複数", "オーバーロード", "初期化方法"]
+				},
+				{
+					"title": "クラスでのinit（継承との関係）",
+					"code": "// クラスではinitの書き方に注意が必要\n// すべてのプロパティを初期化する必要がある\n\nclass Animal {\n    var name: String\n    var age: Int\n    \n    // クラスのinit（designated initializer）\n    init(name: String, age: Int) {\n        self.name = name\n        self.age = age\n        print(\"\\(name)という動物が作成されました\")\n    }\n}\n\nclass Dog: Animal {  // Animalを継承したDogクラス\n    var breed: String\n    \n    // Dogの独自のinit\n    init(name: String, age: Int, breed: String) {\n        self.breed = breed             // 自分のプロパティを初期化\n        super.init(name: name, age: age)  // 親クラスのinitを呼ぶ\n    }\n    \n    // convenience initializer（便利初期化子）\n    // designated initializerを呼び出すラッパー\n    convenience init(name: String) {\n        self.init(name: name, age: 0, breed: \"不明\")\n    }\n}\n\nlet dog1 = Dog(name: \"太郎\", age: 3, breed: \"ゴールデンレトリバー\")\nlet dog2 = Dog(name: \"花子\")  // convenience initを使用\n\nprint(\"\\(dog1.name)は\\(dog1.breed)です\")\nprint(\"\\(dog2.name)は\\(dog2.breed)です (年齢: \\(dog2.age))\")",
+					"output": "太郎という動物が作成されました\n花子という動物が作成されました\n太郎はゴールデンレトリバーです\n花子は不明です (年齢: 0)",
+					"executable": true,
+					"keywords": [
+						"class",
+						"inheritance",
+						"super",
+						"convenience",
+						"designated",
+						"継承",
+						"親クラス"
+					]
+				},
+				{
+					"title": "失敗可能なinit（failable initializer）",
+					"code": "// 初期化が失敗する可能性がある場合は、init? を使う\n// 初期化に成功するとインスタンスを返し、失敗するとnilを返す\n\nstruct User {\n    var name: String\n    var age: Int\n    \n    // 失敗可能なinit（init?）\n    // ageが0以下または150以上なら失敗\n    init?(name: String, age: Int) {\n        // バリデーション（確認）\n        if age <= 0 || age >= 150 {\n            // 初期化を失敗させる\n            return nil\n        }\n        \n        // 条件を満たしたら初期化を続ける\n        self.name = name\n        self.age = age\n    }\n}\n\n// 成功するケース\nif let user1 = User(name: \"太郎\", age: 13) {\n    print(\"\\(user1.name)ユーザーを作成しました（年齢: \\(user1.age)）\")\n} else {\n    print(\"ユーザー作成に失敗しました\")\n}\n\n// 失敗するケース（年齢が無効）\nif let user2 = User(name: \"花子\", age: -5) {\n    print(\"\\(user2.name)ユーザーを作成しました\")\n} else {\n    print(\"年齢が無効のため、ユーザー作成に失敗しました\")\n}\n\n// 失敗するケース（年齢が大きすぎる）\nif let user3 = User(name: \"次郎\", age: 200) {\n    print(\"\\(user3.name)ユーザーを作成しました\")\n} else {\n    print(\"年齢が無効のため、ユーザー作成に失敗しました\")\n}",
+					"output": "太郎ユーザーを作成しました（年齢: 13）\n年齢が無効のため、ユーザー作成に失敗しました\n年齢が無効のため、ユーザー作成に失敗しました",
+					"executable": true,
+					"keywords": [
+						"failable",
+						"optional",
+						"init?",
+						"validation",
+						"バリデーション",
+						"失敗",
+						"nil"
+					]
+				},
+				{
+					"title": "SwiftData @Modelでのinit",
+					"code": "import Foundation\nimport SwiftData\n\n// @Modelをつけたクラスではinitを独自に定義できる\n@Model\nfinal class ToDoTask: Identifiable {\n    var id: UUID = UUID()        // 各タスクに一意のID\n    var title: String = \"\"       // タスクのタイトル\n    var detail: String = \"\"      // タスクの詳細\n    var isCompleted: Bool = false // 完了フラグ\n    var tabId: UUID = UUID()     // どのタブに属しているか\n    var createdAt: Date = Date() // 作成日時\n    \n    // 初期化メソッド\n    // title, detail, tabIdを指定して、それ以外はデフォルト値を使う\n    init(title: String, detail: String, tabId: UUID) {\n        self.title = title\n        self.detail = detail\n        self.isCompleted = false     // 作成時は未完了\n        self.tabId = tabId\n        self.createdAt = Date()      // 現在時刻を自動設定\n        // idはUUID()で自動生成される\n    }\n}\n\n// 使用例\nlet taskId = UUID()\nlet task1 = ToDoTask(title: \"数学の宿題\", detail: \"第3章の問題を解く\", tabId: taskId)\nlet task2 = ToDoTask(title: \"英語の単語\", detail: \"100個暗記する\", tabId: taskId)\n\nprint(\"タスク1: \\(task1.title)\")\nprint(\"  詳細: \\(task1.detail)\")\nprint(\"  完了: \\(task1.isCompleted)\")\nprint(\"  作成日時: \\(task1.createdAt)\")\nprint()\nprint(\"タスク2: \\(task2.title)\")\nprint(\"  詳細: \\(task2.detail)\")",
+					"output": "タスク1: 数学の宿題\n  詳細: 第3章の問題を解く\n  完了: false\n  作成日時: 2026-02-20 10:00:00 +0000\n\nタスク2: 英語の単語\n  詳細: 100個暗記する",
+					"executable": true,
+					"keywords": [
+						"swiftdata",
+						"model",
+						"database",
+						"dataset",
+						"persistent",
+						"データベース",
+						"永続化"
+					]
+				}
+			],
+			"afterHtml": "<div class=\"mt-8\"><h3 class=\"mb-4 text-xl font-bold\">initの種類と使い分け</h3><div class=\"overflow-x-auto\"><table class=\"table w-full rounded-box table-zebra bg-base-200\"><thead><tr class=\"bg-base-300\"><th class=\"text-base text-base-content\">種類</th><th class=\"text-base text-base-content\">記号</th><th class=\"text-base text-base-content\">説明</th><th class=\"text-base text-base-content\">例</th></tr></thead><tbody><tr><td class=\"font-bold\">通常のinit</td><td><code class=\"rounded bg-base-300 px-1\">init(...)</code></td><td>インスタンス作成に成功する</td><td><code class=\"rounded bg-base-300 px-1\">init(name: String)</code></td></tr><tr><td class=\"font-bold\">失敗可能</td><td><code class=\"rounded bg-base-300 px-1\">init?(...)</code></td><td>失敗時はnil、成功時はインスタンス</td><td><code class=\"rounded bg-base-300 px-1\">init?(age: Int)</code></td></tr><tr><td class=\"font-bold\">便利初期化子</td><td><code class=\"rounded bg-base-300 px-1\">convenience init</code></td><td>別のinitを呼び出すラッパー</td><td><code class=\"rounded bg-base-300 px-1\">convenience init(name: String)</code></td></tr><tr><td class=\"font-bold\">デフォルト</td><td>なし</td><td>プロパティに初期値があると自動生成</td><td>全プロパティがデフォルト値を持つ</td></tr></tbody></table></div></div>"
+		},
+		{
+			"id": "self",
+			"title": "self（自分自身への参照）",
+			"description": "selfはインスタンスが自分自身を参照するときに使います。Swiftでは多くの場合省略できますが、明示的に書くことで意図がより明確になります。",
+			"codeBlocks": [
+				{
+					"title": "selfの基本的な使い方",
+					"code": "// selfはインスタンスが自分自身を指す\n// 多くの場合は省略できますが、明示的に書くこともできます\n\nstruct Student {\n    var name: String\n    var age: Int\n    \n    // メソッド内でプロパティにアクセス\n    func introduce() {\n        // 省略形: self を使わない\n        print(\"私の名前は\\(name)です\")  // nameはこのインスタンスのプロパティ\n        \n        // 明示形: self を使う（同じ結果）\n        print(\"私の名前は\\(self.name)です\")\n    }\n    \n    // 別のインスタンスとの比較\n    func isSameAge(as other: Student) -> Bool {\n        // selfを使ってこのインスタンスと比較対象を区別\n        return self.age == other.age\n    }\n}\n\nlet student1 = Student(name: \"太郎\", age: 13)\nlet student2 = Student(name: \"花子\", age: 13)\n\nstudent1.introduce()\nprint(\"同じ年齢: \\(student1.isSameAge(as: student2))\")",
+					"output": "私の名前は太郎です\n私の名前は太郎です\n同じ年齢: true",
+					"executable": true,
+					"keywords": ["self", "reference", "instance", "参照", "インスタンス", "自分自身"]
+				},
+				{
+					"title": "initでのself の重要性",
+					"code": "// ===== 【重要】initで self を書く理由 =====\n// パラメータとプロパティの名前が同じときは、\n// 「self.」を書かないと、データが保存されません！\n// \n// 例える と：\n// 【プロパティ】= データを保存する箱\n// 【パラメータ】= 関数が受け取る値\n// selfなしだと、「受け取った値を、受け取った値に入れる」という操作になります\n\n// ✅ 正しい例\nstruct Student {\n    var name: String      // 【プロパティ】学生の名前を保存する場所\n    var grade: Int        // 学年を保存する場所\n    \n    init(name: String, grade: Int) {     // name, grade は受け取った値\n        self.name = name                 // ✅ 箱に入れる！\n        self.grade = grade               // ✅ 箱に入れる！\n    }\n}\n\nlet student = Student(name: \"太郎\", grade: 1)\nprint(\"\\(student.name)は\\(student.grade)年生\")  // 太郎は1年生\n\n// ❌ 間違った例\nstruct BadStudent {\n    var name: String\n    var grade: Int\n    \n    init(name: String, grade: Int) {\n        name = name        // ❌ 受け取った値の中身 = 受け取った値の中身（意味なし）\n        grade = grade      // ❌ 箱が埋まらないままになる！\n    }\n}\n\nlet badStudent = BadStudent(name: \"太郎\", grade: 1)\nprint(\"\\(badStudent.name)は\\(badStudent.grade)年生\")  // [空]は[0]年生\n\n// === わかりやすい図解 ===\n// \n// ✅ self.name = name の場合:\n//\n//   init(name: \"太郎\") を呼ぶと...\n//\n//     ┌──────────┐     ┌──────────┐\n//     │ 【箱】    │ ←   │ 受け取った値 │\n//     │ self.name│     │ \"太郎\"   │\n//     └──────────┘     └──────────┘\n//       成功 ✅\n//\n//\n// ❌ name = name の場合:\n//\n//   init(name: \"太郎\") を呼ぶと...\n//\n//     ┌──────────┐\n//     │【 箱 】   │  ← 開いたままで空\n//     │ self.name│\n//     └──────────┘\n//\n//     │ 受け取った値 │\n//     │ \"太郎\"      │  ← この値は使われず\n//      \n//       失敗 ❌",
+					"output": "太郎は1年生\n[空]は[0]年生",
+					"executable": true,
+					"keywords": ["init", "parameter", "property", "プロパティ", "パラメータ", "区別", "self"]
+				},
+				{
+					"title": "selfをパラメータとして渡す",
+					"code": "// メソッドでself全体を別の関数に渡す場合\n\nstruct Rectangle {\n    var width: Double\n    var height: Double\n    \n    // このインスタンス自体を別の関数に渡す\n    func printSize() {\n        // self全体を関数に渡す\n        describeShape(self)\n    }\n}\n\n// 外部の関数（型の外側で定義）\nfunc describeShape(_ shape: Rectangle) {\n    print(\"矩形: 幅 \\(shape.width), 高さ \\(shape.height)\")\n    print(\"面積: \\(shape.width * shape.height)\")\n}\n\nlet rect = Rectangle(width: 10, height: 20)\nrect.printSize()\n\n// describeShape(rect) と同じ結果\nrect.printSize()  // 内部でself をパラメータとして渡している",
+					"output": "矩形: 幅 10.0, 高さ 20.0\n面積: 200.0\n矩形: 幅 10.0, 高さ 20.0\n面積: 200.0",
+					"executable": true,
+					"keywords": ["parameter", "pass", "function", "渡す", "関数", "自身"]
+				},
+				{
+					"title": "mutatingメソッドでのself",
+					"code": "// 値型（struct）は中身を変更するメソッドを「mutating」にする必要がある\n// mutatingメソッド内では、self全体を置き換えることもできる\n\nstruct Counter {\n    var count = 0\n    \n    // mutatingをつけることで、プロパティを変更できるメソッドにする\n    mutating func increment() {\n        self.count += 1  // または単に count += 1\n    }\n    \n    // 値を指定してカウンターをリセット\n    mutating func reset(to value: Int) {\n        self.count = value\n    }\n    \n    // self全体を新しい値に置き換える\n    mutating func replicate() {\n        // このカウンターを2倍の値で初期化し直す\n        self = Counter(count: count * 2)\n    }\n}\n\nvar counter = Counter(count: 5)\ncounter.increment()\nprint(\"カウント: \\(counter.count)\")  // 6\n\ncounter.reset(to: 10)\nprint(\"リセット: \\(counter.count)\")   // 10\n\ncounter.replicate()\nprint(\"複製: \\(counter.count)\")        // 20（10 * 2）",
+					"output": "カウント: 6\nリセット: 10\n複製: 20",
+					"executable": true,
+					"keywords": ["mutating", "struct", "modify", "置き換える", "値型", "変更"]
+				},
+				{
+					"title": "クロージャでのself",
+					"code": "// クロージャ内でselfを使う場合、メモリリークを防ぐために [weak self] を使う\n// （クラスの場合、強い参照サイクルが発生する可能性があるため）\n\nclass DataFetcher {\n    var name: String\n    var resultHandler: (() -> Void)?\n    \n    init(name: String) {\n        self.name = name\n    }\n    \n    func fetchData() {\n        // クロージャを定義\n        // [weak self] でselfへの弱参照を使う\n        // selfが破棄されたら nil になる\n        resultHandler = { [weak self] in\n            if let self = self {\n                // selfが存在する場合のみ処理\n                print(\"\\(self.name)のデータ取得完了\")\n            } else {\n                print(\"このオブジェクトは既に破棄されています\")\n            }\n        }\n    }\n    \n    // [unowned self] の例（危険なので注意）\n    // selfが絶対に破棄されないことが確実な場合に使う\n    func setCallback() {\n        resultHandler = { [unowned self] in\n            print(\"\\(self.name)がコールバック処理を実行\")\n        }\n    }\n}\n\nvar fetcher: DataFetcher? = DataFetcher(name: \"API\")\nfetcher?.fetchData()\nfetcher?.resultHandler?()\n\n// fetcher を破棄\nfetcher = nil\n// 以下を実行すると、resultHandler? は nil なので何もしない\n// または、[weak self] があれば \"このオブジェクトは既に破棄\" のメッセージが出る可能性",
+					"output": "APIのデータ取得完了\n",
+					"executable": false,
+					"keywords": [
+						"closure",
+						"weak",
+						"unowned",
+						"reference cycle",
+						"memory leak",
+						"クロージャ",
+						"メモリリーク"
+					]
+				},
+				{
+					"title": "値型と参照型でのselfの違い",
+					"code": "// === 値型（struct）での self ===\nstruct ValueType {\n    var value: Int\n    \n    mutating func change() {\n        self.value = 100  // 自分自身の値を変更\n        // 値型は mutating が必要\n    }\n}\n\nvar vt = ValueType(value: 10)\nvt.change()\nprint(\"値型のvalue: \\(vt.value)\")  // 100\n\n// === 参照型（class）での self ===\nclass ReferenceType {\n    var value: Int\n    \n    init(value: Int) {\n        self.value = value\n    }\n    \n    func change() {\n        self.value = 100  // mutating は不要\n        // 参照型はメモリ上の同じオブジェクトを変更するため\n    }\n}\n\nlet rt = ReferenceType(value: 10)\nrt.change()\nprint(\"参照型のvalue: \\(rt.value)\")  // 100\n\n// === 違い ===\n// 値型（struct）:\n//   - mutating をつけないとプロパティを変更できない\n//   - self = ... で全体を置き換え可能\n//   - 値をコピーするので、original と変更後は別物\n\n// 参照型（class）:\n//   - mutating は不要（常にメモリ上の同じオブジェクト）\n//   - let で宣言しても、プロパティは変更可能\n//   - すべての参照者が同じオブジェクトを見る",
+					"output": "値型のvalue: 100\n参照型のvalue: 100",
+					"executable": true,
+					"keywords": [
+						"struct",
+						"class",
+						"value type",
+						"reference type",
+						"mutating",
+						"違い",
+						"値型",
+						"参照型"
+					]
+				}
+			],
+			"afterHtml": "<div class=\"mt-8\"><h3 class=\"mb-4 text-xl font-bold\">self を使う場面まとめ</h3><div class=\"overflow-x-auto\"><table class=\"table w-full rounded-box table-zebra bg-base-200\"><thead><tr class=\"bg-base-300\"><th class=\"text-base text-base-content\">場面</th><th class=\"text-base text-base-content\">使う理由</th><th class=\"text-base text-base-content\">例</th></tr></thead><tbody><tr><td class=\"font-bold\">init で パラメータ = プロパティ</td><td>区別を明確にする</td><td><code class=\"rounded bg-base-300 px-1\">self.name = name</code></td></tr><tr><td class=\"font-bold\">複数のインスタンスを比較</td><td>「どのインスタンスか」を明示</td><td><code class=\"rounded bg-base-300 px-1\">self.age == other.age</code></td></tr><tr><td class=\"font-bold\">インスタンス全体を渡す</td><td>メソッドから関数へ</td><td><code class=\"rounded bg-base-300 px-1\">function(self)</code></td></tr><tr><td class=\"font-bold\">mutating で全体置換</td><td>値型で新しい値に初期化し直す</td><td><code class=\"rounded bg-base-300 px-1\">self = Type(...)</code></td></tr><tr><td class=\"font-bold\">クロージャ内での参照</td><td>メモリリーク防止 [weak self]</td><td><code class=\"rounded bg-base-300 px-1\">{ [weak self] in ... }</code></td></tr></tbody></table></div></div>"
 		}
 	]
 }

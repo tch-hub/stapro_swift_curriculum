@@ -38,12 +38,12 @@ export const todolistSteps: TodolistStep[] = [
 	{
 		id: 'step7',
 		title: 'ステップ7: タスクのデータモデルを作る(ToDoTask.swift)',
-		summary: 'SwiftDataでToDoTaskモデルを定義します。'
+		summary: 'タスク情報を保存するための「設計図」を作成します。'
 	},
 	{
 		id: 'step8',
 		title: 'ステップ8: タブのデータモデルを作る(ToDoTab.swift)',
-		summary: 'SwiftDataでToDoTabモデルを定義します。'
+		summary: 'タブ情報を保存するための「設計図」を作成します。'
 	},
 	{
 		id: 'step9',

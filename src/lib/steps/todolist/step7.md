@@ -2,40 +2,47 @@
 
 ## 1. モデルの作成
 
-`SwiftData/ToDoTask.swift` を開き、タスク情報を保存するためのデータモデルを作成します。
+`SwiftData/ToDoTask.swift` を開き、タスク情報を保存するためのデータモデルを作成します。  
+`SwiftData`とはアプリ内にデータを永続的に保存するためのフレームワークです。  
 SwiftDataを使うには、クラスに `@Model` を付けるだけでOKです。
 
 以下のコードを記述してください。
 
-```swift
+```swift tite="SwiftData/ToDoTask.swift"
 import Foundation
 import SwiftData
 
 // @Modelをつけることで、このクラスのデータがデータベースに保存できるようになる
 @Model
 final class ToDoTask: Identifiable {
-    // タスクごとに一意のID（識別子）
+
     var id: UUID = UUID()
-    // タスクのタイトル
+    // タスクごとに一意のID（識別子）
     var title: String = ""
-    // タスクの詳細メモ
+    // タスクのタイトル
     var detail: String = ""
-    // 完了したかどうか
+    // タスクの詳細メモ
     var isCompleted: Bool = false
-    // どのタブ（リスト）に属しているかを紐付けるID
+    // 完了したかどうか
     var tabId: UUID = UUID()
-    // 作成日時
+    // どのタブ（リスト）に属しているかを紐付けるID
     var createdAt: Date = Date()
+    // 作成日時
 
     // 新しいタスクを作成する時の初期設定
     init(title: String, detail: String, tabId: UUID) {
+
         self.title = title
+
         self.detail = detail
-        // 作成時は未完了状態にする
+
         self.isCompleted = false
+        // 作成時は未完了状態にする
+
         self.tabId = tabId
-        // 作成日時を現在時刻に設定
+
         self.createdAt = Date()
+        // 作成日時を現在時刻に設定
     }
 }
 ```
@@ -47,6 +54,7 @@ final class ToDoTask: Identifiable {
 
 - **`final class ToDoTask`**
   タスク1つ1つのデータを表すクラスです。SwiftDataのモデルは必ず `class`（クラス）である必要があり、`final`（継承不可）をつけるのが推奨されています。
+- `Identifiable` このクラスが `id` プロパティで一意に識別可能であることを示すプロトコルです。ForEachやListで各タスクを正確に管理するために書く必要があります。
 
 - **各プロパティ（保存する項目）**
   - **`id`**: データを一意に識別するためのIDです。
@@ -56,6 +64,7 @@ final class ToDoTask: Identifiable {
 
 - **`init` (イニシャライザ)**
   新しいタスクデータを作る時に呼ばれます。タイトルやタブIDなど必要な情報を受け取り、初期状態（未完了、作成日時など）をセットします。
+- **`self.`** 値を保存するために書く必要があります。
 
 ---
 
