@@ -10,28 +10,58 @@
 	const originalAppSteps = [
 		{
 			id: 'step1',
-			title: 'ステップ1: アプリのアイデアを考えよう',
-			summary: '自分が作りたいアプリのアイデアを出す'
+			title: 'ステップ1: アプリ企画・設計・プロジェクト作成',
+			summary: 'アプリの計画を立て、XcodeでmacOSアプリを作成し、PLAN.mdに計画を記録する'
 		},
 		{
 			id: 'step2',
-			title: 'ステップ2: アプリの設計図を描いてみよう',
-			summary: '画面のデザインやレイアウトを決める'
+			title: 'ステップ2: ファイル構成を整える',
+			summary: 'フォルダ・ファイルの骨格を整え、仮の画面を表示できる状態にする'
 		},
 		{
 			id: 'step3',
-			title: 'ステップ3: 必要な機能を洗い出そう',
-			summary: 'アプリに必要な機能をリストアップする'
+			title: 'ステップ3: メイン画面の骨格を作る',
+			summary: 'ダミーデータを使って画面のレイアウト・画面遷移の構造を確認する'
 		},
 		{
 			id: 'step4',
-			title: 'ステップ4: プロジェクトをセットアップしよう',
-			summary: 'Xcodeで新規プロジェクトを作成する'
+			title: 'ステップ4: データモデルの実装',
+			summary: 'SwiftDataでデータモデルとサービスクラスを実装する'
 		},
 		{
 			id: 'step5',
-			title: 'ステップ5: 機能を実装してみよう',
-			summary: '設計図と機能リストをもとに開発を進める'
+			title: 'ステップ5: データの表示（Read）',
+			summary: 'データベースからデータを取得してリスト表示する'
+		},
+		{
+			id: 'step6',
+			title: 'ステップ6: データの追加（Create）',
+			summary: '入力フォームを作り、新しいデータを保存できるようにする'
+		},
+		{
+			id: 'step7',
+			title: 'ステップ7: データの更新・削除（Update / Delete）',
+			summary: 'スワイプ削除・状態切り替え・確認アラートを実装する'
+		},
+		{
+			id: 'step8',
+			title: 'ステップ8: UI部品を整える・機能を追加する',
+			summary: '検索・並び替え・アニメーションなど使いやすさを高める'
+		},
+		{
+			id: 'step9',
+			title: 'ステップ9: デバッグ・バグ修正',
+			summary: '全機能の動作確認・よくあるバグの原因と対処法'
+		},
+		{
+			id: 'step10',
+			title: 'ステップ10: UI仕上げ・磨き込み',
+			summary: '色・フォント・余白を整えてアプリの見た目を仕上げる'
+		},
+		{
+			id: 'step11',
+			title: 'ステップ11: 発表・振り返り',
+			summary: '完成したアプリを発表し、授業全体を振り返る'
 		}
 	];
 </script>
@@ -54,12 +84,18 @@
 					<div class="flex-1">
 						<h2 class="mb-4 text-2xl font-bold">プロジェクト概要</h2>
 						<p class="mb-6 leading-relaxed">
-							このプロジェクトでは、企画から設計、実装までのアプリ開発の一連の流れを体験します。これまで学習したSwiftUIの知識を応用して、完全にオリジナルのアプリを開発することを目指します。
+							このプロジェクトでは、企画から設計、実装までのアプリ開発の一連の流れを体験します。作るアプリの種類・テーマはあなた自身が決めます。ターゲットは
+							<strong>macOSアプリ</strong> です（iPhoneと同じSwiftUI・SwiftDataが使えます）。
 						</p>
+						<div class="mb-6 rounded-lg border border-info/30 bg-info/10 p-4">
+							<p class="text-sm">
+								💡 <strong>なぜmacOS？</strong> iPhoneアプリは無料の開発者アカウントだと7日ごとにMacと繋いで再インストールが必要です。macOSアプリなら制限なく動かし続けられます！
+							</p>
+						</div>
 						<h3 class="mb-2 font-bold">学習のゴール：</h3>
 						<ul class="mb-6 list-inside list-disc space-y-2">
-							<li>timerとtodolistで学んだ知識を応用し、定着させる</li>
-							<li>アイデアを形にするプロセス（企画、設計、実装、テスト）を学ぶ</li>
+							<li>タイマー・ToDoリストで学んだ知識を応用し、定着させる</li>
+							<li>アイデアを形にするプロセス（企画・設計・実装・発表）を体験する</li>
 							<li>問題解決能力と創造性を養う</li>
 						</ul>
 					</div>
@@ -171,7 +207,7 @@
 	<section class="mb-16">
 		<h2 class="mb-8 text-3xl font-bold">制作ステップ</h2>
 		<p class="mb-8 text-lg text-base-content/80">
-			アプリ開発を5つのステップで段階的に進めましょう。各ステップで何をすべきか詳しく説明します。
+			macOSアプリの開発を11のステップで段階的に進めましょう。各ステップにはチェックリストと詰まったときの検索キーワードが載っています。
 		</p>
 		<ProjectSteps steps={originalAppSteps} projectId="original-app" />
 	</section>
