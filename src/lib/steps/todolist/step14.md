@@ -1,8 +1,12 @@
 # ステップ14: SwiftDataの設定を行う(ToDoListApp.swift)
 
-## 1. SwiftDataの構成
+> **ステップ1との違い**
+> ステップ1では `ToDoListApp.swift` にまず最低限のコード（`ContentView` を表示するだけ）を書きました。
+> このステップでは、作成したデータモデル（`ToDoTask`, `ToDoTab`）をアプリ全体で使えるように、**SwiftDataの設定を追加**します。
 
-`ToDoListApp.swift` を開き、作成したデータモデル（`ToDoTask`, `ToDoTab`）をアプリ全体で使えるように設定します。
+## 1. SwiftDataの設定を追加する
+
+`ToDoListApp.swift` を開いて、以下のコードに書き換えてください。
 
 ```swift
 import SwiftUI
@@ -13,17 +17,17 @@ struct ToDoListApp: App {
     let modelContainer: ModelContainer
 
     init() {
-        // 保存対象のデータモデルを定義
+        // 保存するデータの種類を登録する
         let schema = Schema([
             ToDoTask.self,
             ToDoTab.self
         ])
 
-        // データベースの設定（永続化を有効にするため isStoredInMemoryOnly: false）
+        // データベースの設定（アプリを閉じてもデータを残す）
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
-            // コンテナの初期化
+            // データベースを作成する
             modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not initialize ModelContainer: \(error)")
@@ -34,38 +38,51 @@ struct ToDoListApp: App {
         WindowGroup {
             ContentView()
         }
-        // 作成したコンテナをアプリ全体に適用
+        // 作ったデータベースをアプリ全体で使えるようにする
         .modelContainer(modelContainer)
     }
 }
 ```
 
-**SwiftDataの初期化の仕組み:**
+**ステップ1から追加した部分:**
+
+| 追加した内容 | 説明 |
+|---|---|
+| `let modelContainer: ModelContainer` | データベースを管理する変数を用意する |
+| `init()` | アプリ起動時に最初に実行される処理 |
+| `Schema` | どのデータを保存対象にするかを登録する設定 |
+| `ModelConfiguration` | データベースの動き方を設定する |
+| `ModelContainer` | 実際のデータベースを作る |
+| `.modelContainer(modelContainer)` | データベースをアプリ全体に共有する |
+
+---
+
+**各パーツの説明:**
 
 - **`Schema`（スキーマ：データベースの設計図）**
-  どのクラス（`@Model`がついたクラス）をデータベースのテーブルとして管理するかを定義します。ここでは `ToDoTask` と `ToDoTab` の2つを登録しています。これにより、SwiftDataがこれらのクラスの構造を理解し、適切なデータベーステーブルを自動生成します。
+  どのクラス（`@Model` がついたクラス）をデータとして管理するかを登録します。ここでは `ToDoTask`（タスク）と `ToDoTab`（タブ）の2つを登録しています。
 
 - **`ModelConfiguration`（データベースの設定）**
-  データベースの動作を設定します。重要なのは `isStoredInMemoryOnly` パラメータです:
-  - **`false`（本番用）**: データをディスク（ストレージ）に永続保存します。アプリを終了しても、次回起動時にデータが残ります。
-  - **`true`（テスト用）**: データをメモリ上にのみ保存します。アプリを終了するとデータは消えます（プレビューやテストで使用）。
+  データベースの動き方を決めます。`isStoredInMemoryOnly` が大事なポイントです。
+  - **`false`（本番用）**: アプリを閉じてもデータが残ります。
+  - **`true`（テスト用）**: アプリを閉じるとデータが消えます。
 
-- **`ModelContainer`（データベースの実体）**
-  実際のデータベースファイルを管理するコンテナです。`init()` で作成し、`modelContainer` プロパティに保存しています。
+- **`ModelContainer`（データベースの本体）**
+  実際にデータを保存・管理するデータベースです。`init()` の中で作成します。
 
-- **`do-catch` によるエラーハンドリング**
-  データベースの初期化は失敗する可能性があります（ディスク容量不足、権限エラーなど）。`try` でエラーが発生する可能性のある処理を実行し、`catch` でエラーをキャッチします。ここでは `fatalError()` でアプリを強制終了させていますが、これはデータベースなしではアプリが動作できないためです。
+- **`do-catch` によるエラー処理**
+  データベースの作成に失敗することがあります（容量不足など）。`try` で失敗するかもしれない処理を実行し、失敗したら `catch` でエラーをキャッチします。データベースが使えないとアプリが動かないので、`fatalError()` で強制終了させています。
 
 - **`.modelContainer(modelContainer)`**
-  作成したコンテナをアプリ全体に注入します。これにより、アプリ内のどのビューでも `@Environment(\.modelContext)` でデータベースにアクセスできるようになります。
+  作ったデータベースをアプリ全体で共有します。これにより、どのビューからでも `@Environment(\.modelContext)` を使ってデータにアクセスできます。
 
-**データの流れ:**
+**処理の流れ（まとめ）:**
 
-1. アプリ起動時に `init()` が実行される
-2. `Schema` でデータモデルを登録
-3. `ModelContainer` でデータベースを初期化
+1. アプリ起動 → `init()` が実行される
+2. `Schema` でデータの種類を登録
+3. `ModelContainer` でデータベースを作成
 4. `.modelContainer()` でアプリ全体に共有
-5. 各ビューで `@Environment(\.modelContext)` を使ってアクセス
+5. 各画面で `@Environment(\.modelContext)` を使ってアクセス
 
 ---
 
@@ -106,4 +123,4 @@ struct ToDoListApp: App {
 
 ---
 
-このステップでは、アプリの裏側で使用する初期データの定義を行いました。見た目には変化はありませんが、次のステップでこのデータを使ってアプリを初期状態にセットアップしていきます。
+このステップでは、アプリの裏側で使うデータベースの設定を行いました。見た目には変化はありませんが、次のステップでこのデータを使ってアプリの初期状態をセットアップしていきます。

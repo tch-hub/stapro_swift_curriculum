@@ -1,5 +1,10 @@
 # ステップ13: ホーム画面の枠を作る(HomeView.swift)
 
+### ステップ13終了時の完成イメージ
+
+<img src="/images/todolist/Homeview.png" alt="HomeViewの完成イメージ" class="mobile-screenshot-top" />
+
+
 ## 1. 画面の土台作成
 
 `Views/HomeView.swift` を開き、ホーム画面の土台を作成します。
@@ -34,11 +39,7 @@ struct HomeView: View {
 
 ## コード全体
 
-<img src="/images/todolist/Homeview.png" alt="HomeViewの完成イメージ" class="mobile-screenshot" />
-
-### Views/HomeView.swift
-
-```swift
+```swift title="Views/HomeView.swift"
 import SwiftUI
 
 /// ホーム画面（枠だけ作成）

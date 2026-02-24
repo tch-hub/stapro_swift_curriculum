@@ -1,194 +1,270 @@
 <script>
-	let tabs = [
-		{ id: 1, name: '勉強' },
-		{ id: 2, name: 'やること' }
-	];
-	let selectedTabId = 1;
+	// === データ定義 ===
+	let lists = $state([
+		{ id: 1, name: 'リスト' },
+		{ id: 2, name: '仕事' },
+		{ id: 3, name: 'プライベート' }
+	]);
 
-	let tasks = [
-		{ id: 1, tabId: 1, text: 'SwiftUIの基礎を学ぶ', completed: true },
-		{ id: 2, tabId: 1, text: 'SwiftDataについて調べる', completed: false },
-		{ id: 3, tabId: 2, text: '買い物に行く', completed: false },
-		{ id: 4, tabId: 2, text: '部屋の掃除をする', completed: true }
-	];
+	let allTasks = $state([
+		{ id: 1, listId: 1, text: 'アイテムA', completed: false },
+		{ id: 2, listId: 1, text: 'アイテムB', completed: false },
+		{ id: 3, listId: 1, text: 'アイテムC', completed: true },
+		{ id: 4, listId: 2, text: 'ミーティング資料を作る', completed: false },
+		{ id: 5, listId: 2, text: 'メールを返信する', completed: true },
+		{ id: 6, listId: 3, text: '買い物に行く', completed: false }
+	]);
 
-	let newTaskText = '';
-	let newTabName = '';
-	let nextTaskId = 5;
-	let nextTabId = 3;
+	// === UI状態 ===
+	let selectedListId = $state(1);
+	let showListPicker = $state(false);
+	let newTaskText = $state('');
+	let nextTaskId = $state(7);
 
+	// === 派生値 ===
+	let selectedList = $derived(lists.find((l) => l.id === selectedListId));
+	let filteredTasks = $derived(allTasks.filter((t) => t.listId === selectedListId));
+
+	// === アクション ===
 	function addTask() {
-		if (newTaskText.trim() === '') return;
-		tasks = [
-			...tasks,
-			{ id: nextTaskId++, tabId: selectedTabId, text: newTaskText, completed: false }
+		if (!newTaskText.trim()) return;
+		allTasks = [
+			...allTasks,
+			{ id: nextTaskId++, listId: selectedListId, text: newTaskText, completed: false }
 		];
 		newTaskText = '';
 	}
 
-	function addTab() {
-		if (newTabName.trim() === '') return;
-		const newTab = { id: nextTabId++, name: newTabName };
-		tabs = [...tabs, newTab];
-		selectedTabId = newTab.id;
-		newTabName = '';
+	function selectList(id) {
+		selectedListId = id;
+		showListPicker = false;
 	}
 
-	function deleteTask(taskId) {
-		tasks = tasks.filter((t) => t.id !== taskId);
+	function toggleTask(task) {
+		task.completed = !task.completed;
 	}
-
-	$: filteredTasks = tasks.filter((task) => task.tabId === selectedTabId);
 </script>
 
+<!-- モック電話画面 -->
 <div class="mockup-phone">
 	<div class="mockup-phone-camera"></div>
-	<div class="mockup-phone-display bg-[#F2F2F7] text-black">
-		<!-- 以下モニター内 -->
-		<div
-			class="relative flex h-full w-full flex-col items-stretch justify-start overflow-hidden bg-[#F2F2F7] pt-12 text-black"
-		>
-			<!-- iOS Segmented Control -->
-			<div class="mb-4 px-4">
-				<div class="relative flex rounded-lg bg-gray-200 p-1">
-					{#each tabs as tab (tab.id)}
-						<button
-							class="flex-1 rounded-md py-1.5 text-sm font-medium transition-all duration-200 {selectedTabId ===
-							tab.id
-								? 'bg-white text-black shadow-sm'
-								: 'text-gray-500 hover:text-gray-900'}"
-							onclick={() => (selectedTabId = tab.id)}
-						>
-							{tab.name}
-						</button>
-					{/each}
-				</div>
+	<div class="mockup-phone-display bg-white text-black">
+		<div class="screen">
+			<!-- タイトル -->
+			<div class="px-5 pt-14 pb-2">
+				<h1 class="text-3xl font-bold text-black">ToDo リスト</h1>
 			</div>
 
-			<!-- Task List (Inset Grouped) -->
-			<div class="flex-1 overflow-y-auto px-4 pb-28">
-				<div class="space-y-3">
-					{#each filteredTasks as task (task.id)}
-						<div class="flex items-center gap-3 rounded-xl bg-white p-3 shadow-sm">
+			<!-- リストヘッダー -->
+			<div class="relative flex items-center justify-between px-5 py-3">
+				<!-- リスト切り替えボタン -->
+				<button
+					class="flex items-center gap-0.5 text-base font-normal text-[#007AFF]"
+					onclick={() => (showListPicker = !showListPicker)}
+				>
+					{selectedList?.name}
+					<span class="icon transition-transform {showListPicker ? 'rotate-180' : ''}">
+						expand_more
+					</span>
+				</button>
+
+				<!-- フィルターボタン -->
+				<button class="icon-btn" aria-label="フィルター">
+					<span class="icon">filter_list</span>
+				</button>
+
+				<!-- リスト選択ドロップダウン -->
+				{#if showListPicker}
+					<div class="dropdown">
+						{#each lists as list, i (list.id)}
 							<button
-								class="flex h-6 w-6 flex-none items-center justify-center rounded-full border-2 transition-colors {task.completed
-									? 'border-blue-500 bg-blue-500'
-									: 'border-gray-300'}"
-								onclick={() => (task.completed = !task.completed)}
+								class="dropdown-item {list.id === selectedListId ? 'selected' : ''}"
+								onclick={() => selectList(list.id)}
 							>
-								{#if task.completed}
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										class="h-4 w-4 text-white"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path
-											fill-rule="evenodd"
-											d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-											clip-rule="evenodd"
-										/>
-									</svg>
+								<span>{list.name}</span>
+								{#if list.id === selectedListId}
+									<span class="icon text-base text-[#007AFF]">check</span>
 								{/if}
 							</button>
-							<span
-								class="flex-grow text-left text-black {task.completed
-									? 'text-gray-400 line-through'
-									: ''}"
-							>
-								{task.text}
-							</span>
-							<button
-								class="text-gray-400 hover:text-red-500"
-								aria-label="タスクを削除"
-								onclick={() => deleteTask(task.id)}
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									class="h-5 w-5"
-									viewBox="0 0 20 20"
-									fill="currentColor"
-								>
-									<path
-										fill-rule="evenodd"
-										d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-										clip-rule="evenodd"
-									/>
-								</svg>
-							</button>
-						</div>
-					{:else}
-						<div class="py-10 text-center text-sm text-gray-400">タスクがありません</div>
-					{/each}
-				</div>
+							{#if i < lists.length - 1}
+								<div class="mx-4 border-b border-gray-100"></div>
+							{/if}
+						{/each}
+					</div>
+				{/if}
 			</div>
 
-			<!-- Input Area -->
-			<div class="absolute right-0 bottom-0 left-0 border-t border-gray-200 bg-[#F2F2F7] p-4">
-				<!-- タブ追加エリア -->
-				<div class="mb-2 flex gap-2">
-					<input
-						type="text"
-						placeholder="新しいタブ"
-						class="flex-1 rounded-full border-none bg-white px-4 py-2 text-black shadow-sm outline-none focus:ring-2 focus:ring-blue-500"
-						bind:value={newTabName}
-						onkeydown={(e) => e.key === 'Enter' && addTab()}
-					/>
+			<!-- タスクリスト -->
+			<div
+				class="flex-1 overflow-y-auto"
+				onclick={() => {
+					if (showListPicker) showListPicker = false;
+				}}
+				role="presentation"
+			>
+				{#each filteredTasks as task, i (task.id)}
 					<button
-						class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 text-white shadow-md transition-colors hover:bg-blue-600 disabled:bg-blue-300"
-						onclick={addTab}
-						disabled={!newTabName.trim()}
-						aria-label="タブを追加"
+						class="flex w-full items-center gap-3 px-5 py-3 text-left"
+						onclick={() => toggleTask(task)}
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M12 4v16m8-8H4"
-							/>
-						</svg>
-					</button>
-				</div>
+						<!-- チェック円 -->
+						{#if task.completed}
+							<span class="check-circle completed">
+								<span class="icon text-sm text-white">check</span>
+							</span>
+						{:else}
+							<span class="check-circle pending"></span>
+						{/if}
 
-				<!-- タスク追加エリア -->
-				<div class="flex gap-2">
+						<!-- タスクテキスト -->
+						<span
+							class="flex-grow text-base {task.completed
+								? 'text-gray-400 line-through'
+								: 'text-black'}"
+						>
+							{task.text}
+						</span>
+					</button>
+
+					{#if i < filteredTasks.length - 1}
+						<div class="ml-14 border-b border-gray-200"></div>
+					{/if}
+				{/each}
+
+				{#if filteredTasks.length === 0}
+					<div class="py-10 text-center text-sm text-gray-400">タスクがありません</div>
+				{/if}
+			</div>
+
+			<!-- 入力エリア -->
+			<div class="absolute right-0 bottom-6 left-0 bg-[#F2F2F7] px-4 py-3">
+				<div class="flex items-center gap-2">
 					<input
 						type="text"
-						placeholder="新しいタスク"
-						class="flex-1 rounded-full border-none bg-white px-4 py-2 text-black shadow-sm outline-none focus:ring-2 focus:ring-green-500"
+						placeholder="新しいタスクを追加..."
+						class="flex-1 border-none bg-transparent text-sm text-gray-400 outline-none placeholder:text-gray-400"
 						bind:value={newTaskText}
 						onkeydown={(e) => e.key === 'Enter' && addTask()}
 					/>
 					<button
-						class="flex h-10 w-10 items-center justify-center rounded-full bg-green-500 text-white shadow-md transition-colors hover:bg-green-600 disabled:bg-green-300"
+						class="send-btn {newTaskText.trim() ? 'active' : ''}"
 						onclick={addTask}
-						disabled={!newTaskText.trim()}
 						aria-label="タスクを追加"
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M12 4v16m8-8H4"
-							/>
-						</svg>
+						<span class="icon text-base">arrow_upward</span>
 					</button>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+<style>
+	/* 画面全体 */
+	.screen {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		height: 100%;
+		width: 100%;
+		overflow: hidden;
+		background-color: #f2f2f7;
+		color: black;
+	}
+
+	/* Material Icons 共通 */
+	.icon {
+		font-family: 'Material Symbols Outlined';
+		font-weight: normal;
+		font-style: normal;
+		font-size: 1.25rem;
+		line-height: 1;
+		display: inline-block;
+		user-select: none;
+	}
+
+	/* フィルターアイコンボタン */
+	.icon-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 0.5rem;
+		background-color: #eaf2ff;
+		color: #007aff;
+	}
+
+	/* ドロップダウン */
+	.dropdown {
+		position: absolute;
+		top: 100%;
+		left: 0.75rem;
+		z-index: 10;
+		min-width: 160px;
+		overflow: hidden;
+		border-radius: 0.75rem;
+		background: white;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+		border: 1px solid rgba(0, 0, 0, 0.08);
+	}
+
+	.dropdown-item {
+		display: flex;
+		width: 100%;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.75rem 1rem;
+		text-align: left;
+		font-size: 0.875rem;
+		color: black;
+		transition: background-color 0.15s;
+	}
+
+	.dropdown-item:hover {
+		background-color: #f9fafb;
+	}
+
+	.dropdown-item.selected {
+		font-weight: 500;
+		color: #007aff;
+	}
+
+	/* チェック円 */
+	.check-circle {
+		display: flex;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 9999px;
+	}
+
+	.check-circle.completed {
+		background-color: #9ca3af;
+	}
+
+	.check-circle.pending {
+		border: 2px solid #007aff;
+	}
+
+	/* 送信ボタン */
+	.send-btn {
+		display: flex;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		width: 1.75rem;
+		height: 1.75rem;
+		border-radius: 9999px;
+		background-color: #9ca3af;
+		color: white;
+		transition: background-color 0.15s;
+	}
+
+	.send-btn.active {
+		background-color: #007aff;
+	}
+</style>

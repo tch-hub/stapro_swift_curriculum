@@ -1,31 +1,31 @@
 # ステップ1: プロジェクトの作成とセットアップ(ToDoListApp.swift)
 
-## 1. Xcodeで新規プロジェクトを作成
+## 1. Xcodeで新しいプロジェクトを作る
 
-1. Xcodeを起動し、「Create a new Xcode project」を選択します。
-2. テンプレートで「App」を選択して「Next」をクリックします。
-3. 設定を入力し、以下の画像のように指定して「Next」を押します。
+1. Xcodeを起動して「Create a new Xcode project」を選びます。
+2. テンプレートで「App」を選んで「Next」をクリックします。
+3. 下の画像のように設定して「Next」を押します。
 
 <img src="/images/setup2.png" alt="Xcode の設定画面" class="mx-auto block max-w-full md:max-w-lg rounded-lg border border-base-300 shadow-sm" />
 
 4. 保存先を選んでプロジェクトを作成します。
 
-## 2. 自動作成されるファイルを削除して必要なファイルを作成する
+## 2. 不要なファイルを削除して、必要なファイルを作る
 
-新しくプロジェクトを作成すると自動生成されるファイルは一度すべて削除し、必要なファイルを自分で作り直します。以下の手順で進めてください。
+新しくプロジェクトを作ると、Xcodeが自動でいくつかのファイルを作ってくれます。今回はそれらをいったん全部消して、自分で必要なファイルを作り直します。
 
-### ファイルを削除する方法
+### ファイルの消し方
 
-- Xcodeのプロジェクトナビゲーターで、削除したいファイルまたはフォルダを選択します。
-- 右クリックし、メニューから「Delete」を選択します（「Move to Trash」を選んで完全に削除してください）。
+- プロジェクトナビゲーター（左の一覧）で消したいファイルまたはフォルダを選びます。
+- 右クリックして「Delete」→「Move to Trash」を選べば完全に消えます。
 
-### 必要なファイル構造を作成する
+### 作るべきファイル構造
 
-以下の構成になるようにフォルダとファイルを作成してください。
+以下の構成になるようにフォルダとファイルを作ってください。
 
 ```text
 ToDoList/
-├── ToDoListApp.swift  # アプリのエントリーポイント
+├── ToDoListApp.swift  # アプリのスタート地点
 ├── Views/
 │   ├── ContentView.swift
 │   ├── HomeView.swift
@@ -46,19 +46,19 @@ ToDoList/
     └── InputView.swift
 ```
 
-**フォルダの作成方法:**
+**フォルダの作り方:**
 
-- プロジェクトナビゲーターの空白部分で右クリックし、「New Folder」を作成します。
+- プロジェクトナビゲーターの空白部分を右クリックして「New Folder」を選びます。
 
-**ファイルの作成方法:**
+**ファイルの作り方:**
 
-- いずれかの方法でファイルを作成してください。
-  - Xcode メニューバーの「File」→「New」→「File...」を選択
-  - プロジェクトナビゲーターの空白の部分で右クリックし、「New EmptyFile」を選択
+どちらかの方法で作れます。
+  - Xcodeのメニューバーから「File」→「New」→「File...」を選ぶ
+  - プロジェクトナビゲーターの空白を右クリックして「New Empty File」を選ぶ
 
-## 3. ToDoListApp.swift の実装
+## 3. ToDoListApp.swift を書く
 
-アプリのエントリーポイントとなる `ToDoListApp.swift` に以下のコードを記述します。
+アプリが最初に起動するときに呼ばれるファイルです。以下のコードを書いてください。
 
 ```swift
 import SwiftUI
@@ -74,13 +74,13 @@ struct ToDoListApp: App {
 }
 ```
 
-- `import SwiftData`: アプリ内でデータベース機能を使うためにインポートします。
+- `import SwiftData`: データベース機能を使うためのおまじないです。あとのステップで使います。
 - `@main`: ここがアプリの開始地点であることを示します。
-- `WindowGroup`: アプリのメインウィンドウを管理するコンテナです。ここでは `ContentView` を最初に表示するように設定しています。
+- `WindowGroup`: アプリのメインウィンドウを管理する箱です。最初に `ContentView` を表示するよう設定しています。
 
-## 4. ContentView.swift の実装
+## 4. ContentView.swift を書く
 
-メイン画面となる `ContentView.swift` に以下のコードを記述します。
+最初に表示されるメイン画面のファイルです。今は文字を表示するだけのシンプルな内容にしておきます。
 
 ```swift
 import SwiftUI
@@ -97,9 +97,9 @@ struct ContentView: View {
 }
 ```
 
-- `struct ContentView: View`: SwiftUIのビューを定義しています。
-- `Text("ToDoList")`: 画面に文字を表示するだけのシンプルな構成です。ここから機能を追加していきます。
-- `#Preview`: Xcodeのプレビュー機能で画面を確認するためのコードです。
+- `struct ContentView: View`: SwiftUIの画面（View）を定義しています。
+- `Text("ToDoList")`: 画面に「ToDoList」という文字を表示します。ここからどんどん機能を追加していきます。
+- `#Preview`: Xcodeのプレビュー機能で画面の見た目を確認するためのコードです。
 
 ---
 
