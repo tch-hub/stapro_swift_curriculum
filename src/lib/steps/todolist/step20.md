@@ -1,71 +1,46 @@
 # ステップ20: スワイプ削除を追加する(HomeView.swift)
 
-## 1. ロジックの実装: 削除処理
+### ステップ20終了時の完成イメージ
 
-`Views/HomeView.swift` を開き、タスク削除用のメソッドを追加します。
-リスト操作では削除対象が「何行目か(IndexSet)」で渡されるため、それを使って削除対象のタスクを特定します。
+<img src="/images/todolist/20.png" alt="HomeViewの完成イメージ" class="mobile-screenshot-top" />
+
+## 1. タスクを削除する仕組みを作る
+
+`Views/HomeView.swift` を開き、タスク削除用のメソッド（処理）を追加します。
+リストから項目を削除する時は「上から何番目の行か（インデックス）」を指定して削除する対象を特定します。
 
 ```swift
-    // スワイプ削除イベントを受け取るメソッド
+    // スワイプ削除を実行する処理
     private func handleDeleteTask(_ offsets: IndexSet) {
-        // 渡されたインデックス（行番号）をループ処理
-        for index in offsets {
-            // インデックスに対応するタスクを取得
-            let taskToDelete = tasks[index]
-            // データベースから削除
-            ToDoTaskService.deleteTask(taskToDelete, from: modelContext)
+        for index in offsets { // 渡された行番号（インデックス）を一つずつ処理する
+            let taskToDelete = tasks[index]  // その行番号にあるタスクのデータを取得する
+            ToDoTaskService.deleteTask(taskToDelete, from: modelContext) // 取得したタスクをデータベースから削除する
         }
-        // 表示を更新
-        loadTasks()
+        loadTasks() // タスクが消えた後の最新リストを画面に反映させる
     }
 ```
 
-**削除処理メソッドの仕組み:**
+**削除処理の仕組み:**
 
-- **`private func handleDeleteTask(_ offsets: IndexSet)`**
-  削除対象の行番号（インデックス）の集合を受け取る関数です。
-  - `IndexSet`: 整数の集合を表す型。複数の行を一度に削除できるため、配列ではなく集合を使います
-  - `_`: 外部引数ラベルを省略（呼び出し時に `handleDeleteTask(offsets)` と書ける）
+| コード | 役割 |
+|---|---|
+| `private func handleDeleteTask(_ offsets: IndexSet)` | 削除したい行番号（インデックス）のまとまりを受け取る関数です。<br>・`IndexSet` という「複数の番号をまとめられる型」を使うことで、複数の行を一度に削除することも可能にしています。<br>・`_` をつけることで、呼び出すときに `offsets:` という名前を省略して書けるようにしています。 |
+| `for index in offsets { ... }` | 今回削除したい行番号を一つずつ取り出して、中カッコ `{ }` の中の処理を繰り返します（これを**ループ処理**と呼びます）。 |
+| `let taskToDelete = tasks[index]` | 変数 `tasks` に入っている一覧から、`index`（今回削除する行番号）番目のデータを取得し、`taskToDelete` という定数に一時的に入れます。 |
+| `ToDoTaskService.deleteTask(...)` | ステップ10で作成したデータベース処理を呼び出し、先ほど取得したタスクのデータをデータベースから削除します。 |
+| `loadTasks()` | 全ての削除が終わったあとに1回だけ呼ぶことで、タスクが消えた最新の状態を画面に表示し直します。 |
 
-- **`for index in offsets { ... }`**
-  削除対象の各インデックスをループ処理します。
 
-  **なぜループが必要？**
-  - ユーザーが複数の行を選択して一度に削除することがあるため
-  - 通常は1つのインデックスですが、編集モードでは複数選択が可能です
+## 2. 画面のスワイプ動作と紐付ける
 
-- **`let taskToDelete = tasks[index]`**
-  配列のインデックスを使って、削除対象のタスクオブジェクトを取得します。
-  - `tasks[0]`: 1番目のタスク
-  - `tasks[1]`: 2番目のタスク
-  - `tasks[index]`: index番目のタスク
-
-- **`ToDoTaskService.deleteTask(taskToDelete, from: modelContext)`**
-  ステップ10で作成したサービスメソッドを使って、データベースから削除します。
-
-- **`loadTasks()`**
-  削除後、タスクリストを再読み込みして画面を更新します。
-  - ループの外で1回だけ呼ぶことで、効率的に更新できます
-
-**処理の流れ:**
-
-1. ユーザーがタスクを左にスワイプ
-2. 削除ボタンが表示される
-3. 削除ボタンをタップ
-4. `handleDeleteTask` が呼ばれる（削除する行番号が渡される）
-5. 行番号から該当するタスクオブジェクトを取得
-6. データベースから削除
-7. タスクリストを再読み込み
-8. UIが自動的に更新され、タスクが消える
-
-## 2. UIの修正: 削除アクションの有効化
-
-`body` 内の `CustomList` の呼び出し部分を修正し、`onDelete` パラメータに先ほどのメソッドを渡します。
+作った削除機能を画面から使えるようにします。
+`body` 内の `CustomList` の呼び出し部分を修正し、`onDelete` という設定に先ほど作った処理を渡します。
 
 ```swift
+                // MARK: - コンテンツ
                 if selectedTabId != nil && !tasks.isEmpty {
-                    // onDelete に handleDeleteTask を渡すことでスワイプ削除が有効になります
-                    CustomList(items: tasks, onDelete: handleDeleteTask) { task in
+                    
+                    CustomList(items: tasks, onDelete: handleDeleteTask) { task in // onDelete に handleDeleteTask を渡すことでスワイプ削除が有効になります
                         ToDoListItem(
                             title: task.title,
                             isCompleted: task.isCompleted
@@ -73,51 +48,18 @@
                             toggleTaskCompletion(task)
                         }
                     }
-                }
+                } else {
 ```
 
-**削除アクションの有効化:**
+**スワイプ削除を有効にする仕組み:**
 
-- **`onDelete: handleDeleteTask`**
-  関数を値として渡しています（関数参照）。
-
-  **関数参照とは？**
-  - `handleDeleteTask()` と書くと、関数を**実行**してしまいます
-  - `handleDeleteTask` と書くと、関数そのものを**値として渡す**ことができます
-  - `CustomList` は、スワイプ削除が発生した時にこの関数を呼び出します
-
-- **`CustomList` 内部での処理**
-  ステップ6で作成した `CustomList` は、以下のように動作します:
-  1. ユーザーがスワイプ操作を行う
-  2. SwiftUIの `.onDelete` モディファイアが反応
-  3. 削除対象の行番号（`IndexSet`）が取得される
-  4. `onDelete` パラメータに渡された関数（`handleDeleteTask`）を呼び出す
-  5. `handleDeleteTask` が実行され、データベースから削除される
-
-- **`nil` から `handleDeleteTask` への変更**
-  - 以前: `onDelete: nil` → スワイプ削除が無効
-  - 今回: `onDelete: handleDeleteTask` → スワイプ削除が有効
-
-**データの流れ:**
-
-```
-ユーザーのスワイプ操作
-  ↓
-CustomList が検知
-  ↓
-IndexSet（削除する行番号）を取得
-  ↓
-handleDeleteTask(offsets) を呼び出し
-  ↓
-データベースから削除
-  ↓
-loadTasks() で画面更新
-  ↓
-タスクが消える
-```
+| コード | 役割・解説 |
+|---|---|
+| `onDelete: handleDeleteTask` | タスクがスワイプ（横にサッとスライド）された時に、「この関数を実行してね」と処理自体を渡しています。<br>・**注意:** カッコをつけて `handleDeleteTask()` と書いてしまうとその場で実行されてしまうため、カッコはつけずに「関数の名前だけ」を渡すのがポイントです。 |
+| `CustomList` の動作 | もともと `onDelete: nil`（削除機能なし）にしていた部分を関数に置き換えたことで、以下のように動くようになります。<br>① ユーザーが画面でスワイプする<br>② 左から「削除」ボタンが現れる<br>③ ボタンを押すと消す行番号が特定され、自動的に `handleDeleteTask` へ渡される |
 
 お疲れ様でした！これでToDoリストアプリの主要な機能はすべて実装完了です。
-プレビューやシミュレーターを実行して、タスクの追加・編集・削除ができるか確認してみましょう。
+プレビューやシミュレーターを実行して、タスクの追加・完了の切り替え・スワイプでの削除がすべて正しく動くか、実際に触って確認してみましょう！
 
 ---
 
@@ -125,9 +67,7 @@ loadTasks() で画面更新
 
 <img src="/images/todolist/20.png" alt="HomeViewの完成イメージ" class="mobile-screenshot" />
 
-### Views/HomeView.swift
-
-```swift
+```swift title="Views/HomeView.swift"
 import SwiftUI
 import SwiftData
 
@@ -179,8 +119,6 @@ struct HomeView: View {
             }
         }
     }
-
-    // MARK: - Private Methods
 
     private func loadTabs() {
         tabs = ToDoTabService.getAllTabs(from: modelContext)

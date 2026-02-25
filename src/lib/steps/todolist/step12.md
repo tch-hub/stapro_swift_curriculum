@@ -128,7 +128,7 @@ struct TabManageView: View {
 **データの読み込みと追加の流れ:**
 
 - **`loadTabs()`**
-  `ToDoTabService` を使ってデータベースに保存されているタブをすべて取り出し、`tabs` という箱に入れます。`tabs` が変わると、SwiftUIが自動的に画面を更新してくれます。
+  ステップ12で作成した`ToDoTabService` を使ってデータベースに保存されているタブをすべて取り出し、`tabs` という箱に入れます。`tabs` が変わると、SwiftUIが自動的に画面を更新してくれます。
 
 - **`addTab()`の処理フロー**
   1.  **`guard !newTabName.isEmpty else { return }`**: 入力欄が空のときは何もしないで終わります（空のタブが作られないようにするためのチェックです）。
@@ -180,13 +180,14 @@ private func confirmDelete() {
 ```swift
 // Xcodeのプレビュー画面で動作確認するためのコード（アプリ本体には影響しない）
 #Preview {
-    NavigationStack { // ナビゲーションバーを表示するために必要
+    NavigationStack {
         TabManageView()
             // inMemory: true → アプリを閉じると消えるテスト用のデータベースを使う
             .modelContainer(for: ToDoTab.self, inMemory: true)
     }
 }
 ```
+- `NavigationStack`: 画面間の遷移や階層的なナビゲーションを管理するためにSwiftUIで用意されている仕組みです。`navigationTitle`などのナビゲーション関連の修飾子を適用するために必要です。
 
 - `#Preview`: このブロック内に書いたコードがXcodeのプレビュー画面に表示されます。
 

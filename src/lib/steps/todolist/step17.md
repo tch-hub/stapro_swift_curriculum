@@ -1,321 +1,191 @@
 # ステップ17: タブとタスクを表示する(HomeView.swift)
 
-## 1. 状態変数の準備
+### ステップ17終了時の完成イメージ
 
-`Views/HomeView.swift` を開き、データを管理するための変数を追加します。
+<img src="/images/todolist/17.png" alt="HomeViewの完成イメージ" class="mobile-screenshot-top" />
+
+
+## 1. データを入れる箱（変数）を準備する
+
+`Views/HomeView.swift` を開いて、画面に表示する「タブ」や「タスク」を覚えておくための変数を追加しましょう。
 
 ```swift
 import SwiftUI
 import SwiftData
 
 struct HomeView: View {
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) private var modelContext // データベースを操作するための道具
 
-    // データ管理用の状態変数
-    @State private var tabs: [ToDoTab] = []         // 全タブのリスト
-    @State private var tasks: [ToDoTask] = []       // 選択中のタブのタスクリスト
-    @State private var selectedTabId: UUID?         // 選択中のタブID
+    // 画面に表示するデータを覚えておくための箱
+    @State private var tabs: [ToDoTab] = []         // すべてのタブのリスト
+    @State private var tasks: [ToDoTask] = []       // 選ばれているタブのタスクリスト
+    @State private var selectedTabId: UUID?         // 今どのタブが選ばれているか
 
-    @Binding var navigationPath: [NavigationItem]   // 親から受け取る遷移パス
+    @Binding var navigationPath: [NavigationItem]   // 画面の移動（遷移）を管理する仕組み
 
-    // ... body部分の実装へ
+    // ... この下の「body」の中に画面の見た目を作っていきます
 }
 ```
 
-**状態変数の役割:**
 
-- **`@Environment(\.modelContext) private var modelContext`**
-  SwiftDataのデータベースにアクセスするためのコンテキストです。アプリ全体で共有されているものを受け取ります。
+| 追加した内容 | 役割 |
+|---|---|
+| `modelContext` | データベース（データの箱）からデータを取ってきたり保存したりする道具 |
+| `tabs` | データベースから取ってきた「すべてのタブ」を入れておく箱。中身が変わると自動で画面も変わります。 |
+| `tasks` | 今選ばれているタブに入っている「タスク」を入れておく箱。 |
+| `selectedTabId` | 今どのタブが選ばれているかを覚えておくための変数。何も選ばれていない状態もあるので、`?`（オプショナル型）がついています。 |
+| `navigationPath` | 別の画面（タブ管理画面）へ移動したい時に、移動先の情報を追加するための道具。 |
 
-- **`@State private var tabs: [ToDoTab] = []`**
-  データベースから取得した全タブのリストを保持します。この配列が変更されると、UIが自動的に更新されます。
+## 2. 画面の枠組みを作る
 
-- **`@State private var tasks: [ToDoTask] = []`**
-  現在選択されているタブに属するタスクのリストです。タブを切り替えるたびに、この配列の中身が入れ替わります。
-
-- **`@State private var selectedTabId: UUID?`**
-  どのタブが選択されているかを追跡します。`UUID?`（オプショナル型）なのは、初期状態では何も選択されていない可能性があるためです。
-
-- **`@Binding var navigationPath: [NavigationItem]`**
-  親（MainStack）から受け取った画面遷移の履歴です。タブ管理画面への遷移時に、この配列に要素を追加します。
-
-**データの流れ:**
-
-1. `loadTabs()` で全タブを取得 → `tabs` に格納
-2. 最初のタブを自動選択 → `selectedTabId` に設定
-3. `selectedTabId` の変更を検知 → `loadTasks()` が実行される
-4. 選択されたタブのタスクを取得 → `tasks` に格納
-5. `tasks` の変更でUIが更新される
-
-## 2. UIの実装: レイアウトの枠組み
-
-`body` の中身を実装します。
-まずは全体の枠組みと、タブが1つもない場合（アプリ初期化前など）の表示を作ります。
+`body` の中身を作っていきましょう。
+まずは全体の枠組みと、アプリを開いたばかりで「タブが1つもない時」の表示を作ります。
 
 ```swift
     var body: some View {
         VStack(spacing: 0) {
             if tabs.isEmpty {
-                // データが全くない場合の表示（iOS 17以降で使える標準コンポーネント）
+                // タブが1つもない時：「タブがありません」という案内を表示する
                 ContentUnavailableView("タブがありません", systemImage: "tray")
             } else {
-                // ここにヘッダーとリストを追加していきます
+                // タブがある時：ここにタブの切り替えボタンとタスクのリストを作ります
             }
         }
-        .navigationTitle("ToDoリスト")
-        // 画面が表示された時にデータを読み込む
+        .navigationTitle("ToDoリスト") // 画面の上にタイトルを表示
         .onAppear {
-            loadTabs()
+            loadTabs() // 画面が表示されたときに、タブのデータを読み込む（後で作ります）
         }
     }
 ```
 
-**UIレイアウトの仕組み:**
+| コード | 役割 |
+|---|---|
+| `VStack(spacing: 0)` | 画面のパーツを縦に並べるためのコンテナです。`spacing: 0` と書くことで、パーツ同士の隙間をなくしてぴったりくっつけています。 |
+| `if tabs.isEmpty` | もし `tabs` という箱の中身が空っぽ（0個）だったら、「タブがありません」という特別な画面を表示します。 |
+| `ContentUnavailableView` | データがないということを表示してくれる、iOSに最初から用意されている便利な部品です。 |
+| `.onAppear { loadTabs() }` | 画面が表示された瞬間に1回だけ、中の処理（ここではタブの読み込み）を実行します。 |
 
-- **`VStack(spacing: 0)`**
-  縦方向にビューを並べるコンテナです。`spacing: 0` で要素間の余白をなくしています。
+## 3. タブを切り替えるボタン（ヘッダー）を作る
 
-- **`if tabs.isEmpty`**
-  タブが1つもない場合の条件分岐です。アプリ初期化前や、全タブを削除した場合に該当します。
-
-- **`ContentUnavailableView`（iOS 17以降）**
-  「データがない」状態を表示するための標準コンポーネントです。アイコンとメッセージを自動的にレイアウトしてくれます。
-  - 第1引数: 表示するメッセージ
-  - `systemImage`: SF Symbolsのアイコン名
-
-- **`.onAppear { loadTabs() }`**
-  ビューが画面に表示された時に1度だけ実行されます。ここでデータベースからタブ一覧を読み込みます。
-
-  **重要:** `.onAppear` はビューのライフサイクルの一部で、画面が表示されるたびに呼ばれます。ただし、同じビューが表示され続けている間は再実行されません。
-
-## 3. UIの実装: タブヘッダー
-
-`else` ブロックの中に、タブを選択するためのヘッダーを追加します。
+`else`（タブがある時）の中に、タブを選ぶためのヘッダーを追加します。
 
 ```swift
             } else {
-                // 1. タブ選択ヘッダー
+                // 1. タブを切り替えるボタンの集まり
                 TabHeaderView(
-                    tabs: tabs.map { .init(id: $0.id, name: $0.name) }, // データ型を変換して渡す
+                    tabs: tabs.map { .init(id: $0.id, name: $0.name) }, // 必要なデータだけにして渡す
                     selectedTabId: $selectedTabId,
                     onManageTabs: {
-                        // 管理ボタンが押されたら画面遷移
+                        // 管理ボタン（歯車マークなど）が押されたら、タブ管理画面へ移動する
                         navigationPath.append(NavigationItem(id: .tabManage))
                     }
                 )
-                // タブが変わったらタスクを再読み込み
                 .onChange(of: selectedTabId) { _, _ in
+                    // 選ばれているタブが変わったら、そのタブのタスクを読み込み直す
                     loadTasks()
                 }
 
-                // 次にリスト部分を追加します
+                // 次に、この下にタスクのリストを追加します
             }
 ```
 
-- `tabs.map { ... }`: `TabHeaderView` が期待しているデータ型に合わせて、変換を行っています。
 
-**タブヘッダーの仕組み:**
+| コード | 役割 |
+|---|---|
+| `tabs.map { ... }` | `TabHeaderView` という部品が使いやすいように、データベースそのままのデータではなく、必要な情報（`id` と `name`）だけを抜き出して渡しています。 |
+| `$selectedTabId` | 頭に `$` をつけることで、タブがタップされたときに変数も同時に変える指示をしています（これをバインディングと呼びます）。 |
+| `.onChange` | `selectedTabId` の中身が変わった瞬間をキャッチして、中の処理を実行してくれます。ここでは「別のタブが選ばれたから、タスクを読み込み直す」という指示を出しています。 |
 
-- **`tabs.map { .init(id: $0.id, name: $0.name) }`**
-  `tabs` 配列（`[ToDoTab]`型）を、`TabHeaderView` が期待する型に変換しています。
-  - `map` は配列の各要素を変換する関数
-  - `.init(id: $0.id, name: $0.name)` で新しい構造体を作成
-  - `$0` は現在処理中の要素（`ToDoTab`）を指す
+## 4. タスクのリストを作る
 
-  **なぜ変換が必要？** `TabHeaderView` は汎用的なコンポーネントなので、SwiftDataの `ToDoTab` に直接依存しないよう設計されています。
-
-- **`selectedTabId: $selectedTabId`**
-  `$` をつけることで、Bindingとして渡します。これにより、`TabHeaderView` 内でタブが選択されると、この `selectedTabId` が自動的に更新されます（双方向バインディング）。
-
-- **`onManageTabs: { ... }`**
-  タブ管理ボタンが押された時の処理です。クロージャ（無名関数）で定義しています。
-  - `navigationPath.append(...)` で画面遷移の履歴に新しい画面を追加
-  - `NavigationItem(id: .tabManage)` でタブ管理画面を指定
-
-- **`.onChange(of: selectedTabId) { _, _ in loadTasks() }`**
-  `selectedTabId` の値が変わった時に自動的に実行される処理です。
-  - 第1引数 `_`: 変更前の値（今回は使わないので `_` で無視）
-  - 第2引数 `_`: 変更後の値（今回は使わないので `_` で無視）
-  - タブが切り替わったら、そのタブのタスクを読み込み直します
-
-**データの流れ:**
-
-1. ユーザーがタブをタップ
-2. `TabHeaderView` 内で `selectedTabId` が更新される
-3. Bindingにより、HomeViewの `selectedTabId` も更新される
-4. `.onChange` が検知して `loadTasks()` を実行
-5. 新しいタブのタスクが `tasks` に格納される
-6. UIが自動的に更新される
-
-## 4. UIの実装: タスクリスト
-
-ヘッダーの下に、メインとなるタスクリスト（または空の状態）を表示するコードを追加します。
+ヘッダーの下に、メインのタスクリストを表示するコードを追加します。
 
 ```swift
-                // 2. メインコンテンツエリア
+                // 2. タスクが並ぶリストの部分
                 if selectedTabId != nil && !tasks.isEmpty {
-                    // タスクがある場合：リストを表示
+                    // タブが選ばれていて、タスクも1つ以上あるならリストを表示
                     CustomList(items: tasks, onDelete: nil) { task in
                         ToDoListItem(
-                            title: task.title,
-                            isCompleted: task.isCompleted
+                            title: task.title,           // タスクの名前
+                            isCompleted: task.isCompleted // 終わっているかどうか
                         ) {
-                            // 完了切り替え（次のステップで実装）
+                            // タップした時の処理（次のステップで作ります）
                         }
                     }
                 } else {
-                    // タスクがない場合 or タブ未選択の場合
+                    // タスクが1つもない時は、空っぽの画面を表示
                     EmptyStateView(hasSelectedTab: selectedTabId != nil)
                 }
 ```
 
-**タスクリスト表示の仕組み:**
-
 - **`if selectedTabId != nil && !tasks.isEmpty`**
-  2つの条件を両方満たす場合にタスクリストを表示します:
-  1. `selectedTabId != nil`: タブが選択されている
-  2. `!tasks.isEmpty`: タスクが1つ以上ある
+  `&&` は「〜かつ〜である」という意味です。「タブがきちんと選ばれていて」、かつ「タスクが空ではない」という2つの条件が揃った時だけ、タスクのリストを表示します。
 
-  `&&` は「かつ」を意味する論理演算子です。
+- **`CustomList` と `ToDoListItem`**
+  前のステップで作ったリストの部品を使って、1つ1つのタスクを画面に表示しています。
 
-- **`CustomList(items: tasks, onDelete: nil) { task in ... }`**
-  以前作成した汎用リストコンポーネントを使用しています。
-  - `items: tasks`: 表示するデータ
-  - `onDelete: nil`: 削除機能は今回使わない（次のステップで実装）
-  - `{ task in ... }`: 各タスクをどう表示するかを定義するクロージャ
+## 5. タスクを読み込む仕組み（ロジック）を作る
 
-- **`ToDoListItem(...)`**
-  各タスクを表示するための行コンポーネントです。
-  - `title: task.title`: タスクのタイトル
-  - `isCompleted: task.isCompleted`: 完了状態
-  - `{ }`: タップ時の処理（次のステップで実装予定）
-
-- **`else { EmptyStateView(...) }`**
-  タスクがない、またはタブが未選択の場合に表示します。
-  - `hasSelectedTab: selectedTabId != nil` で、「タブは選択されているがタスクがない」のか「タブ自体が未選択」なのかを判別し、適切なメッセージを表示します。
-
-## 5. ロジックの実装: タスク読み込み
-
-`body` の外に、データを読み込むプライベートメソッドを追加します。
-まずは、**選択中のタブに対応するタスク**だけを読み込む関数を作ります。
+`body` のブロックの外側に、データベースからタスクを取ってくる処理を追加します。
+まずは、**「今選ばれているタブ」に入っているタスクだけ**を取ってくる関数です。
 
 ```swift
-    // 選択中のタブIDを使って、タスクをデータベースから取得
+    // 選ばれているタブのタスクだけを取り出す処理
     private func loadTasks() {
         guard let tabId = selectedTabId else {
-            // タブが選択されていなければ、タスクは空
+            // もし何もタブが選ばれていなければ、タスクの箱は空っぽにして処理をストップする
             tasks = []
             return
         }
 
-        // 条件：tabIdが一致するタスクだけを取得
+        // 「このタブIDを持っているタスクだけ集める」という指示の条件を作る
         let descriptor = FetchDescriptor<ToDoTask>(
             predicate: #Predicate { $0.tabId == tabId }
         )
-        // 取得実行（失敗したら空配列）
+        // データベースから取ってきて、`tasks` の箱に入れる
         tasks = (try? modelContext.fetch(descriptor)) ?? []
     }
 ```
 
-**タスク読み込みの仕組み:**
-
 - **`guard let tabId = selectedTabId else { ... }`**
-  `guard` 文は「条件を満たさない場合に早期リターン」するための構文です。
-  - `selectedTabId` がnilの場合（タブ未選択）、`tasks = []` で空にして関数を終了
-  - nilでない場合、`tabId` に値を取り出して処理を続行
+  「もし `selectedTabId` が空(nil)だったら、そこで処理を諦めてストップしてね」という安全確認の機能です。
 
-  **`if let` との違い:** `guard let` は「正常な場合に処理を続ける」ことを明示し、コードの可読性が向上します。
+- **`#Predicate { $0.tabId == tabId }`（条件の絞り込み）**
+  すべてのタスクの中から、「自分が持っているタブのID（`$0.tabId`）」と「今選ばれているタブのID（`tabId`）」が同じものだけを見つけ出す、という条件です。
 
-- **`FetchDescriptor<ToDoTask>(predicate: #Predicate { $0.tabId == tabId })`**
-  データベースから特定の条件に合うタスクだけを取得します。
-  - `#Predicate { ... }`: 条件式を定義するマクロ
-  - `$0.tabId == tabId`: 「タスクの `tabId` が、選択中のタブIDと一致する」という条件
-  - これにより、選択中のタブに属するタスクだけが取得されます
+## 6. タブ一覧を読み込む仕組み（ロジック）を作る
 
-- **`(try? modelContext.fetch(descriptor)) ?? []`**
-  エラーハンドリング付きのデータ取得です。
-  - `try?`: エラーが発生した場合、nilを返す
-  - `?? []`: nilの場合は空配列を返す
-  - 結果として、エラー時でもアプリがクラッシュせず、空のリストが表示されます
-
-**処理の流れ:**
-
-1. タブが選択されているかチェック
-2. 選択されていなければ空配列を設定して終了
-3. 選択されていれば、そのタブIDでフィルタリング
-4. データベースから該当タスクを取得
-5. `tasks` に格納してUIを更新
-
-## 6. ロジックの実装: タブ一覧読み込み
-
-全てのタブを読み込む関数を追加します。
-読み込んだ後、どのタブを選択状態にするかの自動調整も行います。
+すべてのタブを読み込む関数を追加します。
+読み込んだ後に「一番最初のタブを自動で選ぶ」という機能も入れます。
 
 ```swift
-    // 全てのタブを読み込む
+    // すべてのタブを読み込んで、どれを選ぶかセットする処理
     private func loadTabs() {
-        // ステップ11で作ったServiceを使って全件取得
-        tabs = ToDoTabService.getAllTabs(from: modelContext)
+        
+        tabs = ToDoTabService.getAllTabs(from: modelContext) // ステップ11で作った仕組みを使って、全部のタブを取ってくる
 
-        // 選択状態の自動調整
+        // 自動的にどれかのタブを選ぶための処理
         if let currentId = selectedTabId {
-            // もし選択中のIDがリストの中に無かったら（削除された場合など）
-            if !tabs.contains(where: { $0.id == currentId }) {
-                // 先頭のタブを選択し直す
-                selectedTabId = tabs.first?.id
+            
+            if !tabs.contains(where: { $0.id == currentId }) { // もし今選ばれているタブが、なくなっていたら（消されたりして）
+                
+                selectedTabId = tabs.first?.id // 先頭のタブを選び直す
             }
         } else {
-            // 未選択（初回起動時など）なら、先頭のタブを選択
-            selectedTabId = tabs.first?.id
+            
+            selectedTabId = tabs.first?.id // アプリを開いたばかりで何も選ばれていないなら、先頭のタブを選ぶ
         }
 
-        // タブ一覧の更新に合わせて、タスクも再読み込み
-        loadTasks()
+        
+        loadTasks() // タブが準備できたので、そのタブのタスクを読み込む
     }
 ```
 
-**タブ一覧読み込みと選択状態管理:**
+---
 
-- **`tabs = ToDoTabService.getAllTabs(from: modelContext)`**
-  ステップ11で作成したサービスメソッドを使って、全タブを取得します。
+### 🔄 タブの選択トラブルを防ぐ工夫
 
-- **選択状態の自動調整ロジック**
-
-  ```swift
-  if let currentId = selectedTabId {
-      if !tabs.contains(where: { $0.id == currentId }) {
-          selectedTabId = tabs.first?.id
-      }
-  } else {
-      selectedTabId = tabs.first?.id
-  }
-  ```
-
-  **2つのケースを処理:**
-  1. **既に何かタブが選択されている場合（`if let currentId = selectedTabId`）**
-     - `tabs.contains(where: { $0.id == currentId })`: 選択中のタブIDが、取得したタブリストに含まれているかチェック
-     - 含まれていない場合（タブが削除された場合など）、先頭のタブを選択し直す
-     - これにより、「存在しないタブが選択されている」という不整合を防ぎます
-  2. **何も選択されていない場合（`else`）**
-     - 初回起動時やタブが全削除された後の状態
-     - 先頭のタブを自動選択します
-
-- **`tabs.first?.id`**
-  - `first`: 配列の最初の要素を取得（配列が空ならnil）
-  - `?.id`: オプショナルチェイニング。firstがnilでなければidを取得
-  - 結果として、タブがあれば最初のタブのID、なければnilが設定されます
-
-- **`loadTasks()`**
-  タブ一覧の更新に合わせて、選択中のタブのタスクも再読み込みします。これにより、データの整合性が保たれます。
-
-**処理の流れ:**
-
-1. データベースから全タブを取得
-2. 現在選択中のタブが存在するかチェック
-3. 存在しなければ先頭のタブを選択
-4. 未選択なら先頭のタブを選択
-5. タスクを再読み込み
-6. UIが自動的に更新される
+アプリを使っていると、「選んでいたタブがいつのまにか消されている（削除機能など）」ということが起こるかもしれません。そのままだとエラーになってしまうので、**「もし選んでいるタブが見つからなかったら、一番最初のタブを選び直す」** または **「初めて開いたら、自動で一番最初のタブを選ぶ」** という賢い仕組み（`selectedTabId = tabs.first?.id`）を入れています。
 
 ---
 
@@ -323,9 +193,7 @@ struct HomeView: View {
 
 <img src="/images/todolist/17.png" alt="HomeViewの完成イメージ" class="mobile-screenshot" />
 
-### Views/HomeView.swift
-
-```swift
+```swift title="Views/HomeView.swift"
 import SwiftUI
 import SwiftData
 
@@ -341,10 +209,8 @@ struct HomeView: View {
     var body: some View {
         VStack(spacing: 0) {
             if tabs.isEmpty {
-                // タブ自体がない場合（初期化前など）
                 ContentUnavailableView("タブがありません", systemImage: "tray")
             } else {
-                // MARK: - ヘッダー
                 TabHeaderView(
                     tabs: tabs.map { .init(id: $0.id, name: $0.name) },
                     selectedTabId: $selectedTabId,
@@ -356,14 +222,12 @@ struct HomeView: View {
                     loadTasks()
                 }
 
-                // MARK: - コンテンツ
                 if selectedTabId != nil && !tasks.isEmpty {
                     CustomList(items: tasks, onDelete: nil) { task in
                         ToDoListItem(
                             title: task.title,
                             isCompleted: task.isCompleted
                         ) {
-                            // TODO: 完了状態の切り替え
                         }
                     }
                 } else {
@@ -376,8 +240,6 @@ struct HomeView: View {
             loadTabs()
         }
     }
-
-    // MARK: - Private Methods
 
     private func loadTabs() {
         tabs = ToDoTabService.getAllTabs(from: modelContext)

@@ -1,170 +1,148 @@
 # ステップ16: 起動時の初期化を行う(ContentView.swift)
 
-## 1. 基本変数の追加
 
-`Views/ContentView.swift` を開き、初期化状態を管理する変数などを追加します。
+### ステップ16終了時の完成イメージ
+
+<img src="/images/todolist/ContentView16.png" alt="ContentViewの完成イメージ" class="mobile-screenshot-top" />
+
+
+## 1. アプリの準備をするための変数を追加する
+
+`Views/ContentView.swift` を開いて、アプリの準備（初期化）の状態を管理するための変数を追加しましょう。
 
 ```swift
 import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    // データ操作用
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) private var modelContext // データベースを操作するための道具
 
-    // 初期化が完了したかどうかを管理するフラグ
-    @State private var isInitialized: Bool
+    @State private var isInitialized: Bool // アプリの準備が終わったかどうかを覚えておくためのスイッチ（フラグ）
 
-    // 自動初期化を行うかどうか（プレビュー用などではfalseにできるように）
-    private let autoInitialize: Bool
+    private let autoInitialize: Bool // 自動で準備を始めるかどうか（プレビュー画面などのために用意）
 
-    // 初期化（イニシャライザ）
+    // init() はこの画面が作られる時に、一番最初に動く「最初の設定」
     init(isInitialized: Bool = false, autoInitialize: Bool = true) {
         _isInitialized = State(initialValue: isInitialized)
         self.autoInitialize = autoInitialize
     }
 
     var body: some View {
-        // ... (次の手順で実装します)
+        // ... (次の手順で中身を作ります)
         Text("Loading...")
     }
 }
 ```
 
-**初期化状態管理の仕組み:**
+**新しく追加したコードの役割:**
 
-- **`@State private var isInitialized: Bool`**
-  アプリの初期化が完了したかどうかを管理するフラグです。`false` の間はローディング画面を表示し、`true` になったらメイン画面を表示します。
+| 追加した内容 | 役割 |
+|---|---|
+| `modelContext` | データベース（データの箱）を操作するための道具 |
+| `isInitialized` | アプリの準備が終わったかどうかを判定するスイッチ（終わってなければローディング画面、終わったらメイン画面を見せる） |
+| `autoInitialize` | 自動で準備を始めるかどうかを決める設定（プレビュー画面の時はOFFにするために使う） |
+| `init()` | 画面が最初に作られる時の初期設定 |
 
-- **`private let autoInitialize: Bool`**
-  自動で初期化処理を実行するかどうかを制御します。本番では `true`、プレビューでは `false` にすることで、プレビュー時に初期化処理をスキップできます。
+## 2. 画面の表示を切り替える
 
-- **カスタムイニシャライザ（`init`）**
-  SwiftUIのビューは通常、イニシャライザを書く必要がありませんが、`@State` 変数に初期値を外部から渡したい場合は、カスタムイニシャライザが必要です。
-  - **`_isInitialized = State(initialValue: isInitialized)`**
-    `@State` のラッパーに直接アクセスするには、変数名の前に `_` をつけます。`State(initialValue:)` で初期値を設定しています。
-  - **デフォルト引数**
-    `isInitialized: Bool = false` のように、引数にデフォルト値を設定することで、呼び出し側で省略できるようにしています。本番では `ContentView()` と引数なしで呼べます。
-
-## 2. 画面表示の切り替え
-
-`body` の中身を実装します。
-初期化が完了していればメイン画面へ、まだならローディング画面を表示するようにします。
+`body` の中身を作っていきましょう。
+準備が終わっていればメイン画面へ、まだなら「準備中…」というローディング画面を表示するようにします。
+`var body: some View {...}`の中に以下のコードを追加します。
 
 ```swift
     var body: some View {
         if isInitialized {
-            // 初期化完了：メインの画面遷移へ
+            // 準備OK！：メイン画面（MainStack）を表示する
             MainStack()
         } else {
-            // 初期化中：ローディング表示
+            // 準備中...：くるくる回るローディング画面を表示する
             VStack {
                 Text("アプリを準備中...")
-                ProgressView()
+                ProgressView() // くるくる回るアニメーション
             }
             .onAppear {
-                // 画面が表示されたら初期化処理を開始
-                if !autoInitialize { return }
+                // 画面が表示されたときに、自動で準備をスタートする
+                if !autoInitialize { return } // 自動準備がOFFならここでストップ
 
-                // 1秒待ってから処理開始（ローディングを見せるため）
+                // 1秒だけ待ってから準備を始める（ローディング画面を少しだけ見せるため）
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    initializeAppIfNeeded()
-                    isInitialized = true
+                    initializeAppIfNeeded() // 準備の処理（後で作ります）
+                    isInitialized = true  // 準備が終わったので、スイッチをONにする！
                 }
             }
         }
     }
 ```
 
-**画面切り替えと非同期初期化の仕組み:**
-
-- **条件分岐による画面切り替え**
-
-  ```swift
-  if isInitialized {
-      MainStack()  // 初期化完了後の画面
-  } else {
-      VStack { ... }  // ローディング画面
-  }
-  ```
-
-  `isInitialized` の値によって、表示するビューを切り替えています。SwiftUIは状態が変わると自動的に画面を再描画するため、`isInitialized` が `true` になった瞬間に `MainStack()` に切り替わります。
+- **`if isInitialized`**
+  `isInitialized` というスイッチが `true`（ON）なら `MainStack()` というメイン画面を表示します。もし `false`（OFF）なら「アプリを準備中...」というローディング画面を表示します。SwiftUIは、このスイッチが切り替わった瞬間に自動で画面を切り替えてくれます。
 
 - **`ProgressView()`**
-  くるくる回るローディングインジケーターを表示します。ユーザーに「処理中」であることを視覚的に伝えます。
+  ロード中によく見る、くるくる回るアニメーションを表示する便利な道具です。
 
-- **`.onAppear { ... }`**
-  ビューが画面に表示された時に1度だけ実行される処理です。ここで初期化処理を開始します。
+- **`.onAppear`**
+  画面が表示されたときに、1度だけ中の処理を実行してくれます。ここでアプリの準備をスタートさせます。
 
-- **`DispatchQueue.main.asyncAfter(deadline: .now() + 1)`**
-  メインスレッドで、1秒後に処理を実行します。
-  - **なぜ1秒待つのか？**: ローディング画面を一瞬だけ表示して即座に消えると、ユーザーが「何が起きたのか」分からなくなります。1秒待つことで、ローディング画面を見せる時間を確保しています。
-  - **メインスレッド（`main`）**: UI更新はメインスレッドで行う必要があるため、`DispatchQueue.main` を使います。
+- **`DispatchQueue.main.asyncAfter(...)`**
+  指定した時間の後に処理を実行するための機能です。ここでは `1` を設定して「1秒待ってから実行する」ようにしています。
+  処理がすぐに終わって画面が切り替わってしまうと、一瞬だけローディング画面が表示されて不自然に見えることがあるため、あえて1秒間待機する時間を設けています。
 
-- **初期化の流れ**
-  1. アプリ起動 → `isInitialized = false` → ローディング画面表示
-  2. `.onAppear` が実行される
-  3. 1秒待つ
-  4. `initializeAppIfNeeded()` でデータベースに初期データを投入
-  5. `isInitialized = true` に変更
-  6. SwiftUIが自動的に `MainStack()` に切り替える
+## 3. 最初のデータを入れる仕組みを作る
 
-## 3. 初期データの投入ロジック
-
-`body` のブロックの外側に、初期データを投入するプライベートコンポーネントを追加します。
-アプリ初回起動時（データが空の時）のみ実行されます。
+`body` のブロックの外側に、アプリを初めて開いたときに最初のデータ（初期データ）を自動で入れる仕組みを追加します。
 
 ```swift
-    // 初期化ロジック
+    // アプリの準備（初期化）の処理
     private func initializeAppIfNeeded() {
-        // 既存データをチェック
+        // データベースに「タブ」のデータがすでに入っているかチェックする
         let descriptor = FetchDescriptor<ToDoTab>()
         let existingTabs = (try? modelContext.fetch(descriptor)) ?? []
 
-        // データがまだ1件もなければ、初期データを作成
+        // もしデータが1件もなければ、最初のデータを作る
         if existingTabs.isEmpty {
             for (tabName, taskNames) in INITIAL_TODO_TABS {
-                // タブを作成
+                // タブを作る
                 let newTab = ToDoTab(name: tabName)
-                ToDoTabService.addTab(newTab, to: modelContext)
+                ToDoTabService.addTab(newTab, to: modelContext) // データベースに保存！
 
-                // そのタブ内のタスクを作成
+                // そのタブの中に入るタスクを作る
                 for taskName in taskNames {
                     let newTask = ToDoTask(title: taskName, detail: "", tabId: newTab.id)
-                    ToDoTaskService.addTask(newTask, to: modelContext)
+                    ToDoTaskService.addTask(newTask, to: modelContext) // データベースに保存！
                 }
             }
         }
     }
 ```
 
-**初期データ投入の仕組み:**
+---
 
-- **既存データのチェック**
-  まず、データベースに既にタブが存在するかをチェックします。条件なしの `FetchDescriptor` で全タブを取得し、エラー時は空配列を返します。
+### 🔄 データを入れるときの流れ
 
-- **`if existingTabs.isEmpty`**
-  タブが1件もない場合のみ、初期データを作成します。これにより、アプリを再起動しても初期データが重複して作成されることを防ぎます。
+- **`existingTabs.isEmpty`（データが空か確認する）**  
+  アプリの初回起動時はデータが「0件」であるため、この中の処理が実行されます。2回目以降の起動時はすでにデータが保存されているためスキップされます。これにより、初期データが重複して作成されるのを防いでいます。
 
-- **ループ処理の流れ**
-  1. `INITIAL_TODO_TABS` から1つずつタブ情報を取り出す（タブ名とタスク名のリスト）
-  2. タブを作成してデータベースに保存
-  3. そのタブに属するタスクを1つずつ作成
-  4. 各タスクの `tabId` に、先ほど作成したタブの `id` を設定（親子関係の紐付け）
-  5. タスクをデータベースに保存
-
-  **重要なポイント:** タブを先に作成してから、そのタブのIDを使ってタスクを作成する順序が重要です。
+- **ループ処理でデータを作成する手順**  
+  あらかじめステップ9で用意しておいた `INITIAL_TODO_TABS` というデータに基づき、順番に作成と保存を行います。
+  1. まず「タブ（例えば "今日" など）」を作成してデータベースに保存します。
+  2. 次に、そのタブに所属する「タスク（例えば "買い物" など）」を作成してデータベースに保存します。
+  3. タスクを作成する際、どのタブの所属かを示すために、作成したタブのID（`tabId`）をセットして関連づけるのが重要なポイントです。
 
 ## 4. プレビューの修正
 
-最後にプレビューコードを修正します。
 
 ```swift
 #Preview {
-    // プレビューでは初期化処理をスキップして表示確認
+    // プレビューの時は、この準備処理をスキップするように設定しておく
     ContentView(isInitialized: false, autoInitialize: false)
 }
 ```
+
+- `#Preview`: このブロック内に書いたコードがXcodeのプレビュー画面に表示されます。
+
+  ※ このコードは、実際のアプリ本体には必須ではありませんが、プレビュー上で動作や状態変化を確認するためのテスト用ラッパーとして書かれています。  
+  ※ 実行せずに確認できるようにしています。
+
 
 ---
 
@@ -172,9 +150,7 @@ struct ContentView: View {
 
 <img src="/images/todolist/ContentView16.png" alt="ContentViewの完成イメージ" class="mobile-screenshot" />
 
-### Views/ContentView.swift
-
-```swift
+```swift title="Views/ContentView.swift"
 import SwiftUI
 import SwiftData
 
@@ -209,17 +185,14 @@ struct ContentView: View {
     }
 
     private func initializeAppIfNeeded() {
-        // 既存データをチェック
         let descriptor = FetchDescriptor<ToDoTab>()
         let existingTabs = (try? modelContext.fetch(descriptor)) ?? []
 
-        // 初期データがなければ作成
         if existingTabs.isEmpty {
             for (tabName, taskNames) in INITIAL_TODO_TABS {
                 let newTab = ToDoTab(name: tabName)
                 ToDoTabService.addTab(newTab, to: modelContext)
 
-                // タブに属するタスクを追加
                 for taskName in taskNames {
                     let newTask = ToDoTask(title: taskName, detail: "", tabId: newTab.id)
                     ToDoTaskService.addTask(newTask, to: modelContext)

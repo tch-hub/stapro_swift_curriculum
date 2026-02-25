@@ -77,8 +77,8 @@ export const todolistSteps: TodolistStep[] = [
 	},
 	{
 		id: 'step15',
-		title: 'ステップ15: 画面遷移の土台を作る(MainStack.swift)',
-		summary: 'NavigationStackで画面遷移を定義します。'
+		title: 'ステップ15: 画面を切り替える準備をしよう (MainStack.swift)',
+		summary: '画面の切り替えをコントロールするための「土台」を作っていきます。'
 	},
 	{
 		id: 'step16',
