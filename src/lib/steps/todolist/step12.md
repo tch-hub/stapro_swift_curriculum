@@ -97,7 +97,7 @@ struct TabManageView: View {
   画面が表示された時に実行される処理です。ここでデータベースからタブ一覧を読み込んでいます。これにより、画面を開くたびに最新のデータが表示されます。
 
 - **`.alert()`（削除確認アラート）**
-  `showDeleteAlert` が `true` になると表示されるアラートです。「削除」ボタン（赤色）と「キャンセル」ボタンを用意し、誤操作を防いでいます。`message` でカスケード削除の警告も表示しています。
+  `showDeleteAlert` が `true` になると表示されるアラートです。「削除」ボタン（赤色）と「キャンセル」ボタンを用意し、誤操作を防いでいます。
 
 - **`.safeAreaInset(edge: .bottom)`（下部の入力エリア）**
   画面の下部に固定で表示される領域を作ります。`InputView` を配置することで、常に画面下部からタブを追加できるようにしています。セーフエリア（ホームバーなど）を避けて配置されるため、iPhoneでも使いやすくなっています。
@@ -115,8 +115,7 @@ struct TabManageView: View {
 
     // 【新しいタブを追加する関数】
     private func addTab() {
-        // 入力欄が空のままだったら、何もせずにここで終わる（空のタブを作らないため）
-        guard !newTabName.isEmpty else { return }
+        guard !newTabName.isEmpty else { return } // 入力欄が空のままだったら、何もせずにここで終わる（空のタブを作らないため）
 
         let newTab = ToDoTab(name: newTabName) // 入力された名前で新しいタブを作る
         ToDoTabService.addTab(newTab, to: modelContext) // データベースに保存する
@@ -145,8 +144,7 @@ struct TabManageView: View {
 ```swift
 // 【第1段階：スワイプで削除しようとしたときに呼ばれる関数】
 // 実際にはまだ削除せず、確認アラートを表示するだけ
-private func handleDelete(offsets: IndexSet) {
-    // offsets には「何行目をスワイプしたか」の番号が入っている
+private func handleDelete(offsets: IndexSet) { // offsets には「何行目をスワイプしたか」の番号が入っている
     if let index = offsets.first {  // 先頭の1つだけ取り出す
         tabToDelete = tabs[index]   // 削除しようとしているタブを覚えておく
         showDeleteAlert = true       // true にするとアラートが表示される
@@ -156,8 +154,7 @@ private func handleDelete(offsets: IndexSet) {
 // 【第2段階：アラートで「削除」を押したときに呼ばれる関数】
 // ここで初めて実際の削除が行われる
 private func confirmDelete() {
-    // tabToDelete に値が入っているか確認（nilでないことを確かめる）
-    if let tabToDelete = tabToDelete {
+    if let tabToDelete = tabToDelete { // tabToDelete に値が入っているか確認（nilでないことを確かめる）
         ToDoTabService.deleteTab(tabToDelete, from: modelContext) // データベースから削除
         loadTabs() // 削除後に一覧を読み直して画面を更新する
     }

@@ -8,7 +8,14 @@
 				{
 					"title": "padding() - 余白の設定",
 					"code": "// padding()で余白を追加\nText(\"Hello, SwiftUI!\")\n    .padding()                    // 全方向にデフォルト余白（16pt程度）\n\nText(\"Hello, SwiftUI!\")\n    .padding(.horizontal)         // 左右のみ余白\n    .padding(.vertical, 20)       // 上下に20ptの余白\n\nText(\"Hello, SwiftUI!\")\n    .padding(EdgeInsets(          // 個別に指定\n        top: 10,\n        leading: 20,\n        bottom: 10,\n        trailing: 20\n    ))",
-					"keywords": ["margin", "space", "inset", "余白", "パディング", "間隔"]
+					"keywords": [
+						"margin",
+						"space",
+						"inset",
+						"余白",
+						"パディング",
+						"間隔"
+					]
 				},
 				{
 					"title": "EdgeInsets - 4辺の余白を指定",
@@ -30,7 +37,16 @@
 				{
 					"title": "frame() - サイズの指定",
 					"code": "// frame()でサイズを指定\nText(\"固定サイズ\")\n    .frame(width: 200, height: 100)     // 幅200pt、高さ100pt\n\nText(\"最小・最大サイズ\")\n    .frame(minWidth: 100, maxWidth: 300)  // 幅の範囲を指定\n\nText(\"親に合わせる\")\n    .frame(maxWidth: .infinity)           // 親の幅いっぱいに広がる\n\nText(\"配置を指定\")\n    .frame(width: 200, height: 100, alignment: .topLeading)  // 左上に配置",
-					"keywords": ["size", "width", "height", "dimension", "サイズ", "大きさ", "幅", "高さ"]
+					"keywords": [
+						"size",
+						"width",
+						"height",
+						"dimension",
+						"サイズ",
+						"大きさ",
+						"幅",
+						"高さ"
+					]
 				},
 				{
 					"title": "maxWidth / maxHeight - 最大サイズの制御",
@@ -49,27 +65,65 @@
 				{
 					"title": "Spacer() - スペースの挿入",
 					"code": "// Spacerは利用可能なスペースを埋める\nHStack {\n    Text(\"左\")\n    Spacer()          // 左と右の間を最大限広げる\n    Text(\"右\")\n}\n\nVStack {\n    Text(\"上\")\n    Spacer()\n    Text(\"下\")\n}\n\nHStack {\n    Text(\"左\")\n    Spacer()\n    Text(\"中央\")\n    Spacer()\n    Text(\"右\")        // 均等に配置される\n}",
-					"keywords": ["expand", "fill", "space", "スペース", "隙間", "埋める"]
+					"keywords": [
+						"expand",
+						"fill",
+						"space",
+						"スペース",
+						"隙間",
+						"埋める"
+					]
 				},
 				{
 					"title": "spacing - 要素間の間隔",
 					"code": "// Stack初期化時に要素間の間隔を指定\nVStack(spacing: 12) {     // 縦方向の間隔を12ptに固定\n    Text(\"要素1\")\n    Text(\"要素2\")\n}\n\nHStack(spacing: 20) {     // 横方向の間隔を20ptに固定\n    Text(\"左\")\n    Text(\"右\")\n}\n\n// spacing: 0 で間隔をなくす\nVStack(spacing: 0) {\n    Text(\"くっついた\")\n    Text(\"テキスト\")\n}",
-					"keywords": ["gap", "interval", "margin", "間隔", "スキマ"]
+					"keywords": [
+						"gap",
+						"interval",
+						"margin",
+						"間隔",
+						"スキマ"
+					]
 				},
 				{
 					"title": "alignment - 配置の制御",
 					"code": "// VStack, HStack, ZStackの配置\nVStack(alignment: .leading) {     // 左揃え\n    Text(\"短いテキスト\")\n    Text(\"これは長いテキストです\")\n}\n\nHStack(alignment: .top) {         // 上揃え\n    Text(\"高さが\\n異なる\\nテキスト\")\n    Text(\"短い\")\n}\n\nZStack(alignment: .bottomTrailing) {  // 右下に配置\n    Rectangle()\n        .fill(.blue)\n        .frame(width: 200, height: 200)\n    Text(\"右下\")\n}",
-					"keywords": ["align", "position", "center", "left", "right", "配置", "揃え", "位置"]
+					"keywords": [
+						"align",
+						"position",
+						"center",
+						"left",
+						"right",
+						"配置",
+						"揃え",
+						"位置"
+					]
 				},
 				{
 					"title": "offset() - 位置のずらし",
 					"code": "// offset()で位置をずらす\nText(\"オフセット\")\n    .offset(x: 20, y: 10)         // 右に20pt、下に10ptずらす\n\n// 重ねて表示する例\nZStack {\n    Circle()\n        .fill(.blue)\n        .frame(width: 100, height: 100)\n    Circle()\n        .fill(.red)\n        .frame(width: 50, height: 50)\n        .offset(x: 30, y: -30)    // 右上にずらす\n}",
-					"keywords": ["move", "position", "shift", "ずらす", "移動", "オフセット"]
+					"keywords": [
+						"move",
+						"position",
+						"shift",
+						"ずらす",
+						"移動",
+						"オフセット"
+					]
 				},
 				{
 					"title": "rotationEffect() - 回転",
 					"code": "// ビューを回転させる\nText(\"回転テキスト\")\n    .rotationEffect(.degrees(45))  // 時計回りに45度回転\n    .rotationEffect(.radians(.pi)) // ラジアン指定も可能（180度）\n\n// 基準点を指定して回転\nRectangle()\n    .frame(width: 100, height: 50)\n    .rotationEffect(.degrees(90), anchor: .bottomLeading) // 左下を中心に回転\n\n// 3D回転\nText(\"3D回転\")\n    .rotation3DEffect(\n        .degrees(45),\n        axis: (x: 1.0, y: 0.0, z: 0.0) // X軸を中心に回転\n    )",
-					"keywords": ["rotate", "angle", "degree", "turn", "3d", "回転", "角度", "回す"]
+					"keywords": [
+						"rotate",
+						"angle",
+						"degree",
+						"turn",
+						"3d",
+						"回転",
+						"角度",
+						"回す"
+					]
 				},
 				{
 					"title": "resizable() - 画像のサイズ変更",
@@ -95,22 +149,69 @@
 				{
 					"title": "font() - フォントの設定",
 					"code": "// システムフォントスタイル\nText(\"Large Title\").font(.largeTitle)   // 34pt\nText(\"Title\").font(.title)               // 28pt\nText(\"Title 2\").font(.title2)            // 22pt\nText(\"Title 3\").font(.title3)            // 20pt\nText(\"Headline\").font(.headline)         // 17pt（太字）\nText(\"Body\").font(.body)                 // 17pt\nText(\"Callout\").font(.callout)           // 16pt\nText(\"Subheadline\").font(.subheadline)   // 15pt\nText(\"Footnote\").font(.footnote)         // 13pt\nText(\"Caption\").font(.caption)           // 12pt\nText(\"Caption 2\").font(.caption2)        // 11pt\n\n// カスタムフォント\nText(\"カスタムサイズ\")\n    .font(.system(size: 24))             // サイズ指定\n\nText(\"デザイン指定\")\n    .font(.system(size: 20, design: .rounded))  // 丸みを帯びたフォント\n\nText(\"モノスペース\")\n    .font(.system(size: 16, design: .monospaced))  // 等幅フォント",
-					"keywords": ["type", "size", "style", "フォント", "文字サイズ", "書体"]
+					"keywords": [
+						"type",
+						"size",
+						"style",
+						"フォント",
+						"文字サイズ",
+						"書体"
+					]
 				},
 				{
 					"title": ".system() - カスタムシステムフォント",
 					"code": "// .system()でフォントを細かくカスタマイズ\n\n// サイズのみ指定\nText(\"サイズ指定\")\n    .font(.system(size: 24))\n\n// サイズと太さを指定\nText(\"サイズと太さ\")\n    .font(.system(size: 20, weight: .bold))\n\n// サイズ、太さ、デザインをすべて指定\nText(\"フルカスタマイズ\")\n    .font(.system(size: 18, weight: .medium, design: .rounded))\n\n// ===== デザインの種類 =====\n\n// .default - 標準のサンセリフ体\nText(\"Default Design\")\n    .font(.system(size: 20, design: .default))\n\n// .rounded - 丸みを帯びたフォント（フレンドリーな印象）\nText(\"Rounded Design\")\n    .font(.system(size: 20, design: .rounded))\n\n// .monospaced - 等幅フォント（コード表示に最適）\nText(\"Monospaced Design\")\n    .font(.system(size: 20, design: .monospaced))\n\n// .serif - セリフ体（書籍のような印象）\nText(\"Serif Design\")\n    .font(.system(size: 20, design: .serif))\n\n// ===== 実践的な使用例 =====\n\n// 見出しに丸みのあるフォント\nText(\"Welcome!\")\n    .font(.system(size: 32, weight: .bold, design: .rounded))\n\n// コードブロック用の等幅フォント\nText(\"let message = \\\"Hello\\\"\")\n    .font(.system(size: 14, weight: .regular, design: .monospaced))\n    .padding()\n    .background(Color(.secondarySystemBackground))\n    .cornerRadius(8)\n\n// 引用文にセリフ体\nText(\"\\\"The only way to do great work is to love what you do.\\\"\")\n    .font(.system(size: 18, weight: .light, design: .serif))\n    .italic()",
-					"keywords": ["custom", "design", "weight", "bold", "カスタム", "太字", "デザイン"]
+					"keywords": [
+						"custom",
+						"design",
+						"weight",
+						"bold",
+						"カスタム",
+						"太字",
+						"デザイン"
+					]
 				},
 				{
 					"title": "fontWeight() - 太さの設定",
 					"code": "// フォントの太さを変更\nText(\"Ultra Light\").fontWeight(.ultraLight)\nText(\"Thin\").fontWeight(.thin)\nText(\"Light\").fontWeight(.light)\nText(\"Regular\").fontWeight(.regular)\nText(\"Medium\").fontWeight(.medium)\nText(\"Semibold\").fontWeight(.semibold)\nText(\"Bold\").fontWeight(.bold)\nText(\"Heavy\").fontWeight(.heavy)\nText(\"Black\").fontWeight(.black)\n\n// 簡易的な太字指定\nText(\"太字テキスト\").bold()",
-					"keywords": ["bold", "thin", "heavy", "thickness", "太さ", "ウェイト"]
+					"keywords": [
+						"bold",
+						"thin",
+						"heavy",
+						"thickness",
+						"太さ",
+						"ウェイト"
+					]
+				},
+				{
+					"title": ".caption - キャプション（小さな文字）",
+					"code": "// font(.caption) は補助的なテキストに使用される小さなフォント\n// 通常は .secondary 色などと組み合わせて、補足情報やメタデータを表示します\n\n// === 基本的な使い方 ===\n\nText(\"非常に小さなテキスト\")\n    .font(.caption)\n\n// === キャプションのサイズ一覧 ===\n\nText(\"Caption (12pt) - 標準的なキャプション\")\n    .font(.caption)\n\nText(\"Caption 2 (11pt) - さらに小さなキャプション\")\n    .font(.caption2)\n\n// === 実践的な使用例 ===\n\n// リストの補助テキスト\nHStack {\n    VStack(alignment: .leading) {\n        Text(\"SwiftUIの基礎\")\n        Text(\"チュートリアル・5分で完了\")\n            .font(.caption)\n            .foregroundStyle(.secondary)\n    }\n}\n\n// 画像のキャプション\nVStack {\n    Image(systemName: \"photo.artframe\")\n        .resizable()\n        .scaledToFit()\n        .frame(height: 100)\n    Text(\"図1: サンプル画像\")\n        .font(.caption)\n        .foregroundStyle(.secondary)\n}\n\n// 注意書き\nHStack(alignment: .top) {\n    Image(systemName: \"info.circle\")\n        .font(.caption)\n    Text(\"パスワードは8文字以上で入力してください\")\n        .font(.caption)\n}\n.foregroundStyle(.secondary)\n\n// === 実装のポイント ===\n\n// 1. 目立たせたくない補足情報やメタデータに使用\n// 2. .secondary カラーと連携して控えめに表示するのが一般的\n// 3. アクセシビリティ（Dynamic Type）に自動対応し、ユーザーの設定に合わせてサイズが変わる",
+					"keywords": [
+						"font",
+						"caption",
+						"caption2",
+						"small",
+						"text",
+						"キャプション",
+						"フォント",
+						"文字サイズ",
+						"小さい",
+						"補足",
+						"説明文",
+						"注釈"
+					]
 				},
 				{
 					"title": "foregroundStyle() - 文字色",
 					"code": "// 文字色の設定\nText(\"プライマリ\").foregroundStyle(.primary)       // 標準色\nText(\"セカンダリ\").foregroundStyle(.secondary)     // 薄い色\nText(\"赤色\").foregroundStyle(.red)\nText(\"青色\").foregroundStyle(.blue)\nText(\"アクセント\").foregroundStyle(.accentColor)   // アプリのアクセントカラー\n\n// グラデーション\nText(\"グラデーション\")\n    .foregroundStyle(\n        LinearGradient(\n            colors: [.purple, .pink],\n            startPoint: .leading,\n            endPoint: .trailing\n        )\n    )",
-					"keywords": ["color", "text color", "gradient", "文字色", "カラー", "前景色"]
+					"keywords": [
+						"color",
+						"text color",
+						"gradient",
+						"文字色",
+						"カラー",
+						"前景色"
+					]
 				},
 				{
 					"title": "foregroundColor() - 文字色（旧API）",
@@ -129,12 +230,28 @@
 				{
 					"title": "multilineTextAlignment() - 複数行の配置",
 					"code": "// 複数行テキストの配置\nText(\"これは長いテキストで\\n複数行にわたります\\n左揃えです\")\n    .multilineTextAlignment(.leading)    // 左揃え\n\nText(\"これは長いテキストで\\n複数行にわたります\\n中央揃えです\")\n    .multilineTextAlignment(.center)     // 中央揃え\n\nText(\"これは長いテキストで\\n複数行にわたります\\n右揃えです\")\n    .multilineTextAlignment(.trailing)   // 右揃え",
-					"keywords": ["align", "center", "justify", "行揃え", "配置", "中央揃え", "右揃え"]
+					"keywords": [
+						"align",
+						"center",
+						"justify",
+						"行揃え",
+						"配置",
+						"中央揃え",
+						"右揃え"
+					]
 				},
 				{
 					"title": "lineSpacing() / kerning() - 行間・文字間隔",
 					"code": "// 行間の設定\nText(\"1行目\\n2行目\\n3行目\")\n    .lineSpacing(10)              // 行間を10pt追加\n\n// 文字間隔の設定\nText(\"文字間隔を広げる\")\n    .kerning(5)                   // 文字間を5pt追加\n\n// 行数制限\nText(\"とても長いテキストがここに入ります。表示しきれない場合は省略されます。\")\n    .lineLimit(2)                 // 最大2行まで表示\n    .truncationMode(.tail)        // 末尾を...で省略",
-					"keywords": ["kerning", "interval", "space", "行間", "文字間", "間隔", "文字詰め"]
+					"keywords": [
+						"kerning",
+						"interval",
+						"space",
+						"行間",
+						"文字間",
+						"間隔",
+						"文字詰め"
+					]
 				},
 				{
 					"title": "strikethrough() / underline() - 装飾",
@@ -161,7 +278,14 @@
 				{
 					"title": "background() - 背景の設定",
 					"code": "// 色で背景を設定\nText(\"色の背景\")\n    .padding()\n    .background(.blue)\n\n// 透明度付きの背景\nText(\"半透明の背景\")\n    .padding()\n    .background(.blue.opacity(0.3))\n\n// マテリアル（すりガラス効果）\nText(\"マテリアル背景\")\n    .padding()\n    .background(.ultraThinMaterial)    // 薄いすりガラス\n    // .regularMaterial, .thickMaterial なども使用可能\n\n// ビューを背景に\nText(\"画像背景\")\n    .padding()\n    .background {\n        Image(systemName: \"star.fill\")\n            .resizable()\n            .foregroundStyle(.yellow.opacity(0.3))\n    }",
-					"keywords": ["color", "fill", "behind", "背景", "背景色", "バックグラウンド"]
+					"keywords": [
+						"color",
+						"fill",
+						"behind",
+						"背景",
+						"背景色",
+						"バックグラウンド"
+					]
 				},
 				{
 					"title": "cornerRadius() / clipShape() - 角丸・形状",
@@ -180,7 +304,16 @@
 				{
 					"title": "fill() - 形状の塗りつぶし",
 					"code": "// fill()はShape（形状）を色やスタイルで塗りつぶす修飾子\n\n// === 基本的な使い方 ===\n\n// 単色で塗りつぶし\nCircle()\n    .fill(.blue)                       // 青で塗りつぶし\n\nRectangle()\n    .fill(.red)                        // 赤で塗りつぶし\n\nRoundedRectangle(cornerRadius: 10)\n    .fill(.green)                      // 緑で角丸四角を塗りつぶし\n\nCapsule()\n    .fill(.orange)                     // オレンジでカプセルを塗りつぶし\n\nEllipse()\n    .fill(.purple)                     // 紫で楽円を塗りつぶし\n\n// === 透明度付きの塗りつぶし ===\n\nCircle()\n    .fill(.blue.opacity(0.3))          // 半透明の青\n\nRectangle()\n    .fill(.black.opacity(0.5))         // 半透明の黒（オーバーレイなどに）\n\n// === グラデーションで塗りつぶし ===\n\n// 線形グラデーション\nRoundedRectangle(cornerRadius: 15)\n    .fill(\n        LinearGradient(\n            colors: [.blue, .purple],\n            startPoint: .topLeading,\n            endPoint: .bottomTrailing\n        )\n    )\n    .frame(width: 200, height: 100)\n\n// 放射状グラデーション\nCircle()\n    .fill(\n        RadialGradient(\n            colors: [.yellow, .orange],\n            center: .center,\n            startRadius: 0,\n            endRadius: 80\n        )\n    )\n    .frame(width: 160, height: 160)\n\n// === fill() と stroke() の組み合わせ ===\n\n// 塗りつぶし + 枠線（overlayを使う）\nCircle()\n    .fill(.blue)\n    .overlay(\n        Circle()\n            .stroke(.white, lineWidth: 3)\n    )\n    .frame(width: 100, height: 100)\n\n// === fill() と background() の違い ===\n\n// fill() → Shapeに対して使う（Circle, Rectangle など）\nCircle()\n    .fill(.red)          // Shapeを塗りつぶす\n\n// background() → どのViewにも使える（Text, Image など）\nText(\"テキスト\")\n    .background(.red)    // Viewの背景を設定\n\n// Text に fill() は使えない\n// Text(\"テキスト\").fill(.red)  // コンパイルエラー\n\n// === 実践的な使用例 ===\n\n// カード風の背景\nstruct CardView: View {\n    var body: some View {\n        VStack(alignment: .leading) {\n            Text(\"タイトル\").font(.headline)\n            Text(\"説明文がここに入ります\")\n                .foregroundStyle(.secondary)\n        }\n        .padding()\n        .background(\n            RoundedRectangle(cornerRadius: 12)\n                .fill(Color(.secondarySystemBackground))\n        )\n    }\n}\n\n// アイコン背景の円\nstruct IconBadge: View {\n    var body: some View {\n        ZStack {\n            Circle()\n                .fill(.blue.opacity(0.2))\n                .frame(width: 60, height: 60)\n            Image(systemName: \"star.fill\")\n                .foregroundStyle(.blue)\n                .font(.title2)\n        }\n    }\n}",
-					"keywords": ["fill", "color", "shape", "gradient", "塗りつぶし", "塗る", "フィル", "形状"]
+					"keywords": [
+						"fill",
+						"color",
+						"shape",
+						"gradient",
+						"塗りつぶし",
+						"塗る",
+						"フィル",
+						"形状"
+					]
 				},
 				{
 					"title": "trim() - 形状の切り取り",
@@ -200,17 +333,42 @@
 				{
 					"title": "stroke() - 線の描画",
 					"code": "// 形状の輪郭を描画\nCircle()\n    .stroke(Color.blue)            // 青い線\n\n// 線の太さを指定\nRectangle()\n    .stroke(Color.red, lineWidth: 5) // 太さ5ptの赤い線\n\n// スタイルの詳細設定\nCircle()\n    .stroke(\n        Color.green,\n        style: StrokeStyle(\n            lineWidth: 10,\n            lineCap: .round,       // 端の形状（丸）\n            lineJoin: .round,      // 角の形状（丸）\n            dash: [10, 5]          // 点線（10pt線、5pt空白）\n        )\n    )\n\n// 枠線を重ねる（borderの代わり）\nText(\"丸い枠線\")\n    .padding()\n    .overlay(\n        Capsule()\n            .stroke(.orange, lineWidth: 2)\n    )",
-					"keywords": ["line", "outline", "border", "shape", "線", "輪郭", "ストローク", "点線"]
+					"keywords": [
+						"line",
+						"outline",
+						"border",
+						"shape",
+						"線",
+						"輪郭",
+						"ストローク",
+						"点線"
+					]
 				},
 				{
 					"title": "overlay() - 前面に重ねる",
 					"code": "// オーバーレイで前面に要素を重ねる\nImage(systemName: \"photo\")\n    .resizable()\n    .frame(width: 100, height: 100)\n    .overlay(alignment: .bottomTrailing) {\n        Text(\"NEW\")\n            .font(.caption)\n            .padding(4)\n            .background(.red)\n            .foregroundStyle(.white)\n            .cornerRadius(4)\n    }\n\n// 枠線として使用\nText(\"枠線\")\n    .padding()\n    .overlay(\n        RoundedRectangle(cornerRadius: 10)\n            .stroke(.blue, lineWidth: 2)\n    )",
-					"keywords": ["front", "top", "stack", "monitor", "重ねる", "オーバーレイ", "前面"]
+					"keywords": [
+						"front",
+						"top",
+						"stack",
+						"monitor",
+						"重ねる",
+						"オーバーレイ",
+						"前面"
+					]
 				},
 				{
 					"title": "border() - 枠線",
 					"code": "// シンプルな枠線\nText(\"枠線付き\")\n    .padding()\n    .border(.blue)                 // 1ptの青い枠線\n\nText(\"太い枠線\")\n    .padding()\n    .border(.red, width: 3)        // 3ptの赤い枠線\n\n// 角丸の枠線はoverlayを使う\nText(\"角丸枠線\")\n    .padding()\n    .overlay(\n        RoundedRectangle(cornerRadius: 10)\n            .stroke(.purple, lineWidth: 2)\n    )",
-					"keywords": ["stroke", "outline", "line", "frame", "枠線", "ボーダー", "囲み線"]
+					"keywords": [
+						"stroke",
+						"outline",
+						"line",
+						"frame",
+						"枠線",
+						"ボーダー",
+						"囲み線"
+					]
 				}
 			]
 		},
@@ -554,17 +712,40 @@
 				{
 					"title": "animation() - アニメーション修飾子",
 					"code": "// 状態変化をアニメーション\nstruct AnimationExample: View {\n    @State private var isExpanded = false\n\n    var body: some View {\n        VStack {\n            Rectangle()\n                .fill(.blue)\n                .frame(width: isExpanded ? 200 : 100,\n                       height: isExpanded ? 200 : 100)\n                .animation(.default, value: isExpanded)  // デフォルトアニメーション\n\n            Button(\"トグル\") {\n                isExpanded.toggle()\n            }\n        }\n    }\n}",
-					"keywords": ["motion", "effect", "transition", "state", "動き", "アニメーション"]
+					"keywords": [
+						"motion",
+						"effect",
+						"transition",
+						"state",
+						"動き",
+						"アニメーション"
+					]
 				},
 				{
 					"title": "withAnimation - アニメーションブロック",
 					"code": "// withAnimationで明示的にアニメーション\nstruct WithAnimationExample: View {\n    @State private var scale = 1.0\n\n    var body: some View {\n        VStack {\n            Circle()\n                .fill(.purple)\n                .frame(width: 100, height: 100)\n                .scaleEffect(scale)\n\n            Button(\"アニメーション\") {\n                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {\n                    scale = scale == 1.0 ? 1.5 : 1.0\n                }\n            }\n        }\n    }\n}",
-					"keywords": ["explicit", "block", "trigger", "logic", "明示的", "ブロック"]
+					"keywords": [
+						"explicit",
+						"block",
+						"trigger",
+						"logic",
+						"明示的",
+						"ブロック"
+					]
 				},
 				{
 					"title": "アニメーションの種類",
 					"code": "// 様々なアニメーションカーブ\n.animation(.linear, value: state)              // 一定速度\n.animation(.easeIn, value: state)              // ゆっくり始まる\n.animation(.easeOut, value: state)             // ゆっくり終わる\n.animation(.easeInOut, value: state)           // 両端がゆっくり\n\n// スプリングアニメーション\n.animation(.spring(), value: state)            // デフォルトのバネ\n.animation(.spring(response: 0.3, dampingFraction: 0.5), value: state)  // カスタマイズ\n.animation(.bouncy, value: state)              // 弾むような動き\n\n// 速度とリピート\n.animation(.linear(duration: 2), value: state)                // 2秒かける\n.animation(.easeInOut.repeatForever(), value: state)          // 永遠に繰り返し\n.animation(.easeInOut.repeatCount(3, autoreverses: true), value: state)  // 3回繰り返し",
-					"keywords": ["spring", "linear", "ease", "curve", "カーブ", "速度", "イージング", "バネ"]
+					"keywords": [
+						"spring",
+						"linear",
+						"ease",
+						"curve",
+						"カーブ",
+						"速度",
+						"イージング",
+						"バネ"
+					]
 				},
 				{
 					"title": "transition() - 表示/非表示のトランジション",
@@ -584,12 +765,28 @@
 				{
 					"title": "アニメーション可能なプロパティ",
 					"code": "// アニメーション可能な修飾子\n.opacity(0.5)                    // 透明度\n.scaleEffect(1.5)                // 拡大縮小\n.rotationEffect(.degrees(45))    // 回転\n.offset(x: 50, y: 50)            // 位置移動\n.frame(width: 200, height: 200)  // サイズ変更\n\n// 実践例\nstruct PracticalAnimation: View {\n    @State private var isAnimating = false\n\n    var body: some View {\n        Image(systemName: \"heart.fill\")\n            .font(.system(size: 50))\n            .foregroundStyle(.red)\n            .scaleEffect(isAnimating ? 1.2 : 1.0)\n            .opacity(isAnimating ? 1.0 : 0.5)\n            .animation(\n                .easeInOut(duration: 0.5).repeatForever(autoreverses: true),\n                value: isAnimating\n            )\n            .onAppear {\n                isAnimating = true\n            }\n    }\n}",
-					"keywords": ["animatable", "values", "change", "プロパティ", "変化", "拡大", "回転"]
+					"keywords": [
+						"animatable",
+						"values",
+						"change",
+						"プロパティ",
+						"変化",
+						"拡大",
+						"回転"
+					]
 				},
 				{
 					"title": "spring() - スプリングアニメーション",
 					"code": "// spring()は自然な弾む動きのアニメーションを作成\n// response（応答時間）とdampingFraction（減衰率）で動きを制御\n\n// === 基本的な使用方法 ===\n\n// デフォルトのスプリングアニメーション\nstruct SpringExample: View {\n    @State private var isExpanded = false\n\n    var body: some View {\n        VStack {\n            Circle()\n                .fill(.blue)\n                .frame(width: isExpanded ? 200 : 100,\n                       height: isExpanded ? 200 : 100)\n                .animation(.spring(), value: isExpanded)  // デフォルト\n\n            Button(\"トグル\") {\n                isExpanded.toggle()\n            }\n        }\n    }\n}\n\n// === パラメータの詳細 ===\n\n// response - 応答時間（秒）。値が小さいほど速く反応\n.animation(.spring(response: 0.3), value: state)   // 0.3秒で反応（速い）\n.animation(.spring(response: 1.0), value: state)   // 1.0秒で反応（遅い）\n\n// dampingFraction - 減衰率（0～1）。値が小さいほど弾む\n.animation(.spring(dampingFraction: 0.3), value: state)  // 弾む動き\n.animation(.spring(dampingFraction: 0.7), value: state)  // 控えめな動き\n.animation(.spring(dampingFraction: 1.0), value: state)  // 弾まない（クリティカル）\n\n// === 実践的な組み合わせ ===\n\n// 速く弾む動き（カート追加、いいね！など）\n.animation(\n    .spring(response: 0.3, dampingFraction: 0.5),\n    value: isLiked\n)\n\n// ゆっくり弾む動き（画面遷移など）\n.animation(\n    .spring(response: 0.8, dampingFraction: 0.7),\n    value: showDetail\n)\n\n// 滑らかな動き（通常のUI更新）\n.animation(\n    .spring(response: 0.6, dampingFraction: 1.0),  // dampingFractionが1.0時は弾まない\n    value: selectedTab\n)\n\n// === 実践例 ===\n\n// いいねボタンのアニメーション\nstruct LikeButton: View {\n    @State private var isLiked = false\n\n    var body: some View {\n        VStack {\n            Image(systemName: isLiked ? \"heart.fill\" : \"heart\")\n                .font(.system(size: 48))\n                .foregroundStyle(isLiked ? .red : .gray)\n                .scaleEffect(isLiked ? 1.3 : 1.0)\n                .animation(\n                    .spring(response: 0.4, dampingFraction: 0.6),\n                    value: isLiked\n                )\n\n            Button(action: { isLiked.toggle() }) {\n                Text(isLiked ? \"いいね取消\" : \"いいね！\")\n            }\n            .buttonStyle(.borderedProminent)\n        }\n        .padding()\n    }\n}\n\n// ポップアップのアニメーション\nstruct PopupAnimation: View {\n    @State private var showPopup = false\n\n    var body: some View {\n        ZStack {\n            VStack {\n                Button(\"ポップアップ表示\") {\n                    withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {\n                        showPopup = true\n                    }\n                }\n            }\n\n            if showPopup {\n                VStack {\n                    Text(\"成功！\")\n                        .font(.headline)\n                    Text(\"データが保存されました\")\n                        .font(.caption)\n                        .foregroundStyle(.secondary)\n                }\n                .padding()\n                .background(.green.opacity(0.9))\n                .foregroundStyle(.white)\n                .cornerRadius(12)\n                .scaleEffect(showPopup ? 1.0 : 0.1)\n                .opacity(showPopup ? 1.0 : 0.0)\n                .animation(.spring(response: 0.5, dampingFraction: 0.7), value: showPopup)\n                .transition(.scale.combined(with: .opacity))\n            }\n        }\n        .padding()\n    }\n}",
-					"keywords": ["spring", "bounce", "response", "damping", "弾む", "スプリング", "バウンス"]
+					"keywords": [
+						"spring",
+						"bounce",
+						"response",
+						"damping",
+						"弾む",
+						"スプリング",
+						"バウンス"
+					]
 				},
 				{
 					"title": "contentTransition() - コンテンツ変更のアニメーション",
@@ -615,17 +812,37 @@
 				{
 					"title": "buttonStyle() - ボタンスタイル",
 					"code": "// ボタンスタイルの種類\nButton(\"Default\") { }\n    // デフォルトスタイル（指定なし）\n\nButton(\"Plain\") { }\n    .buttonStyle(.plain)              // 装飾なし、テキストのみ\n\nButton(\"Bordered\") { }\n    .buttonStyle(.bordered)           // 枠線付き\n\nButton(\"Bordered Prominent\") { }\n    .buttonStyle(.borderedProminent)  // 塗りつぶし（目立つ）\n\nButton(\"Borderless\") { }\n    .buttonStyle(.borderless)         // 枠線なし\n\n// tintでボタンの色を変更\nButton(\"カスタム色\") { }\n    .buttonStyle(.borderedProminent)\n    .tint(.green)                     // 緑色のボタン\n\n// controlSizeでサイズを変更\nButton(\"小さいボタン\") { }\n    .buttonStyle(.bordered)\n    .controlSize(.small)              // .mini, .small, .regular, .large\n\nButton(\"大きいボタン\") { }\n    .buttonStyle(.bordered)\n    .controlSize(.large)",
-					"keywords": ["border", "plain", "shape", "appearance", "見た目", "ボタンスタイル"]
+					"keywords": [
+						"border",
+						"plain",
+						"shape",
+						"appearance",
+						"見た目",
+						"ボタンスタイル"
+					]
 				},
 				{
 					"title": "カスタムButtonStyle",
 					"code": "// カスタムボタンスタイルの作成\nstruct CustomButtonStyle: ButtonStyle {\n    func makeBody(configuration: Configuration) -> some View {\n        configuration.label\n            .padding(.horizontal, 20)\n            .padding(.vertical, 12)\n            .background(\n                configuration.isPressed ? Color.blue.opacity(0.7) : Color.blue\n            )\n            .foregroundStyle(.white)\n            .cornerRadius(10)\n            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)\n            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)\n    }\n}\n\n// 使用例\nButton(\"カスタムボタン\") {\n    print(\"タップされました\")\n}\n.buttonStyle(CustomButtonStyle())",
-					"keywords": ["configuration", "makeBody", "create", "自作", "カスタム"]
+					"keywords": [
+						"configuration",
+						"makeBody",
+						"create",
+						"自作",
+						"カスタム"
+					]
 				},
 				{
 					"title": "listStyle() - リストスタイル",
 					"code": "// リストスタイルの種類\nList {\n    Text(\"項目1\")\n    Text(\"項目2\")\n    Text(\"項目3\")\n}\n.listStyle(.automatic)            // 自動（プラットフォームに応じて）\n\nList { ... }\n.listStyle(.plain)                // シンプル、区切り線のみ\n\nList { ... }\n.listStyle(.inset)                // インセット付き\n\nList { ... }\n.listStyle(.insetGrouped)         // グループ化+インセット（設定画面風）\n\nList { ... }\n.listStyle(.grouped)              // グループ化\n\nList { ... }\n.listStyle(.sidebar)              // サイドバー用\n\n// リスト行の背景を変更\nList {\n    Text(\"カスタム背景\")\n        .listRowBackground(Color.yellow.opacity(0.3))\n}\n\n// リスト行の区切り線を非表示\nList {\n    Text(\"区切り線なし\")\n        .listRowSeparator(.hidden)",
-					"keywords": ["appearance", "grouped", "sidebar", "inset", "リストスタイル", "見た目"]
+					"keywords": [
+						"appearance",
+						"grouped",
+						"sidebar",
+						"inset",
+						"リストスタイル",
+						"見た目"
+					]
 				},
 				{
 					"title": "listRowInsets() - リスト行の余白調整",
@@ -658,7 +875,14 @@
 				{
 					"title": "textFieldStyle() - テキストフィールドスタイル",
 					"code": "// テキストフィールドスタイルの種類\n@State private var text = \"\"\n\nTextField(\"プレースホルダー\", text: $text)\n    // デフォルトスタイル（指定なし）\n\nTextField(\"Plain\", text: $text)\n    .textFieldStyle(.plain)           // 枠線なし\n\nTextField(\"Rounded Border\", text: $text)\n    .textFieldStyle(.roundedBorder)   // 角丸の枠線\n\n// テキストフィールドのカスタマイズ\nTextField(\"カスタム\", text: $text)\n    .padding()\n    .background(Color(.secondarySystemBackground))\n    .cornerRadius(10)\n    .overlay(\n        RoundedRectangle(cornerRadius: 10)\n            .stroke(Color.blue, lineWidth: 1)\n    )",
-					"keywords": ["appearance", "border", "input", "field", "入力欄", "テキストフィールド"]
+					"keywords": [
+						"appearance",
+						"border",
+						"input",
+						"field",
+						"入力欄",
+						"テキストフィールド"
+					]
 				},
 				{
 					"title": "axis - テキストフィールドの展開方向",
@@ -677,7 +901,14 @@
 				{
 					"title": "toggleStyle() - トグルスタイル",
 					"code": "// トグルスタイルの種類\n@State private var isOn = false\n\nToggle(\"自動\", isOn: $isOn)\n    .toggleStyle(.automatic)          // 自動（プラットフォームに応じて）\n\nToggle(\"スイッチ\", isOn: $isOn)\n    .toggleStyle(.switch)             // スイッチ型\n\nToggle(\"ボタン\", isOn: $isOn)\n    .toggleStyle(.button)             // ボタン型\n\n// トグルの色を変更\nToggle(\"カスタム色\", isOn: $isOn)\n    .toggleStyle(.switch)\n    .tint(.purple)                    // 紫色のトグル",
-					"keywords": ["switch", "button", "appearance", "input", "トグル", "スイッチ"]
+					"keywords": [
+						"switch",
+						"button",
+						"appearance",
+						"input",
+						"トグル",
+						"スイッチ"
+					]
 				},
 				{
 					"title": "pickerStyle() - ピッカースタイル",
@@ -696,12 +927,26 @@
 				{
 					"title": "labelStyle() - ラベルスタイル",
 					"code": "// ラベルスタイルの種類\nLabel(\"設定\", systemImage: \"gear\")\n    .labelStyle(.automatic)           // 自動（アイコン+テキスト）\n\nLabel(\"設定\", systemImage: \"gear\")\n    .labelStyle(.titleOnly)           // テキストのみ\n\nLabel(\"設定\", systemImage: \"gear\")\n    .labelStyle(.iconOnly)            // アイコンのみ\n\nLabel(\"設定\", systemImage: \"gear\")\n    .labelStyle(.titleAndIcon)        // テキスト+アイコン（明示的）\n\n// Labelの使用例\nButton {\n    // アクション\n} label: {\n    Label(\"追加\", systemImage: \"plus.circle.fill\")\n}\n.buttonStyle(.borderedProminent)",
-					"keywords": ["icon", "text", "combination", "display", "ラベル", "アイコン"]
+					"keywords": [
+						"icon",
+						"text",
+						"combination",
+						"display",
+						"ラベル",
+						"アイコン"
+					]
 				},
 				{
 					"title": "contentShape() - タップ領域の定義",
 					"code": "// contentShapeはタップ可能な領域を定義する\n// 透明な部分もタップを検知したい場合に使用\n\n// 問題: HStack内の余白部分はタップできない\nHStack {\n    Text(\"左\")\n    Spacer()\n    Text(\"右\")\n}\n.onTapGesture {\n    print(\"タップされました\")  // Spacer部分はタップ不可\n}\n\n// 解決: contentShapeで領域全体をタップ可能に\nHStack {\n    Text(\"左\")\n    Spacer()\n    Text(\"右\")\n}\n.contentShape(Rectangle())            // 四角形の領域全体をタップ可能に\n.onTapGesture {\n    print(\"タップされました\")  // Spacer部分もタップ可能\n}\n\n// Buttonでも同様に使用可能\nButton {\n    print(\"タップ\")\n} label: {\n    HStack {\n        Image(systemName: \"star\")\n        Spacer()\n        Text(\"お気に入り\")\n    }\n    .contentShape(Rectangle())        // ボタン全体をタップ可能に\n}\n.buttonStyle(.plain)\n\n// 様々な形状を指定可能\n.contentShape(Circle())               // 円形の領域\n.contentShape(Capsule())              // カプセル形状\n.contentShape(RoundedRectangle(cornerRadius: 10))  // 角丸四角形\n\n// インタラクションの種類を指定\n.contentShape(.interaction, Rectangle())     // タップ・ジェスチャー用\n.contentShape(.dragPreview, Rectangle())     // ドラッグプレビュー用\n.contentShape(.contextMenuPreview, Circle()) // コンテキストメニュー用",
-					"keywords": ["hit testing", "tap area", "touch", "region", "タップ領域", "当たり判定"]
+					"keywords": [
+						"hit testing",
+						"tap area",
+						"touch",
+						"region",
+						"タップ領域",
+						"当たり判定"
+					]
 				},
 				{
 					"title": "navigationTitle() - ナビゲーションタイトル",

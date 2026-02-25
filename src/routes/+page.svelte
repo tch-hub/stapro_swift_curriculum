@@ -15,33 +15,40 @@
 		},
 		{
 			id: 1,
-			title: '第1回授業: Swiftの基本構文',
+			title: '第1回授業: 新しい教材（タイトルを追加してください）',
+			description: '追加する教材の内容をここに記述してください。',
+			checked: false,
+			tutorialUrl: null,
+			quizUrl: null
+		},
+		{
+			id: 2,
+			title: '第2回授業: Swiftの基本構文(練習問題)',
 			description:
 				'Swiftの基本構文を学びます。変数、定数、型推論、条件分岐、関数などについて理解します。<br>まずはSwift基本構文を学習し、その後練習問題に取り組んでみましょう。',
 			checked: false,
 			tutorialUrl: null,
-			quizUrl: '/quiz',
-			referenceUrl: '/reference'
+			quizUrl: '/quiz'
 		},
 		{
-			id: 2,
-			title: '第2回授業: SwiftUI学習',
+			id: 3,
+			title: '第3回授業: SwiftUI学習',
 			description:
 				'SwiftUIの基本を学びます。デフォルトコードの解説・テキスト表示・ボタン操作・レイアウト（VStack / HStack / ZStack）を学習します。',
 			checked: false,
 			tutorialSections: ['/tutorial/0', '/tutorial/1', '/tutorial/2', '/tutorial/3']
 		},
 		{
-			id: 3,
-			title: '第3回授業: SwiftUI学習',
+			id: 4,
+			title: '第4回授業: SwiftUI学習',
 			description:
 				'SwiftUIのインタラクティブな要素を学びます。状態管理（@State）・図形・テキスト入力・Toggle・Slider・カウンターアプリの作成まで行います。',
 			checked: false,
 			tutorialSections: ['/tutorial/4', '/tutorial/5', '/tutorial/6', '/tutorial/7']
 		},
 		{
-			id: 4,
-			title: '第4回授業',
+			id: 5,
+			title: '第5回授業',
 			description:
 				'タイマーアプリ制作を開始します。プロジェクト作成・基本UIの構築・時間選択コンポーネント（TimePicker / TimeSelectionView）を実装します。',
 			checked: false,
@@ -49,8 +56,8 @@
 			projectSteps: ['/project/timer/step1', '/project/timer/step2', '/project/timer/step3']
 		},
 		{
-			id: 5,
-			title: '第5回授業',
+			id: 6,
+			title: '第6回授業',
 			description:
 				'タイマーの表示とロジックを実装します。円形プログレスバー（TimerDisplayView）・ViewModel（カウントダウン・開始・停止・一時停止）・ContentViewへの接続を行います。',
 			checked: false,
@@ -58,8 +65,8 @@
 			projectSteps: ['/project/timer/step4', '/project/timer/step5', '/project/timer/step6']
 		},
 		{
-			id: 6,
-			title: '第6回授業',
+			id: 7,
+			title: '第7回授業',
 			description:
 				'タイマーアプリを完成させます。アラーム音（AVFoundation）・アラート表示・カスタムボタン（ColorButton）・状態に応じたUI切り替えを実装します。',
 			checked: false,
@@ -67,8 +74,8 @@
 			projectSteps: ['/project/timer/step7', '/project/timer/step8']
 		},
 		{
-			id: 7,
-			title: '第7回授業',
+			id: 8,
+			title: '第8回授業',
 			description:
 				'ToDoリストアプリの制作を開始します。プロジェクト作成・タスクコンポーネント・リストコンポーネントを作成します。',
 			checked: false,
@@ -80,8 +87,8 @@
 			]
 		},
 		{
-			id: 8,
-			title: '第8回授業',
+			id: 9,
+			title: '第9回授業',
 			description:
 				'ToDoリストアプリのUIを引き続き作成します。空の状態ビュー・入力バー・タブ選択ヘッダーを実装します。',
 			checked: false,
@@ -93,8 +100,8 @@
 			]
 		},
 		{
-			id: 9,
-			title: '第9回授業',
+			id: 10,
+			title: '第10回授業',
 			description:
 				'ToDoリストアプリのデータ層を実装します。タスク・タブのモデル定義・初期データ・タスク操作サービス・タブ操作サービスを作成します（画面には変化なし）。',
 			checked: false,
@@ -108,8 +115,8 @@
 			]
 		},
 		{
-			id: 10,
-			title: '第10回授業',
+			id: 11,
+			title: '第11回授業',
 			description:
 				'ToDoリストアプリの管理画面と起動設定を実装します。タブ管理画面（TabManageView）・SwiftData初期設定・ホーム画面の枠を作成します。',
 			checked: false,
@@ -121,8 +128,8 @@
 			]
 		},
 		{
-			id: 11,
-			title: '第11回授業',
+			id: 12,
+			title: '第12回授業',
 			description:
 				'ToDoリストアプリの画面遷移とメイン表示を実装します。MainStack（画面遷移）・ContentView（起動時初期化）・HomeView（タブ・タスク一覧表示）を作成します。',
 			checked: false,
@@ -134,8 +141,8 @@
 			]
 		},
 		{
-			id: 12,
-			title: '第12回授業',
+			id: 13,
+			title: '第13回授業',
 			description:
 				'ToDoリストアプリの主要機能を完成させます。タスクの完了切り替え・タスク追加フォーム・スワイプ削除を実装します。',
 			checked: false,
@@ -147,8 +154,8 @@
 			]
 		},
 		{
-			id: 13,
-			title: '第13回授業',
+			id: 14,
+			title: '第14回授業',
 			description:
 				'ToDoリストアプリの発展課題に取り組みます。完了タスクの並び替え・タスク検索・削除確認アラートなど、自分でアイデアを考えて機能を追加します。',
 			checked: false,
@@ -156,8 +163,8 @@
 			projectSteps: ['/project/todolist/step21']
 		},
 		{
-			id: 14,
-			title: '第14回授業',
+			id: 15,
+			title: '第15回授業',
 			description:
 				'オリジナルアプリの企画・設計を行います。何を作るかを決め、必要な画面・データ・機能のリストを整理します。',
 			checked: false,
@@ -165,8 +172,8 @@
 			projectSteps: ['/project/original-app/step1']
 		},
 		{
-			id: 15,
-			title: '第15回授業',
+			id: 16,
+			title: '第16回授業',
 			description:
 				'Xcodeでオリジナルアプリのプロジェクトを作成します。フォルダ・ファイル構成を整え、エントリーポイントと仮の画面を実装します。',
 			checked: false,
@@ -174,8 +181,8 @@
 			projectSteps: ['/project/original-app/step2']
 		},
 		{
-			id: 16,
-			title: '第16回授業',
+			id: 17,
+			title: '第17回授業',
 			description:
 				'メイン画面の骨格を作ります。ダミーデータを使って画面のレイアウト・画面遷移の構造を確認します。',
 			checked: false,
@@ -183,8 +190,8 @@
 			projectSteps: ['/project/original-app/step3']
 		},
 		{
-			id: 17,
-			title: '第17回授業',
+			id: 18,
+			title: '第18回授業',
 			description:
 				'データモデルとサービスクラスを実装します。SwiftDataを使ってアプリのデータを端末に永続保存できるようにします。',
 			checked: false,
@@ -192,8 +199,8 @@
 			projectSteps: ['/project/original-app/step4']
 		},
 		{
-			id: 18,
-			title: '第18回授業',
+			id: 19,
+			title: '第19回授業',
 			description:
 				'データの表示機能（Read）を実装します。データベースからデータを取得してリスト表示し、空の状態の表示も作ります。',
 			checked: false,
@@ -201,8 +208,8 @@
 			projectSteps: ['/project/original-app/step5']
 		},
 		{
-			id: 19,
-			title: '第19回授業',
+			id: 20,
+			title: '第20回授業',
 			description:
 				'データの追加機能（Create）を実装します。入力フォームを作り、新しいデータを保存できるようにします。',
 			checked: false,
@@ -210,8 +217,8 @@
 			projectSteps: ['/project/original-app/step6']
 		},
 		{
-			id: 20,
-			title: '第20回授業',
+			id: 21,
+			title: '第21回授業',
 			description:
 				'データの更新・削除機能（Update / Delete）を実装します。これでCRUD（基本的なデータ操作）がすべて揃います。',
 			checked: false,
@@ -219,8 +226,8 @@
 			projectSteps: ['/project/original-app/step7']
 		},
 		{
-			id: 21,
-			title: '第21回授業',
+			id: 22,
+			title: '第22回授業',
 			description:
 				'UI部品を整え、アプリに合った機能を追加します。検索・並び替え・アニメーションなど、使いやすさを高めます。',
 			checked: false,
@@ -228,8 +235,8 @@
 			projectSteps: ['/project/original-app/step8']
 		},
 		{
-			id: 22,
-			title: '第22回授業',
+			id: 23,
+			title: '第23回授業',
 			description:
 				'デバッグとバグ修正を行います。全機能の動作確認・クラッシュの原因特定・データ保存の検証を行います。',
 			checked: false,
@@ -237,22 +244,13 @@
 			projectSteps: ['/project/original-app/step9']
 		},
 		{
-			id: 23,
-			title: '第23回授業',
+			id: 24,
+			title: '第24回授業',
 			description:
 				'UIの仕上げ・磨き込みを行います。色・フォント・余白を整えて、見た目をきれいに仕上げます。',
 			checked: false,
 			projectName: 'オリジナルアプリ',
 			projectSteps: ['/project/original-app/step10']
-		},
-		{
-			id: 24,
-			title: '第24回授業',
-			description:
-				'完成したオリジナルアプリを発表します。デモ・苦労した点・工夫した点を共有し、授業全体を振り返ります。',
-			checked: false,
-			projectName: 'オリジナルアプリ',
-			projectSteps: ['/project/original-app/step11']
 		}
 	]);
 

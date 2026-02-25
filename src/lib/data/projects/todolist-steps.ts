@@ -72,8 +72,8 @@ export const todolistSteps: TodolistStep[] = [
 	},
 	{
 		id: 'step14',
-		title: 'ステップ14: SwiftDataの設定を行う(ToDoListApp.swift)',
-		summary: 'ModelContainerを初期化して保存環境を準備します。'
+		title: 'ステップ14: アプリにデータベースを準備しよう (ToDoListApp.swift)',
+		summary: '「データを保存する場所（データベース）」を作って使えるようにする設定をしていきます。'
 	},
 	{
 		id: 'step15',

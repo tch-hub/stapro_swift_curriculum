@@ -1,95 +1,100 @@
-# ステップ14: SwiftDataの設定を行う(ToDoListApp.swift)
+# ステップ14: アプリにデータベースを準備しよう (ToDoListApp.swift)
 
-> ステップ1では `ToDoListApp.swift` にまず最低限のコード（`ContentView` を表示するだけ）を書きました。
-> このステップでは、作成したデータモデル（`ToDoTask`, `ToDoTab`）をアプリ全体で使えるように、**SwiftDataの設定を追加**します。
 
 ## 1. SwiftDataの設定を追加する
 
-`ToDoListApp.swift` を開いて、以下のコードに書き換えてください。
+`ToDoListApp.swift` というファイルを開いて、以下のようにコードを書き換えてみましょう。
 
 ```swift
 import SwiftUI
-import SwiftData
+import SwiftData // データベースを使うための新しい道具（フレームワーク）を読み込む
 
 @main
 struct ToDoListApp: App {
-    let modelContainer: ModelContainer
+    let modelContainer: ModelContainer // データを保存する「大きな箱（データベース）」を入れるための変数を用意
+    
+    init() { // init() はアプリが立ち上がった時に、一番最初に1回だけ実行される「準備の処理」
 
-    init() {
-        // 保存するデータの種類を登録する
+        // ① このアプリで「何のデータを保存するのか」をリストアップして登録する
         let schema = Schema([
-            ToDoTask.self,
-            ToDoTab.self
+            ToDoTask.self, // 「やるべきこと（タスク）」のデータを保存するよ！
+            ToDoTab.self   // 「タブ」のデータも保存するよ！
         ])
 
-        // データベースの設定（アプリを閉じてもデータを残す）
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        // ② データベースの設定を決める
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false) // isStoredInMemoryOnlyを false にすることで、「アプリを閉じてもデータを消さずに残す」設定になる
 
-        do {
-            // データベースを作成する
-            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        // ③ 登録したリストと設定を使って、実際の「箱」を作る
+        do {  // スマホの容量不足などで箱が作れないこともあるので、do-catch を使って失敗した時の動きも書いておく
+            
+            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration]) // try: 「失敗するかもしれないけど、とりあえず作ってみる！」という合図
         } catch {
-            fatalError("Could not initialize ModelContainer: \(error)")
+            
+            fatalError("データの箱（ModelContainer）が作れませんでした: \(error)") // もし箱の作成に失敗した場合は、アプリが動かせないのでエラーを出して強制終了させる（fatalError）
         }
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView() // アプリの最初の画面（ContentView）を表示
         }
-        // 作ったデータベースをアプリ全体で使えるようにする
+
+        // ④ 完成した「データの箱」をアプリのすべての画面で使えるように配給する魔法の言葉！
         .modelContainer(modelContainer)
     }
 }
 ```
 
-**ステップ1から追加した部分:**
+**新しく追加したコードの役割:**
 
-| 追加した内容 | 説明 |
+| 追加した内容 | 役割 |
 |---|---|
-| `let modelContainer: ModelContainer` | データベースを管理する変数を用意する |
-| `init()` | アプリ起動時に最初に実行される処理 |
-| `Schema` | どのデータを保存対象にするかを登録する設定 |
-| `ModelConfiguration` | データベースの動き方を設定する |
-| `ModelContainer` | 実際のデータベースを作る |
-| `.modelContainer(modelContainer)` | データベースをアプリ全体に共有する |
+| `modelContainer` | データを保存する「箱」を入れる変数 |
+| `init()` | アプリが立ち上がるときに、一番最初に動く「初期設定」の処理 |
+| `Schema` | 「この種類のデータを保存しますよ」と登録するリスト |
+| `ModelConfiguration` | 「保存したデータをアプリを閉じても残すか？」などの設定 |
+| `ModelContainer` | 実際にデータを保存する「箱（データベース）」そのもの |
+| `.modelContainer(...)` | 作った「箱」を、アプリのどこからでも使えるようにする魔法の言葉 |
 
 ---
 
-**各パーツの説明:**
+### 💡 コードの詳しい解説
 
-- **`Schema`（スキーマ：データベースの設計図）**
-  どのクラス（`@Model` がついたクラス）をデータとして管理するかを登録します。ここでは `ToDoTask`（タスク）と `ToDoTab`（タブ）の2つを登録しています。
+- **`Schema`（スキーマ：保存するもののリスト）**
+  ここでは、「アプリでどんなデータを保存するか」を登録します。今回は、前に作った `ToDoTask`（やるべきこと）と `ToDoTab`（タブ）の2つを「保存するデータだよ！」とリストに登録しています。
 
 - **`ModelConfiguration`（データベースの設定）**
-  データベースの動き方を決めます。`isStoredInMemoryOnly` が大事なポイントです。
-  - **`false`（本番用）**: アプリを閉じてもデータが残ります。
-  - **`true`（テスト用）**: アプリを閉じるとデータが消えます。
+  データベースの動き方を決める設定です。ここで特に重要なのが `isStoredInMemoryOnly`（メモリの中だけに保存するか？）という設定です。
+  - **`false`にする（普段はこちら）**: スマホの中にしっかり保存されるので、アプリを閉じてもデータが消えません！
+  - **`true`にする（テスト用）**: アプリを閉じるとデータが全部消えてしまう設定です。
 
 - **`ModelContainer`（データベースの本体）**
-  実際にデータを保存・管理するデータベースです。`init()` の中で作成します。
+  実際にデータを保存する「大きな箱」です。これがデータベースそのものです！アプリを立ち上げる `init()` という処理の中で、この大きな箱を組み立てています。
 
-- **`do-catch` によるエラー処理**
-  データベースの作成に失敗することがあります（容量不足など）。`try` で失敗するかもしれない処理を実行し、失敗したら `catch` でエラーをキャッチします。データベースが使えないとアプリが動かないので、`fatalError()` で強制終了させています。
+- **`do-catch`（失敗したときの対策）**
+  もしスマホの容量がいっぱいで、データを保存する箱が作れなかったらどうなるでしょう？
+  そこで、`do` の中で「とりあえずやってみる（`try`）」と書き、もし失敗したときは `catch` に「失敗したときの動き」を書いておきます。今回はデータが保存できないとアプリが機能しないので、`fatalError`（強制終了）を使うようにしています。
 
-- **`.modelContainer(modelContainer)`**
-  作ったデータベースをアプリ全体で共有します。これにより、どのビューからでも `@Environment(\.modelContext)` を使ってデータにアクセスできます。
+- **`.modelContainer(modelContainer)`（みんなで使えるようにする）**
+  せっかく「データの箱」を作っても、設定しないと他の画面から使うことができません。この1行を書くことで、アプリのどの画面からでもデータを引き出したり、保存したりできるようになります。
 
-**処理の流れ（まとめ）:**
+---
 
-1. アプリ起動 → `init()` が実行される
-2. `Schema` でデータの種類を登録
-3. `ModelContainer` でデータベースを作成
-4. `.modelContainer()` でアプリ全体に共有
-5. 各画面で `@Environment(\.modelContext)` を使ってアクセス
+### 🔄 アプリが立ち上がるときの流れ
+
+おさらいとして、アプリを開いたときにどんな順番で裏側が動いているか見てみましょう。
+
+1. **アプリ起動！** ➡️ `init()`（準備の処理）がスタートする
+2. `Schema` で「保存するデータ」の種類をリストアップ
+3. `ModelContainer` でデータを入れる「箱」を作る
+4. `.modelContainer()` で、作った「箱」をアプリ全体に配る
+5. **完了！** これで、どの画面からでもデータが使えるようになります✨
 
 ---
 
 ## コード全体
 
-### ToDoListApp.swift
-
-```swift
+```swift title="ToDoListApp.swift"
 import SwiftUI
 import SwiftData
 
@@ -103,11 +108,10 @@ struct ToDoListApp: App {
             ToDoTab.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
         do {
             modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("Could not initialize ModelContainer: \(error)")
+            fatalError("データの箱（ModelContainer）が作れませんでした: \(error)")
         }
     }
 
@@ -122,4 +126,5 @@ struct ToDoListApp: App {
 
 ---
 
-このステップでは、アプリの裏側で使うデータベースの設定を行いました。見た目には変化はありませんが、次のステップでこのデータを使ってアプリの初期状態をセットアップしていきます。
+このステップでは、アプリの裏側でデータを保存するための準備をしました！
+画面の見た目はまだ変わりませんが、次のステップからは、いよいよこのデータベースを使ってアプリを動かしていきます。お楽しみに！
