@@ -1,6 +1,5 @@
 # ステップ14: SwiftDataの設定を行う(ToDoListApp.swift)
 
-> **ステップ1との違い**
 > ステップ1では `ToDoListApp.swift` にまず最低限のコード（`ContentView` を表示するだけ）を書きました。
 > このステップでは、作成したデータモデル（`ToDoTask`, `ToDoTab`）をアプリ全体で使えるように、**SwiftDataの設定を追加**します。
 

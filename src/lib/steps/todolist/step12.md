@@ -50,13 +50,12 @@ struct TabManageView: View {
 
 ```swift
     var body: some View {
-        // ZStack：複数のビューを重ねて表示する（今回は1つだが、後でビューを追加しやすいようにしている）
-        ZStack {
+       
+        ZStack {  // ZStack：複数のビューを重ねて表示する（今回は1つだが、後でビューを追加しやすいようにしている）
+
             // ①タブ一覧リスト
-            // tabs 配列の中身を一覧表示する。スワイプ削除は handleDelete に任せる
-            CustomList(items: tabs, onDelete: handleDelete) { tab in
-                // 各タブの行に表示する内容（名前と作成日を縦に並べる）
-                VStack(alignment: .leading, spacing: 4) {
+            CustomList(items: tabs, onDelete: handleDelete) { tab in // tabs 配列の中身を一覧表示する。スワイプ削除は handleDelete に任せる
+                VStack(alignment: .leading, spacing: 4) { // 各タブの行に表示する内容（名前と作成日を縦に並べる）
                     Text(tab.name)           // タブの名前を大きめに表示
                         .font(.headline)
                     Text("作成日: \(tab.createdAt.formatted(date: .abbreviated, time: .omitted))")
@@ -67,14 +66,12 @@ struct TabManageView: View {
             .navigationTitle("タブ管理")   // ナビゲーションバーのタイトル
             .onAppear { loadTabs() }        // 画面が開いたとき、まずデータを読み込む
 
-            // 削除確認アラート
-            // showDeleteAlert が true になると自動的に表示される
-            .alert("タブの削除", isPresented: $showDeleteAlert) {
+            .alert("タブの削除", isPresented: $showDeleteAlert) { // 削除確認アラート:showDeleteAlert が true になると自動的に表示される
                 Button("削除", role: .destructive) { confirmDelete() } // 赤い「削除」ボタン
                 Button("キャンセル", role: .cancel) {}                  // 「キャンセル」ボタン
             } message: {
-                // アラートに表示するメッセージ（タスクも消えることを警告）
-                Text("このタブを削除すると、関連するすべてのタスクも削除されます。")
+                
+                Text("このタブを削除すると、関連するすべてのタスクも削除されます。") // アラートに表示するメッセージ（タスクも消えることを警告）
             }
         }
         // ②下部のタブ追加エリア

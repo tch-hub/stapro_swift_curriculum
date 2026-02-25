@@ -77,7 +77,7 @@
 		<p class="text-lg opacity-90">{data.summary}</p>
 	</header>
 
-	<section class="prose prose-sm max-w-none">
+	<section class="prose prose-base max-w-none">
 		{#each renderedBlocks as block, index (block.type + '-' + index)}
 			{#if block.type === 'code'}
 				<div class="mb-6">

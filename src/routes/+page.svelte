@@ -25,7 +25,7 @@
 		},
 		{
 			id: 2,
-			title: '第2回授業: SwiftUI学習（前半）',
+			title: '第2回授業: SwiftUI学習',
 			description:
 				'SwiftUIの基本を学びます。デフォルトコードの解説・テキスト表示・ボタン操作・レイアウト（VStack / HStack / ZStack）を学習します。',
 			checked: false,
@@ -33,7 +33,7 @@
 		},
 		{
 			id: 3,
-			title: '第3回授業: SwiftUI学習（後半）',
+			title: '第3回授業: SwiftUI学習',
 			description:
 				'SwiftUIのインタラクティブな要素を学びます。状態管理（@State）・図形・テキスト入力・Toggle・Slider・カウンターアプリの作成まで行います。',
 			checked: false,
@@ -345,9 +345,9 @@
 								</a>
 							{/if}
 							{#if lesson.tutorialSections}
-								{#each lesson.tutorialSections as section, i (section)}
+								{#each lesson.tutorialSections as section (section)}
 									<a href={resolve(section)} class="btn btn-primary">
-										チュートリアル {i + 1}
+										チュートリアル {parseInt(section.split('/').pop() || '0', 10) + 1}
 									</a>
 								{/each}
 							{/if}
