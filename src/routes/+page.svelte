@@ -15,10 +15,11 @@
 		},
 		{
 			id: 1,
-			title: '第1回授業: 新しい教材（タイトルを追加してください）',
-			description: '追加する教材の内容をここに記述してください。',
+			title: '第1回授業: Swift基本構文の解説',
+			description:
+				'練習問題で出てくるSwiftプログラミングの基本的なルールと構文（変数・定数・型推論・条件分岐・配列・関数など）について学習します。',
 			checked: false,
-			tutorialUrl: null,
+			tutorialUrl: '/basic-syntax',
 			quizUrl: null
 		},
 		{
