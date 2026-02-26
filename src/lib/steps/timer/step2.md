@@ -131,3 +131,57 @@ struct ContentView: View {
     ContentView()
 }
 ```
+
+## 練習問題
+
+<img src="/images/timer/practice-step2.png" alt="練習問題の完成イメージ" />
+
+1.  **テキストの変更**
+    `Text("タイマーアプリ")` の部分を、あなたの好きな名前に変更してみましょう（例：「マイタイマー」、「勉強用タイマー」など）。
+
+2.  **ボタンの色の変更**
+    「開始」ボタンの背景色（現在は `Color.green`）を青（`Color.blue`）に、「キャンセル」ボタンの背景色（現在は `Color.gray`）を赤（`Color.red`）に変更してみましょう。
+
+3.  **新しいボタンの追加**
+    HStack の中に、もう一つ「一時停止」というボタンを追加してみましょう。色はオレンジ（`Color.orange`）に設定してみてください。
+
+### 解答例
+
+ContentViewの `body` の中身を以下のように変更します。
+
+```swift
+    var body: some View {
+        VStack(spacing: 24) {
+            // 1. テキストの変更
+            Text("マイタイマー")
+                .font(.largeTitle)
+                .padding()
+            HStack {
+                // 2. ボタンの色の変更 (green -> blue)
+                Button("開始") {
+                }
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+
+                // 3. 新しいボタンの追加
+                Button("一時停止") {
+                }
+                .padding()
+                .background(Color.orange)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+
+                // 2. ボタンの色の変更 (gray -> red)
+                Button("キャンセル") {
+                }
+                .padding()
+                .background(Color.red)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+            }
+        }
+        .padding()
+    }
+```

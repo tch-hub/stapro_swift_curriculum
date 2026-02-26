@@ -303,6 +303,7 @@
 				{/if}
 				<div class="card-actions justify-end gap-2">
 					<button class="btn btn-primary" onclick={restartQuiz}>もう一度挑戦</button>
+					<a href={resolve('/basic-syntax')} class="btn btn-outline">テキストに戻る</a>
 					<a href={resolve('/quiz')} class="btn btn-secondary">一覧へ戻る</a>
 				</div>
 			</div>
@@ -390,8 +391,9 @@
 		<div class="mt-4">
 			<p>スコア: {score} / {orderedQuiz.length}</p>
 		</div>
-		<div class="mt-4">
-			<a href={resolve('/quiz')} class="btn btn-secondary">戻る</a>
+		<div class="mt-4 flex gap-2">
+			<a href={resolve('/basic-syntax')} class="btn btn-outline">テキストに戻る</a>
+			<a href={resolve('/quiz')} class="btn btn-secondary">一覧へ戻る</a>
 		</div>
 	{/if}
 </div>

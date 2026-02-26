@@ -1,6 +1,7 @@
 <script>
 	import { base, resolve } from '$app/paths';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
+	import StepPractice from '$lib/components/StepPractice.svelte';
 	import { marked } from 'marked';
 
 	let { data } = $props();
@@ -20,8 +21,45 @@
 		}
 		return parsedTokens;
 	});
-	let renderedBlocks = $derived.by(() =>
-		tokensWithoutTitle
+
+	// 「## 練習問題」でトークンをメインコンテンツと練習問題コンテンツに分割する
+	let mainTokens = $derived.by(() => {
+		const practiceIndex = tokensWithoutTitle.findIndex(
+			(t) => t.type === 'heading' && t.depth === 2 && t.text.trim() === '練習問題'
+		);
+		return practiceIndex !== -1 ? tokensWithoutTitle.slice(0, practiceIndex) : tokensWithoutTitle;
+	});
+
+	let practiceTokens = $derived.by(() => {
+		const practiceIndex = tokensWithoutTitle.findIndex(
+			(t) => t.type === 'heading' && t.depth === 2 && t.text.trim() === '練習問題'
+		);
+		if (practiceIndex === -1) return [];
+
+		const restTokens = tokensWithoutTitle.slice(practiceIndex + 1);
+		const answerIndex = restTokens.findIndex(
+			(t) => t.type === 'heading' && t.depth === 3 && t.text.trim() === '解答例'
+		);
+
+		return answerIndex !== -1 ? restTokens.slice(0, answerIndex) : restTokens;
+	});
+
+	let answerTokens = $derived.by(() => {
+		const practiceIndex = tokensWithoutTitle.findIndex(
+			(t) => t.type === 'heading' && t.depth === 2 && t.text.trim() === '練習問題'
+		);
+		if (practiceIndex === -1) return [];
+
+		const restTokens = tokensWithoutTitle.slice(practiceIndex + 1);
+		const answerIndex = restTokens.findIndex(
+			(t) => t.type === 'heading' && t.depth === 3 && t.text.trim() === '解答例'
+		);
+
+		return answerIndex !== -1 ? restTokens.slice(answerIndex + 1) : [];
+	});
+
+	function processTokens(tokens) {
+		return tokens
 			.filter((token) => token.type !== 'space')
 			.map((token) => {
 				if (token.type === 'code') {
@@ -67,8 +105,79 @@
 					type: 'html',
 					html
 				};
+			});
+	}
+
+	let renderedBlocks = $derived(processTokens(mainTokens));
+	let practiceBlocks = $derived(processTokens(practiceTokens));
+	let answerBlocks = $derived(processTokens(answerTokens));
+
+	// 練習問題ブロックの中から最初の画像URLを抽出する
+	let practiceImage = $derived.by(() => {
+		// tokenから直接探す
+		for (const token of practiceTokens) {
+			if (token.type === 'image') {
+				let url = token.href;
+				if (base && url.startsWith('/')) {
+					const normalizedBase = (base || '').replace(/\/$/, '');
+					url = `${normalizedBase}${url}`;
+				}
+				return url;
+			}
+			// 段落内などのインライン画像
+			if (token.tokens) {
+				const imgToken = token.tokens.find((t) => t.type === 'image');
+				if (imgToken) {
+					let url = imgToken.href;
+					if (base && url.startsWith('/')) {
+						const normalizedBase = (base || '').replace(/\/$/, '');
+						url = `${normalizedBase}${url}`;
+					}
+					return url;
+				}
+			}
+		}
+
+		// HTMLパース後のブロックから探す (imgタグが含まれている場合)
+		for (const block of practiceBlocks) {
+			if (block.type === 'html' && block.html.includes('<img')) {
+				const match = block.html.match(/src=['"]([^'"]+)['"]/);
+				if (match) return match[1];
+			}
+		}
+
+		return null;
+	});
+
+	// 表示用からは画像を削除する（StepPracticeの左側で表示するため）
+	let displayPracticeBlocks = $derived.by(() => {
+		return practiceBlocks
+			.filter((block) => {
+				if (block.type === 'html') {
+					// 単独の段落にある画像のみのHTMLの場合は除外
+					const textOnly = block.html
+						.replace(/<img[^>]*>/gi, '') // imgタグを削除
+						.replace(/<[^>]*>/g, '') // 他のすべてのHTMLタグを削除
+						.trim();
+
+					// imgタグが存在し、プレーンテキストが空・または改行文字等の場合は除外
+					if (block.html.toLowerCase().includes('<img') && textOnly === '') {
+						return false;
+					}
+				}
+				return true;
 			})
-	);
+			.map((block) => {
+				// imgタグが存在するが、他にテキストもある場合は、imgタグだけを削除したhtmlを返す
+				if (block.type === 'html' && block.html.toLowerCase().includes('<img')) {
+					return {
+						...block,
+						html: block.html.replace(/<img[^>]*>/gi, '')
+					};
+				}
+				return block;
+			});
+	});
 </script>
 
 <div class="container mx-auto px-4 py-8 pb-32">
@@ -92,6 +201,48 @@
 				</div>
 			{/if}
 		{/each}
+
+		{#if practiceBlocks.length > 0}
+			{#snippet practiceContent()}
+				{#each displayPracticeBlocks as block, index (block.type + '-' + index)}
+					{#if block.type === 'code'}
+						<div class="mb-6">
+							{#key block.code}
+								<CodeBlock code={block.code} language={block.language} fileName={block.fileName} />
+							{/key}
+						</div>
+					{:else}
+						<div class="mb-4">
+							<!-- eslint-disable-next-line svelte/no-at-html-tags -- マークダウンを表示するため -->
+							{@html block.html}
+						</div>
+					{/if}
+				{/each}
+			{/snippet}
+
+			{#snippet answerContent()}
+				{#each answerBlocks as block, index (block.type + '-' + index)}
+					{#if block.type === 'code'}
+						<div class="mb-6">
+							{#key block.code}
+								<CodeBlock code={block.code} language={block.language} fileName={block.fileName} />
+							{/key}
+						</div>
+					{:else}
+						<div class="mb-4">
+							<!-- eslint-disable-next-line svelte/no-at-html-tags -- マークダウンを表示するため -->
+							{@html block.html}
+						</div>
+					{/if}
+				{/each}
+			{/snippet}
+
+			<StepPractice
+				{practiceImage}
+				{practiceContent}
+				answerContent={answerBlocks.length > 0 ? answerContent : undefined}
+			/>
+		{/if}
 	</section>
 
 	<!-- 固定ナビゲーションフッター -->
