@@ -2,6 +2,7 @@
 title: ステップ8: カスタムボタンによるUIの仕上げ(ColorButton, ContentView)
 summary: ColorButtonコンポーネントを作成してボタンのデザインを統一し、状態に応じたボタンの出し分けを実装してアプリを完成させます。
 ---
+
 ## 1. ColorButtonコンポーネント
 
 ボタンコンポーネント（`ColorButton.swift`）を編集します。
