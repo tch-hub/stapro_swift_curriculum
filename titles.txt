@@ -1,0 +1,33 @@
+src/lib/steps/timer:
+- step1.md: ステップ1: プロジェクトの作成とセットアップ
+- step2.md: ステップ2: 基本的なUIの構築(ContentView.swift)
+- step3.md: ステップ3: 時間選択ビューの実装(TimePicker, TimeSelectionView)
+- step4.md: ステップ4: タイマー表示ビューの実装(TimerDisplayView)
+- step5.md: ステップ5: ViewModelとタイマーロジックの実装(TimerViewModel)
+- step6.md: ステップ6: ViewModelのUIへの反映(ContentView)
+- step7.md: ステップ7: アラームとアラート機能の追加(TimerViewModel, ContentView)
+- step8.md: ステップ8: カスタムボタンによるUIの仕上げ(ColorButton, ContentView)
+
+src/lib/steps/todolist:
+- step1.md: ステップ1: プロジェクトの作成とセットアップ(ToDoListApp.swift)
+- step2.md: ステップ2: タスクコンポーネントを作る(ToDoListItem.swift)
+- step3.md: ステップ3: リストコンポーネントを作る(CustomList.swift)
+- step4.md: ステップ4: 空の状態を表示するコンポーネントを作る(EmptyStateView.swift)
+- step5.md: ステップ5: タスク入力バーを作る(InputView.swift)
+- step6.md: ステップ6: タブ選択ヘッダーを作る(TabHeaderView.swift)
+- step7.md: ステップ7: タスクのデータモデルを作る(ToDoTask.swift)
+- step8.md: ステップ8: タブのデータモデルを作る(ToDoTab.swift)
+- step9.md: ステップ9: 初期データを投入する(Constants.swift)
+- step10.md: ステップ10: タスク操作のサービスを作る(ToDoTaskService.swift)
+- step11.md: ステップ11: タブ操作のサービスを作る(ToDoTabService.swift)
+- step12.md: ステップ12: タブ管理画面を作る(TabManageView.swift)
+- step13.md: ステップ13: ホーム画面の枠を作る(HomeView.swift)
+- step14.md: ステップ14: アプリにデータベースを準備しよう (ToDoListApp.swift)
+- step15.md: ステップ15: 画面を切り替える準備をしよう (MainStack.swift)
+- step16.md: ステップ16: 起動時の初期化を行う(ContentView.swift)
+- step17.md: ステップ17: タブとタスクを表示する(HomeView.swift)
+- step18.md: ステップ18: 完了切り替えを実装する(HomeView.swift)
+- step19.md: ステップ19: タスク追加フォームを作る(HomeView.swift)
+- step20.md: ステップ20: スワイプ削除を追加する(HomeView.swift)
+- step21.md: ステップ21: 発展課題（もっと便利にするアイデア）
+
