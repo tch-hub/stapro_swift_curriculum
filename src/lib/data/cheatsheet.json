@@ -10,45 +10,21 @@
 					"code": "// Swiftでは、定数（let）と変数（var）を宣言できます\n// 定数の宣言（値を変更できない）\nlet schoolName = \"中央中学校\"  // 学校名を定数として宣言\nlet pi = 3.14159  // 円周率も定数\n\n// 変数の宣言（値を変更できる）\nvar score = 85  // スコアを変数として宣言\nvar isStudying = true  // 勉強中かどうかを変数で管理\n\n// データ型を明示的に指定することも可能\nvar height: Double = 165.5  // 身長をDouble型で宣言\nvar weight: Int = 50  // 体重をInt型で宣言\n\n// print関数を使って値を出力\nprint(\"学校名: \\(schoolName)\")  // 文字列補間を使って変数を埋め込み\nprint(\"スコア: \\(score)\")\nprint(\"勉強中: \\(isStudying)\")\nprint(\"身長: \\(height)cm\")\nprint(\"体重: \\(weight)kg\")",
 					"output": "学校名: 中央中学校\nスコア: 85\n勉強中: true\n身長: 165.5cm\n体重: 50kg",
 					"executable": true,
-					"keywords": [
-						"variable",
-						"constant",
-						"let",
-						"var",
-						"宣言",
-						"定義",
-						"変数",
-						"定数"
-					]
+					"keywords": ["variable", "constant", "let", "var", "宣言", "定義", "変数", "定数"]
 				},
 				{
 					"title": "定数への再代入（エラー例）",
 					"code": "// 定数の宣言\nlet schoolName = \"中央中学校\"\n\n// 定数への再代入はエラーになる\nschoolName = \"東京中学校\"",
 					"output": "error: cannot assign to value: 'schoolName' is a 'let' constant\nschoolName = \"東京中学校\"\n^^^^^^^^^^\nnote: change 'let' to 'var' to make it mutable",
 					"executable": true,
-					"keywords": [
-						"error",
-						"reassignment",
-						"let",
-						"change",
-						"変更",
-						"エラー",
-						"再代入"
-					]
+					"keywords": ["error", "reassignment", "let", "change", "変更", "エラー", "再代入"]
 				},
 				{
 					"title": "列挙型（Enum）",
 					"code": "// 列挙型（Enum）は、関連する値をグループ化する型です\n// 基本的な列挙型の定義\nenum Direction {\n    case north  // 北\n    case south  // 南\n    case east   // 東\n    case west   // 西\n}\n\n// 短縮形での定義（1行で複数のcaseを定義）\nenum Direction {\n    case north, south, east, west\n}\n\n// enumの使用例\nlet currentDirection = Direction.north  // 北方向を指定\n\n// switch文を使ってenumの値を処理\nswitch currentDirection {\ncase .north:\n    print(\"北へ進む\")  // northの場合の処理\ncase .south:\n    print(\"南へ進む\")  // southの場合の処理\ncase .east:\n    print(\"東へ進む\")  // eastの場合の処理\ncase .west:\n    print(\"西へ進む\")  // westの場合の処理\n}\n\n// 生の値（raw value）を持つenumの例\nenum Planet: Int {  // Int型のraw valueを持つ\n    case mercury = 1  // 水星\n    case venus = 2    // 金星\n    case earth = 3    // 地球\n    case mars = 4     // 火星\n}\n\nlet earthNumber = Planet.earth.rawValue  // rawValueで数値を取得\nprint(\"地球の番号: \\(earthNumber)\")",
 					"output": "北へ進む\n地球の番号: 3",
 					"executable": true,
-					"keywords": [
-						"enum",
-						"case",
-						"switch",
-						"列挙",
-						"イナム",
-						"エナム"
-					]
+					"keywords": ["enum", "case", "switch", "列挙", "イナム", "エナム"]
 				}
 			]
 		},
@@ -80,26 +56,14 @@
 					"code": "// type(of:)関数を使って変数の型を確認する\nlet number = 42\nlet decimal = 3.14\nlet text = \"Hello\"\nlet flag = true\n\nprint(\"numberの型: \\(type(of: number))\")  // Int型\nprint(\"decimalの型: \\(type(of: decimal))\")  // Double型\nprint(\"textの型: \\(type(of: text))\")      // String型\nprint(\"flagの型: \\(type(of: flag))\")      // Bool型",
 					"output": "numberの型: Int\ndecimalの型: Double\ndecimalの型: String\nflagの型: Bool",
 					"executable": true,
-					"keywords": [
-						"type(of:)",
-						"check",
-						"確認",
-						"型確認"
-					]
+					"keywords": ["type(of:)", "check", "確認", "型確認"]
 				},
 				{
 					"title": "タプル（Tuple）",
 					"code": "// タプルは複数の値をグループ化する型\n// 生徒の情報をタプルで表現\nlet student: (String, Int, String) = (\"太郎\", 13, \"中学1年\")\nlet point: (x: Int, y: Int) = (x: 10, y: 20)\n\n// インデックスでアクセス\nprint(\"名前: \\(student.0)\")  // 最初の要素（太郎）\nprint(\"年齢: \\(student.1)\")  // 2番目の要素（13）\nprint(\"学年: \\(student.2)\")  // 3番目の要素（中学1年）\n\n// ラベル付きでアクセス\nprint(\"X座標: \\(point.x)\")  // xラベルでアクセス\nprint(\"Y座標: \\(point.y)\")  // yラベルでアクセス\n\n// 分解して代入\nlet (name, age, grade) = student\nprint(\"\\(name)は\\(age)歳の\\(grade)生です\")",
 					"output": "名前: 太郎\n年齢: 13\n学年: 中学1年\nX座標: 10\nY座標: 20\n太郎は13歳の中学1年生です",
 					"executable": true,
-					"keywords": [
-						"tuple",
-						"multiple",
-						"values",
-						"pair",
-						"組",
-						"タプル"
-					]
+					"keywords": ["tuple", "multiple", "values", "pair", "組", "タプル"]
 				},
 				{
 					"title": "型の変換（キャスト）",
@@ -121,30 +85,14 @@
 					"code": "// 範囲型は連続した値の範囲を表す型\n// ClosedRangeは開始値と終了値を含む範囲（...演算子）\nlet closedRange: ClosedRange<Int> = 1...5  // 1, 2, 3, 4, 5を含む範囲\nprint(\"ClosedRange: \\(closedRange)\")  // 1...5と表示される\n\n// 範囲を使ったループ\nprint(\"範囲内の値:\")\nfor number in closedRange {\n    print(\"\\(number)\", terminator: \" \")  // 1 2 3 4 5 と出力\n}\nprint()  // 改行\n\n// 範囲に値が含まれるかチェック\nlet testValue = 3\nif closedRange.contains(testValue) {\n    print(\"\\(testValue)は範囲内に含まれます\")  // 3は範囲内に含まれる\n}\n\n// 範囲の境界値を取得\nprint(\"開始値: \\(closedRange.lowerBound)\")  // 1\nprint(\"終了値: \\(closedRange.upperBound)\")  // 5\n\n// 半開範囲（..<演算子）との比較\nlet halfOpenRange = 1..<5  // 1, 2, 3, 4を含む（5を含まない）\nprint(\"Half-open range: \\(halfOpenRange)\")  // 1..<5\n\n// 文字の範囲も可能\nlet charRange: ClosedRange<Character> = \"a\"...\"z\"\nprint(\"文字の範囲: \\(charRange.contains(\\\"m\\\"))\")  // true",
 					"output": "ClosedRange: 1...5\n範囲内の値:\n1 2 3 4 5\n3は範囲内に含まれます\n開始値: 1\n終了値: 5\nHalf-open range: 1..<5\n文字の範囲: true",
 					"executable": true,
-					"keywords": [
-						"range",
-						"closed",
-						"half-open",
-						"...",
-						"..<",
-						"範囲"
-					]
+					"keywords": ["range", "closed", "half-open", "...", "..<", "範囲"]
 				},
 				{
 					"title": "Void型",
 					"code": "// Voidは「値がない」ことを表す特別な型です\n// () と書く「空のタプル」と同じ意味です\n\n// 1. 関数の戻り値（通常は省略されます）\nfunc greet() -> Void {\n    print(\"こんにちは\")\n}\n\n// 2. クロージャの型定義（よく使われます）\n// 「引数なし、戻り値なし」の処理を表現します\n// 例: let onToggle: () -> Void\n\nvar action: () -> Void = {\n    print(\"アクション実行\")\n}\n\n// 実行\ngreet()\naction()",
 					"output": "こんにちは\nアクション実行",
 					"executable": true,
-					"keywords": [
-						"void",
-						"empty",
-						"tuple",
-						"return",
-						"closure",
-						"型",
-						"空",
-						"戻り値なし"
-					]
+					"keywords": ["void", "empty", "tuple", "return", "closure", "型", "空", "戻り値なし"]
 				}
 			]
 		},
@@ -178,32 +126,14 @@
 					"code": "// 比較演算子を使って値の大小や等しさを比較する\nlet x = 5   // 変数xに5を代入\nlet y = 10  // 変数yに10を代入\n\nprint(\"x == y: \\(x == y)\")  // 等しい（xはyと等しいか？）: false\nprint(\"x != y: \\(x != y)\")  // 等しくない（xはyと等しくないか？）: true\nprint(\"x < y: \\(x < y)\")   // より小さい（xはyより小さいか？）: true\nprint(\"x > y: \\(x > y)\")   // より大きい（xはyより大きいか？）: false\nprint(\"x <= y: \\(x <= y)\")  // 以下（xはy以下か？）: true\nprint(\"x >= y: \\(x >= y)\")  // 以上（xはy以上か？）: false",
 					"output": "x == y: false\nx != y: true\nx < y: true\nx > y: false\nx <= y: true\nx >= y: false",
 					"executable": true,
-					"keywords": [
-						"==",
-						"!=",
-						"<",
-						">",
-						"compare",
-						"equal",
-						"比較",
-						"等しい",
-						"大小"
-					]
+					"keywords": ["==", "!=", "<", ">", "compare", "equal", "比較", "等しい", "大小"]
 				},
 				{
 					"title": "三項演算子",
 					"code": "// 三項演算子は条件式 ? 真の値 : 偽の値 の形式で、条件によって値を選択する\nlet score = 85  // テストのスコア\n\n// 条件に基づいて値を選択（60点以上なら合格、そうでなければ不合格）\nlet result = score >= 60 ? \"合格\" : \"不合格\"\nprint(\"テスト結果: \\(result)\")\n\n// 数値の比較（aとbのうち大きい方を選択）\nlet a = 10\nlet b = 20\nlet max = a > b ? a : b  // aがbより大きい場合はa、そうでなければb\nprint(\"大きい方の値: \\(max)\")\n\n// 文字列の選択（学生かどうかに応じてメッセージを選択）\nlet isStudent = true\nlet message = isStudent ? \"学生です\" : \"学生ではありません\"\nprint(message)",
 					"output": "テスト結果: 合格\n大きい方の値: 20\n学生です",
 					"executable": true,
-					"keywords": [
-						"ternary",
-						"?:",
-						"condition",
-						"if-else",
-						"operator",
-						"条件演算子",
-						"三項"
-					]
+					"keywords": ["ternary", "?:", "condition", "if-else", "operator", "条件演算子", "三項"]
 				},
 				{
 					"title": "論理演算子",
@@ -236,28 +166,14 @@
 					"code": "// if文を使って条件分岐を行う\nlet age = 13  // 年齢\n\n// 基本的なif-else文（13歳以上なら中学生、そうでなければ小学生）\nif age >= 13 {\n    print(\"中学生です\")\n} else {\n    print(\"小学生です\")\n}\n\n// 複数の条件をチェックするif-else if-else文\nif age >= 18 {\n    print(\"大人\")  // 18歳以上は大人\n} else if age >= 13 {\n    print(\"中学生\")  // 13-17歳は中学生\n} else {\n    print(\"小学生\")  // 12歳以下は小学生\n}",
 					"output": "中学生です\n中学生",
 					"executable": true,
-					"keywords": [
-						"condition",
-						"else",
-						"branch",
-						"条件",
-						"分岐",
-						"if"
-					]
+					"keywords": ["condition", "else", "branch", "条件", "分岐", "if"]
 				},
 				{
 					"title": "for-inループ",
 					"code": "// for-inループを使ってコレクションの要素を順番に処理する\nlet fruits = [\"りんご\", \"バナナ\", \"オレンジ\"]  // 果物の配列\n\n// 配列の各要素を順番に処理\nfor fruit in fruits {\n    print(\"好きな果物: \\(fruit)\")\n}\n\n// 範囲を使ったループ（1から5までの数字を順番に処理）\nfor i in 1...5 {  // 1, 2, 3, 4, 5の順にiに代入される\n    print(\"\\(i)回目のループ\")\n}",
 					"output": "好きな果物: りんご\n好きな果物: バナナ\n好きな果物: オレンジ\n1回目のループ\n2回目のループ\n3回目のループ\n4回目のループ\n5回目のループ",
 					"executable": true,
-					"keywords": [
-						"loop",
-						"iteration",
-						"repeat",
-						"繰り返し",
-						"ループ",
-						"for"
-					]
+					"keywords": ["loop", "iteration", "repeat", "繰り返し", "ループ", "for"]
 				},
 				{
 					"title": "guard文",
@@ -328,28 +244,14 @@
 					"code": "// 通常の関数: 呼び出し時にラベルが必要\nfunc greet(name: String) -> String {\n    return \"こんにちは、\\(name)さん!\"\n}\nprint(greet(name: \"太郎\"))  // ラベル「name:」が必要\n\n// _ をつけた関数: ラベルを省略できる\nfunc hello(_ name: String) -> String {\n    return \"Hello, \\(name)!\"\n}\nprint(hello(\"花子\"))  // ラベルなしで呼べる\n\n// 複数引数での使い分け\nfunc add(_ a: Int, _ b: Int) -> Int {\n    return a + b\n}\nprint(add(3, 5))  // 両方ラベル省略\n\n// SwiftUIでよく見るパターン\n// .onChange(of: value) { _, newValue in ... }\n// Image(systemName: \"star\")  ← systemNameはラベルあり",
 					"output": "こんにちは、太郎さん!\nHello, 花子!\n8",
 					"executable": true,
-					"keywords": [
-						"underscore",
-						"label",
-						"argument",
-						"ラベル",
-						"省略",
-						"アンダースコア",
-						"_"
-					]
+					"keywords": ["underscore", "label", "argument", "ラベル", "省略", "アンダースコア", "_"]
 				},
 				{
 					"title": "値の無視（ワイルドカード）",
 					"code": "// 1. ループで値を使わない場合\nfor _ in 1...3 {\n    print(\"繰り返し\")  // 回数だけ必要で、値は不要\n}\n\n// 2. 戻り値を無視する場合\nfunc doSomething() -> Int {\n    print(\"処理実行\")\n    return 42\n}\nlet _ = doSomething()  // 戻り値を使わないことを明示\n\n// 3. タプルの一部を無視\nlet (name, _, grade) = (\"太郎\", 13, \"中学1年\")\nprint(\"\\(name)は\\(grade)生です\")  // 年齢(13)は無視",
 					"output": "繰り返し\n繰り返し\n繰り返し\n処理実行\n太郎は中学1年生です",
 					"executable": true,
-					"keywords": [
-						"wildcard",
-						"ignore",
-						"discard",
-						"無視",
-						"ワイルドカード"
-					]
+					"keywords": ["wildcard", "ignore", "discard", "無視", "ワイルドカード"]
 				}
 			]
 		},
@@ -363,45 +265,21 @@
 					"code": "// 配列は複数の値を順番に格納するコレクション型\n// 配列の作成（文字列の配列）\nvar fruits = [\"りんご\", \"バナナ\", \"オレンジ\"]  // 果物の名前を格納\nlet numbers = [1, 2, 3, 4, 5]  // 数値の配列\n\n// インデックスを使って要素にアクセス（0から始まる）\nprint(fruits[0])  // 最初の要素（りんご）を出力\nprint(numbers[0]) // 最初の要素（1）を出力\n\n// 要素の追加（appendメソッドを使う）\nfruits.append(\"ぶどう\")  // 配列の末尾にぶどうを追加\nprint(fruits)  // 追加後の配列全体を出力\n\n// 要素数の取得（countプロパティ）\nprint(fruits.count)  // fruits配列の要素数を出力\nprint(numbers.count) // numbers配列の要素数を出力",
 					"output": "りんご\n1\n[\"りんご\", \"バナナ\", \"オレンジ\", \"ぶどう\"]\n4\n5",
 					"executable": true,
-					"keywords": [
-						"array",
-						"list",
-						"append",
-						"count",
-						"index",
-						"リスト",
-						"配列"
-					]
+					"keywords": ["array", "list", "append", "count", "index", "リスト", "配列"]
 				},
 				{
 					"title": "辞書（Dictionary）",
 					"code": "// 辞書はキーと値のペアを格納するコレクション型\n// 辞書の作成（キーが科目名、値が点数の辞書）\nvar scores = [\"数学\": 85, \"英語\": 92, \"国語\": 78]\n\n// キーを使って値を取得（オプショナルバインディングを使用）\nif let mathScore = scores[\"数学\"] {  // 数学の点数を取得しようとする\n    print(\"数学の点数: \\(mathScore)\")  // 取得成功したら出力\n}\n\n// 値の更新または追加\nscores[\"理科\"] = 88  // 理科の点数を追加\nprint(scores)  // 更新後の辞書全体を出力",
 					"output": "数学の点数: 85\n[\"数学\": 85, \"英語\": 92, \"国語\": 78, \"理科\": 88]",
 					"executable": true,
-					"keywords": [
-						"dictionary",
-						"key",
-						"value",
-						"map",
-						"hash",
-						"連想配列",
-						"辞書"
-					]
+					"keywords": ["dictionary", "key", "value", "map", "hash", "連想配列", "辞書"]
 				},
 				{
 					"title": "データの並べ替え（sorted）",
 					"code": "// sorted()を使うと、配列の中身を特定のルールで並べ替えることができます\nlet numbers = [5, 2, 8, 1, 9]\n\n// 1. 基本的な並べ替え（小さい順）\nlet sortedNumbers = numbers.sorted()\nprint(\"小さい順: \\(sortedNumbers)\")\n\n// 2. 特殊な条件での並べ替え（大きい順など）\n// { $0 > $1 } は「前の要素($0)が後ろの要素($1)より大きいか」を比べるという意味です\nlet highToLow = numbers.sorted { $0 > $1 }\nprint(\"大きい順: \\(highToLow)\")\n\n// 3. 文字列の並べ替え（あいうえお順/アルファベット順）\nlet fruits = [\"みかん\", \"りんご\", \"ばなな\"]\nlet sortedFruits = fruits.sorted()\nprint(\"あいうえお順: \\(sortedFruits)\")",
 					"output": "小さい順: [1, 2, 5, 8, 9]\\n大きい順: [9, 8, 5, 2, 1]\\nあいうえお順: [\"ばなな\", \"みかん\", \"りんご\"]",
 					"executable": true,
-					"keywords": [
-						"sort",
-						"order",
-						"arrange",
-						"sequence",
-						"並べ替え",
-						"ソート",
-						"順番"
-					]
+					"keywords": ["sort", "order", "arrange", "sequence", "並べ替え", "ソート", "順番"]
 				}
 			]
 		},
@@ -491,15 +369,7 @@
 					"code": "// 1. \\.self の意味\n// \\.self は「その値自身」を指すKeyPathです\nlet numbers = [10, 20, 30]\n\n// List(numbers, id: \\.self) のように使う場合、\n// 「配列の各要素（数値）そのものを識別子(ID)として使う」という意味になります\n\n\n// 2. プロパティへのKeyPath\nstruct Student {\n    var name: String\n    var grade: Int\n}\n\nlet students = [\n    Student(name: \"太郎\", grade: 1),\n    Student(name: \"花子\", grade: 2),\n    Student(name: \"次郎\", grade: 1)\n]\n\n// map関数などでKeyPathを使うと、クロージャを省略して簡潔に書けます\n// 通常の書き方: students.map { student in student.name }\nlet names = students.map(\\.name)\nprint(\"名前一覧: \\(names)\")\n\n// filterなどでの活用（KeyPathそのものではなく、プロパティ参照として）\n// KeyPath自体は値への「パス」を表す型です\nlet namePath = \\Student.name\nlet taro = students[0]\nprint(\"KeyPathでアクセス: \\(taro[keyPath: namePath])\")",
 					"output": "names: [\"太郎\", \"花子\", \"次郎\"]\nKeyPathでアクセス: 太郎",
 					"executable": true,
-					"keywords": [
-						"keypath",
-						"self",
-						"syntax",
-						"reference",
-						"参照",
-						"キーパス",
-						"\\."
-					]
+					"keywords": ["keypath", "self", "syntax", "reference", "参照", "キーパス", "\\."]
 				}
 			]
 		},
@@ -573,14 +443,7 @@
 					"code": "// print関数はコンソールに値を出力する\nprint(\"Hello, World!\")  // 基本的な出力\nprint(\"名前: 太郎, 年齢: 13\")  // 複数の値をカンマ区切りで出力\n\n// terminatorパラメータで改行を制御（デフォルトは\\n）\nprint(\"こんにちは\", terminator: \"\")  // 改行なしで出力\n\n// 明示的に改行を指定（デフォルトと同じ）\nprint(\"こんにちは\", terminator: \"\\n\")\n\n// 複数の改行を出力\nprint(\"1行目\")  // 1行目出力\nprint(\"2行目\", terminator: \"\\n\\n\")  // 2行目出力後に2回改行\nprint(\"4行目\")  // 4行目出力",
 					"output": "Hello, World!\n名前: 太郎, 年齢: 13\nこんにちはこんにちは\n1行目\n2行目\n\n4行目",
 					"executable": true,
-					"keywords": [
-						"log",
-						"console",
-						"debug",
-						"output",
-						"出力",
-						"プリント"
-					]
+					"keywords": ["log", "console", "debug", "output", "出力", "プリント"]
 				},
 				{
 					"title": "Stringのメソッド",
@@ -605,16 +468,7 @@
 					"code": "import Foundation\n\n// UUID（Universally Unique Identifier）は、世界で唯一の識別子を生成します\n// ランダムなUUIDを生成\nlet id = UUID()\nprint(\"生成されたID: \\(id)\")\n// 出力例: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\n\n// 文字列として取得する場合\nlet idString = id.uuidString\nprint(\"文字列形式: \\(idString)\")\n\n// SwiftUIでの活用例（リスト表示の識別子としてよく使われます）\nstruct TodoItem: Identifiable {\n    let id = UUID()  // インスタンス作成時に自動でユニークなIDを付与\n    var title: String\n}\n\nlet item = TodoItem(title: \"牛乳を買う\")\nprint(\"Todo項目のID: \\(item.id)\")",
 					"output": "生成されたID: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\n文字列形式: E621E1F8-C36C-495A-93FC-0C247A3E6E5F\nTodo項目のID: E621E1F8-C36C-495A-93FC-0C247A3E6E5F",
 					"executable": true,
-					"keywords": [
-						"id",
-						"unique",
-						"identifier",
-						"random",
-						"uuid",
-						"識別子",
-						"一意",
-						"ランダム"
-					]
+					"keywords": ["id", "unique", "identifier", "random", "uuid", "識別子", "一意", "ランダム"]
 				}
 			]
 		},
@@ -628,14 +482,7 @@
 					"code": "import SwiftUI\n\n// @Stateは、ビュー内で変更可能な状態を管理するためのプロパティラッパーです\n// 値が変更されると、ビューが自動的に再描画されます\n\nstruct CounterView: View {\n    // @Stateを使って、カウント値を管理\n    // privateをつけるのが推奨（このビュー内でのみ使用するため）\n    @State private var count = 0\n    \n    var body: some View {\n        VStack {\n            Text(\"カウント: \\(count)\")\n            \n            Button(\"増やす\") {\n                count += 1  // 値を変更するとビューが更新される\n            }\n        }\n    }\n}\n\n// @Stateの特徴:\n// - ビューが所有する「単一の情報源」\n// - 値型（Int, String, Bool, 構造体など）に使用\n// - ビューが再生成されても値は保持される",
 					"output": "（ボタンを押すたびにカウントが1ずつ増える）",
 					"executable": false,
-					"keywords": [
-						"state",
-						"property wrapper",
-						"view",
-						"update",
-						"状態",
-						"再描画"
-					]
+					"keywords": ["state", "property wrapper", "view", "update", "状態", "再描画"]
 				},
 				{
 					"title": "@Binding（双方向データ渡し）",
@@ -657,13 +504,7 @@
 					"code": "import SwiftUI\n\n// TextFieldの例で@Stateと@Bindingの連携を理解する\n\n// 入力フォームの子コンポーネント\nstruct NameInputField: View {\n    @Binding var name: String  // 親から渡される参照\n    \n    var body: some View {\n        TextField(\"名前を入力\", text: $name)\n            .textFieldStyle(.roundedBorder)\n    }\n}\n\n// 親ビュー\nstruct FormView: View {\n    @State private var userName = \"\"  // この状態を親が「所有」\n    \n    var body: some View {\n        VStack(spacing: 20) {\n            // 子ビューに状態の「参照」を渡す\n            NameInputField(name: $userName)\n            \n            // 入力された値をリアルタイムで表示\n            Text(\"こんにちは、\\(userName.isEmpty ? \"ゲスト\" : userName)さん！\")\n        }\n        .padding()\n    }\n}\n\n// まとめ:\n// @State  → 「状態を持つ」側（親）で使う\n// @Binding → 「状態を借りる」側（子）で使う\n// $変数名 → Bindingとして渡すときに使う記法",
 					"output": "（TextFieldに入力すると、下のテキストがリアルタイムで更新される）",
 					"executable": false,
-					"keywords": [
-						"difference",
-						"usage",
-						"pattern",
-						"使い分け",
-						"違い"
-					]
+					"keywords": ["difference", "usage", "pattern", "使い分け", "違い"]
 				},
 				{
 					"title": "@FocusState（フォーカス管理）",
@@ -740,31 +581,14 @@
 					"code": "import SwiftUI\n\n// idパラメータは、各要素を一意に識別するための「キー」です\n// SwiftUIが「どの要素が変更されたか」を判定するために使われます\n\n// パターン1: 値型（String, Int）の場合はid: \\.self を使う\nstruct SimpleView: View {\n    let numbers = [1, 2, 3, 4, 5]\n    \n    var body: some View {\n        VStack {\n            ForEach(numbers, id: \\.self) { num in\n                Text(\"数字: \\(num)\")\n            }\n        }\n    }\n}\n\n// パターン2: 複雑な型（構造体）の場合は、Identifiable に準拠させる\nstruct Student: Identifiable {\n    let id = UUID()  // 各学生に一意なIDを付与\n    var name: String\n    var grade: Int\n}\n\nstruct StudentListView: View {\n    let students = [\n        Student(name: \"太郎\", grade: 1),\n        Student(name: \"花子\", grade: 1),\n        Student(name: \"次郎\", grade: 2)\n    ]\n    \n    var body: some View {\n        VStack {\n            // Identifiableに準拠しているので、idを省略できる\n            ForEach(students) { student in\n                HStack {\n                    Text(student.name)\n                    Text(\"\\(student.grade)年\")\n                        .foregroundStyle(.secondary)\n                }\n                .padding()\n            }\n        }\n    }\n}\n\n// パターン3: プロパティを明示的に指定\nstruct UserView: View {\n    let users = [\n        (id: 1, name: \"太郎\"),\n        (id: 2, name: \"花子\"),\n        (id: 3, name: \"次郎\")\n    ]\n    \n    var body: some View {\n        VStack {\n            ForEach(users, id: \\.id) { user in  // idプロパティをキーとして使用\n                Text(user.name)\n            }\n        }\n    }\n}",
 					"output": "（各パターンで配列の要素がリストアイテムとして表示される）",
 					"executable": false,
-					"keywords": [
-						"id",
-						"key",
-						"identifiable",
-						"uuid",
-						"識別子",
-						"一意",
-						"キー"
-					]
+					"keywords": ["id", "key", "identifiable", "uuid", "識別子", "一意", "キー"]
 				},
 				{
 					"title": "ForEachと@State の組み合わせ",
 					"code": "import SwiftUI\n\n// ForEachで動的にリストを更新する例\n\nstruct TodoListView: View {\n    // Todoアイテムの構造体\n    struct TodoItem: Identifiable {\n        let id = UUID()\n        var title: String\n        var isCompleted: Bool = false\n    }\n    \n    // @Stateで状態を管理\n    @State private var todos: [TodoItem] = [\n        TodoItem(title: \"牛乳を買う\"),\n        TodoItem(title: \"数学の宿題\"),\n        TodoItem(title: \"部屋を片付ける\")\n    ]\n    \n    var body: some View {\n        VStack {\n            Text(\"やることリスト\")\n                .font(.title)\n            \n            // ForEachでリストの各要素をビューとして生成\n            ForEach($todos) { $todo in  // $をつけてBindingとして受け取る\n                HStack {\n                    // チェックボックスの役割\n                    Image(systemName: todo.isCompleted ? \"checkmark.circle.fill\" : \"circle\")\n                        .foregroundStyle(todo.isCompleted ? .green : .gray)\n                        .onTapGesture {\n                            todo.isCompleted.toggle()  // タップで完了状態を切り替え\n                        }\n                    \n                    Text(todo.title)\n                        .strikethrough(todo.isCompleted)  // 完了時は取り消し線を表示\n                    \n                    Spacer()  // スペースを挿入\n                }\n                .padding()\n            }\n            \n            Spacer()\n        }\n    }\n}\n\n// ポイント:\n// - $todosでBindingリストを取得\n// - ForEachの中で$todoでBinding値を受け取る\n// - Bindingを使うことで、子ビューでの変更が親の@Stateに反映される",
 					"output": "（チェックマークをタップすると、アイテムが完了状態に切り替わる）",
 					"executable": false,
-					"keywords": [
-						"dynamic",
-						"update",
-						"binding",
-						"state",
-						"todo",
-						"list",
-						"動的",
-						"更新"
-					]
+					"keywords": ["dynamic", "update", "binding", "state", "todo", "list", "動的", "更新"]
 				},
 				{
 					"title": "ForEachでList・ScrollViewと組み合わせ",
@@ -808,89 +632,42 @@
 					"code": "import SwiftUI\n\n// Identifiableはプロトコルで、型に一意の識別子を持たせます\n// 次の2つが必要:\n// 1. Identifiable プロトコルに準拠\n// 2. id という名前のプロパティを定義\n\nstruct Student: Identifiable {\n    // id プロパティは、各インスタンスを一意に識別するために使われます\n    let id = UUID()  // UUIDは「世界で唯一の識別子」を生成\n    \n    // その他のプロパティ\n    var name: String\n    var grade: Int\n}\n\n// インスタンスを作成\nlet student1 = Student(name: \"太郎\", grade: 1)\nlet student2 = Student(name: \"花子\", grade: 1)\n\nprint(\"学生1のID: \\(student1.id)\")\nprint(\"学生2のID: \\(student2.id)\")\nprint(\"IDが異なる: \\(student1.id != student2.id)\")  // true\n\n// Identifiableに準拠するメリット:\n// - ForEachでid指定を省略できる\n// - List や TabView でも直接使える\n// - 各要素の変更を正確に追跡できる",
 					"output": "学生1のID: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX\n学生2のID: YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY\nIDが異なる: true",
 					"executable": true,
-					"keywords": [
-						"identifiable",
-						"protocol",
-						"id",
-						"unique",
-						"識別",
-						"プロトコル",
-						"一意"
-					]
+					"keywords": ["identifiable", "protocol", "id", "unique", "識別", "プロトコル", "一意"]
 				},
 				{
 					"title": "ForEachでIdentifiableを使う",
 					"code": "import SwiftUI\n\nstruct Book: Identifiable {\n    let id = UUID()  // Identifiableに必須の id プロパティ\n    var title: String\n    var author: String\n}\n\nstruct BookListView: View {\n    let books = [\n        Book(title: \"吾輩は猫である\", author: \"夏目漱石\"),\n        Book(title: \"羅生門\", author: \"芥川龍之介\"),\n        Book(title: \"こころ\", author: \"夏目漱石\")\n    ]\n    \n    var body: some View {\n        VStack(spacing: 10) {\n            Text(\"本の一覧\")\n                .font(.title2)\n            \n            // ✅ Identifiableに準拠しているので、id:を省略できる\n            ForEach(books) { book in\n                VStack(alignment: .leading, spacing: 4) {\n                    Text(book.title)\n                        .font(.headline)\n                    Text(\"著者: \\(book.author)\")\n                        .font(.caption)\n                        .foregroundStyle(.secondary)\n                }\n                .frame(maxWidth: .infinity, alignment: .leading)\n                .padding()\n                .background(Color(.systemGray6))\n                .cornerRadius(8)\n            }\n        }\n        .padding()\n    }\n}\n\n// 比較:\n// ❌ Identifiableに準拠していない場合\n// ForEach(books, id: \\.id) { book in ... }  // idを明示的に指定\n\n// ✅ Identifiableに準拠した場合\n// ForEach(books) { book in ... }  // idを省略できて簡潔",
 					"output": "（本のタイトルと著者がカード形式で表示される）",
 					"executable": false,
-					"keywords": [
-						"foreach",
-						"list",
-						"efficient",
-						"省略",
-						"簡潔",
-						"フォーエッチ"
-					]
+					"keywords": ["foreach", "list", "efficient", "省略", "簡潔", "フォーエッチ"]
 				},
 				{
 					"title": "数値IDでIdentifiableを実装",
 					"code": "import SwiftUI\n\n// id プロパティの型は UUID でなく、Int など他の型でもOK\n// 必要なのは「一意である（重複しない）」ことだけです\n\nstruct User: Identifiable {\n    let id: Int  // 整数のIDを使う（例: データベースからのID）\n    var name: String\n    var email: String\n}\n\nstruct UserListView: View {\n    // データベースから取得したと想定\n    let users = [\n        User(id: 1, name: \"太郎\", email: \"taro@example.com\"),\n        User(id: 2, name: \"花子\", email: \"hanako@example.com\"),\n        User(id: 3, name: \"次郎\", email: \"jiro@example.com\")\n    ]\n    \n    var body: some View {\n        VStack {\n            Text(\"ユーザー一覧\")\n                .font(.title)\n            \n            List {\n                ForEach(users) { user in\n                    HStack {\n                        VStack(alignment: .leading, spacing: 4) {\n                            Text(user.name)\n                                .font(.headline)\n                            Text(user.email)\n                                .font(.caption)\n                                .foregroundStyle(.secondary)\n                        }\n                        Spacer()\n                        // IDをバッジで表示\n                        Text(\"#\\(user.id)\")\n                            .font(.caption2)\n                            .padding(.horizontal, 8)\n                            .padding(.vertical, 4)\n                            .background(.blue)\n                            .foregroundStyle(.white)\n                            .cornerRadius(4)\n                    }\n                }\n            }\n        }\n    }\n}\n\n// id の型は:\n// - UUID（ランダムで絶対重複しない）\n// - Int（データベースやサーバーの ID）\n// - String（メールアドレスなど一意な文字列）\n// など、重複しさえすれば何でもOK",
 					"output": "（ユーザー情報がID付きで一覧表示される）",
 					"executable": false,
-					"keywords": [
-						"id",
-						"int",
-						"type",
-						"database",
-						"ユーザー",
-						"データベース"
-					]
+					"keywords": ["id", "int", "type", "database", "ユーザー", "データベース"]
 				},
 				{
 					"title": "@Stateと組み合わせた動的リスト",
 					"code": "import SwiftUI\n\nstruct Task: Identifiable {\n    let id = UUID()  // 追加・削除時も ID は変わらない\n    var title: String\n    var isCompleted: Bool = false\n}\n\nstruct TodoView: View {\n    @State private var tasks: [Task] = [\n        Task(title: \"数学の宿題\"),\n        Task(title: \"英語の勉強\"),\n        Task(title: \"部屋を片付ける\")\n    ]\n    \n    @State private var newTaskTitle = \"\"\n    \n    var body: some View {\n        VStack {\n            // 新規タスク入力\n            HStack {\n                TextField(\"新しいタスク\", text: $newTaskTitle)\n                    .textFieldStyle(.roundedBorder)\n                \n                Button(\"追加\") {\n                    if !newTaskTitle.isEmpty {\n                        tasks.append(Task(title: newTaskTitle))\n                        newTaskTitle = \"\"  // 入力をクリア\n                    }\n                }\n                .buttonStyle(.borderedProminent)\n            }\n            .padding()\n            \n            // タスク一覧\n            List {\n                ForEach($tasks) { $task in\n                    HStack {\n                        // チェックボックス\n                        Image(systemName: task.isCompleted ? \"checkmark.circle.fill\" : \"circle\")\n                            .foregroundStyle(task.isCompleted ? .green : .gray)\n                            .onTapGesture {\n                                task.isCompleted.toggle()\n                            }\n                        \n                        // タスクテキスト（完了時は取り消し線）\n                        Text(task.title)\n                            .strikethrough(task.isCompleted)\n                        \n                        Spacer()\n                    }\n                }\n                .onDelete { indexSet in\n                    tasks.remove(atOffsets: indexSet)  // 削除機能\n                }\n            }\n        }\n    }\n}\n\n// ポイント:\n// - UUID() で各タスクが一意な ID を持つ\n// - 追加・削除してもIDは変わらない\n// - List の スワイプ削除機能が正確に動作する",
 					"output": "（タスク追加・完了・削除ができるTODOリスト）",
 					"executable": false,
-					"keywords": [
-						"state",
-						"dynamic",
-						"list",
-						"add",
-						"delete",
-						"動的",
-						"追加",
-						"削除"
-					]
+					"keywords": ["state", "dynamic", "list", "add", "delete", "動的", "追加", "削除"]
 				},
 				{
 					"title": "既存の型を Identifiable にする拡張",
 					"code": "import SwiftUI\n\n// 既にあるシンプルな構造体\nstruct Course {\n    var name: String\n    var credits: Int\n}\n\n// extension で Identifiable に準拠させる\n// （元の定義は変えずに機能を追加）\nextension Course: Identifiable {\n    var id: String {\n        // コースの名前を ID として使う\n        // 複数の同名コースがない場合に有効\n        name\n    }\n}\n\nstruct CourseListView: View {\n    let courses = [\n        Course(name: \"数学\", credits: 4),\n        Course(name: \"英語\", credits: 3),\n        Course(name: \"理科\", credits: 4)\n    ]\n    \n    var body: some View {\n        VStack {\n            Text(\"開講科目\")\n                .font(.title)\n            \n            ForEach(courses) { course in\n                HStack {\n                    Text(course.name)\n                        .font(.headline)\n                    Spacer()\n                    Text(\"\\(course.credits)単位\")\n                        .foregroundStyle(.secondary)\n                }\n                .padding()\n                .background(Color(.systemGray6))\n            }\n        }\n        .padding()\n    }\n}\n\n// extension で Identifiable を追加するメリット:\n// - 元の構造体の定義を変えない\n// - 必要に応じて複数の場所で使える\n// - 既存のコードに影響を与えない",
 					"output": "（科目一覧が単位数とともに表示される）",
 					"executable": false,
-					"keywords": [
-						"extension",
-						"protocol",
-						"conform",
-						"拡張",
-						"準拠",
-						"エクステンション"
-					]
+					"keywords": ["extension", "protocol", "conform", "拡張", "準拠", "エクステンション"]
 				},
 				{
 					"title": "Identifiable vs id: \\.self の使い分け",
 					"code": "import SwiftUI\n\n// === 場面1: シンプルな値型（String, Int） ===\n// → id: \\.self を使う方がシンプル\n\nstruct SimpleListView: View {\n    let fruits = [\"りんご\", \"バナナ\", \"オレンジ\"]\n    \n    var body: some View {\n        VStack {\n            ForEach(fruits, id: \\.self) { fruit in\n                Text(fruit)\n            }\n        }\n    }\n}\n\n// === 場面2: 複雑な型（構造体）の場合 ===\n// → Identifiable に準拠させる方が安全で読みやすい\n\nstruct Student: Identifiable {\n    let id = UUID()\n    var name: String\n    var age: Int\n    var grade: String\n}\n\nstruct StudentListView: View {\n    let students = [\n        Student(name: \"太郎\", age: 13, grade: \"中学1年\"),\n        Student(name: \"花子\", age: 14, grade: \"中学2年\")\n    ]\n    \n    var body: some View {\n        VStack {\n            // Identifiable に準拠しているので id: を省略\n            ForEach(students) { student in\n                Text(\"\\(student.name) (\\(student.age)歳)\")\n            }\n        }\n    }\n}\n\n// === 場面3: 一時的なインデックス取得 ===\n// → indexed() ヘルパーを使う\n\nstruct IndexedListView: View {\n    let items = [\"第1項\", \"第2項\", \"第3項\"]\n    \n    var body: some View {\n        VStack {\n            ForEach(Array(items.enumerated()), id: \\.offset) { index, item in\n                HStack {\n                    Text(\"\\(index + 1): \")\n                        .foregroundStyle(.secondary)\n                    Text(item)\n                }\n            }\n        }\n    }\n}\n\n// 使い分けの目安:\n// - 値型（String, Int）: id: \\.self\n// - 参照型或いは複雑な型: Identifiable に準拠\n// - リスト要素の削除が必要: UUID を使う\n// - スタティックなID: 整数或いは文字列を使う",
 					"output": "（各パターンがそれぞれ正しく表示される）",
 					"executable": false,
-					"keywords": [
-						"self",
-						"difference",
-						"choice",
-						"string",
-						"int",
-						"使い分け",
-						"判断",
-						"比較"
-					]
+					"keywords": ["self", "difference", "choice", "string", "int", "使い分け", "判断", "比較"]
 				}
 			],
 			"afterHtml": "<div class=\"mt-8\"><h3 class=\"mb-4 text-xl font-bold\">Identifiable が必須な場面</h3><div class=\"overflow-x-auto\"><table class=\"table w-full rounded-box table-zebra bg-base-200\"><thead><tr class=\"bg-base-300\"><th class=\"text-base text-base-content\">場面</th><th class=\"text-base text-base-content\">説明</th><th class=\"text-base text-base-content\">理由</th></tr></thead><tbody><tr><td class=\"font-bold\">List 内のForEach</td><td><code class=\"rounded bg-base-300 px-1\">List { ForEach(items) {...} }</code></td><td>リスト要素の削除・移動を正確に追跡</td></tr><tr><td class=\"font-bold\">TabView 内</td><td>タブの各ビュー要素</td><td>タブの状態管理が正確になる</td></tr><tr><td class=\"font-bold\">@State での配列管理</td><td>追加・削除・編集がある場合</td><td>UUID で一意性を確保</td></tr><tr><td class=\"font-bold\">アニメーション</td><td>要素の削除・追加時</td><td>ID が変わらないことで スムーズなアニメーション</td></tr></tbody></table></div></div>"
@@ -920,26 +697,14 @@
 					"code": "// プロパティに初期値を設定しておくと、initを省略できる\n\nstruct Book {\n    var title: String\n    var author: String\n    var publishedYear: Int = 2024  // デフォルト値を設定\n    var isAvailable: Bool = true   // デフォルト値を設定\n    \n    // initを明示的に定義しない場合、Swiftが自動で生成する\n    // （デフォルト初期化子：memberwise initializer）\n}\n\n// デフォルト初期化子を使ってインスタンスを作成\nlet book1 = Book(title: \"Swift入門\", author: \"Aさん\")\n// publishedYearはデフォルト値2024、isAvailableはtrueが使われる\n\nlet book2 = Book(title: \"データベース設計\", author: \"Bさん\", publishedYear: 2020)\n// publishedYearを明示的に指定、isAvailableはデフォルト値true\n\nlet book3 = Book(title: \"アルゴリズム\", author: \"Cさん\", publishedYear: 2019, isAvailable: false)\n// すべてのプロパティを指定\n\nprint(\"\\(book1.title): \\(book1.publishedYear)年発行, 貸出可: \\(book1.isAvailable)\")\nprint(\"\\(book2.title): \\(book2.publishedYear)年発行, 貸出可: \\(book2.isAvailable)\")\nprint(\"\\(book3.title): \\(book3.publishedYear)年発行, 貸出可: \\(book3.isAvailable)\")",
 					"output": "Swift入門: 2024年発行, 貸出可: true\nデータベース設計: 2020年発行, 貸出可: true\nアルゴリズム: 2019年発行, 貸出可: false",
 					"executable": true,
-					"keywords": [
-						"default",
-						"value",
-						"デフォルト",
-						"初期値",
-						"省略"
-					]
+					"keywords": ["default", "value", "デフォルト", "初期値", "省略"]
 				},
 				{
 					"title": "複数のinitを定義（オーバーロード）",
 					"code": "// 複数の異なる形式のinitを定義できる\n// （異なるパラメータで複数の初期化方法を提供）\n\nstruct Point {\n    var x: Double\n    var y: Double\n    \n    // init1: x と y を指定する方法\n    init(x: Double, y: Double) {\n        self.x = x\n        self.y = y\n    }\n    \n    // init2: 1つの値で x と y の両方を設定する方法\n    init(value: Double) {\n        self.x = value\n        self.y = value\n    }\n    \n    // init3: 何も指定しない場合は原点(0, 0)に初期化\n    init() {\n        self.x = 0\n        self.y = 0\n    }\n}\n\n// 異なる初期化方法を使用\nlet point1 = Point(x: 3, y: 4)  // init1を使用\nlet point2 = Point(value: 5)     // init2を使用\nlet point3 = Point()             // init3を使用\n\nprint(\"Point1: (\\(point1.x), \\(point1.y))\")\nprint(\"Point2: (\\(point2.x), \\(point2.y))\")\nprint(\"Point3: (\\(point3.x), \\(point3.y))\")",
 					"output": "Point1: (3.0, 4.0)\nPoint2: (5.0, 5.0)\nPoint3: (0.0, 0.0)",
 					"executable": true,
-					"keywords": [
-						"overload",
-						"multiple",
-						"複数",
-						"オーバーロード",
-						"初期化方法"
-					]
+					"keywords": ["overload", "multiple", "複数", "オーバーロード", "初期化方法"]
 				},
 				{
 					"title": "クラスでのinit（継承との関係）",
@@ -999,57 +764,28 @@
 					"code": "// selfはインスタンスが自分自身を指す\n// 多くの場合は省略できますが、明示的に書くこともできます\n\nstruct Student {\n    var name: String\n    var age: Int\n    \n    // メソッド内でプロパティにアクセス\n    func introduce() {\n        // 省略形: self を使わない\n        print(\"私の名前は\\(name)です\")  // nameはこのインスタンスのプロパティ\n        \n        // 明示形: self を使う（同じ結果）\n        print(\"私の名前は\\(self.name)です\")\n    }\n    \n    // 別のインスタンスとの比較\n    func isSameAge(as other: Student) -> Bool {\n        // selfを使ってこのインスタンスと比較対象を区別\n        return self.age == other.age\n    }\n}\n\nlet student1 = Student(name: \"太郎\", age: 13)\nlet student2 = Student(name: \"花子\", age: 13)\n\nstudent1.introduce()\nprint(\"同じ年齢: \\(student1.isSameAge(as: student2))\")",
 					"output": "私の名前は太郎です\n私の名前は太郎です\n同じ年齢: true",
 					"executable": true,
-					"keywords": [
-						"self",
-						"reference",
-						"instance",
-						"参照",
-						"インスタンス",
-						"自分自身"
-					]
+					"keywords": ["self", "reference", "instance", "参照", "インスタンス", "自分自身"]
 				},
 				{
 					"title": "initでのself の重要性",
 					"code": "// ===== 【重要】initで self を書く理由 =====\n// パラメータとプロパティの名前が同じときは、\n// 「self.」を書かないと、データが保存されません！\n// \n// 例える と：\n// 【プロパティ】= データを保存する箱\n// 【パラメータ】= 関数が受け取る値\n// selfなしだと、「受け取った値を、受け取った値に入れる」という操作になります\n\n// ✅ 正しい例\nstruct Student {\n    var name: String      // 【プロパティ】学生の名前を保存する場所\n    var grade: Int        // 学年を保存する場所\n    \n    init(name: String, grade: Int) {     // name, grade は受け取った値\n        self.name = name                 // ✅ 箱に入れる！\n        self.grade = grade               // ✅ 箱に入れる！\n    }\n}\n\nlet student = Student(name: \"太郎\", grade: 1)\nprint(\"\\(student.name)は\\(student.grade)年生\")  // 太郎は1年生\n\n// ❌ 間違った例\nstruct BadStudent {\n    var name: String\n    var grade: Int\n    \n    init(name: String, grade: Int) {\n        name = name        // ❌ 受け取った値の中身 = 受け取った値の中身（意味なし）\n        grade = grade      // ❌ 箱が埋まらないままになる！\n    }\n}\n\nlet badStudent = BadStudent(name: \"太郎\", grade: 1)\nprint(\"\\(badStudent.name)は\\(badStudent.grade)年生\")  // [空]は[0]年生\n\n// === わかりやすい図解 ===\n// \n// ✅ self.name = name の場合:\n//\n//   init(name: \"太郎\") を呼ぶと...\n//\n//     ┌──────────┐     ┌──────────┐\n//     │ 【箱】    │ ←   │ 受け取った値 │\n//     │ self.name│     │ \"太郎\"   │\n//     └──────────┘     └──────────┘\n//       成功 ✅\n//\n//\n// ❌ name = name の場合:\n//\n//   init(name: \"太郎\") を呼ぶと...\n//\n//     ┌──────────┐\n//     │【 箱 】   │  ← 開いたままで空\n//     │ self.name│\n//     └──────────┘\n//\n//     │ 受け取った値 │\n//     │ \"太郎\"      │  ← この値は使われず\n//      \n//       失敗 ❌",
 					"output": "太郎は1年生\n[空]は[0]年生",
 					"executable": true,
-					"keywords": [
-						"init",
-						"parameter",
-						"property",
-						"プロパティ",
-						"パラメータ",
-						"区別",
-						"self"
-					]
+					"keywords": ["init", "parameter", "property", "プロパティ", "パラメータ", "区別", "self"]
 				},
 				{
 					"title": "selfをパラメータとして渡す",
 					"code": "// メソッドでself全体を別の関数に渡す場合\n\nstruct Rectangle {\n    var width: Double\n    var height: Double\n    \n    // このインスタンス自体を別の関数に渡す\n    func printSize() {\n        // self全体を関数に渡す\n        describeShape(self)\n    }\n}\n\n// 外部の関数（型の外側で定義）\nfunc describeShape(_ shape: Rectangle) {\n    print(\"矩形: 幅 \\(shape.width), 高さ \\(shape.height)\")\n    print(\"面積: \\(shape.width * shape.height)\")\n}\n\nlet rect = Rectangle(width: 10, height: 20)\nrect.printSize()\n\n// describeShape(rect) と同じ結果\nrect.printSize()  // 内部でself をパラメータとして渡している",
 					"output": "矩形: 幅 10.0, 高さ 20.0\n面積: 200.0\n矩形: 幅 10.0, 高さ 20.0\n面積: 200.0",
 					"executable": true,
-					"keywords": [
-						"parameter",
-						"pass",
-						"function",
-						"渡す",
-						"関数",
-						"自身"
-					]
+					"keywords": ["parameter", "pass", "function", "渡す", "関数", "自身"]
 				},
 				{
 					"title": "mutatingメソッドでのself",
 					"code": "// 値型（struct）は中身を変更するメソッドを「mutating」にする必要がある\n// mutatingメソッド内では、self全体を置き換えることもできる\n\nstruct Counter {\n    var count = 0\n    \n    // mutatingをつけることで、プロパティを変更できるメソッドにする\n    mutating func increment() {\n        self.count += 1  // または単に count += 1\n    }\n    \n    // 値を指定してカウンターをリセット\n    mutating func reset(to value: Int) {\n        self.count = value\n    }\n    \n    // self全体を新しい値に置き換える\n    mutating func replicate() {\n        // このカウンターを2倍の値で初期化し直す\n        self = Counter(count: count * 2)\n    }\n}\n\nvar counter = Counter(count: 5)\ncounter.increment()\nprint(\"カウント: \\(counter.count)\")  // 6\n\ncounter.reset(to: 10)\nprint(\"リセット: \\(counter.count)\")   // 10\n\ncounter.replicate()\nprint(\"複製: \\(counter.count)\")        // 20（10 * 2）",
 					"output": "カウント: 6\nリセット: 10\n複製: 20",
 					"executable": true,
-					"keywords": [
-						"mutating",
-						"struct",
-						"modify",
-						"置き換える",
-						"値型",
-						"変更"
-					]
+					"keywords": ["mutating", "struct", "modify", "置き換える", "値型", "変更"]
 				},
 				{
 					"title": "クロージャでのself",
@@ -1125,15 +861,7 @@
 					"code": "import Foundation\nimport SwiftData\n\n@Model\nfinal class ToDoTask {\n    var title: String\n    var isCompleted: Bool = false\n    \n    init(title: String, isCompleted: Bool = false) {\n        self.title = title\n        self.isCompleted = isCompleted\n    }\n}\n\n// save() は変更をデータベースに記録する\n@MainActor\nfunc updateTask(_ task: ToDoTask, newTitle: String, modelContext: ModelContext) {\n    // 1. プロパティを変更\n    task.title = newTitle\n    task.isCompleted = true\n    \n    // 2. save() で変更をデータベースに反映\n    // SwiftDataは自動追跡なので、save() だけで十分\n    // insert() や update() の呼び出しは不要\n    try? modelContext.save()\n    \n    print(\"タスクを更新しました: \\(newTitle)\")\n}\n\n// try-catch でエラー処理\n@MainActor\nfunc saveWithErrorHandling(task: ToDoTask, modelContext: ModelContext) {\n    do {\n        // save() が失敗する可能性がある場合\n        try modelContext.save()\n        print(\"保存成功\")\n    } catch {\n        // エラーが発生した場合の処理\n        print(\"保存失敗: \\(error.localizedDescription)\")\n    }\n}",
 					"output": "タスクを更新しました: 宿題を終わらせる\n保存成功",
 					"executable": false,
-					"keywords": [
-						"save",
-						"persist",
-						"database",
-						"commit",
-						"保存",
-						"永続化",
-						"変更反映"
-					]
+					"keywords": ["save", "persist", "database", "commit", "保存", "永続化", "変更反映"]
 				},
 				{
 					"title": "modelContext.fetch（データ取得）",

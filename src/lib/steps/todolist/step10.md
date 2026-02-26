@@ -1,4 +1,7 @@
-# ステップ10: タスク操作のサービスを作る(ToDoTaskService.swift)
+---
+title: ステップ10: タスク操作のサービスを作る(ToDoTaskService.swift)
+summary: タスクの追加・更新・削除・完了切り替えをまとめます。
+---
 
 ## 1. クラスの基本構造
 

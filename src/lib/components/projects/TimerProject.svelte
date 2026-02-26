@@ -1,7 +1,7 @@
 <script>
 	import { resolve } from '$app/paths';
 	import TimerDemo from '$lib/components/TimerDemo.svelte';
-	import { timerSteps } from '$lib/data/projects/timer-steps';
+	import { timerSteps } from '$lib/data/projects/index';
 	import ProjectSteps from './ProjectSteps.svelte';
 	import ProjectCodeSamples from './ProjectCodeSamples.svelte';
 

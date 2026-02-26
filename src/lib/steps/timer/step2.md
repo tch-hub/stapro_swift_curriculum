@@ -1,3 +1,7 @@
+---
+title: ステップ2: 基本的なUIの構築(ContentView.swift)
+summary: ContentViewでVStack/HStackを使ったレイアウトを作成し、TimerStateと@Stateによる状態管理を導入します。
+---
 ## swiftUIの基本構造
 
 ```
@@ -184,4 +188,6 @@ ContentViewの `body` の中身を以下のように変更します。
         }
         .padding()
     }
+
+
 ```

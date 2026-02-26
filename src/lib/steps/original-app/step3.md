@@ -1,4 +1,7 @@
-# ステップ3: メイン画面の骨格を作る
+---
+title: ステップ3: メイン画面の骨格を作る
+summary: ダミーデータを使って画面のレイアウト・画面遷移の構造を確認する
+---
 
 画面の「枠」だけを先に作って、アプリ全体の構造を確認します。  
 この段階では見た目はシンプルでOK。「どんな画面があるか」を形にすることが目標です。
@@ -9,13 +12,13 @@
 
 よく使う画面パターンと、それに対応するSwiftUIの書き方を確認しましょう。
 
-| 画面パターン | 使うコンポーネント | 検索キーワード |
-|------------|-----------------|--------------|
-| リスト表示 | `List` / `ForEach` | 「List」「ForEach」 |
-| タブ切り替え | `TabView` | 「TabView」 |
-| 画面遷移（戻る/進む） | `NavigationStack` | 「NavigationStack」「NavigationLink」 |
-| シート（下から出てくる） | `.sheet()` | 「sheet」 |
-| フォーム入力 | `Form` / `TextField` | 「TextField」「Form」 |
+| 画面パターン             | 使うコンポーネント   | 検索キーワード                        |
+| ------------------------ | -------------------- | ------------------------------------- |
+| リスト表示               | `List` / `ForEach`   | 「List」「ForEach」                   |
+| タブ切り替え             | `TabView`            | 「TabView」                           |
+| 画面遷移（戻る/進む）    | `NavigationStack`    | 「NavigationStack」「NavigationLink」 |
+| シート（下から出てくる） | `.sheet()`           | 「sheet」                             |
+| フォーム入力             | `Form` / `TextField` | 「TextField」「Form」                 |
 
 > 💡 ヒント: ToDoリストアプリでは `NavigationStack` と `navigationDestination` で画面遷移を実装しました。  
 > 検索バーで「NavigationStack」と検索して確認しましょう。
@@ -85,18 +88,19 @@ NavigationLink("詳細へ") {
 
 ## 🔍 詰まったときの検索キーワード
 
-| 困ったこと | 検索キーワード |
-|-----------|--------------|
-| リストを表示したい | 「List」「ForEach」 |
-| 画面を切り替えたい | 「NavigationStack」「NavigationLink」 |
-| タブで切り替えたい | 「TabView」 |
-| 下から画面を出したい | 「sheet」 |
-| ボタンを押して別画面へ | 「navigationPath」「append」 |
+| 困ったこと             | 検索キーワード                        |
+| ---------------------- | ------------------------------------- |
+| リストを表示したい     | 「List」「ForEach」                   |
+| 画面を切り替えたい     | 「NavigationStack」「NavigationLink」 |
+| タブで切り替えたい     | 「TabView」                           |
+| 下から画面を出したい   | 「sheet」                             |
+| ボタンを押して別画面へ | 「navigationPath」「append」          |
 
 ---
 
 ## 💬 先生への確認ポイント
 
 この段階で先生に見せて確認してもらいましょう：
+
 - 画面の数と遷移の流れは適切か？
 - 作ろうとしている機能は11回で実現できそうか？

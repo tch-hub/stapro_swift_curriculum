@@ -1,9 +1,11 @@
-# ステップ13: ホーム画面の枠を作る(HomeView.swift)
+---
+title: ステップ13: ホーム画面の枠を作る(HomeView.swift)
+summary: ホーム画面の土台を作成します。
+---
 
 ### ステップ13終了時の完成イメージ
 
 <img src="/images/todolist/Homeview.png" alt="HomeViewの完成イメージ" class="mobile-screenshot-top" />
-
 
 ## 1. 画面の土台作成
 
@@ -39,7 +41,6 @@ struct HomeView: View {
 
   ※ このコードは、実際のアプリ本体には必須ではありませんが、プレビュー上で動作や状態変化を確認するためのテスト用ラッパーとして書かれています。  
   ※ 実行せずに確認できるようにしています。
-
 
 ---
 

@@ -1,4 +1,7 @@
-# ステップ1: プロジェクトの作成とセットアップ(ToDoListApp.swift)
+---
+title: ステップ1: プロジェクトの作成とセットアップ(ToDoListApp.swift)
+summary: Xcodeでプロジェクトを立ち上げて初期ファイルを確認します。
+---
 
 ## 1. Xcodeで新しいプロジェクトを作る
 
@@ -53,8 +56,9 @@ ToDoList/
 **ファイルの作り方:**
 
 どちらかの方法で作れます。
-  - Xcodeのメニューバーから「File」→「New」→「File...」を選ぶ
-  - プロジェクトナビゲーターの空白を右クリックして「New Empty File」を選ぶ
+
+- Xcodeのメニューバーから「File」→「New」→「File...」を選ぶ
+- プロジェクトナビゲーターの空白を右クリックして「New Empty File」を選ぶ
 
 ## 3. ToDoListApp.swift を書く
 
@@ -122,8 +126,8 @@ struct ToDoListApp: App {
 ```
 
 ### Views/ContentView.swift
-<img src="/images/todolist/step1.png" alt="ToDoListItemの完成イメージ" class="mobile-screenshot" />
 
+<img src="/images/todolist/step1.png" alt="ToDoListItemの完成イメージ" class="mobile-screenshot" />
 
 ```swift
 import SwiftUI
@@ -139,4 +143,5 @@ struct ContentView: View {
     ContentView()
 }
 ```
+
 画面左上のピンマークを押してPreviewを固定表示しておきましょう！

@@ -9,41 +9,19 @@
 					"title": "Text - テキストの表示",
 					"description": "アプリ内でテキストを表示するための最も基本的なコンポーネントです。",
 					"code": "// 基本的なテキスト\nText(\"Hello, World!\")\n\n// Markdown記法のサポート\nText(\"**太字** と *斜体* と [リンク](https://apple.com)\")\n\n// 日付の表示スタイル\nText(Date(), style: .date)     // 2024年1月1日\nText(Date(), style: .time)     // 12:00\nText(Date(), style: .relative) // 2時間前\nText(Date(), style: .timer)    // 0:00 (カウントアップ)\n\n// 数値のフォーマット\nText(1000, format: .currency(code: \"JPY\")) // ¥1,000",
-					"keywords": [
-						"label",
-						"string",
-						"font",
-						"display",
-						"文字",
-						"表示"
-					]
+					"keywords": ["label", "string", "font", "display", "文字", "表示"]
 				},
 				{
 					"title": "Image - 画像の表示",
 					"description": "画像を表示するためのコンポーネントです。SF Symbolsやアセット画像の表示が可能です。",
 					"code": "// システムアイコン (SF Symbols)\nImage(systemName: \"star.fill\")\n    .foregroundStyle(.yellow)\n\n// アセット画像\nImage(\"ProfilePicture\")\n    .resizable()        // サイズ変更を許可\n    .aspectRatio(contentMode: .fit) // アスペクト比を維持\n    .frame(width: 100)\n\n// 非同期画像の読み込み\nAsyncImage(url: URL(string: \"https://example.com/icon.png\")) {\n    image in image.resizable()\n} placeholder: {\n    ProgressView()\n}",
-					"keywords": [
-						"picture",
-						"photo",
-						"icon",
-						"symbol",
-						"sf symbols",
-						"画像",
-						"アイコン"
-					]
+					"keywords": ["picture", "photo", "icon", "symbol", "sf symbols", "画像", "アイコン"]
 				},
 				{
 					"title": "Button - ボタン",
 					"description": "タップ操作を受け付け、アクションを実行するボタンコンポーネントです。",
 					"code": "// 基本的なボタン\nButton(\"タップして実行\") {\n    print(\"実行されました\")\n}\n\n// テキスト以外のラベル\nButton(action: {\n    // アクション\n}) {\n    HStack {\n        Image(systemName: \"trash\")\n        Text(\"削除\")\n    }\n}\n\n// ロール指定（破壊的なアクションなど）\nButton(\"削除\", role: .destructive) {\n    // 削除処理\n}",
-					"keywords": [
-						"action",
-						"tap",
-						"click",
-						"interaction",
-						"ボタン",
-						"タップ"
-					]
+					"keywords": ["action", "tap", "click", "interaction", "ボタン", "タップ"]
 				}
 			]
 		},
@@ -90,16 +68,7 @@
 				{
 					"title": "Spacer & Divider - 余白と区切り",
 					"code": "// Spacer: 利用可能な空間を埋める\nHStack {\n    Text(\"左端\")\n    Spacer() // ここが広がる\n    Text(\"右端\")\n}\n\n// Divider: 区切り線を表示\nVStack {\n    Text(\"上段\")\n    Divider()\n    Text(\"下段\")\n}",
-					"keywords": [
-						"space",
-						"line",
-						"separator",
-						"gap",
-						"fill",
-						"余白",
-						"区切り",
-						"スペース"
-					]
+					"keywords": ["space", "line", "separator", "gap", "fill", "余白", "区切り", "スペース"]
 				}
 			]
 		},
@@ -125,15 +94,7 @@
 				{
 					"title": "TextField - テキスト入力",
 					"code": "@State var name = \"\"\n\n// 基本的な入力フィールド\nTextField(\"名前を入力\", text: $name)\n    .textFieldStyle(.roundedBorder)\n\n// パスワード入力（伏せ字）\nSecureField(\"パスワード\", text: $password)\n\n// 数値入力キーボード指定\nTextField(\"年齢\", value: $age, format: .number)\n    .keyboardType(.numberPad)",
-					"keywords": [
-						"input",
-						"form",
-						"keyboard",
-						"text",
-						"entry",
-						"入力",
-						"テキストフィールド"
-					]
+					"keywords": ["input", "form", "keyboard", "text", "entry", "入力", "テキストフィールド"]
 				},
 				{
 					"title": "Picker - 選択肢から選ぶ",
@@ -153,14 +114,7 @@
 				{
 					"title": "ScrollView - スクロール",
 					"code": "// 垂直スクロール\nScrollView {\n    VStack {\n        ForEach(0..<20) { i in\n            Text(\"行 \\(i)\")\n                .frame(maxWidth: .infinity)\n                .padding()\n                .background(.gray.opacity(0.1))\n        }\n    }\n}\n\n// 水平スクロール\nScrollView(.horizontal, showsIndicators: false) {\n    HStack {\n        // ...コンテンツ\n    }\n}",
-					"keywords": [
-						"scroll",
-						"overflow",
-						"content",
-						"pan",
-						"スクロール",
-						"スクロールビュー"
-					]
+					"keywords": ["scroll", "overflow", "content", "pan", "スクロール", "スクロールビュー"]
 				}
 			]
 		},

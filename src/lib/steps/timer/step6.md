@@ -1,3 +1,7 @@
+---
+title: ステップ6: ViewModelのUIへの反映(ContentView)
+summary: ContentViewにViewModel(@StateObject)を組み込み、各ボタンのアクションをViewModelのメソッドに接続します。
+---
 ### 1. ContentViewの更新
 
 まずは、`ContentView` が `TimerViewModel` を使うように変更します。

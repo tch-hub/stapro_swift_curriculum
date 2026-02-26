@@ -1,6 +1,10 @@
-# ステップ15: 画面を切り替える準備をしよう (MainStack.swift)
+---
+title: ステップ15: 画面を切り替える準備をしよう (MainStack.swift)
+summary: 画面の切り替えをコントロールするための「土台」を作っていきます。
+---
 
 ### ステップ15終了時の完成イメージ
+
 <img src="/images/todolist/MainStack.png" alt="MainStackの完成イメージ" class="mobile-screenshot-top" />
 
 ## 1. 画面の名前を決めよう
@@ -55,7 +59,7 @@ struct MainStack: View {
     @State private var navigationPath: [NavigationItem] = []
 
     var body: some View {
-        
+
         NavigationStack(path: $navigationPath) {// 画面の重なりを管理する箱
             HomeView(navigationPath: $navigationPath) // 最初に表示する画面（ホーム画面）
                 // 渡されたNavigationItemに応じて、どの画面を表示するか決めるルール
@@ -89,6 +93,7 @@ struct MainStack: View {
 `Views/HomeView.swift` を開いてください。
 
 ### ① 移動履歴を受け取る準備
+
 `struct HomeView: View {` のすぐ下に、新しい変数を追加します。
 
 ```swift
@@ -100,6 +105,7 @@ struct HomeView: View {
 ```
 
 ### ② プレビューエラーを直す
+
 ①のコードを追加すると、ファイルの一番下にあるプレビューでエラーが出るはずです。以下のように修正しましょう。
 
 ```swift
@@ -127,8 +133,8 @@ import SwiftUI
 import SwiftData
 
 enum ScreenID: String {
-    case home      
-    case tabManage 
+    case home
+    case tabManage
 }
 
 struct NavigationItem: Hashable {

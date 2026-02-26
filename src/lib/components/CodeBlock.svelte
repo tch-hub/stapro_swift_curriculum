@@ -1,5 +1,24 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
+	import Prism from 'prismjs';
+	import 'prismjs/themes/prism-tomorrow.css';
+	import 'prismjs/components/prism-swift.min.js';
+	import 'prismjs/plugins/line-numbers/prism-line-numbers.min.js';
+	import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
+	import 'prismjs/plugins/remove-initial-line-feed/prism-remove-initial-line-feed.min.js';
+	import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.min.js';
+	import 'prismjs/plugins/match-braces/prism-match-braces.min.js';
+	import 'prismjs/plugins/match-braces/prism-match-braces.css';
+
+	// SwiftのString Interpolation \() が match-braces を壊す問題への対策
+	// interpolation-punctuation から 'punctuation' クラスを取り除くことで、
+	// match-braces が () をペアとして誤認識するのを防ぐ
+	Prism.hooks.add('wrap', function (env) {
+		if (env.language === 'swift' && env.type === 'interpolation-punctuation') {
+			env.classes = env.classes.filter((c) => c !== 'punctuation');
+			env.classes.push('swift-interpolation-punc');
+		}
+	});
 
 	// プロパティの定義
 	let {
@@ -21,6 +40,9 @@
 	// マウント状態（hydration後にのみtrueになる）
 	let mounted = $state(false);
 
+	// 表示用のコードを整形（タブを2スペースに変換）
+	let displayCode = $derived(code.replace(/\t/g, '  '));
+
 	// クリップボードにコードをコピーする関数
 	async function copyToClipboard() {
 		try {
@@ -37,7 +59,8 @@
 	// Swiftコードを実行（SwiftFiddleで開く）
 	async function runCode() {
 		try {
-			await navigator.clipboard.writeText(code);
+			// 実行時も整形済みのコードをコピーする
+			await navigator.clipboard.writeText(displayCode);
 			const confirmed = confirm(
 				'コードをクリップボードにコピーしました。\n\nSwiftFiddleで実行するには：\n1. 開いたページでコードを貼り付ける\n2. 「Run」ボタンをクリック\n\nSwiftFiddleを開きますか？'
 			);
@@ -63,38 +86,18 @@
 	// 行番号付きでコードを表示するための処理
 	// code / language が変化したときにも Prism ハイライトを再適用する
 	$effect(() => {
-		// 依存として code / language / showLineNumbers / mounted を参照
-		void code;
+		// 依存として displayCode / language / showLineNumbers / mounted を参照
+		void displayCode;
 		void language;
 		void showLineNumbers;
-		if (mounted && window.Prism && codeElement) {
-			window.Prism.highlightElement(codeElement);
+		if (mounted && codeElement) {
+			// Prismプラグイン（行番号など）を正しく再適用するために、一旦DOM更新を待つ
+			tick().then(() => {
+				Prism.highlightElement(codeElement);
+			});
 		}
 	});
 </script>
-
-<!-- Prism.jsのスタイル読み込み -->
-<svelte:head>
-	<link
-		href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
-		rel="stylesheet"
-	/>
-	<link
-		href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css"
-		rel="stylesheet"
-	/>
-	<!-- data-manual で自動ハイライトを無効化 -->
-	<script
-		data-manual
-		src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"
-	></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"
-	></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"
-	></script>
-</svelte:head>
 
 <div class="code-block overflow-hidden rounded-lg bg-base-100 shadow-lg">
 	{#if showHeader}
@@ -156,11 +159,11 @@
 	<!-- コード表示部分 -->
 	<div class="code-content">
 		<pre
-			class="language-swift {showLineNumbers
+			class="language-swift match-braces rainbow-braces {showLineNumbers
 				? 'line-numbers'
 				: ''} m-0 overflow-x-auto bg-transparent p-4"><code
 				bind:this={codeElement}
-				class="language-swift">{code}</code
+				class="language-swift">{displayCode}</code
 			></pre>
 	</div>
 
@@ -270,5 +273,16 @@
 	:global(.prose .code-block h3) {
 		margin-top: 0 !important;
 		margin-bottom: 0 !important;
+	}
+
+	/* SwiftのString Interpolation \() によるMatch Braces誤作動を防ぐ対策
+	   js側で punctuation クラスを swift-interpolation-punc に置換しているため、
+	   元の punctuation 用の色を割り当てる */
+	:global(.token.string-literal .token.swift-interpolation-punc) {
+		color: #ccc !important;
+	}
+
+	:global(.token.string-literal .token.interpolation.language-swift) {
+		color: #e5c07b !important; /* 変数部分の色 */
 	}
 </style>

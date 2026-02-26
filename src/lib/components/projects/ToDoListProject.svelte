@@ -1,7 +1,7 @@
 <script>
 	import { resolve } from '$app/paths';
 	import ToDoListDemo from '$lib/components/ToDoListDemo.svelte';
-	import { todolistSteps } from '$lib/data/projects/todolist-steps';
+	import { todolistSteps } from '$lib/data/projects/index';
 	import ProjectSteps from './ProjectSteps.svelte';
 	import ProjectCodeSamples from './ProjectCodeSamples.svelte';
 

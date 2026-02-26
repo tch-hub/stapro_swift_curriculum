@@ -1,4 +1,7 @@
-# ステップ10: UI仕上げ・磨き込み
+---
+title: ステップ10: UI仕上げ・磨き込み
+summary: 色・フォント・余白を整えてアプリの見た目を仕上げる
+---
 
 機能が揃い、バグも直ったら、最後の仕上げです。  
 「使いやすい」「見た目が良い」アプリに仕上げましょう。
@@ -90,11 +93,11 @@ Xcodeのプレビューで「Dark Mode」に切り替えて確認しましょう
 
 ## 🔍 詰まったときの検索キーワード
 
-| 困ったこと | 検索キーワード |
-|-----------|--------------|
-| 色を設定したい | 「foregroundStyle」「accentColor」「secondary」 |
-| 角丸にしたい | 「clipShape」「RoundedRectangle」「cornerRadius」 |
-| 影をつけたい | 「shadow」 |
-| フォントを変えたい | 「font」「headline」「caption」 |
-| ダークモードで確認したい | 「systemBackground」「Color」 |
-| ローディング表示したい | 「ProgressView」 |
+| 困ったこと               | 検索キーワード                                    |
+| ------------------------ | ------------------------------------------------- |
+| 色を設定したい           | 「foregroundStyle」「accentColor」「secondary」   |
+| 角丸にしたい             | 「clipShape」「RoundedRectangle」「cornerRadius」 |
+| 影をつけたい             | 「shadow」                                        |
+| フォントを変えたい       | 「font」「headline」「caption」                   |
+| ダークモードで確認したい | 「systemBackground」「Color」                     |
+| ローディング表示したい   | 「ProgressView」                                  |

@@ -1,0 +1,31 @@
+
+> stapro-swift-curriculum@0.0.1 build E:\svelte\stapro_swift_curriculum
+> vite build
+
+[36mvite v7.1.6 [32mbuilding SSR bundle for production...[36m[39m
+transforming...
+/*! 絃 daisyUI 5.1.13 */
+[32m笨・[39m 307 modules transformed.
+笨・[39m Build failed in 2.06s
+error during build:
+src/lib/components/projects/TimerProject.svelte (4:10): "timerSteps" is not exported by "src/lib/data/projects.ts", imported by "src/lib/components/projects/TimerProject.svelte".
+file: E:/svelte/stapro_swift_curriculum/src/lib/components/projects/TimerProject.svelte:4:10
+
+2:   import { resolve } from '$app/paths';
+3:   import TimerDemo from '$lib/components/TimerDemo.svelte';
+4:   import { timerSteps } from '$lib/data/projects';
+              ^
+5:   import ProjectSteps from './ProjectSteps.svelte';
+6:   import ProjectCodeSamples from './ProjectCodeSamples.svelte';
+
+    at getRollupError (file:///E:/svelte/stapro_swift_curriculum/node_modules/.pnpm/rollup@4.52.0/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///E:/svelte/stapro_swift_curriculum/node_modules/.pnpm/rollup@4.52.0/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///E:/svelte/stapro_swift_curriculum/node_modules/.pnpm/rollup@4.52.0/node_modules/rollup/dist/es/shared/node-entry.js:16960:16)
+    at Module.traceVariable (file:///E:/svelte/stapro_swift_curriculum/node_modules/.pnpm/rollup@4.52.0/node_modules/rollup/dist/es/shared/node-entry.js:17412:29)
+    at ModuleScope.findVariable (file:///E:/svelte/stapro_swift_curriculum/node_modules/.pnpm/rollup@4.52.0/node_modules/rollup/dist/es/shared/node-entry.js:15082:39)
+    at FunctionScope.findVariable (file:///E:/svelte/stapro_swift_curriculum/node_modules/.pnpm/rollup@4.52.0/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at FunctionBodyScope.findVariable (file:///E:/svelte/stapro_swift_curriculum/node_modules/.pnpm/rollup@4.52.0/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at ReturnValueScope.findVariable (file:///E:/svelte/stapro_swift_curriculum/node_modules/.pnpm/rollup@4.52.0/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at FunctionBodyScope.findVariable (file:///E:/svelte/stapro_swift_curriculum/node_modules/.pnpm/rollup@4.52.0/node_modules/rollup/dist/es/shared/node-entry.js:5642:38)
+    at Identifier.bind (file:///E:/svelte/stapro_swift_curriculum/node_modules/.pnpm/rollup@4.52.0/node_modules/rollup/dist/es/shared/node-entry.js:5413:40)
+窶右LIFECYCLE窶・Command failed with exit code 1.

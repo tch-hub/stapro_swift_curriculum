@@ -1,4 +1,7 @@
-# ステップ7: データの更新・削除（Update / Delete）
+---
+title: ステップ7: データの更新・削除（Update / Delete）
+summary: スワイプ削除・状態切り替え・確認アラートを実装する
+---
 
 追加したデータを「変更する」「消す」機能を実装します。  
 これで基本的なCRUD（Create・Read・Update・Delete）が揃います！
@@ -103,13 +106,13 @@ struct EditView: View {
 
 ## 🔍 詰まったときの検索キーワード
 
-| 困ったこと | 検索キーワード |
-|-----------|--------------|
-| スワイプで削除したい | 「onDelete」「IndexSet」 |
-| 削除確認ダイアログを出したい | 「alert」「role: .destructive」 |
-| タップで状態を切り替えたい | 「toggle()」「toggleTaskCompletion」 |
-| データを更新・保存したい | 「modelContext.save」「updateTask」 |
-| 編集画面で直接変更したい | 「@Bindable」 |
+| 困ったこと                   | 検索キーワード                       |
+| ---------------------------- | ------------------------------------ |
+| スワイプで削除したい         | 「onDelete」「IndexSet」             |
+| 削除確認ダイアログを出したい | 「alert」「role: .destructive」      |
+| タップで状態を切り替えたい   | 「toggle()」「toggleTaskCompletion」 |
+| データを更新・保存したい     | 「modelContext.save」「updateTask」  |
+| 編集画面で直接変更したい     | 「@Bindable」                        |
 
 ---
 

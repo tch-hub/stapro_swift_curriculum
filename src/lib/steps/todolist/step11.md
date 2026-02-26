@@ -1,4 +1,7 @@
-# ステップ11: タブ操作のサービスを作る(ToDoTabService.swift)
+---
+title: ステップ11: タブ操作のサービスを作る(ToDoTabService.swift)
+summary: タブの追加・更新・削除をまとめます。
+---
 
 ## 1. クラスの基本構造
 

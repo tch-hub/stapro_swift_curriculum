@@ -1,4 +1,7 @@
-# ステップ6: タブ選択ヘッダーを作る(TabHeaderView.swift)
+---
+title: ステップ6: タブ選択ヘッダーを作る(TabHeaderView.swift)
+summary: タブ切り替えと管理画面への導線を作成します。
+---
 
 ### ステップ6終了時の完成イメージ
 

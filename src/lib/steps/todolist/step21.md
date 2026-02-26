@@ -1,4 +1,7 @@
-# ステップ21: 発展課題（自分で機能を考えてみよう）
+---
+title: ステップ21: 発展課題（もっと便利にするアイデア）
+summary: 検索やソートなどの追加機能に挑戦します。
+---
 
 ここまでのステップで、基本的なToDoアプリは完成しました！
 このステップでは、**「自分で考えて機能を追加する」** というプログラミングの醍醐味を体験してみましょう。
@@ -204,7 +207,7 @@ Swiftの配列には `sorted` というデータを並び替える便利な機�
 
 ```swift title="Views/HomeView.swift"
     // onDelete には新しく作った requestメソッドを指定する
-    CustomList(items: tasks, onDelete: handleDeleteRequest) { task in 
+    CustomList(items: tasks, onDelete: handleDeleteRequest) { task in
         // ...
     }
 

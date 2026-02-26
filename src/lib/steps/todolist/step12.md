@@ -1,4 +1,7 @@
-# ステップ12: タブ管理画面を作る(TabManageView.swift)
+---
+title: ステップ12: タブ管理画面を作る(TabManageView.swift)
+summary: タブの追加と削除を行う画面を作成します。
+---
 
 ### ステップ12終了時の完成イメージ
 
@@ -50,7 +53,7 @@ struct TabManageView: View {
 
 ```swift
     var body: some View {
-       
+
         ZStack {  // ZStack：複数のビューを重ねて表示する（今回は1つだが、後でビューを追加しやすいようにしている）
 
             // ①タブ一覧リスト
@@ -70,7 +73,7 @@ struct TabManageView: View {
                 Button("削除", role: .destructive) { confirmDelete() } // 赤い「削除」ボタン
                 Button("キャンセル", role: .cancel) {}                  // 「キャンセル」ボタン
             } message: {
-                
+
                 Text("このタブを削除すると、関連するすべてのタスクも削除されます。") // アラートに表示するメッセージ（タスクも消えることを警告）
             }
         }
@@ -177,6 +180,7 @@ private func confirmDelete() {
 ## 4. プレビューの作成
 
 最後に、ファイルの末尾にプレビュー用のコードを追加して動作を確認します。
+
 ```swift
 // Xcodeのプレビュー画面で動作確認するためのコード（アプリ本体には影響しない）
 #Preview {
@@ -187,6 +191,7 @@ private func confirmDelete() {
     }
 }
 ```
+
 - `NavigationStack`: 画面間の遷移や階層的なナビゲーションを管理するためにSwiftUIで用意されている仕組みです。`navigationTitle`などのナビゲーション関連の修飾子を適用するために必要です。
 
 - `#Preview`: このブロック内に書いたコードがXcodeのプレビュー画面に表示されます。

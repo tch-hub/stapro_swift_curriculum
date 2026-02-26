@@ -1,131 +1,131 @@
 // generate-pdb-555.js
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
 // 5-5-5分割
 const patterns = [
-    [1, 2, 3, 4, 5],
-    [6, 7, 8, 9, 10],
-    [11, 12, 13, 14, 15]
+	[1, 2, 3, 4, 5],
+	[6, 7, 8, 9, 10],
+	[11, 12, 13, 14, 15]
 ];
-const names = ["pdb5_1", "pdb5_2", "pdb5_3"];
+const names = ['pdb5_1', 'pdb5_2', 'pdb5_3'];
 
 // 順列計算 P(n, k)
 const fact = [1];
 for (let i = 1; i <= 16; i++) fact[i] = fact[i - 1] * i;
 
 function perm(n, k) {
-    if (k < 0 || k > n) return 0;
-    return fact[n] / fact[n - k];
+	if (k < 0 || k > n) return 0;
+	return fact[n] / fact[n - k];
 }
 
 // 順列ランク (Permutation Rank)
 function rankPattern(state, pattern) {
-    const items = [0, ...pattern];
-    let rank = 0;
-    let available = 0xFFFF;
+	const items = [0, ...pattern];
+	let rank = 0;
+	let available = 0xffff;
 
-    for (let i = 0; i < items.length; i++) {
-        const val = items[i];
-        const pos = state.indexOf(val);
+	for (let i = 0; i < items.length; i++) {
+		const val = items[i];
+		const pos = state.indexOf(val);
 
-        let count = 0;
-        for (let j = 0; j < pos; j++) {
-            if ((available >> j) & 1) count++;
-        }
+		let count = 0;
+		for (let j = 0; j < pos; j++) {
+			if ((available >> j) & 1) count++;
+		}
 
-        const n = 16 - 1 - i;
-        const k = items.length - 1 - i;
+		const n = 16 - 1 - i;
+		const k = items.length - 1 - i;
 
-        rank += count * perm(n, k);
-        available &= ~(1 << pos);
-    }
-    return rank;
+		rank += count * perm(n, k);
+		available &= ~(1 << pos);
+	}
+	return rank;
 }
 
 function neighbors(blank) {
-    const r = (blank / 4) | 0;
-    const c = blank % 4;
-    const res = [];
-    if (r > 0) res.push(blank - 4);
-    if (r < 3) res.push(blank + 4);
-    if (c > 0) res.push(blank - 1);
-    if (c < 3) res.push(blank + 1);
-    return res;
+	const r = (blank / 4) | 0;
+	const c = blank % 4;
+	const res = [];
+	if (r > 0) res.push(blank - 4);
+	if (r < 3) res.push(blank + 4);
+	if (c > 0) res.push(blank - 1);
+	if (c < 3) res.push(blank + 1);
+	return res;
 }
 
 function generate(pattern, name) {
-    console.log(`Generating ${name}... Pattern: ${pattern}`);
-    const itemsLen = pattern.length + 1;
-    const totalStates = perm(16, itemsLen);
-    console.log(`Total states: ${totalStates}`);
+	console.log(`Generating ${name}... Pattern: ${pattern}`);
+	const itemsLen = pattern.length + 1;
+	const totalStates = perm(16, itemsLen);
+	console.log(`Total states: ${totalStates}`);
 
-    const pdb = new Uint8Array(totalStates);
-    pdb.fill(255);
+	const pdb = new Uint8Array(totalStates);
+	pdb.fill(255);
 
-    const goal = Array.from({ length: 16 }, (_, i) => (i + 1) % 16);
+	const goal = Array.from({ length: 16 }, (_, i) => (i + 1) % 16);
 
-    // 0-1 BFS using two queues
-    let currentQueue = [];
-    let nextQueue = [];
+	// 0-1 BFS using two queues
+	let currentQueue = [];
+	let nextQueue = [];
 
-    // 初期状態
-    const startRank = rankPattern(goal, pattern);
-    pdb[startRank] = 0;
-    currentQueue.push({ state: goal, blank: 15 });
+	// 初期状態
+	const startRank = rankPattern(goal, pattern);
+	pdb[startRank] = 0;
+	currentQueue.push({ state: goal, blank: 15 });
 
-    let dist = 0;
-    let visited = 1;
+	let dist = 0;
+	let visited = 1;
 
-    while (currentQueue.length > 0 || nextQueue.length > 0) {
-        if (currentQueue.length === 0) {
-            currentQueue = nextQueue;
-            nextQueue = [];
-            dist++;
-            console.log(`${name}: dist ${dist}, queue size ${currentQueue.length}, visited ${visited}`);
-            if (dist >= 255) break;
-        }
+	while (currentQueue.length > 0 || nextQueue.length > 0) {
+		if (currentQueue.length === 0) {
+			currentQueue = nextQueue;
+			nextQueue = [];
+			dist++;
+			console.log(`${name}: dist ${dist}, queue size ${currentQueue.length}, visited ${visited}`);
+			if (dist >= 255) break;
+		}
 
-        const { state, blank } = currentQueue.pop();
+		const { state, blank } = currentQueue.pop();
 
-        for (const next of neighbors(blank)) {
-            const tile = state[next];
-            // パターンに含まれるタイルが動く場合のみコスト1
-            // パターン外のタイルが動く（=空白移動のみ）場合はコスト0
-            const isPatternTile = pattern.includes(tile);
-            const moveCost = isPatternTile ? 1 : 0;
+		for (const next of neighbors(blank)) {
+			const tile = state[next];
+			// パターンに含まれるタイルが動く場合のみコスト1
+			// パターン外のタイルが動く（=空白移動のみ）場合はコスト0
+			const isPatternTile = pattern.includes(tile);
+			const moveCost = isPatternTile ? 1 : 0;
 
-            const newState = [...state];
-            [newState[blank], newState[next]] = [newState[next], newState[blank]];
+			const newState = [...state];
+			[newState[blank], newState[next]] = [newState[next], newState[blank]];
 
-            const r = rankPattern(newState, pattern);
+			const r = rankPattern(newState, pattern);
 
-            // 未訪問なら更新
-            if (pdb[r] === 255) {
-                pdb[r] = dist + moveCost;
-                if (moveCost === 0) {
-                    currentQueue.push({ state: newState, blank: next });
-                } else {
-                    nextQueue.push({ state: newState, blank: next });
-                }
-                visited++;
-            }
-        }
-    }
+			// 未訪問なら更新
+			if (pdb[r] === 255) {
+				pdb[r] = dist + moveCost;
+				if (moveCost === 0) {
+					currentQueue.push({ state: newState, blank: next });
+				} else {
+					nextQueue.push({ state: newState, blank: next });
+				}
+				visited++;
+			}
+		}
+	}
 
-    const outputPath = path.join(process.cwd(), "static", `${name}.bin`);
-    fs.writeFileSync(outputPath, pdb);
-    console.log(`${name} DONE. Visited: ${visited}. Saved to ${outputPath}`);
+	const outputPath = path.join(process.cwd(), 'static', `${name}.bin`);
+	fs.writeFileSync(outputPath, pdb);
+	console.log(`${name} DONE. Visited: ${visited}. Saved to ${outputPath}`);
 }
 
 (async () => {
-    try {
-        for (let i = 0; i < 3; i++) {
-            generate(patterns[i], names[i]);
-            await new Promise(r => setTimeout(r, 1000));
-        }
-        console.log("ALL DONE");
-    } catch (e) {
-        console.error(e);
-    }
+	try {
+		for (let i = 0; i < 3; i++) {
+			generate(patterns[i], names[i]);
+			await new Promise((r) => setTimeout(r, 1000));
+		}
+		console.log('ALL DONE');
+	} catch (e) {
+		console.error(e);
+	}
 })();

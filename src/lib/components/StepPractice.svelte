@@ -46,35 +46,25 @@
 			<div class="flex w-full flex-shrink-0 flex-col items-center md:w-1/3">
 				<span class="mb-2 text-sm font-bold text-base-content/70">完成イメージ</span>
 				{#if practiceImage}
-					<div class="mockup-phone border-primary">
-						<div class="camera"></div>
-						<div class="display">
-							<div class="artboard artboard-demo phone-1 relative overflow-hidden bg-base-100">
-								<img
-									src={practiceImage}
-									alt="練習問題の完成イメージ"
-									class="h-full w-full object-cover"
-									onerror={(e) => {
-										e.currentTarget.style.display = 'none';
-										e.currentTarget.nextElementSibling.style.display = 'flex';
-									}}
-								/>
-								<div class="absolute inset-0 flex hidden items-center justify-center bg-base-300">
-									<span class="text-sm font-medium text-base-content/50">No Image</span>
-								</div>
-							</div>
-						</div>
+					<img
+						src={practiceImage}
+						alt="練習問題の完成イメージ"
+						class="mobile-screenshot !float-none !m-0"
+						onerror={(e) => {
+							e.currentTarget.style.display = 'none';
+							e.currentTarget.nextElementSibling.style.display = 'flex';
+						}}
+					/>
+					<div
+						class="mobile-screenshot !float-none !m-0 hidden aspect-[1/2.16] items-center justify-center bg-base-300"
+					>
+						<span class="text-sm font-medium text-base-content/50">No Image</span>
 					</div>
 				{:else}
-					<div class="mockup-phone border-base-300 opacity-70">
-						<div class="camera"></div>
-						<div class="display">
-							<div
-								class="artboard artboard-demo phone-1 flex items-center justify-center bg-base-300"
-							>
-								<span class="text-sm font-medium text-base-content/50">No Image</span>
-							</div>
-						</div>
+					<div
+						class="mobile-screenshot !float-none !m-0 flex aspect-[1/2.16] items-center justify-center bg-base-300 opacity-70"
+					>
+						<span class="text-sm font-medium text-base-content/50">No Image</span>
 					</div>
 				{/if}
 			</div>

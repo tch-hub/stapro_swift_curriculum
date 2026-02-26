@@ -1,4 +1,7 @@
-# ステップ5: データの表示（Read）
+---
+title: ステップ5: データの表示（Read）
+summary: データベースからデータを取得してリスト表示する
+---
 
 データベースからデータを取得して、画面に一覧表示する機能を実装します。  
 「読み込んで表示する」ができれば、アプリらしい動きになります。
@@ -89,11 +92,11 @@ var body: some View {
 
 ## 🔍 詰まったときの検索キーワード
 
-| 困ったこと | 検索キーワード |
-|-----------|--------------|
-| データの取得方法 | 「FetchDescriptor」「modelContext.fetch」 |
-| データベース接続 | 「@Environment」「modelContext」 |
-| リスト表示 | 「List」「ForEach」 |
-| 条件で絞り込みたい | 「#Predicate」「predicate」 |
-| 画面が開いたタイミングで処理したい | 「onAppear」 |
-| 空の状態を表示したい | 「EmptyStateView」「isEmpty」 |
+| 困ったこと                         | 検索キーワード                            |
+| ---------------------------------- | ----------------------------------------- |
+| データの取得方法                   | 「FetchDescriptor」「modelContext.fetch」 |
+| データベース接続                   | 「@Environment」「modelContext」          |
+| リスト表示                         | 「List」「ForEach」                       |
+| 条件で絞り込みたい                 | 「#Predicate」「predicate」               |
+| 画面が開いたタイミングで処理したい | 「onAppear」                              |
+| 空の状態を表示したい               | 「EmptyStateView」「isEmpty」             |
