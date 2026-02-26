@@ -139,56 +139,54 @@ struct ContentView: View {
 
 ## 練習問題
 
-<img src="/images/timer/practice-step2.png" alt="練習問題の完成イメージ" />
+Xcodeで新規プロジェクト（App）を作成し、このステップで学んだレイアウト（`VStack`・`HStack`）や修飾子（モディファイア）を使って、以下のようなプロフィール画面風のUIを作成してみましょう。
 
-1.  **テキストの変更**
-    `Text("タイマーアプリ")` の部分を、あなたの好きな名前に変更してみましょう（例：「マイタイマー」、「勉強用タイマー」など）。
+1. **縦のレイアウト（VStack）**
+   `VStack` を使い、一番上に `Text("プロフィール")` を配置してください。フォントを大きく（`.font(.largeTitle)`）設定してみましょう。
 
-2.  **ボタンの色の変更**
-    「開始」ボタンの背景色（現在は `Color.green`）を青（`Color.blue`）に、「キャンセル」ボタンの背景色（現在は `Color.gray`）を赤（`Color.red`）に変更してみましょう。
+2. **横のレイアウト（HStack）**
+   `Text` の下に `HStack` を使い、2つのボタン（例：「フォローする」「メッセージ」）を横に並べて配置してください。
 
-3.  **新しいボタンの追加**
-    HStack の中に、もう一つ「一時停止」というボタンを追加してみましょう。色はオレンジ（`Color.orange`）に設定してみてください。
+3. **デザインの調整**
+   それぞれのボタンに余白（`.padding()`）、背景色（`.background()`）、文字色（`.foregroundColor()`）、角丸（`.cornerRadius()`）を設定して、見た目を整えてください。背景色は好きな色（`Color.blue`や`Color.pink`など）で構いません。
 
 ### 解答例
 
-ContentViewの `body` の中身を以下のように変更します。
+`ContentView.swift` を以下のように変更します。（設定する色やテキストは自由です）
 
-```swift
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
     var body: some View {
         VStack(spacing: 24) {
-            // 1. テキストの変更
-            Text("マイタイマー")
+            Text("プロフィール")
                 .font(.largeTitle)
                 .padding()
-            HStack {
-                // 2. ボタンの色の変更 (green -> blue)
-                Button("開始") {
+            
+            HStack(spacing: 16) {
+                Button("フォローする") {
+                    // ボタンが押されたときの処理
                 }
                 .padding()
                 .background(Color.blue)
                 .foregroundColor(.white)
                 .cornerRadius(10)
 
-                // 3. 新しいボタンの追加
-                Button("一時停止") {
+                Button("メッセージ") {
+                    // ボタンが押されたときの処理
                 }
                 .padding()
-                .background(Color.orange)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-
-                // 2. ボタンの色の変更 (gray -> red)
-                Button("キャンセル") {
-                }
-                .padding()
-                .background(Color.red)
+                .background(Color.green)
                 .foregroundColor(.white)
                 .cornerRadius(10)
             }
         }
         .padding()
     }
+}
 
-
+#Preview {
+    ContentView()
+}
 ```

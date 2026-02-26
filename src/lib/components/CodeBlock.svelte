@@ -285,4 +285,29 @@
 	:global(.token.string-literal .token.interpolation.language-swift) {
 		color: #e5c07b !important; /* 変数部分の色 */
 	}
+
+	/* Rainbow Bracesの色カスタマイズ */
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-1),
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-5),
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-9) {
+		color: #ccc; /* 第一階層（ネストなし）の基本色は白系 */
+	}
+
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-2),
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-6),
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-10) {
+		color: #e5c07b; /* 第二階層 */
+	}
+
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-3),
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-7),
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-11) {
+		color: #c678dd; /* 第三階層 */
+	}
+
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-4),
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-8),
+	.code-content :global(.rainbow-braces .token.punctuation.brace-level-12) {
+		color: #61afef; /* 第四階層 */
+	}
 </style>
