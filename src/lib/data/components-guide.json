@@ -22,6 +22,24 @@
 					"description": "タップ操作を受け付け、アクションを実行するボタンコンポーネントです。",
 					"code": "// 基本的なボタン\nButton(\"タップして実行\") {\n    print(\"実行されました\")\n}\n\n// テキスト以外のラベル\nButton(action: {\n    // アクション\n}) {\n    HStack {\n        Image(systemName: \"trash\")\n        Text(\"削除\")\n    }\n}\n\n// ロール指定（破壊的なアクションなど）\nButton(\"削除\", role: .destructive) {\n    // 削除処理\n}",
 					"keywords": ["action", "tap", "click", "interaction", "ボタン", "タップ"]
+				},
+				{
+					"title": "Menu - メニューボタン",
+					"code": "// Menu はタップするとアクションのリストが表示されるコンポーネント\n// ツールバーなどでよく使用される\n\n// === 基本的な使い方 ===\n\n// シンプルなメニュー\nMenu(\"メニュー\") {\n    Button(\"編集\") { }\n    Button(\"削除\") { }\n    Button(\"共有\") { }\n}\n\n// アイコン付きメニュー\nMenu {\n    Button(action: {}) {\n        Label(\"編集\", systemImage: \"pencil\")\n    }\n    Button(action: {}) {\n        Label(\"削除\", systemImage: \"trash\")\n    }\n    Button(action: {}) {\n        Label(\"共有\", systemImage: \"square.and.arrow.up\")\n    }\n} label: {\n    Image(systemName: \"ellipsis.circle\")\n        .font(.system(size: 24))\n}\n\n// === テキストと一緒に表示 ===\n\nMenu {\n    Button(\"昇順\") { }\n    Button(\"降順\") { }\n    Button(\"名前順\") { }\n} label: {\n    HStack {\n        Image(systemName: \"arrow.up.arrow.down\")\n        Text(\"ソート\")\n    }\n}\n\n// === セクション分け ===\n\nMenu(\"その他\") {\n    Section(\"編集\") {\n        Button(\"編集\", action: { })\n        Button(\"複製\", action: { })\n    }\n    \n    Section(\"削除\") {\n        Button(\"ゴミ箱へ移動\", action: { })\n        Button(\"完全に削除\", action: { })\n    }\n}\n\n// === 破壊的なアクション（赤色） ===\n\nMenu(\"アクション\") {\n    Button(\"完了\", action: { })\n    \n    Button(role: .destructive) {\n        Label(\"削除\", systemImage: \"trash\")\n    } action: {\n        // 削除処理\n    }\n}\n\n// === ツールバー内での使用（最も一般的） ===\n\nstruct ContentView: View {\n    @State private var sortBy = \"名前\"\n    \n    var body: some View {\n        NavigationStack {\n            List {\n                Text(\"項目1\")\n                Text(\"項目2\")\n                Text(\"項目3\")\n            }\n            .navigationTitle(\"リスト\")\n            .toolbar {\n                ToolbarItem(placement: .topBarTrailing) {\n                    Menu {\n                        Button(\"名前順\") { sortBy = \"名前\" }\n                        Button(\"日付順\") { sortBy = \"日付\" }\n                        Button(\"サイズ順\") { sortBy = \"サイズ\" }\n                    } label: {\n                        Image(systemName: \"arrow.up.arrow.down\")\n                    }\n                }\n            }\n        }\n    }\n}\n\n// === 実践的な例：複数のアクション ===\n\nstruct ArticleOptionsMenu: View {\n    @State private var isShowing = false\n    let articleId: String\n    \n    var body: some View {\n        Menu {\n            Button(action: { }) {\n                Label(\"読む\", systemImage: \"book\")\n            }\n            \n            Button(action: { }) {\n                Label(\"共有\", systemImage: \"square.and.arrow.up\")\n            }\n            \n            Button(action: { }) {\n                Label(\"お気に入り\", systemImage: \"star\")\n            }\n            \n            Divider()\n            \n            Button(role: .destructive, action: { }) {\n                Label(\"削除\", systemImage: \"trash\")\n            }\n        } label: {\n            Image(systemName: \"ellipsis\")\n                .foregroundStyle(.blue)\n        }\n    }\n}\n\n// === Pickerのメニュースタイル との違い ===\n\n// Menu は単なるボタンのリスト\nMenu(\"アクション\") {\n    Button(\"アクション1\") { }\n    Button(\"アクション2\") { }\n}\n\n// Picker でメニュースタイルを使用すると、選択状態を管理できる\n@State private var selection = 0\nlet options = [\"オプション1\", \"オプション2\", \"オプション3\"]\n\nPicker(\"選択\", selection: $selection) {\n    ForEach(0..<options.count, id: \\.self) { index in\n        Text(options[index]).tag(index)\n    }\n}\n.pickerStyle(.menu)  // メニューのような表示だが、選択状態を管理",
+					"keywords": [
+						"menu",
+						"action",
+						"dropdown",
+						"ellipsis",
+						"toolbar",
+						"button",
+						"options",
+						"メニュー",
+						"アクション",
+						"ドロップダウン",
+						"ボタン",
+						"その他"
+					]
 				}
 			]
 		},
@@ -115,6 +133,73 @@
 					"title": "ScrollView - スクロール",
 					"code": "// 垂直スクロール\nScrollView {\n    VStack {\n        ForEach(0..<20) { i in\n            Text(\"行 \\(i)\")\n                .frame(maxWidth: .infinity)\n                .padding()\n                .background(.gray.opacity(0.1))\n        }\n    }\n}\n\n// 水平スクロール\nScrollView(.horizontal, showsIndicators: false) {\n    HStack {\n        // ...コンテンツ\n    }\n}",
 					"keywords": ["scroll", "overflow", "content", "pan", "スクロール", "スクロールビュー"]
+				}
+			]
+		},
+		{
+			"id": "swiftui-foreach",
+			"title": "ForEach（リスト構築）",
+			"description": "複数のビューを効率よく生成するSwiftUIコンポーネントです。",
+			"codeBlocks": [
+				{
+					"title": "ForEachの基本的な使い方",
+					"code": "import SwiftUI\n\n// ForEachは配列の各要素に対して、ビューを繰り返し生成します\n\nstruct FruitListView: View {\n    // 果物の名前の配列\n    let fruits = [\"りんご\", \"バナナ\", \"オレンジ\"]\n    \n    var body: some View {\n        VStack {\n            // ForEachを使ってリストアイテムを生成\n            ForEach(fruits, id: \\.self) { fruit in\n                Text(fruit)  // 各果物の名前をTextで表示\n                    .font(.headline)\n                    .padding()\n            }\n        }\n    }\n}\n\n// ForEachの要素:\n// - fruits: 繰り返す配列\n// - id: \\.self: 各要素を識別するキー（ここでは値そのものをID として使用）\n// - fruit in: クロージャで各要素を受け取る\n// - { 処理 }: 各要素に対して実行するビューの定義",
+					"output": "（同じリストアイテムが3行に分かれて表示される）",
+					"executable": false,
+					"keywords": [
+						"foreach",
+						"list",
+						"iterate",
+						"loop",
+						"array",
+						"ビュー生成",
+						"ループ",
+						"繰り返し"
+					]
+				},
+				{
+					"title": "id パラメータの役割",
+					"code": "import SwiftUI\n\n// idパラメータは、各要素を一意に識別するための「キー」です\n// SwiftUIが「どの要素が変更されたか」を判定するために使われます\n\n// パターン1: 値型（String, Int）の場合はid: \\.self を使う\nstruct SimpleView: View {\n    let numbers = [1, 2, 3, 4, 5]\n    \n    var body: some View {\n        VStack {\n            ForEach(numbers, id: \\.self) { num in\n                Text(\"数字: \\(num)\")\n            }\n        }\n    }\n}\n\n// パターン2: 複雑な型（構造体）の場合は、Identifiable に準拠させる\nstruct Student: Identifiable {\n    let id = UUID()  // 各学生に一意なIDを付与\n    var name: String\n    var grade: Int\n}\n\nstruct StudentListView: View {\n    let students = [\n        Student(name: \"太郎\", grade: 1),\n        Student(name: \"花子\", grade: 1),\n        Student(name: \"次郎\", grade: 2)\n    ]\n    \n    var body: some View {\n        VStack {\n            // Identifiableに準拠しているので、idを省略できる\n            ForEach(students) { student in\n                HStack {\n                    Text(student.name)\n                    Text(\"\\(student.grade)年\")\n                        .foregroundStyle(.secondary)\n                }\n                .padding()\n            }\n        }\n    }\n}\n\n// パターン3: プロパティを明示的に指定\nstruct UserView: View {\n    let users = [\n        (id: 1, name: \"太郎\"),\n        (id: 2, name: \"花子\"),\n        (id: 3, name: \"次郎\")\n    ]\n    \n    var body: some View {\n        VStack {\n            ForEach(users, id: \\.id) { user in  // idプロパティをキーとして使用\n                Text(user.name)\n            }\n        }\n    }\n}",
+					"output": "（各パターンで配列の要素がリストアイテムとして表示される）",
+					"executable": false,
+					"keywords": ["id", "key", "identifiable", "uuid", "識別子", "一意", "キー"]
+				},
+				{
+					"title": "ForEachと@State の組み合わせ",
+					"code": "import SwiftUI\n\n// ForEachで動的にリストを更新する例\n\nstruct TodoListView: View {\n    // Todoアイテムの構造体\n    struct TodoItem: Identifiable {\n        let id = UUID()\n        var title: String\n        var isCompleted: Bool = false\n    }\n    \n    // @Stateで状態を管理\n    @State private var todos: [TodoItem] = [\n        TodoItem(title: \"牛乳を買う\"),\n        TodoItem(title: \"数学の宿題\"),\n        TodoItem(title: \"部屋を片付ける\")\n    ]\n    \n    var body: some View {\n        VStack {\n            Text(\"やることリスト\")\n                .font(.title)\n            \n            // ForEachでリストの各要素をビューとして生成\n            ForEach($todos) { $todo in  // $をつけてBindingとして受け取る\n                HStack {\n                    // チェックボックスの役割\n                    Image(systemName: todo.isCompleted ? \"checkmark.circle.fill\" : \"circle\")\n                        .foregroundStyle(todo.isCompleted ? .green : .gray)\n                        .onTapGesture {\n                            todo.isCompleted.toggle()  // タップで完了状態を切り替え\n                        }\n                    \n                    Text(todo.title)\n                        .strikethrough(todo.isCompleted)  // 完了時は取り消し線を表示\n                    \n                    Spacer()  // スペースを挿入\n                }\n                .padding()\n            }\n            \n            Spacer()\n        }\n    }\n}\n\n// ポイント:\n// - $todosでBindingリストを取得\n// - ForEachの中で$todoでBinding値を受け取る\n// - Bindingを使うことで、子ビューでの変更が親の@Stateに反映される",
+					"output": "（チェックマークをタップすると、アイテムが完了状態に切り替わる）",
+					"executable": false,
+					"keywords": ["dynamic", "update", "binding", "state", "todo", "list", "動的", "更新"]
+				},
+				{
+					"title": "ForEachでList・ScrollViewと組み合わせ",
+					"code": "import SwiftUI\n\n// List内でForEachを使う（最もよくあるパターン）\n\nstruct BookListView: View {\n    struct Book: Identifiable {\n        let id = UUID()\n        var title: String\n        var author: String\n        var year: Int\n    }\n    \n    let books = [\n        Book(title: \"吾輩は猫である\", author: \"夏目漱石\", year: 1905),\n        Book(title: \"羅生門\", author: \"芥川龍之介\", year: 1915),\n        Book(title: \"こころ\", author: \"夏目漱石\", year: 1914)\n    ]\n    \n    var body: some View {\n        VStack {\n            Text(\"古典文学\")\n                .font(.title2)\n            \n            // ListはForEachと相性が良い\n            List {\n                ForEach(books) { book in\n                    VStack(alignment: .leading, spacing: 4) {\n                        Text(book.title)\n                            .font(.headline)\n                        Text(book.author)\n                            .font(.caption)\n                            .foregroundStyle(.secondary)\n                        Text(\"\\(book.year)年\")\n                            .font(.caption2)\n                            .foregroundStyle(.secondary)\n                    }\n                    .padding(.vertical, 4)\n                }\n            }\n            .listStyle(.plain)\n        }\n    }\n}\n\n// ScrollViewと組み合わせ\nstruct ScrollableListView: View {\n    let items = Array(1...100).map { \"アイテム#\\($0)\" }\n    \n    var body: some View {\n        ScrollView {\n            VStack(spacing: 10) {\n                ForEach(items, id: \\.self) { item in\n                    Text(item)\n                        .frame(maxWidth: .infinity, alignment: .leading)\n                        .padding()\n                        .background(Color(.systemGray6))\n                        .cornerRadius(8)\n                }\n            }\n            .padding()\n        }\n    }\n}",
+					"output": "（リスト形式でアイテムが表示され、スクロール可能になる）",
+					"executable": false,
+					"keywords": [
+						"list",
+						"scrollview",
+						"container",
+						"grid",
+						"layout",
+						"リスト表示",
+						"スクロール"
+					]
+				},
+				{
+					"title": "ForEachのベストプラクティス",
+					"code": "import SwiftUI\n\n// よくある間違いと正しい使い方\n\n// ❌ 間違い: idを指定しない（警告が出る）\n// ForEach(items) { item in ... }  // 危険\n\n// ✅ 正しい: 適切なidを指定\nstruct GoodPracticeView: View {\n    struct Task: Identifiable {\n        let id: UUID\n        var name: String\n        var done: Bool\n    }\n    \n    @State private var tasks: [Task] = [\n        Task(id: UUID(), name: \"タスク1\", done: false),\n        Task(id: UUID(), name: \"タスク2\", done: true)\n    ]\n    \n    var body: some View {\n        VStack {\n            // ✅ Good: Identifiableに準拠しているので安全\n            ForEach(tasks) { task in\n                Text(task.name)\n            }\n            \n            // ✅ Good: id: \\.self で値を識別\n            ForEach([\"A\", \"B\", \"C\"], id: \\.self) { letter in\n                Text(letter)\n            }\n            \n            // ✅ Good: id: \\.id でプロパティを指定\n            ForEach(tasks, id: \\.id) { task in\n                Text(task.name)\n            }\n        }\n    }\n}\n\n// ベストプラクティス:\n// 1. 可能なら Identifiable に準拠させる（最も安全）\n// 2. UUIDやデータベースのidを使う（重複がない）\n// 3. 値型の場合は id: \\.self を使う\n// 4. idを明示的に指定して意図を明確にする",
+					"output": "（各パターンが正しく機能する）",
+					"executable": false,
+					"keywords": [
+						"best practice",
+						"safe",
+						"identifiable",
+						"uuid",
+						"pattern",
+						"ベストプラクティス",
+						"安全"
+					]
 				}
 			]
 		},

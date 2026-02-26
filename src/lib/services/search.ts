@@ -1,5 +1,5 @@
 import componentsData from '$lib/data/components-guide.json';
-import cheatsheetData from '$lib/data/cheatsheet.json';
+import basicSyntaxData from '$lib/data/basic-syntax.json';
 import stylingData from '$lib/data/styling-guide.json';
 import glossaryData from '$lib/data/glossary.json';
 
@@ -41,10 +41,10 @@ const PAGES = [
 		tabLabel: 'コンポーネント'
 	},
 	{
-		data: cheatsheetData,
+		data: basicSyntaxData,
 		title: 'リファレンス',
 		path: '/reference',
-		tabId: 'cheatsheet',
+		tabId: 'basic-syntax',
 		tabLabel: '基本文法'
 	},
 	{

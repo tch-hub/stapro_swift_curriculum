@@ -1,0 +1,223 @@
+
+=== src/lib/data/cheatsheet.json ===
+- Section [basic-syntax]: 基本構文
+  * 変数と定数
+  * 定数への再代入（エラー例）
+  * 列挙型（Enum）
+- Section [types]: 型
+  * 基本型
+  * 型の確認（type(of:)関数）
+  * タプル（Tuple）
+  * 型の変換（キャスト）
+  * 範囲型（Range）
+  * Void型
+- Section [operators]: 演算子
+  * 算術演算子
+  * 比較演算子
+  * 三項演算子
+  * 論理演算子
+- Section [control-structures]: 制御構造
+  * if文
+  * for-inループ
+  * guard文
+- Section [functions]: 関数
+  * 関数の定義と呼び出し
+  * 静的メソッド（static func）
+- Section [underscore]: _（アンダースコア）
+  * 引数ラベルの省略（Swift独自）
+  * 値の無視（ワイルドカード）
+- Section [collections]: コレクション
+  * 配列（Array）
+  * 辞書（Dictionary）
+  * データの並べ替え（sorted）
+- Section [classes-structs]: クラスと構造体
+  * 構造体の定義
+  * private（アクセス制御）
+  * final（継承・オーバーライドの禁止）
+- Section [methods]: メソッド
+  * メソッドの定義と使用
+- Section [keypaths]: KeyPathと.self
+  * KeyPathと.selfの使い方
+- Section [optionals-error-handling]: オプションとエラー処理
+  * Optional型
+  * do-catchと\(error) - エラー処理
+  * try、try?、try! の使い分け
+- Section [useful-functions]: 便利な関数
+  * print関数
+  * Stringのメソッド
+  * UUID() - 一意なIDの生成
+  * trimmingCharacters(_:) - 文字列の先頭と末尾を削除
+- Section [swiftui-property-wrappers]: SwiftUIプロパティラッパー
+  * @State（状態の管理）
+  * @Binding（双方向データ渡し）
+  * @Stateと@Bindingの使い分け
+  * @FocusState（フォーカス管理）
+  * @Environment（環境値の取得）
+  * @ViewBuilder（複数ビューを組み合わせる）
+- Section [swiftui-identifiable]: Identifiable（識別可能プロトコル）
+  * Identifiableの基本
+  * ForEachでIdentifiableを使う
+  * 数値IDでIdentifiableを実装
+  * @Stateと組み合わせた動的リスト
+  * 既存の型を Identifiable にする拡張
+  * Identifiable vs id: \.self の使い分け
+- Section [initializer]: 初期化メソッド（init）
+  * initの基本
+  * デフォルト値を使ったinit
+  * 複数のinitを定義（オーバーロード）
+  * クラスでのinit（継承との関係）
+  * 失敗可能なinit（failable initializer）
+  * SwiftData @Modelでのinit
+- Section [self]: self（自分自身への参照）
+  * selfの基本的な使い方
+  * initでのself の重要性
+  * selfをパラメータとして渡す
+  * mutatingメソッドでのself
+  * クロージャでのself
+  * 値型と参照型でのselfの違い
+- Section [swiftdata-persistence]: SwiftData（データ永続化）
+  * modelContext.insert（データ追加）
+  * modelContext.delete（データ削除）
+  * modelContext.save（データ保存）
+  * modelContext.fetch（データ取得）
+
+=== src/lib/data/components-guide.json ===
+- Section [basic]: 基本コンポーネント
+  * Text - テキストの表示
+  * Image - 画像の表示
+  * Button - ボタン
+  * Menu - メニューボタン
+- Section [layout]: レイアウトコンテナ
+  * Stacks - 水平・垂直・重ね合わせ
+  * Capsule / 基本シェイプ - 形状の描画
+  * Spacer & Divider - 余白と区切り
+- Section [data]: データ表示と入力
+  * List - リスト表示
+  * TextField - テキスト入力
+  * Picker - 選択肢から選ぶ
+  * ScrollView - スクロール
+- Section [swiftui-foreach]: ForEach（リスト構築）
+  * ForEachの基本的な使い方
+  * id パラメータの役割
+  * ForEachと@State の組み合わせ
+  * ForEachでList・ScrollViewと組み合わせ
+  * ForEachのベストプラクティス
+- Section [navigation]: ナビゲーション
+  * NavigationStack - 画面遷移
+
+=== src/lib/data/glossary.json ===
+- Section [imports]: import文とフレームワーク
+  * import Foundation
+  * import SwiftUI
+  * import SwiftData
+- Section [swift-basics]: Swift基本用語
+  * 変数 (Variable) - var
+  * 定数 (Constant) - let
+  * 関数 (Function)
+  * 引数 (Argument / Parameter)
+  * クロージャ (Closure)
+  * トレイリングクロージャ (Trailing Closure)
+  * キャプチャ (Capture)
+- Section [types]: 型とデータ構造
+  * Int - 整数型
+  * String - 文字列型
+  * Bool - 論理型
+  * Double - 浮動小数点型
+  * Array - 配列
+  * Dictionary - 辞書型
+- Section [structures]: 構造体とクラス
+  * 構造体 (Struct)
+  * インスタンス (Instance)
+  * オブジェクト (Object)
+  * クラス (Class)
+  * 構造体とクラスの違い
+  * プロトコル (Protocol)
+  * 列挙型 (Enum)
+  * オプショナル (Optional)
+- Section [swiftui-basics]: SwiftUI基本用語
+  * View プロトコル
+  * モディファイア (Modifier)
+  * IndexSet
+  * メインスレッド (Main Thread)
+- Section [swiftui-state]: SwiftUI状態管理
+  * @State - ビュー内の状態
+  * @Binding - 親子間のデータ共有
+  * @ObservedObject - 外部データの監視
+- Section [data-modeling]: データモデリング
+  * スキーマ (Schema)
+  * ModelContainer / ModelConfiguration - データの保存先
+
+=== src/lib/data/styling-guide.json ===
+- Section [layout]: レイアウト修飾子
+  * padding() - 余白の設定
+  * EdgeInsets - 4辺の余白を指定
+  * frame() - サイズの指定
+  * maxWidth / maxHeight - 最大サイズの制御
+  * spacing - 要素間の間隔
+  * alignment - 配置の制御
+  * offset() - 位置のずらし
+  * rotationEffect() - 回転
+  * resizable() - 画像のサイズ変更
+  * Vertical / Horizontal - レイアウトの方向
+- Section [text]: テキストスタイリング
+  * font() - フォントの設定
+  * .system() - カスタムシステムフォント
+  * fontWeight() - 太さの設定
+  * .caption - キャプション（小さな文字）
+  * foregroundStyle() - 文字色
+  * foregroundColor() - 文字色（旧API）
+  * multilineTextAlignment() - 複数行の配置
+  * lineSpacing() / kerning() - 行間・文字間隔
+  * strikethrough() / underline() - 装飾
+- Section [background-shape]: 背景と形状
+  * background() - 背景の設定
+  * cornerRadius() / clipShape() - 角丸・形状
+  * fill() - 形状の塗りつぶし
+  * trim() - 形状の切り取り
+  * stroke() - 線の描画
+  * overlay() - 前面に重ねる
+  * border() - 枠線
+- Section [colors]: カラーシステム
+  * セマンティックカラー
+  * primary - プライマリーカラー
+  * accentColor - アクセントカラー
+  * secondary - セカンダリーカラー
+  * tertiary - ターシャリーカラー
+  * quaternary - クォータナリーカラー
+  * システム背景色
+  * システムラベル色
+  * システムフィル色
+  * システムグレースケール
+  * その他のシステムカラー
+  * システムカラー（旧API）
+  * 標準カラー
+  * グラデーション
+  * カスタムカラー
+- Section [animation]: アニメーション
+  * animation() - アニメーション修飾子
+  * withAnimation - アニメーションブロック
+  * アニメーションの種類
+  * transition() - 表示/非表示のトランジション
+  * アニメーション可能なプロパティ
+  * spring() - スプリングアニメーション
+  * contentTransition() - コンテンツ変更のアニメーション
+- Section [interactive]: インタラクティブスタイル
+  * buttonStyle() - ボタンスタイル
+  * カスタムButtonStyle
+  * listStyle() - リストスタイル
+  * listRowInsets() - リスト行の余白調整
+  * listRowSeparator() - リスト行の区切り線
+  * textFieldStyle() - テキストフィールドスタイル
+  * axis - テキストフィールドの展開方向
+  * toggleStyle() - トグルスタイル
+  * pickerStyle() - ピッカースタイル
+  * labelStyle() - ラベルスタイル
+  * contentShape() - タップ領域の定義
+  * navigationTitle() - ナビゲーションタイトル
+  * onSubmit - フォーム送信時の処理
+- Section [icons]: SF Symbols（アイコン）
+  * Image(systemName:) - SF Symbolsの基本
+  * .font() - アイコンのサイズと太さ指定
+  * .foregroundStyle() - アイコンの色指定
+  * 複合修飾子 - アイコンの完全なスタイリング
+  * scaleEffect() - アイコンのスケーリング

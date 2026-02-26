@@ -2,7 +2,7 @@ import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 
 /**
  * セクション検索用のcomposable
- * cheatsheet, components-guide, styling-guideで共通利用
+ * basic-syntax, components-guide, styling-guideで共通利用
  */
 
 /**

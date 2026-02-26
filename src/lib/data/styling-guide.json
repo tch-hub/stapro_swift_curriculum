@@ -47,11 +47,6 @@
 					]
 				},
 				{
-					"title": "Spacer() - スペースの挿入",
-					"code": "// Spacerは利用可能なスペースを埋める\nHStack {\n    Text(\"左\")\n    Spacer()          // 左と右の間を最大限広げる\n    Text(\"右\")\n}\n\nVStack {\n    Text(\"上\")\n    Spacer()\n    Text(\"下\")\n}\n\nHStack {\n    Text(\"左\")\n    Spacer()\n    Text(\"中央\")\n    Spacer()\n    Text(\"右\")        // 均等に配置される\n}",
-					"keywords": ["expand", "fill", "space", "スペース", "隙間", "埋める"]
-				},
-				{
 					"title": "spacing - 要素間の間隔",
 					"code": "// Stack初期化時に要素間の間隔を指定\nVStack(spacing: 12) {     // 縦方向の間隔を12ptに固定\n    Text(\"要素1\")\n    Text(\"要素2\")\n}\n\nHStack(spacing: 20) {     // 横方向の間隔を20ptに固定\n    Text(\"左\")\n    Text(\"右\")\n}\n\n// spacing: 0 で間隔をなくす\nVStack(spacing: 0) {\n    Text(\"くっついた\")\n    Text(\"テキスト\")\n}",
 					"keywords": ["gap", "interval", "margin", "間隔", "スキマ"]
@@ -83,6 +78,26 @@
 						"画像",
 						"リサイズ",
 						"アスペクト比"
+					]
+				},
+				{
+					"title": "Vertical / Horizontal - レイアウトの方向",
+					"description": "VerticalとHorizontalは、ビューの配置方向や修飾子の適用方向を指定するための定数です。VStack（垂直配置）とHStack（水平配置）で使い分けたり、padding()やspacing()で上下左右の方向を指定する際に使われます。Vertical（垂直）は上下方向、Horizontal（水平）は左右方向を意味します。",
+					"code": "import SwiftUI\n\n// === VStack と HStack での的用 ===\n\n// VStack: 要素を垂直（上から下へ）に配置\nVStack {\n    Text(\"上から\")\n    Text(\"順番に\")\n    Text(\"並ぶ\")\n}\n\n// HStack: 要素を水平（左から右へ）に配置\nHStack {\n    Text(\"左から\")\n    Text(\"順番に\")\n    Text(\"並ぶ\")\n}\n\n// === padding() で方向を指定 ===\n\n// 全方向に余白を追加\nText(\"パディング\")\n    .padding()                    // すべての辺に余白\n\n// 上下の余白のみ\nText(\"上下の余白\")\n    .padding(.vertical, 16)       // 上と下に16ptの余白\n\n// 左右の余白のみ\nText(\"左右の余白\")\n    .padding(.horizontal, 20)     // 左と右に20ptの余白\n\n// === spacing() で方向を指定 ===\n\n// VStack内の要素間の間隔（垂直方向）\nVStack(spacing: 10) {\n    Text(\"要素1\")\n    Text(\"要素2\")\n    Text(\"要素3\")  // 各要素間に10ptの間隔\n}\n\n// HStack内の要素間の間隔（水平方向）\nHStack(spacing: 10) {\n    Text(\"要素1\")\n    Text(\"要素2\")\n    Text(\"要素3\")  // 各要素間に10ptの間隔\n}\n\n// === 実践的な例 ===\n\n// ボタン周りの余白設定\nstruct ButtonView: View {\n    var body: some View {\n        Button(\"送信\") { }\n            .buttonStyle(.borderedProminent)\n            .padding(.vertical, 12)      // 上下の余白\n            .padding(.horizontal, 32)    // 左右の余白\n    }\n}\n\n// フォーム入力欄の配置\nstruct FormView: View {\n    @State private var email = \"\"\n    @State private var password = \"\"\n    \n    var body: some View {\n        VStack(spacing: 16) {\n            TextField(\"メール\", text: $email)\n                .padding(.horizontal, 12)\n                .padding(.vertical, 8)\n                .textFieldStyle(.roundedBorder)\n            \n            SecureField(\"パスワード\", text: $password)\n                .padding(.horizontal, 12)\n                .padding(.vertical, 8)\n                .textFieldStyle(.roundedBorder)\n            \n            Button(\"ログイン\") { }\n                .buttonStyle(.borderedProminent)\n                .padding(.vertical, 16)\n        }\n        .padding()  // VStack全体の余白\n    }\n}\n\n// リスト行の水平余白\nstruct ListView: View {\n    var body: some View {\n        List {\n            HStack {\n                Image(systemName: \"star.fill\")\n                Text(\"お気に入り\")\n            }\n            .padding(.horizontal, 0)     // 左右の余白をなくして全幅表示\n            .padding(.vertical, 12)      // 上下に余白を保持\n        }\n    }\n}\n\n// === Axis 値として使用（ScrollView など） ===\n\n// 垂直スクロール\nScrollView(.vertical) {\n    VStack {\n        ForEach(0..<100, id: \\.self) { index in\n            Text(\"行 \\(index)\")\n        }\n    }\n}\n\n// 水平スクロール\nScrollView(.horizontal) {\n    HStack {\n        ForEach(0..<20, id: \\.self) { index in\n            Text(\"列 \\(index)\")\n        }\n    }\n}\n\n// === horizontal と vertical の使い分け ===\n// vertical: 上下方向に関する設定（.padding(.vertical)）\n// horizontal: 左右方向に関する設定（.padding(.horizontal)）\n// VStack: 要素を縦（vertical）に並べる\n// HStack: 要素を横（horizontal）に並べる",
+					"keywords": [
+						"Vertical",
+						"Horizontal",
+						"方向",
+						"direction",
+						"Axis",
+						"padding",
+						"spacing",
+						"VStack",
+						"HStack",
+						"垂直",
+						"水平",
+						"上下",
+						"左右"
 					]
 				}
 			]
@@ -739,21 +754,19 @@
 					]
 				},
 				{
-					"title": "Menu - メニューボタン",
-					"code": "// Menu はタップするとアクションのリストが表示されるコンポーネント\n// ツールバーなどでよく使用される\n\n// === 基本的な使い方 ===\n\n// シンプルなメニュー\nMenu(\"メニュー\") {\n    Button(\"編集\") { }\n    Button(\"削除\") { }\n    Button(\"共有\") { }\n}\n\n// アイコン付きメニュー\nMenu {\n    Button(action: {}) {\n        Label(\"編集\", systemImage: \"pencil\")\n    }\n    Button(action: {}) {\n        Label(\"削除\", systemImage: \"trash\")\n    }\n    Button(action: {}) {\n        Label(\"共有\", systemImage: \"square.and.arrow.up\")\n    }\n} label: {\n    Image(systemName: \"ellipsis.circle\")\n        .font(.system(size: 24))\n}\n\n// === テキストと一緒に表示 ===\n\nMenu {\n    Button(\"昇順\") { }\n    Button(\"降順\") { }\n    Button(\"名前順\") { }\n} label: {\n    HStack {\n        Image(systemName: \"arrow.up.arrow.down\")\n        Text(\"ソート\")\n    }\n}\n\n// === セクション分け ===\n\nMenu(\"その他\") {\n    Section(\"編集\") {\n        Button(\"編集\", action: { })\n        Button(\"複製\", action: { })\n    }\n    \n    Section(\"削除\") {\n        Button(\"ゴミ箱へ移動\", action: { })\n        Button(\"完全に削除\", action: { })\n    }\n}\n\n// === 破壊的なアクション（赤色） ===\n\nMenu(\"アクション\") {\n    Button(\"完了\", action: { })\n    \n    Button(role: .destructive) {\n        Label(\"削除\", systemImage: \"trash\")\n    } action: {\n        // 削除処理\n    }\n}\n\n// === ツールバー内での使用（最も一般的） ===\n\nstruct ContentView: View {\n    @State private var sortBy = \"名前\"\n    \n    var body: some View {\n        NavigationStack {\n            List {\n                Text(\"項目1\")\n                Text(\"項目2\")\n                Text(\"項目3\")\n            }\n            .navigationTitle(\"リスト\")\n            .toolbar {\n                ToolbarItem(placement: .topBarTrailing) {\n                    Menu {\n                        Button(\"名前順\") { sortBy = \"名前\" }\n                        Button(\"日付順\") { sortBy = \"日付\" }\n                        Button(\"サイズ順\") { sortBy = \"サイズ\" }\n                    } label: {\n                        Image(systemName: \"arrow.up.arrow.down\")\n                    }\n                }\n            }\n        }\n    }\n}\n\n// === 実践的な例：複数のアクション ===\n\nstruct ArticleOptionsMenu: View {\n    @State private var isShowing = false\n    let articleId: String\n    \n    var body: some View {\n        Menu {\n            Button(action: { }) {\n                Label(\"読む\", systemImage: \"book\")\n            }\n            \n            Button(action: { }) {\n                Label(\"共有\", systemImage: \"square.and.arrow.up\")\n            }\n            \n            Button(action: { }) {\n                Label(\"お気に入り\", systemImage: \"star\")\n            }\n            \n            Divider()\n            \n            Button(role: .destructive, action: { }) {\n                Label(\"削除\", systemImage: \"trash\")\n            }\n        } label: {\n            Image(systemName: \"ellipsis\")\n                .foregroundStyle(.blue)\n        }\n    }\n}\n\n// === Pickerのメニュースタイル との違い ===\n\n// Menu は単なるボタンのリスト\nMenu(\"アクション\") {\n    Button(\"アクション1\") { }\n    Button(\"アクション2\") { }\n}\n\n// Picker でメニュースタイルを使用すると、選択状態を管理できる\n@State private var selection = 0\nlet options = [\"オプション1\", \"オプション2\", \"オプション3\"]\n\nPicker(\"選択\", selection: $selection) {\n    ForEach(0..<options.count, id: \\.self) { index in\n        Text(options[index]).tag(index)\n    }\n}\n.pickerStyle(.menu)  // メニューのような表示だが、選択状態を管理",
+					"title": "onSubmit - フォーム送信時の処理",
+					"description": "onSubmitは、フォームやテキストフィールドで確定キーを押したときに実行される処理を指定するモディファイアです。ユーザーが『完了』『改行』『検索』などのキーを押したときに、テキストを送信したり、データを保存したりする際に使います。TextFieldやSecureFieldに付けることで、入力終了時の動作をカスタマイズできます。",
+					"code": "import SwiftUI\n\n// === 基本的な使い方 ===\n\nstruct SearchView: View {\n    @State private var searchText = \"\"\n    \n    var body: some View {\n        TextField(\"検索キーワード\", text: $searchText)\n            .textFieldStyle(.roundedBorder)\n            .padding()\n            .onSubmit {\n                // 確定キーが押されたときの処理\n                performSearch(searchText)\n            }\n    }\n    \n    func performSearch(_ query: String) {\n        print(\"検索実行: \\(query)\")\n    }\n}\n\n// === ToDoアプリでの使用例 ===\n\nstruct TodoInputView: View {\n    @State private var todoText = \"\"\n    @Environment(.modelContext) private var context\n    \n    func addTodo() {\n        let trimmedTitle = todoText.trimmingCharacters(in: .whitespacesAndNewlines)\n        guard !trimmedTitle.isEmpty else { return }\n        \n        let newTodo = Todo(title: trimmedTitle)\n        context.insert(newTodo)\n        todoText = \"\"  // 入力欄をリセット\n    }\n    \n    var body: some View {\n        HStack {\n            TextField(\"新しいタスク\", text: $todoText)\n                .textFieldStyle(.roundedBorder)\n                .onSubmit {\n                    // EnterキーやDoneキーで追加\n                    addTodo()\n                }\n            \n            Button(\"追加\") {\n                addTodo()\n            }\n        }\n        .padding()\n    }\n}\n\n// === 複数のフィールドで使い分ける ===\n\nstruct LoginView: View {\n    @State private var email = \"\"\n    @State private var password = \"\"\n    \n    var body: some View {\n        VStack {\n            TextField(\"メールアドレス\", text: $email)\n                .textFieldStyle(.roundedBorder)\n                .onSubmit {\n                    // メール入力後は次のフィールドへ\n                    // (通常はTabキーで自動移動される)\n                }\n            \n            SecureField(\"パスワード\", text: $password)\n                .textFieldStyle(.roundedBorder)\n                .onSubmit {\n                    // パスワード入力後はログイン処理\n                    login()\n                }\n            \n            Button(\"ログイン\") {\n                login()\n            }\n        }\n        .padding()\n    }\n    \n    func login() {\n        print(\"ログイン: \\(email)\")\n    }\n}\n\n// === onSubmitのポイント ===\n// ✅ TextFieldやSecureFieldに付与する\n// ✅ ユーザーが確定キー（DoneやReturn）を押したとき実行\n// ✅ ボタンと組み合わせて複数の実行方法を用意すると親切\n// ✅ 入力値の検証やデータ保存に使用",
 					"keywords": [
-						"menu",
-						"action",
-						"dropdown",
-						"ellipsis",
-						"toolbar",
-						"button",
-						"options",
-						"メニュー",
-						"アクション",
-						"ドロップダウン",
-						"ボタン",
-						"その他"
+						"onSubmit",
+						"フォーム",
+						"送信",
+						"TextField",
+						"SecureField",
+						"確定キー",
+						"Enter",
+						"Return",
+						"Done"
 					]
 				}
 			]

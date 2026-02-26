@@ -5,7 +5,7 @@
 	import { tick, onMount } from 'svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
-	import cheatsheetData from '$lib/data/cheatsheet.json';
+	import basicSyntaxData from '$lib/data/basic-syntax.json';
 	import glossaryData from '$lib/data/glossary.json';
 	import componentData from '$lib/data/components-guide.json';
 	import stylingData from '$lib/data/styling-guide.json';
@@ -14,10 +14,10 @@
 	// タブの定義
 	const tabs = [
 		{
-			id: 'cheatsheet',
+			id: 'basic-syntax',
 			label: '基本文法',
 			icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
-			data: cheatsheetData,
+			data: basicSyntaxData,
 			placeholder: '文法を検索...',
 			title: 'Swift基本文法',
 			description:
@@ -71,7 +71,7 @@
 	let activeTabId = $derived.by(() => {
 		const tabParam = $page.url.searchParams.get('tab');
 		const validTab = tabs.find((t) => t.id === tabParam);
-		return validTab ? tabParam : 'cheatsheet';
+		return validTab ? tabParam : 'basic-syntax';
 	});
 
 	// 現在のタブデータ
@@ -174,7 +174,7 @@
 
 		<ul class="menu">
 			<li class="menu-title">{currentTab?.label}</li>
-			{#if activeTabId === 'cheatsheet'}
+			{#if activeTabId === 'basic-syntax'}
 				<li>
 					<a
 						href="#how-to-use"
@@ -344,7 +344,7 @@
 			</div>
 
 			<!-- SwiftFiddle実行の解説（チートシートのみ） -->
-			{#if activeTabId === 'cheatsheet'}
+			{#if activeTabId === 'basic-syntax'}
 				<div id="how-to-use" class="card mb-6 bg-base-100 shadow-xl">
 					<div class="card-body">
 						<h2 class="card-title">
@@ -428,7 +428,7 @@
 									output={codeBlock.output}
 									executable={codeBlock.executable !== undefined
 										? codeBlock.executable
-										: activeTabId === 'cheatsheet'}
+										: activeTabId === 'basic-syntax'}
 									description={codeBlock.description}
 								/>
 							</div>
