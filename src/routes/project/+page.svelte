@@ -1,6 +1,6 @@
 <script>
 	import { base, resolve } from '$app/paths';
-	import { projects } from '$lib/data/projects';
+	import { projects } from '$lib/data/projects/index';
 </script>
 
 <div class="container mx-auto px-4 py-8" data-base={base}>

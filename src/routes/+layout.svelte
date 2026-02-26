@@ -5,14 +5,27 @@
 	import { page } from '$app/stores';
 	import Header from '$lib/components/Header.svelte';
 	import tutorialData from '$lib/data/tutorial.json';
-	import quizData from '$lib/data/quiz.json';
 	import GlobalSearch from '$lib/components/GlobalSearch.svelte';
 
 	let { children } = $props();
 
 	let id = $derived($page.params.id);
 	let tutorialSection = $derived(tutorialData.sections.find((s) => s.id === id));
-	let quizSection = $derived(quizData.sections.find((s) => s.id === id));
+
+	const quizSections = [
+		{
+			id: '1',
+			title: '変数と定数',
+			description: 'Swiftでの変数と定数の宣言と使用方法を学びます。'
+		},
+		{ id: '2', title: '型推論', description: 'Swiftの型推論の仕組みを学びます。' },
+		{ id: '3', title: '条件分岐', description: 'Swiftでの条件分岐の方法を学びます。' },
+		{ id: '4', title: '配列', description: 'Swiftでの配列の使い方を学びます。' },
+		{ id: '5', title: '関数', description: 'Swiftでの関数の定義と使用方法を学びます。' },
+		{ id: '6', title: 'enum', description: 'Swiftでの列挙型の宣言と使用方法を学びます。' }
+	];
+	let quizSection = $derived(quizSections.find((s) => s.id === id));
+
 	let breadcrumbTitle = $derived(
 		$page.route.id === '/tutorial/[id]'
 			? tutorialSection?.title

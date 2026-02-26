@@ -1,7 +1,19 @@
 <script>
 	import { base, resolve } from '$app/paths';
 	import { onMount } from 'svelte';
-	import quizData from '$lib/data/quiz.json';
+
+	const quizSections = [
+		{
+			id: '1',
+			title: '変数と定数',
+			description: 'Swiftでの変数と定数の宣言と使用方法を学びます。'
+		},
+		{ id: '2', title: '型推論', description: 'Swiftの型推論の仕組みを学びます。' },
+		{ id: '3', title: '条件分岐', description: 'Swiftでの条件分岐の方法を学びます。' },
+		{ id: '4', title: '配列', description: 'Swiftでの配列の使い方を学びます。' },
+		{ id: '5', title: '関数', description: 'Swiftでの関数の定義と使用方法を学びます。' },
+		{ id: '6', title: 'enum', description: 'Swiftでの列挙型の宣言と使用方法を学びます。' }
+	];
 
 	// スコア保存用のプレフィックス
 	const scoreStoragePrefix = 'quiz-score-';
@@ -13,7 +25,7 @@
 			return;
 		}
 		const gathered = {};
-		for (const section of quizData.sections) {
+		for (const section of quizSections) {
 			const raw = localStorage.getItem(scoreStoragePrefix + section.id);
 			if (!raw) {
 				continue;
@@ -30,7 +42,7 @@
 
 <div class="container mx-auto p-4" data-base={base}>
 	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-		{#each quizData.sections as section (section.id)}
+		{#each quizSections as section (section.id)}
 			<div class="card bg-base-100 shadow-xl">
 				<div class="card-body">
 					<h2 class="card-title">{section.title}</h2>

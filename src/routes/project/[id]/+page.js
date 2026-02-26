@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { projectIdList } from '$lib/data/projects';
+import { projectIdList } from '$lib/data/projects/index';
 
 export function load({ params }) {
 	const { id } = params;
