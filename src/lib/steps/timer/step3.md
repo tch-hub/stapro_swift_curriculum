@@ -260,6 +260,50 @@ struct ContentView: View {
     }
 }
 
+```
+
+## 練習問題
+
+Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ `Picker` と `.pickerStyle(.wheel)` を使って、好きな果物や数字をスクロールして選べるセレクターを作成してみましょう。
+
+1. **データと状態の準備**
+   表示したい果物の配列（`["りんご", "バナナ", "みかん", "ぶどう"]` など）と、選択された項目を保持する `@State` 変数を用意してください。
+2. **Pickerの配置**
+   `Picker` を配置し、ラベル（テキスト）と選択範囲として配列を指定します。
+3. **スタイルの適用**
+   `.pickerStyle(.wheel)` モディファイアを適用して、ドラムロール式の見た目にしてください。
+
+### 解答例
+
+`ContentView.swift` を以下のように変更します。
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+    let fruits = ["りんご", "バナナ", "みかん", "ぶどう"]
+    @State private var selectedFruit = "りんご"
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("好きな果物を選んでください")
+                .font(.headline)
+            
+            Text("選択中: \(selectedFruit)")
+                .font(.title)
+                .foregroundColor(.red)
+
+            Picker("果物", selection: $selectedFruit) {
+                ForEach(fruits, id: \.self) { fruit in
+                    Text(fruit).tag(fruit)
+                }
+            }
+            .pickerStyle(.wheel)
+        }
+        .padding()
+    }
+}
+
 #Preview {
     ContentView()
 }

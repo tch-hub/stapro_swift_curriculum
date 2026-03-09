@@ -136,3 +136,75 @@ struct ContentView: View {
 }
 
 ```
+
+## 練習問題
+
+Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ `@StateObject` を使って、ViewModelが持つデータを画面（UI）に紐づけ、「＋１」「リセット」ボタンで数字を更新できるシンプルなカウンター画面を作成しましょう。
+
+1. **ViewModelの作成**
+   数値を保持する `@Published` 変数、数値を+1するメソッド、数値を0にする（リセット）メソッドを持つ `CounterViewModel` クラス（`ObservableObject`）を作成してください。
+2. **UIとの紐づけ**
+   `ContentView` に `@StateObject var viewModel = CounterViewModel()` を定義して紐づけてください。
+3. **画面の作成**
+   画面中央に現在の数値を表示し、その下に「＋１」ボタンと「リセット」ボタンを横並び（`HStack`）に配置して、先ほどのメソッドを呼び出すようにしてください。
+
+### 解答例
+
+`ContentView.swift` を以下のように変更します。
+
+```swift title="ContentView.swift"
+import SwiftUI
+import Combine
+
+// 1. ViewModelの定義
+class CounterViewModel: ObservableObject {
+    @Published var count = 0
+
+    func increment() {
+        count += 1
+    }
+
+    func reset() {
+        count = 0
+    }
+}
+
+// 2. 画面の定義
+struct ContentView: View {
+    @StateObject var viewModel = CounterViewModel()
+
+    var body: some View {
+        VStack(spacing: 32) {
+            Text("カウンター")
+                .font(.title)
+
+            Text("\(viewModel.count)")
+                .font(.system(size: 80))
+                .bold()
+
+            HStack(spacing: 24) {
+                Button("＋１") {
+                    viewModel.increment()
+                }
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+
+                Button("リセット") {
+                    viewModel.reset()
+                }
+                .padding()
+                .background(Color.red)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+            }
+        }
+        .padding()
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```

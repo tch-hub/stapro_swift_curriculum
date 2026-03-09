@@ -187,6 +187,70 @@ struct ContentView: View {
     }
 }
 
+```
+
+## 練習問題
+
+Xcodeで新規プロジェクト（App）を作成し、このステップで学んだカスタムビュー（引数付きのビュー）を利用して、タイトル（String）と色（Color）を受け取ってデザインされたボタンを返す `CustomButton` ビューを定義し、それをContentViewで複数並べてみましょう。
+
+1. **カスタムビューの作成**
+   `CustomButton` という名前の新しい構造体（View）を作成し、プロパティとして `title: String` 、 `color: Color`、 `action: () -> Void` を持つようにしてください。
+2. **カスタムビューのUI定義**
+   内部で標準の `Button` を使い、受け取った `title` と `color` を使ってボタンの見た目（テキスト、背景色、角丸など）を定義してください。
+3. **ContentViewでの利用**
+   `ContentView` の `VStack` の中に、先ほど作った `CustomButton` を3つ（赤・青・緑など）並べて配置し、それぞれの色とテキストを指定してください。
+
+### 解答例
+
+以下のようにファイルを分けて（もしくは同じファイル内で）実装します。
+
+```swift title="CustomButton.swift"
+import SwiftUI
+
+struct CustomButton: View {
+    let title: String
+    let color: Color
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+        }
+        .padding()
+        .background(color)
+        .foregroundColor(.white)
+        .cornerRadius(12)
+    }
+}
+```
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("カスタムコンポーネント")
+                .font(.title)
+
+            CustomButton(title: "赤いボタン", color: .red) {
+                print("赤が押されました")
+            }
+            
+            CustomButton(title: "青いボタン", color: .blue) {
+                print("青が押されました")
+            }
+            
+            CustomButton(title: "緑のボタン", color: .green) {
+                print("緑が押されました")
+            }
+        }
+        .padding()
+    }
+}
+
 #Preview {
     ContentView()
 }

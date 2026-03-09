@@ -246,6 +246,57 @@ struct ContentView: View {
     }
 }
 
+```
+
+## 練習問題
+
+Xcodeで新規プロジェクト（App）を作成し、このステップで学んだアラート（`.alert`）機能を使って、ボタンを押すと「本当に削除しますか？」という確認ダイアログを表示するUIを作成しましょう。
+
+1. **状態変数の用意**
+   アラートを表示するかどうかを管理する `@State` 変数（`Bool`型、初期値`false`）を用意してください。
+2. **削除ボタンの配置**
+   「データを削除する」といったテキストのボタンを配置し、タップされた時に先ほどの変数を `true` に変更するようにしてください。
+3. **アラートの実装**
+   `.alert` モディファイアを追加し、タイトルを「本当に削除しますか？」とし、「キャンセル」ボタンと「削除」ボタン（Roleなどを指定しても良い）を配置してください。
+
+### 解答例
+
+`ContentView.swift` を以下のように変更します。
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+    @State private var showingAlert = false
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("設定画面")
+                .font(.largeTitle)
+
+            Button("データをすべて削除する") {
+                showingAlert = true
+            }
+            .padding()
+            .background(Color.red)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+        }
+        .padding()
+        .alert("本当に削除しますか？", isPresented: $showingAlert) {
+            Button("キャンセル", role: .cancel) {
+                // キャンセル時の処理（今回は何もしない）
+            }
+            Button("削除", role: .destructive) {
+                // 削除時の処理（今回はPrintなど）
+                print("データが削除されました")
+            }
+        } message: {
+            Text("この操作は取り消せません。")
+        }
+    }
+}
+
 #Preview {
     ContentView()
 }

@@ -1,6 +1,7 @@
 <script>
 	import { base, resolve } from '$app/paths';
 	import { onMount } from 'svelte';
+	import Footer from '$lib/components/Footer.svelte';
 
 	// 授業データを定義（第0回〜第24回）
 	let lessons = $state([
@@ -370,3 +371,5 @@
 		</div>
 	</div>
 </div>
+
+<Footer />

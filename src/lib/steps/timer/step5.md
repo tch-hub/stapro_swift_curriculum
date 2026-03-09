@@ -194,3 +194,42 @@ class TimerViewModel: ObservableObject {
 ---
 
 このステップでは「裏側の処理(ビジネスロジック)」を作りました。画面には何も変化が現れませんが、次のステップ以降でこのViewModelを使ってタイマーの動作を実装していきます。
+
+## 練習問題
+
+Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ `ObservableObject`（ViewModel）と `Timer.scheduledTimer` を利用して、「1秒に1ずつ数字が増える」シンプルな自動カウンターのロジックを作成しましょう。
+
+1. **ViewModelの作成**
+   `CounterViewModel` というクラスを作成し、`ObservableObject` に準拠させてください。
+2. **状態の定義**
+   カウント数（0からスタート）を保持する `@Published` 変数と、`Timer` を保持する変数を定義してください。
+3. **タイマーの開始・停止処理**
+   `Timer.scheduledTimer` を使って1秒ごとにカウントを+1する処理（`startCounting`）と、タイマーを停止する処理（`stopCounting`）を実装してください。
+
+### 解答例
+
+`CounterViewModel.swift`（ファイル名は任意）を以下のように作成します。このステップではUIに関連付けなくても構いません。
+
+```swift title="CounterViewModel.swift"
+import SwiftUI
+import Combine
+
+class CounterViewModel: ObservableObject {
+    @Published var count = 0
+    var timer: Timer?
+
+    func startCounting() {
+        // すでにタイマーが動いていたら一旦止める
+        timer?.invalidate()
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            self.count += 1
+        }
+    }
+
+    func stopCounting() {
+        timer?.invalidate()
+    }
+}
+```
