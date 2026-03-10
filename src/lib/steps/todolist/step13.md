@@ -19,6 +19,7 @@ import SwiftUI
 struct HomeView: View {
     var body: some View {
         VStack(spacing: 12) {
+            
             // 仮のテキスト表示
             Text("ここにタスク一覧を表示します")
                 .foregroundColor(.gray)
