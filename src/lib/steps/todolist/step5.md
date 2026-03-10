@@ -46,7 +46,7 @@ struct InputView: View {
 
 ## 2. 入力チェックとフォーカス制御
 
-入力が空でないかをチェックする機能と、キーボードのフォーカス制御を追加します。`struct InputView: View {` の中に追加してください。
+入力が空でないかをチェックする機能と、キーボードのフォーカス制御を追加します。`var buttonIcon: String = “arrow.up.circle.fill”`の1行下に記述してください。
 
 ```swift
 // キーボードのフォーカス状態を管理
