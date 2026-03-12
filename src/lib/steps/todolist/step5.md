@@ -16,11 +16,11 @@ import SwiftUI
 
 struct InputView: View {
     @Binding var text: String       // 入力中のテキスト（親と共有）
-    let onAdd: () -> Void           // ボタンを押した時の処理
-
     // カスタマイズ可能な設定（デフォルト値あり）
     var placeholder: String = "新しいタスクを追加..."
     var buttonIcon: String = "arrow.up.circle.fill"
+
+    let onAdd: () -> Void           // ボタンを押した時の処理
 
     var body: some View {
         // レイアウトの実装をここに書きます
@@ -201,10 +201,9 @@ import SwiftUI
 
 struct InputView: View {
     @Binding var text: String
-    let onAdd: () -> Void
-
     var placeholder: String = "新しいタスクを追加..."
     var buttonIcon: String = "arrow.up.circle.fill"
+    let onAdd: () -> Void
 
     @FocusState private var isFocused: Bool
 
