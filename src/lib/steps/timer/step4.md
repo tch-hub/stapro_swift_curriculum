@@ -130,6 +130,7 @@ struct TimerDisplayView: View {
 ```
 
 ## 練習問題
+![完成イメージ](/images/timer/p4.png)
 
 Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ `ZStack` を使って、プロフィールアイコンの右上に未読件数を示す赤い通知バッジを重ねて配置するレイアウトを作りましょう。
 

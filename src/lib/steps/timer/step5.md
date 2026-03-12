@@ -197,31 +197,33 @@ class TimerViewModel: ObservableObject {
 
 ## 練習問題
 
-Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ `ObservableObject`（ViewModel）と `Timer.scheduledTimer` を利用して、「1秒に1ずつ数字が増える」シンプルな自動カウンターのロジックを作成しましょう。
+![完成イメージ](/images/timer/p5.png)
+
+Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ `ObservableObject`（ViewModel）と `Timer.scheduledTimer` を利用して、「1秒に1ずつ数字が増える」シンプルな自動カウンターを作成しましょう。
 
 1. **ViewModelの作成**
    `CounterViewModel` というクラスを作成し、`ObservableObject` に準拠させてください。
 2. **状態の定義**
-   カウント数（0からスタート）を保持する `@Published` 変数と、`Timer` を保持する変数を定義してください。
+   カウント数（0からスタート）を保持する `@Published` 変数、**タイマーが動いているかを確認するフラグ（`isRunning`）**、および `Timer` を保持する変数を定義してください。
 3. **タイマーの開始・停止処理**
-   `Timer.scheduledTimer` を使って1秒ごとにカウントを+1する処理（`startCounting`）と、タイマーを停止する処理（`stopCounting`）を実装してください。
+   `isRunning` の状態を見ながら、1つのボタンでカウントを開始・停止できるように実装してください。
 
 ### 解答例
 
-`CounterViewModel.swift`（ファイル名は任意）を以下のように作成します。このステップではUIに関連付けなくても構いません。
+`ContentView.swift` を以下のように作成します。
 
-```swift title="CounterViewModel.swift"
+```swift title="ContentView.swift"
 import SwiftUI
 import Combine
 
 class CounterViewModel: ObservableObject {
     @Published var count = 0
+    @Published var isRunning = false  // 実行中かどうか
     var timer: Timer?
 
     func startCounting() {
-        // すでにタイマーが動いていたら一旦止める
+        isRunning = true
         timer?.invalidate()
-        
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self = self else { return }
             self.count += 1
@@ -229,7 +231,45 @@ class CounterViewModel: ObservableObject {
     }
 
     func stopCounting() {
+        isRunning = false
         timer?.invalidate()
     }
+}
+
+struct ContentView: View {
+    @StateObject var viewModel = CounterViewModel()
+
+    var body: some View {
+        VStack(spacing: 30) {
+            Text("自動カウンター")
+                .font(.headline)
+            
+            Text("\(viewModel.count)")
+                .font(.system(size: 80))
+                .bold()
+
+            // 1つのボタンで「開始」と「停止」を切り替える
+            Button(action: {
+                if viewModel.isRunning {
+                    viewModel.stopCounting()
+                } else {
+                    viewModel.startCounting()
+                }
+            }) {
+                Text(viewModel.isRunning ? "ストップ" : "スタート")
+                    .font(.title2)
+                    .bold()
+                    .frame(width: 150, height: 60)
+                    .background(viewModel.isRunning ? Color.red : Color.green)
+                    .foregroundColor(.white)
+                    .cornerRadius(30)
+            }
+        }
+        .padding()
+    }
+}
+
+#Preview {
+    ContentView()
 }
 ```

@@ -191,63 +191,117 @@ struct ContentView: View {
 
 ## 練習問題
 
-Xcodeで新規プロジェクト（App）を作成し、このステップで学んだカスタムビュー（引数付きのビュー）を利用して、タイトル（String）と色（Color）を受け取ってデザインされたボタンを返す `CustomButton` ビューを定義し、それをContentViewで複数並べてみましょう。
+![完成イメージ](/images/timer/p8.png)
 
-1. **カスタムビューの作成**
-   `CustomButton` という名前の新しい構造体（View）を作成し、プロパティとして `title: String` 、 `color: Color`、 `action: () -> Void` を持つようにしてください。
-2. **カスタムビューのUI定義**
-   内部で標準の `Button` を使い、受け取った `title` と `color` を使ってボタンの見た目（テキスト、背景色、角丸など）を定義してください。
-3. **ContentViewでの利用**
-   `ContentView` の `VStack` の中に、先ほど作った `CustomButton` を3つ（赤・青・緑など）並べて配置し、それぞれの色とテキストを指定してください。
+Xcodeで新規プロジェクト（App）を作成し、これまでに学んだ `enum` による状態管理と、アイコン（SF Symbols）を表示できるカスタムビューを組み合わせて、3つの挨拶（朝・昼・晩）を切り替えるUIを作成しましょう。
+
+1. **状態の定義**
+   `GreetingMode` という `enum` を定義し、`morning`, `afternoon`, `evening` の3つのケースを用意してください。
+2. **カスタムビューの作成**
+   `CustomButton` ビューを作成し、プロパティとして `title: String` 、 `systemName: String`（アイコン名）、 `color: Color`、 `action: () -> Void` を持つようにしてください。
+3. **ContentViewでの実装**
+   `ContentView` で現在のモードを `@State` で保持し、選択されたモードに応じて中央の**テキスト、アイコン、背景色**が切り替わるようにしてください。
 
 ### 解答例
 
-以下のようにファイルを分けて（もしくは同じファイル内で）実装します。
-
-```swift title="CustomButton.swift"
-import SwiftUI
-
-struct CustomButton: View {
-    let title: String
-    let color: Color
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .font(.headline)
-                .frame(maxWidth: .infinity)
-        }
-        .padding()
-        .background(color)
-        .foregroundColor(.white)
-        .cornerRadius(12)
-    }
-}
-```
+`ContentView.swift` を以下のように作成します。
 
 ```swift title="ContentView.swift"
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        VStack(spacing: 20) {
-            Text("カスタムコンポーネント")
-                .font(.title)
+// 1. 挨拶の状態を定義
+enum GreetingMode {
+    case morning
+    case afternoon
+    case evening
+}
 
-            CustomButton(title: "赤いボタン", color: .red) {
-                print("赤が押されました")
+struct ContentView: View {
+    // 現在のモードを保持
+    @State private var mode: GreetingMode = .morning
+
+    var body: some View {
+        ZStack {
+            // モードに応じて背景色を変える
+            backgroundColor.ignoresSafeArea()
+
+            VStack(spacing: 50) {
+                // 中央の表示エリア
+                VStack(spacing: 20) {
+                    Image(systemName: iconName)
+                        .font(.system(size: 80))
+                        .frame(width: 100, height: 100) // サイズを固定してガタつきを防ぐ
+                    Text(greetingText)
+                        .font(.largeTitle)
+                        .bold()
+                }
+                .foregroundColor(.white)
+
+                // 切り替えボタン
+                HStack(spacing: 20) {
+                    CustomButton(title: "朝", systemName: "sun.max.fill", color: .orange) {
+                        mode = .morning
+                    }
+                    CustomButton(title: "昼", systemName: "sun.horizon.fill", color: .blue) {
+                        mode = .afternoon
+                    }
+                    CustomButton(title: "晩", systemName: "moon.stars.fill", color: .indigo) {
+                        mode = .evening
+                    }
+                }
             }
-            
-            CustomButton(title: "青いボタン", color: .blue) {
-                print("青が押されました")
-            }
-            
-            CustomButton(title: "緑のボタン", color: .green) {
-                print("緑が押されました")
-            }
+            .padding()
         }
-        .padding()
+    }
+
+    // --- 計算プロパティで表示内容を切り替える ---
+    var greetingText: String {
+        switch mode {
+        case .morning: return "おはよう"
+        case .afternoon: return "こんにちは"
+        case .evening: return "こんばんは"
+        }
+    }
+
+    var iconName: String {
+        switch mode {
+        case .morning: return "sun.max.fill"
+        case .afternoon: return "sun.horizon.fill"
+        case .evening: return "moon.stars.fill"
+        }
+    }
+
+    var backgroundColor: Color {
+        switch mode {
+        case .morning: return .orange
+        case .afternoon: return .blue
+        case .evening: return .indigo
+        }
+    }
+}
+
+// 2. アイコン付きのカスタムボタン
+struct CustomButton: View {
+    let title: String
+    let systemName: String
+    let color: Color
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack {
+                Image(systemName: systemName)
+                    .frame(width: 30, height: 30) // アイコンのサイズを固定
+                Text(title)
+                    .font(.caption)
+                    .bold()
+            }
+            .frame(width: 80, height: 80)
+            .background(Color.white)
+            .foregroundColor(color)
+            .cornerRadius(15)
+            .shadow(radius: 5)
+        }
     }
 }
 

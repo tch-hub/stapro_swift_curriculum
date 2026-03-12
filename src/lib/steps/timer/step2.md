@@ -139,6 +139,8 @@ struct ContentView: View {
 
 ## 練習問題
 
+![完成イメージ](/images/timer/p2.png)
+
 Xcodeで新規プロジェクト（App）を作成し、このステップで学んだレイアウト（`VStack`・`HStack`）や修飾子（モディファイア）を使って、以下のようなプロフィール画面風のUIを作成してみましょう。
 
 1. **縦のレイアウト（VStack）**

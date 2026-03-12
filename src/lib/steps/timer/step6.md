@@ -139,6 +139,8 @@ struct ContentView: View {
 
 ## 練習問題
 
+![完成イメージ](/images/timer/p6.png)
+
 Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ `@StateObject` を使って、ViewModelが持つデータを画面（UI）に紐づけ、「＋１」「リセット」ボタンで数字を更新できるシンプルなカウンター画面を作成しましょう。
 
 1. **ViewModelの作成**

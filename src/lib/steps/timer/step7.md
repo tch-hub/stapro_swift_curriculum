@@ -250,14 +250,16 @@ struct ContentView: View {
 
 ## 練習問題
 
-Xcodeで新規プロジェクト（App）を作成し、このステップで学んだアラート（`.alert`）機能を使って、ボタンを押すと「本当に削除しますか？」という確認ダイアログを表示するUIを作成しましょう。
+![完成イメージ](/images/timer/p7.png)
 
-1. **状態変数の用意**
-   アラートを表示するかどうかを管理する `@State` 変数（`Bool`型、初期値`false`）を用意してください。
-2. **削除ボタンの配置**
-   「データを削除する」といったテキストのボタンを配置し、タップされた時に先ほどの変数を `true` に変更するようにしてください。
+Xcodeで新規プロジェクト（App）を作成し、このステップで学んだアラート（`.alert`）機能を使って、カウントをリセットする前に「本当にリセットしますか？」という確認ダイアログを表示するUIを作成しましょう。
+
+1. **ViewModelの作成**
+   `CounterViewModel` クラスに、カウント用の数値、タイマー、および**アラートを表示するかどうかを管理する `@Published` 変数（`isShowingAlert`）**を定義してください。
+2. **ボタンの配置**
+   画面に「リセット」ボタンを配置し、タップされた時に `isShowingAlert` を `true` に変更するようにしてください。
 3. **アラートの実装**
-   `.alert` モディファイアを追加し、タイトルを「本当に削除しますか？」とし、「キャンセル」ボタンと「削除」ボタン（Roleなどを指定しても良い）を配置してください。
+   `.alert` モディファイアを追加し、タイトルを「本当にリセットしますか？」とし、「キャンセル」ボタンと、カウントを0に戻す「リセット」ボタン（`role: .destructive` を指定）を配置してください。
 
 ### 解答例
 
@@ -265,34 +267,44 @@ Xcodeで新規プロジェクト（App）を作成し、このステップで学
 
 ```swift title="ContentView.swift"
 import SwiftUI
+import Combine
+
+// 1. ViewModelでアラート状態を管理する
+class CounterViewModel: ObservableObject {
+    @Published var count = 10
+    @Published var isShowingAlert = false
+    
+    func resetCount() {
+        count = 0
+    }
+}
 
 struct ContentView: View {
-    @State private var showingAlert = false
+    @StateObject var viewModel = CounterViewModel()
 
     var body: some View {
-        VStack(spacing: 24) {
-            Text("設定画面")
+        VStack(spacing: 40) {
+            Text("カウンター: \(viewModel.count)")
                 .font(.largeTitle)
 
-            Button("データをすべて削除する") {
-                showingAlert = true
+            Button("数値をリセットする") {
+                // アラートを表示するスイッチをON
+                viewModel.isShowingAlert = true
             }
             .padding()
-            .background(Color.red)
+            .background(Color.orange)
             .foregroundColor(.white)
             .cornerRadius(10)
         }
         .padding()
-        .alert("本当に削除しますか？", isPresented: $showingAlert) {
-            Button("キャンセル", role: .cancel) {
-                // キャンセル時の処理（今回は何もしない）
-            }
-            Button("削除", role: .destructive) {
-                // 削除時の処理（今回はPrintなど）
-                print("データが削除されました")
+        // 2. ViewModelのフラグに連動してアラートを表示
+        .alert("本当にリセットしますか？", isPresented: $viewModel.isShowingAlert) {
+            Button("キャンセル", role: .cancel) { }
+            Button("リセット", role: .destructive) {
+                viewModel.resetCount()
             }
         } message: {
-            Text("この操作は取り消せません。")
+            Text("これまでのカウントは消去されます。")
         }
     }
 }

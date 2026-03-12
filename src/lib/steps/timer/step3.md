@@ -264,43 +264,65 @@ struct ContentView: View {
 
 ## 練習問題
 
-Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ `Picker` と `.pickerStyle(.wheel)` を使って、好きな果物や数字をスクロールして選べるセレクターを作成してみましょう。
+![完成イメージ](/images/timer/p3.png)
 
-1. **データと状態の準備**
-   表示したい果物の配列（`["りんご", "バナナ", "みかん", "ぶどう"]` など）と、選択された項目を保持する `@State` 変数を用意してください。
-2. **Pickerの配置**
-   `Picker` を配置し、ラベル（テキスト）と選択範囲として配列を指定します。
-3. **スタイルの適用**
-   `.pickerStyle(.wheel)` モディファイアを適用して、ドラムロール式の見た目にしてください。
+Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ「コンポーネントの再利用」と「複数のPickerの組み合わせ」を活用して、**西暦（年）と月**をドラムロールで選べるUIを作成してみましょう。
+
+1.  **再利用可能な部品 `YearMonthPicker` の作成**
+    - 数値の範囲（`range`）と単位（`title`: "年" や "月"）、そして選択状態を同期する `@Binding` 変数を持つViewを作成してください。
+2.  **`ContentView` での組み合わせ**
+    - `HStack` を使い、2つの `YearMonthPicker` を横に並べて配置してください。
+    - 2000年〜2030年の範囲、1月〜12月の範囲をそれぞれ設定します。
+3.  **選択結果の表示**
+    - 画面の下部に、「選択中: 2024年 3月」のように現在選択されている値を表示するテキストを配置してください。
 
 ### 解答例
 
-`ContentView.swift` を以下のように変更します。
+`ContentView.swift` を以下のように変更します。（1つのファイルにすべてのコードを記述できます）
 
 ```swift title="ContentView.swift"
 import SwiftUI
 
 struct ContentView: View {
-    let fruits = ["りんご", "バナナ", "みかん", "ぶどう"]
-    @State private var selectedFruit = "りんご"
+    @State private var selectedYear = 2024
+    @State private var selectedMonth = 1
 
     var body: some View {
-        VStack(spacing: 24) {
-            Text("好きな果物を選んでください")
+        VStack(spacing: 40) {
+            Text("日付を選択してください")
                 .font(.headline)
             
-            Text("選択中: \(selectedFruit)")
-                .font(.title)
-                .foregroundColor(.red)
-
-            Picker("果物", selection: $selectedFruit) {
-                ForEach(fruits, id: \.self) { fruit in
-                    Text(fruit).tag(fruit)
-                }
+            HStack {
+                // 西暦のPicker
+                YearMonthPicker(title: "年", range: 2000...2030, selection: $selectedYear)
+                
+                // 月のPicker
+                YearMonthPicker(title: "月", range: 1...12, selection: $selectedMonth)
             }
-            .pickerStyle(.wheel)
+            .frame(height: 200)
+
+            Text("選択中: \(selectedYear)年 \(selectedMonth)月")
+                .font(.title2)
+                .bold()
+                .foregroundColor(.blue)
         }
         .padding()
+    }
+}
+
+// 再利用可能なPicker部品
+struct YearMonthPicker: View {
+    var title: String
+    var range: ClosedRange<Int>
+    @Binding var selection: Int
+
+    var body: some View {
+        Picker(selection: $selection, label: Text(title)) {
+            ForEach(Array(range), id: \.self) { value in
+                Text("\(value) \(title)").tag(value)
+            }
+        }
+        .pickerStyle(.wheel)
     }
 }
 
