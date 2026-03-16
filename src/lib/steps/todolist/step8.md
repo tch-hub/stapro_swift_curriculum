@@ -76,40 +76,14 @@ final class ToDoTab: Identifiable {
 
 このステップでは「裏側の処理(データモデルの定義)」を作りました。画面には何も変化が現れませんが、次のステップ以降でこのモデルを使ってデータを保存・管理していきます。
 
-## 練習問題
+## 練習問題は必要ありません
 
-このステップで学んだ **`@Model` / `final class` / `init` / シンプルなプロパティ定義** を使って、プロジェクト（フォルダ）のデータモデルを作ってみましょう。
+このステップは**概念学習**に特化しているため、練習問題を用意していません。理由は以下の通りです。
 
-新規プロジェクト（App）を作成し、`Project.swift` というファイルを追加してください。
+- **@Modelの本来の機能が体験できない**: 練習問題では単ファイルで実装するため、SwiftDataの永続保存機能（@Modelの主要な役割）が実際には機能しません。
 
-1. **`Project` モデルの定義**  
-   `@Model` を付けた `final class Project` を `Identifiable` に準拠させて定義してください。
+- **単なる構造体になってしまう**: 実行環境なしでは、@Modelをつけても通常のクラス定義と変わりなく見えてしまいます。
 
-2. **プロパティの定義**  
-   以下の3つのプロパティをすべてデフォルト値つきで定義してください。  
-   - `id: UUID`（デフォルト `UUID()`）  
-   - `name: String`（プロジェクト名、デフォルト `""`）  
-   - `createdAt: Date`（作成日時、デフォルト `Date()`）
+- **次のステップで実践的に学べる**: step9以降で、このモデルを使ったデータベース操作や複数モデルの関連付けを実装する際に、@Modelの本当の力が理解できます。
 
-3. **`init` の実装**  
-   `name: String` だけを引数に取るイニシャライザを実装してください。  
-   `createdAt` は自動で現在時刻を設定してください。
-
-### 解答例
-
-```swift title="Project.swift"
-import Foundation
-import SwiftData
-
-@Model
-final class Project: Identifiable {
-    var id: UUID = UUID()
-    var name: String = ""
-    var createdAt: Date = Date()
-
-    init(name: String) {
-        self.name = name
-        self.createdAt = Date()
-    }
-}
-```
+したがって、まずは「複数のモデル定義パターン」と「モデル間の関係性（`tabId`など）」をこのステップで理解した上で、次のステップに進んでください。

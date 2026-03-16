@@ -162,50 +162,14 @@ class ToDoTabService {
 
 このステップでは「裏側の処理(ビジネスロジック)」を作りました。画面には何も変化が現れませんが、次のステップ以降でこのサービスを使ってデータを操作していきます。
 
-## 練習問題
+## 練習問題は必要ありません
 
-このステップで学んだ **`static func` / 他のServiceクラスとの連携 / `FetchDescriptor` を使ったデータ取得** を使って、プロジェクト管理サービスクラスを作ってみましょう。
+このステップは**ビジネスロジック設計**に特化しているため、練習問題を用意していません。理由は以下の通りです。
 
-新規プロジェクト（App）を作成し、`ProjectService.swift` というファイルを追加してください。  
-（`Project` モデルは step8 の練習問題で定義したものを使います。`Note` モデルにも `projectId: UUID` プロパティがあると想定してください）
+- **UIなしでは動作確認ができない**: サービスクラスだけでは、実装が正しく機能しているか判定できません。次のステップでUIと統合されて初めて検証が可能になります。
 
-1. **プロジェクトを追加するメソッド**  
-   `@MainActor static func addProject(_ project: Project, to modelContext: ModelContext)` を実装してください。
+- **設計パターンの理解が優先**: このステップの目的は「ビジネスロジックをサービス層に分離する」という**設計パターン**の理解です。練習問題でUIに混在させてしまうと、その学習目的が失われてしまいます。
 
-2. **プロジェクトを削除するメソッド**  
-   `@MainActor static func deleteProject(_ project: Project, from modelContext: ModelContext)` を実装してください。  
-   削除前に `NoteService.deleteAllNotes(for: project.id, from: modelContext)` を呼んで関連メモを先に削除してください。
+- **次のステップで実装を統合する**: step12以降で、このサービスを実際にUIから呼び出すコードを書く際に、実装パターンの正しさが検証できます。
 
-3. **全プロジェクトを取得するメソッド**  
-   `@MainActor static func getAllProjects(from modelContext: ModelContext) -> [Project]` を実装してください。  
-   `FetchDescriptor<Project>()` を使って全件取得し、失敗時は `[]` を返してください（`?? []`）。
-
-### 解答例
-
-```swift title="ProjectService.swift"
-import Foundation
-import SwiftData
-
-class ProjectService {
-    @MainActor
-    static func addProject(_ project: Project, to modelContext: ModelContext) {
-        modelContext.insert(project)
-        try? modelContext.save()
-    }
-
-    @MainActor
-    static func deleteProject(_ project: Project, from modelContext: ModelContext) {
-        // 先に関連メモをすべて削除
-        NoteService.deleteAllNotes(for: project.id, from: modelContext)
-        // プロジェクト自体を削除
-        modelContext.delete(project)
-        try? modelContext.save()
-    }
-
-    @MainActor
-    static func getAllProjects(from modelContext: ModelContext) -> [Project] {
-        let descriptor = FetchDescriptor<Project>()
-        return (try? modelContext.fetch(descriptor)) ?? []
-    }
-}
-```
+したがって、このステップでは「CRUD操作をサービスメソッドに分離する」という設計思想と「ModelContext」の基本的な使い方を理解することに注力してください。

@@ -288,28 +288,16 @@ struct TabManageView: View {
 
 ![完成イメージ](/images/todolist/p12.png)
 
-このステップで学んだ **`@Environment` / `@State` / `.alert` / `.safeAreaInset` / `.onAppear`** を使って、メモ管理画面を作ってみましょう。
+このステップで学んだ **`@Environment` / `@State` / `.alert` / `.safeAreaInset` / `.onAppear`** を使って、タグ管理アプリを作ってみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し（SwiftData対応）、`NoteManagerView.swift` を作成して以下の条件を満たすコードを実装してください。
+Xcodeで新規プロジェクト（App）を作成し（SwiftData対応）、`ContentView.swift` に以下を実装してください。
 
-1. **状態変数の定義**  
-   以下の `@State` 変数を定義してください。  
-   - `notes: [Note]`（一覧表示用）  
-   - `newNoteContent: String`（入力欄のテキスト）  
-   - `showDeleteAlert: Bool`（削除確認アラートの表示フラグ）  
-   - `noteToDelete: Note?`（削除対象のメモを一時保存）
+**要件:**
 
-2. **メモ一覧の表示**  
-   `CustomList`（またはシンプルな `List` + `ForEach`）でメモ一覧を表示し、スワイプ削除で `handleDelete(offsets:)` を呼び出してください。
-
-3. **削除確認アラート**  
-   スワイプ削除時には即座に削除せず、アラートで「削除」「キャンセル」を表示してから `confirmDelete()` を実行してください。
-
-4. **下部入力エリア**  
-   `.safeAreaInset(edge: .bottom)` で `TextField` と追加ボタンを配置してください。
-
-5. **`.onAppear`**  
-   画面表示時に `loadNotes()` を呼び出してメモを読み込んでください。
+- タグモデル（`@Model final class Tag`）を定義
+- タグ一覧を表示・スワイプ削除・下部から追加
+- 削除時に確認アラートを表示
+- `.onAppear` で初期読み込み
 
 ### 解答例
 
@@ -317,38 +305,55 @@ Xcodeで新規プロジェクト（App）を作成し（SwiftData対応）、`No
 import SwiftUI
 import SwiftData
 
+// 【タグモデル】
+@Model
+final class Tag {
+    var name: String
+    var createdAt: Date
+
+    init(name: String) {
+        self.name = name
+        self.createdAt = Date()
+    }
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
 
-    @State private var notes: [Note] = []
-    @State private var newNoteContent = ""
+    @State private var tags: [Tag] = []
+    @State private var newTagName = ""
     @State private var showDeleteAlert = false
-    @State private var noteToDelete: Note?
+    @State private var tagToDelete: Tag?
 
     var body: some View {
         NavigationStack {
             ZStack {
-                List {
-                    ForEach(notes) { note in
-                        Text(note.content)
+                if tags.isEmpty {
+                    Text("タグがまだありません")
+                        .foregroundColor(.gray)
+                } else {
+                    List {
+                        ForEach(tags) { tag in
+                            Text(tag.name)
+                        }
+                        .onDelete(perform: handleDelete)
                     }
-                    .onDelete(perform: handleDelete)
                 }
-                .navigationTitle("メモ管理")
-                .onAppear { loadNotes() }
-                .alert("メモの削除", isPresented: $showDeleteAlert) {
-                    Button("削除", role: .destructive) { confirmDelete() }
-                    Button("キャンセル", role: .cancel) {}
-                } message: {
-                    Text("このメモを削除しますか？")
-                }
+            }
+            .navigationTitle("タグ管理")
+            .onAppear { loadTags() }
+            .alert("タグの削除", isPresented: $showDeleteAlert) {
+                Button("削除", role: .destructive) { confirmDelete() }
+                Button("キャンセル", role: .cancel) {}
+            } message: {
+                Text("このタグを削除しますか？")
             }
             .safeAreaInset(edge: .bottom) {
                 HStack {
-                    TextField("新しいメモ", text: $newNoteContent)
+                    TextField("新しいタグ", text: $newTagName)
                         .textFieldStyle(.roundedBorder)
-                    Button("追加") { addNote() }
-                        .disabled(newNoteContent.isEmpty)
+                    Button("追加") { addTag() }
+                        .disabled(newTagName.isEmpty)
                 }
                 .padding()
                 .background(.ultraThinMaterial)
@@ -356,38 +361,37 @@ struct ContentView: View {
         }
     }
 
-    private func loadNotes() {
-        let descriptor = FetchDescriptor<Note>()
-        notes = (try? modelContext.fetch(descriptor)) ?? []
+    private func loadTags() {
+        let descriptor = FetchDescriptor<Tag>()
+        tags = (try? modelContext.fetch(descriptor)) ?? []
     }
 
-    private func addNote() {
-        guard !newNoteContent.isEmpty else { return }
-        let note = Note(content: newNoteContent)
-        modelContext.insert(note)
+    private func addTag() {
+        guard !newTagName.isEmpty else { return }
+        modelContext.insert(Tag(name: newTagName))
         try? modelContext.save()
-        newNoteContent = ""
-        loadNotes()
+        newTagName = ""
+        loadTags()
     }
 
     private func handleDelete(offsets: IndexSet) {
         if let index = offsets.first {
-            noteToDelete = notes[index]
+            tagToDelete = tags[index]
             showDeleteAlert = true
         }
     }
 
     private func confirmDelete() {
-        if let note = noteToDelete {
-            modelContext.delete(note)
+        if let tag = tagToDelete {
+            modelContext.delete(tag)
             try? modelContext.save()
-            loadNotes()
+            loadTags()
         }
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Note.self, inMemory: true)
+        .modelContainer(for: Tag.self, inMemory: true)
 }
 ```

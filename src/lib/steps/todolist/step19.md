@@ -193,47 +193,107 @@ struct HomeView: View {
 
 ![完成イメージ](/images/todolist/p19.png)
 
-このステップで学んだ **`.safeAreaInset` / `@State var newText` / `guard` による入力チェック / Serviceクラスへの保存** を使って、メモ追加機能を実装してみましょう。
+このステップで学んだ **`.safeAreaInset` / `@State var newText` / `guard` による入力チェック / `.onChange` での自動更新** を使って、買い物リスト機能を実装してみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し（SwiftData対応・`Note`・`NoteService` が定義済みの状態を想定）、以下の条件を満たすコードを `ContentView.swift` に追加してください。
+Xcodeで新規プロジェクト（App）を作成し、以下の条件を満たすコードを `ContentView.swift` に実装してください。
 
-1. **`@State private var newContent = ""`** を定義してください。
+1. **`ShoppingItem` モデルの作成**（@Model）
+   - `id: UUID`（主キー）
+   - `name: String`（買い物アイテムの名前）
 
-2. **`.safeAreaInset(edge: .bottom)` の配置**  
-   `VStack` の末尾（または `navigationTitle` の後）に、`if selectedCategoryId != nil` の条件で下部入力エリアを表示してください。  
+2. **`@State private var newItemName = ""`** を定義してください。
+
+3. **`.safeAreaInset(edge: .bottom)` の配置**  
+   `VStack` の末尾（または `navigationTitle` の後）に、下部入力エリアを表示してください。  
    入力エリアは `HStack` で `TextField` と「追加」`Button` を横並びにしてください。
 
-3. **`addNote()` の実装**  
-   以下の条件を `guard` で確認してください。  
-   - `newContent` が空でないこと  
-   - `selectedCategoryId` が `nil` でないこと（オプショナルバインディング）  
-   クリアした後 `loadNotes()` を呼んでください。
+4. **`addItem()` の実装**  
+   以下の条件を `guard` で確認してください。
+   - `newItemName` が空でないこと  
+     モデルコンテキストに `insert()` でデータベースに保存し、入力欄を空にしてから `loadItems()` を呼んでください。
 
 ### 解答例
 
-```swift title="ContentView.swift (抜粋)"
-// body 内の続き
-.safeAreaInset(edge: .bottom) {
-    if selectedCategoryId != nil {
-        HStack {
-            TextField("新しいメモ", text: $newContent)
-                .textFieldStyle(.roundedBorder)
-            Button("追加") { addNote() }
-                .disabled(newContent.isEmpty)
-        }
-        .padding()
-        .background(.ultraThinMaterial)
+```swift title="ContentView.swift"
+import SwiftUI
+import SwiftData
+
+// 買い物リスト項目のデータモデル
+@Model final class ShoppingItem {
+    var id: UUID
+    var name: String
+
+    init(name: String) {
+        self.id = UUID()
+        self.name = name
     }
 }
 
-// メソッド
-private func addNote() {
-    guard !newContent.isEmpty, let categoryId = selectedCategoryId else { return }
+struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    @State private var items: [ShoppingItem] = []
+    @State private var newItemName = ""
 
-    let note = Note(content: newContent, categoryId: categoryId)
-    NoteService.addNote(note, to: modelContext)
+    var body: some View {
+        VStack(spacing: 0) {
+            if items.isEmpty {
+                ContentUnavailableView("買い物リストが空です", systemImage: "cart.fill")
+            } else {
+                List {
+                    ForEach(items, id: \.id) { item in
+                        HStack {
+                            Text(item.name)
+                                .font(.body)
+                            Spacer()
+                            Image(systemName: "checkmark.circle")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .onDelete { indices in
+                        indices.forEach { index in
+                            modelContext.delete(items[index])
+                        }
+                        loadItems()
+                    }
+                }
+            }
+        }
+        .navigationTitle("買い物リスト")
+        .onAppear {
+            loadItems()
+        }
+        .safeAreaInset(edge: .bottom) {
+            HStack {
+                TextField("新しい買い物", text: $newItemName)
+                    .textFieldStyle(.roundedBorder)
+                Button("追加") { addItem() }
+                    .disabled(newItemName.isEmpty)
+            }
+            .padding()
+            .background(.ultraThinMaterial)
+        }
+    }
 
-    newContent = ""
-    loadNotes()
+    private func loadItems() {
+        let descriptor = FetchDescriptor<ShoppingItem>()
+        items = (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    private func addItem() {
+        guard !newItemName.isEmpty else { return }
+
+        let item = ShoppingItem(name: newItemName)
+        modelContext.insert(item)
+
+        newItemName = ""
+        loadItems()
+    }
+}
+
+#Preview {
+    NavigationStack {
+        ContentView()
+            .modelContainer(for: ShoppingItem.self, inMemory: true)
+    }
 }
 ```

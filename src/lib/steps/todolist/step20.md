@@ -183,34 +183,107 @@ struct HomeView: View {
 
 ![完成イメージ](/images/todolist/p20.png)
 
-このステップで学んだ **`IndexSet` / `for index in offsets` / `onDelete` へのメソッド参照渡し** を使って、メモのスワイプ削除機能を実装してみましょう。
+このステップで学んだ **`IndexSet` / `for index in offsets` / `.onDelete` でのメソッド参照渡し** を使って、タグ管理の削除機能を実装してみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し（SwiftData対応・`Note`・`NoteService` が定義済みの状態を想定）、以下の条件を満たすコードを `ContentView.swift` に追加してください。
+Xcodeで新規プロジェクト（App）を作成し、以下の条件を満たすコードを `ContentView.swift` に実装してください。
 
-1. **`handleDeleteNote(_:)` メソッドの実装**  
+1. **`Tag` モデルの作成**（@Model）
+   - `id: UUID`
+   - `name: String`
+
+2. **`@State private var tags: [Tag] = []` と `@State private var newTagName = ""`** を定義してください。
+
+3. **`handleDeleteTag(_:)` メソッドの実装**  
    引数として `_ offsets: IndexSet` を受け取ってください。  
-   `for index in offsets` で各インデックスに対して `notes[index]` を取得し、`NoteService.deleteNote(note, from: modelContext)` で削除してください。  
-   ループ後に `loadNotes()` を呼んでください。
+   `for index in offsets` で各インデックスに対して `tags[index]` を取得し、`modelContext.delete()` で削除してください。  
+   ループ後に `loadTags()` を呼んでください。
 
-2. **スワイプ削除の有効化**  
-   `ForEach` に `.onDelete(perform: handleDeleteNote)` を付けて、スワイプで削除できるようにしてください。  
-   **注意**: `handleDeleteNote()` と書くとその場で実行されてしまうため、カッコなしで `handleDeleteNote` と書いてください。
+4. **スワイプ削除の有効化**  
+   `ForEach` に `.onDelete(perform: handleDeleteTag)` を付けて、スワイプで削除できるようにしてください。
 
 ### 解答例
 
-```swift title="ContentView.swift (抜粋)"
-// body 内の ForEach
-ForEach(notes) { note in
-    Text(note.content)
-}
-.onDelete(perform: handleDeleteNote)
+```swift title="ContentView.swift"
+import SwiftUI
+import SwiftData
 
-// メソッド
-private func handleDeleteNote(_ offsets: IndexSet) {
-    for index in offsets {
-        let noteToDelete = notes[index]
-        NoteService.deleteNote(noteToDelete, from: modelContext)
+// タグのデータモデル
+@Model final class Tag {
+    var id: UUID
+    var name: String
+
+    init(name: String) {
+        self.id = UUID()
+        self.name = name
     }
-    loadNotes()
+}
+
+struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    @State private var tags: [Tag] = []
+    @State private var newTagName = ""
+
+    var body: some View {
+        VStack(spacing: 0) {
+            if tags.isEmpty {
+                ContentUnavailableView("タグがありません", systemImage: "tag")
+            } else {
+                List {
+                    ForEach(tags) { tag in
+                        HStack {
+                            Text(tag.name)
+                                .font(.body)
+                            Spacer()
+                            Image(systemName: "tag.fill")
+                                .foregroundStyle(.blue)
+                        }
+                    }
+                    .onDelete(perform: handleDeleteTag)
+                }
+            }
+        }
+        .navigationTitle("タグ管理")
+        .onAppear { loadTags() }
+        .safeAreaInset(edge: .bottom) {
+            HStack {
+                TextField("新しいタグ", text: $newTagName)
+                    .textFieldStyle(.roundedBorder)
+                Button("追加") { addTag() }
+                    .disabled(newTagName.isEmpty)
+            }
+            .padding()
+            .background(.ultraThinMaterial)
+        }
+    }
+
+    private func loadTags() {
+        let descriptor = FetchDescriptor<Tag>()
+        tags = (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    private func addTag() {
+        guard !newTagName.isEmpty else { return }
+
+        let tag = Tag(name: newTagName)
+        modelContext.insert(tag)
+
+        newTagName = ""
+        loadTags()
+    }
+
+    private func handleDeleteTag(_ offsets: IndexSet) {
+        for index in offsets {
+            let tagToDelete = tags[index]
+            modelContext.delete(tagToDelete)
+        }
+        loadTags()
+    }
+}
+
+#Preview {
+    NavigationStack {
+        ContentView()
+            .modelContainer(for: Tag.self, inMemory: true)
+    }
 }
 ```

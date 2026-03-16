@@ -99,46 +99,16 @@ final class ToDoTask: Identifiable {
 
 ---
 
-このステップでは「裏側の処理(データモデルの定義)」を作りました。画面には何も変化が現れませんが、次のステップ以降でこのモデルを使ってデータを保存・管理していきます。
+このステップでは、@Modelを使ったデータモデルの定義と、そのインスタンスの作成・表示方法を学びました。次のステップ以降で、このモデルを使ってデータベースに永続的にデータを保存・管理していきます。
 
-## 練習問題
+## 練習問題は必要ありません
 
-このステップで学んだ **`@Model` / `final class` / `init` / SwiftDataのプロパティ定義** を使って、新しいデータモデルを定義してみましょう。
+このステップは**概念学習**に特化しているため、練習問題を用意していません。理由は以下の通りです。
 
-新規プロジェクト（App）を作成し、`Note.swift` というファイルを追加して以下の条件を満たすモデルを実装してください。
+- **@Modelの本来の機能が体験できない**: 練習問題では一般的なプレビュー環境で実行するため、SwiftDataの永続保存機能（@Modelの主要な役割）が実際には機能しません。
 
-1. **`@Model` の付与**  
-   `Note` という `final class` に `@Model` を付けて、SwiftDataで管理できるようにしてください。  
-   また `Identifiable` プロトコルに準拠させてください。
+- **単なる構造体になってしまう**: プレビュー環境では、@Modelをつけても通常の構造体と変わりなく見えてしまいます。
 
-2. **プロパティの定義**  
-   以下のプロパティを定義してください。  
-   - `id: UUID`（デフォルト値 `UUID()`）  
-   - `content: String`（メモの本文）  
-   - `isPinned: Bool`（ピン留めされているかどうか）  
-   - `createdAt: Date`（作成日時、デフォルト値 `Date()`）
+- **次のステップで実践的に学べる**: step8以降で、このモデルを使ったデータベース操作や状態管理を実装する際に、@Modelの本当の力が理解できます。
 
-3. **`init` の実装**  
-   `content: String` と `isPinned: Bool = false` を引数に取るイニシャライザを実装してください。  
-   `createdAt` は現在時刻で自動設定してください。
-
-### 解答例
-
-```swift title="Note.swift"
-import Foundation
-import SwiftData
-
-@Model
-final class Note: Identifiable {
-    var id: UUID = UUID()
-    var content: String = ""
-    var isPinned: Bool = false
-    var createdAt: Date = Date()
-
-    init(content: String, isPinned: Bool = false) {
-        self.content = content
-        self.isPinned = isPinned
-        self.createdAt = Date()
-    }
-}
-```
+したがって、まずは「@Modelの基本的な書き方」と「プロパティ・initの定義パターン」をこのステップで理解した上で、次のステップに進んでください。

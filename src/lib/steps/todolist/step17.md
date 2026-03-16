@@ -279,62 +279,85 @@ struct HomeView: View {
 
 ![完成イメージ](/images/todolist/p17.png)
 
-このステップで学んだ **`FetchDescriptor` / `#Predicate` / `loadTasks()` / `.onChange`** を使って、カテゴリー別にメモを絞り込んで表示してみましょう。
+このステップで学んだ **`FetchDescriptor` / `#Predicate` / `.onChange` / `guard let`** を使って、優先度別タスク表示アプリを作ってみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し（SwiftData対応・`Note` に `categoryId: UUID` プロパティを追加した状態を想定）、以下の条件を満たす関数を `ContentView.swift` に実装してください。
+Xcodeで新規プロジェクト（App）を作成し（SwiftData対応・`Task` モデルに `priority: Int`（1～3）プロパティがある状態を想定）、`ContentView.swift` に以下を実装してください。
 
-1. **変数の定義**  
-   以下の `@State` 変数を定義してください。  
-   - `notes: [Note] = []`（絞り込まれたメモ一覧）  
-   - `selectedCategoryId: UUID?`（選択中のカテゴリーID）
+**要件:**
 
-2. **`loadNotes()` の実装**  
-   `selectedCategoryId` が `nil` の場合は `notes = []` にして処理を終了してください。  
-   `nil` でない場合は `FetchDescriptor<Note>` に `#Predicate { $0.categoryId == categoryId }` で条件を設定し、データベースから取得して `notes` に入れてください。
-
-3. **`.onChange` の設定**  
-   `selectedCategoryId` が変わったときに `loadNotes()` を呼び出すよう `.onChange(of: selectedCategoryId)` を設定してください。
-
-4. **リストの表示**  
-   `notes` が空でない場合は `List` でメモを表示し、空の場合は `ContentUnavailableView("メモがありません", systemImage: "note")` を表示してください。
+- 優先度フィルタ（高・中・低）のセグメントコントロール
+- 選択した優先度のタスクのみ表示
+- `.onChange` と `#Predicate` で条件フィルタリング
+- タスクが空の場合は `ContentUnavailableView` 表示
 
 ### 解答例
 
-```swift title="ContentView.swift (抜粋)"
+```swift title="ContentView.swift"
 import SwiftUI
 import SwiftData
+
+@Model
+final class Task {
+    var title: String
+    var priority: Int // 1: 低, 2: 中, 3: 高
+    var isCompleted: Bool
+
+    init(title: String, priority: Int) {
+        self.title = title
+        self.priority = priority
+        self.isCompleted = false
+    }
+}
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
 
-    @State private var notes: [Note] = []
-    @State private var selectedCategoryId: UUID?
+    @State private var tasks: [Task] = []
+    @State private var selectedPriority = 3 // デフォルトは「高」
+
+    let priorityLabels = ["低", "中", "高"]
 
     var body: some View {
-        VStack {
-            if !notes.isEmpty {
-                List(notes) { note in
-                    Text(note.content)
+        NavigationStack {
+            VStack {
+                // フィルタセグメント
+                Picker("優先度", selection: $selectedPriority) {
+                    ForEach(1...3, id: \.self) { priority in
+                        Text(priorityLabels[priority - 1]).tag(priority)
+                    }
                 }
-            } else {
-                ContentUnavailableView("メモがありません", systemImage: "note")
+                .pickerStyle(.segmented)
+                .padding()
+                .onChange(of: selectedPriority) { _, _ in
+                    loadTasks()
+                }
+
+                // タスク一覧
+                if tasks.isEmpty {
+                    ContentUnavailableView("タスクがありません", systemImage: "checkmark.circle")
+                } else {
+                    List {
+                        ForEach(tasks) { task in
+                            Text(task.title)
+                        }
+                    }
+                }
             }
-        }
-        .onChange(of: selectedCategoryId) { _, _ in
-            loadNotes()
+            .navigationTitle("優先度別タスク")
+            .onAppear { loadTasks() }
         }
     }
 
-    private func loadNotes() {
-        guard let categoryId = selectedCategoryId else {
-            notes = []
-            return
-        }
-
-        let descriptor = FetchDescriptor<Note>(
-            predicate: #Predicate { $0.categoryId == categoryId }
+    private func loadTasks() {
+        let descriptor = FetchDescriptor<Task>(
+            predicate: #Predicate { $0.priority == selectedPriority }
         )
-        notes = (try? modelContext.fetch(descriptor)) ?? []
+        tasks = (try? modelContext.fetch(descriptor)) ?? []
     }
+}
+
+#Preview {
+    ContentView()
+        .modelContainer(for: Task.self, inMemory: true)
 }
 ```
