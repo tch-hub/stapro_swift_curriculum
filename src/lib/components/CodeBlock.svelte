@@ -30,7 +30,8 @@
 		executable = false, // 実行可能コードかどうか
 		showLineNumbers = true, // 行番号を表示するかどうか
 		output = '', // 実行結果
-		showHeader = true // ヘッダーを表示するかどうか
+		showHeader = true, // ヘッダーを表示するかどうか
+		dataAttribute = '' // data-* 属性用（例：data-search-tutorial の値）
 	} = $props();
 
 	// コピー機能の状態管理
@@ -99,7 +100,10 @@
 	});
 </script>
 
-<div class="code-block rounded-lg bg-base-100 shadow-lg">
+<div
+	class="code-block rounded-lg bg-base-100 shadow-lg"
+	data-search-tutorial={dataAttribute || undefined}
+>
 	{#if showHeader}
 		<!-- ヘッダー部分 -->
 		<div class="code-header flex items-center justify-between bg-base-200 px-4 py-2">

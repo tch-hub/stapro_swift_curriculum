@@ -1,26 +1,239 @@
 <script>
 	import { base, resolve } from '$app/paths';
 	import { onMount } from 'svelte';
+	import CodeBlock from '$lib/components/CodeBlock.svelte';
 
 	// 現在のステップを管理する変数
-	let currentStep = 0;
+	let currentStep = $state(0);
+	const maxStep = 4;
 
 	// OSの検出結果を管理
-	let isMac = true; // デフォルトはtrueにしてサーバーサイドでエラーにならないように
+	let isMac = $state(true); // デフォルトはtrueにしてサーバーサイドでエラーにならないように
+
+	// 検索チュートリアル管理
+	const searchTutorialStorageKey = 'setup-search-tutorial-step';
+	const searchTutorialCompletedStorageKey = 'setup-search-tutorial-completed';
+	let searchTutorialStep = $state(0);
+	let searchTutorialCompleted = $state(false);
+	let highlightRect = $state(null);
+	let missionTooltipStyle = $state('');
+
+	const searchTutorialSteps = [
+		{
+			title: 'テキスト選択で検索',
+			description:
+				'テキストを選択してみましょう。選択すると画面上に「検索」ボタンが出ます。',
+			targetSelector: '[data-search-tutorial="practice-text"]',
+			actionLabel: 'テキストを選択する',
+			tip: 'サイト内のどのテキストでも使えます'
+		},
+		{
+			title: '右下の虫眼鏡ボタンで検索',
+			description: '画面右下の虫眼鏡ボタンをクリックして、ドキュメント検索を開きましょう。',
+			targetSelector: '[aria-label="検索を開く"]',
+			actionLabel: '虫眼鏡ボタンをクリックする',
+			tip: 'タブレットなどのタッチ操作でも使いやすい方法です'
+		},
+		{
+			title: '右クリックから検索',
+			description: 'ページ内の任意の場所で右クリックして、メニューから検索を選びましょう。',
+			targetSelector: '[data-search-tutorial="practice-text"]',
+			actionLabel: 'ページ内で右クリックする',
+			tip: '選択中の文字列をそのまま検索できます。右クリックメニューにキーボードショートカットも表示されます。'
+		}
+	];
+
+	function getActiveSearchTutorial() {
+		return searchTutorialSteps[searchTutorialStep];
+	}
+
+	function isSearchTutorialActive() {
+		return currentStep === 4 && !searchTutorialCompleted;
+	}
 
 	// ステップデータの定義
 	const steps = [
 		{ title: 'システム要件確認', completed: true },
 		{ title: 'Xcodeインストール', completed: true },
 		{ title: '初期設定', completed: true },
-		{ title: '動作確認', completed: false }
+		{ title: '動作確認', completed: false },
+		{ title: 'ドキュメント検索チュートリアル', completed: false }
 	];
+
+	function updateHighlightRect() {
+		const activeSearchTutorial = getActiveSearchTutorial();
+		if (!isSearchTutorialActive() || !activeSearchTutorial?.targetSelector) {
+			highlightRect = null;
+			missionTooltipStyle = '';
+			return;
+		}
+
+		const target = document.querySelector(activeSearchTutorial.targetSelector);
+		if (!target) {
+			highlightRect = null;
+			missionTooltipStyle = '';
+			return;
+		}
+
+		const rect = target.getBoundingClientRect();
+		const viewportHeight = window.innerHeight;
+		const viewportWidth = window.innerWidth;
+
+		// 要素が画面外に完全に出ている場合はハイライトを非表示にする
+		if (rect.bottom < 0 || rect.top > viewportHeight || rect.right < 0 || rect.left > viewportWidth) {
+			highlightRect = null;
+			missionTooltipStyle = '';
+			return;
+		}
+
+		highlightRect = {
+			top: Math.max(rect.top - 8, 0),
+			left: Math.max(rect.left - 8, 0),
+			width: rect.width + 16,
+			height: rect.height + 16
+		};
+
+		// 画面外に部分的に出ている場合、ハイライト矩形を調整
+		if (rect.top - 8 < 0) {
+			// 上側が画面外に出ている場合、高さを調整
+			highlightRect.height = highlightRect.height + (rect.top - 8);
+		}
+		if (rect.left - 8 < 0) {
+			// 左側が画面外に出ている場合、幅を調整
+			highlightRect.width = highlightRect.width + (rect.left - 8);
+		}
+
+		const tooltipWidth = 360;
+		const tooltipHeight = 170;
+		const margin = 12;
+
+		let tooltipLeft = highlightRect.left + highlightRect.width / 2 - tooltipWidth / 2;
+		tooltipLeft = Math.max(margin, Math.min(tooltipLeft, viewportWidth - tooltipWidth - margin));
+
+		let tooltipTop = highlightRect.top + highlightRect.height + margin;
+		if (tooltipTop + tooltipHeight > viewportHeight - margin) {
+			tooltipTop = Math.max(margin, highlightRect.top - tooltipHeight - margin);
+		}
+
+		missionTooltipStyle = `left: ${tooltipLeft}px; top: ${tooltipTop}px; width: min(${tooltipWidth}px, calc(100vw - ${margin * 2}px));`;
+	}
+
+	function persistSearchTutorial() {
+		localStorage.setItem(searchTutorialStorageKey, String(searchTutorialStep));
+		localStorage.setItem(searchTutorialCompletedStorageKey, searchTutorialCompleted ? '1' : '0');
+	}
+
+	function completeSearchTutorial() {
+		searchTutorialCompleted = true;
+		highlightRect = null;
+		missionTooltipStyle = '';
+		persistSearchTutorial();
+	}
+
+	function nextSearchTutorialStep() {
+		if (searchTutorialStep >= searchTutorialSteps.length - 1) {
+			completeSearchTutorial();
+			return;
+		}
+		searchTutorialStep += 1;
+		persistSearchTutorial();
+		requestAnimationFrame(updateHighlightRect);
+	}
+
+	function prevSearchTutorialStep() {
+		if (searchTutorialStep <= 0) {
+			return;
+		}
+		searchTutorialStep -= 1;
+		persistSearchTutorial();
+		requestAnimationFrame(updateHighlightRect);
+	}
+
+	function skipSearchTutorial() {
+		completeSearchTutorial();
+	}
+
+	function resetSearchTutorial() {
+		searchTutorialStep = 0;
+		searchTutorialCompleted = false;
+		persistSearchTutorial();
+		requestAnimationFrame(updateHighlightRect);
+	}
+
+	function detectSearchTutorialAction(event) {
+		if (!isSearchTutorialActive()) {
+			return;
+		}
+
+		if (searchTutorialStep === 0) {
+			const text = window.getSelection()?.toString().trim() ?? '';
+			if (text.length > 0) {
+				nextSearchTutorialStep();
+			}
+			return;
+		}
+
+		if (searchTutorialStep === 1) {
+			const target = event.target;
+			if (target && target.closest?.('[aria-label="検索を開く"]')) {
+				nextSearchTutorialStep();
+			}
+			return;
+		}
+
+		if (searchTutorialStep === 2) {
+			if (event.type === 'contextmenu') {
+				nextSearchTutorialStep();
+			}
+			return;
+		}
+	}
+
+	function moveToNextStep() {
+		currentStep = Math.min(currentStep + 1, maxStep);
+		requestAnimationFrame(updateHighlightRect);
+	}
+
+	function moveToPrevStep() {
+		currentStep = Math.max(currentStep - 1, 0);
+		requestAnimationFrame(updateHighlightRect);
+	}
 
 	// クライアントサイドでOSを検出
 	onMount(() => {
 		const platform = navigator.platform.toLowerCase();
 		const userAgent = navigator.userAgent.toLowerCase();
 		isMac = platform.includes('mac') || userAgent.includes('mac');
+
+		const savedStep = Number(localStorage.getItem(searchTutorialStorageKey) ?? 0);
+		if (Number.isFinite(savedStep)) {
+			searchTutorialStep = Math.min(Math.max(savedStep, 0), searchTutorialSteps.length - 1);
+		}
+		searchTutorialCompleted = localStorage.getItem(searchTutorialCompletedStorageKey) === '1';
+
+		const handleScrollOrResize = () => updateHighlightRect();
+		const handleMouseup = (event) => detectSearchTutorialAction(event);
+		const handleClick = (event) => detectSearchTutorialAction(event);
+		const handleContextmenu = (event) => detectSearchTutorialAction(event);
+		const handleKeydown = (event) => detectSearchTutorialAction(event);
+
+		window.addEventListener('scroll', handleScrollOrResize, true);
+		window.addEventListener('resize', handleScrollOrResize);
+		window.addEventListener('mouseup', handleMouseup, true);
+		window.addEventListener('click', handleClick, true);
+		window.addEventListener('contextmenu', handleContextmenu, true);
+		window.addEventListener('keydown', handleKeydown, true);
+
+		requestAnimationFrame(updateHighlightRect);
+
+		return () => {
+			window.removeEventListener('scroll', handleScrollOrResize, true);
+			window.removeEventListener('resize', handleScrollOrResize);
+			window.removeEventListener('mouseup', handleMouseup, true);
+			window.removeEventListener('click', handleClick, true);
+			window.removeEventListener('contextmenu', handleContextmenu, true);
+			window.removeEventListener('keydown', handleKeydown, true);
+		};
 	});
 </script>
 
@@ -28,7 +241,16 @@
 	<!-- 進行状況表示 -->
 	<div class="steps steps-vertical mb-8 w-full lg:steps-horizontal">
 		{#each steps as step, index (step.title + '-' + index)}
-			<div class="step {index <= currentStep ? 'step-primary' : ''}">{step.title}</div>
+			<button
+				type="button"
+				class="step {index <= currentStep ? 'step-primary' : ''}"
+				onclick={() => {
+					currentStep = index;
+					requestAnimationFrame(updateHighlightRect);
+				}}
+			>
+				{step.title}
+			</button>
 		{/each}
 	</div>
 
@@ -98,7 +320,7 @@
 			</div>
 		</div>
 		<div class="mb-4 flex justify-end">
-			<button class="btn btn-primary" onclick={() => currentStep++}>次のステップ</button>
+			<button class="btn btn-primary" onclick={moveToNextStep}>次のステップ</button>
 		</div>
 	{/if}
 
@@ -155,8 +377,8 @@
 			</div>
 		</div>
 		<div class="mb-4 flex justify-between">
-			<button class="btn btn-outline" onclick={() => currentStep--}>前のステップ</button>
-			<button class="btn btn-primary" onclick={() => currentStep++}>次のステップ</button>
+			<button class="btn btn-outline" onclick={moveToPrevStep}>前のステップ</button>
+			<button class="btn btn-primary" onclick={moveToNextStep}>次のステップ</button>
 		</div>
 	{/if}
 	<!-- ステップ3: 初期設定 -->
@@ -197,8 +419,8 @@
 			</div>
 		</div>
 		<div class="mb-4 flex justify-between">
-			<button class="btn btn-outline" onclick={() => currentStep--}>前のステップ</button>
-			<button class="btn btn-primary" onclick={() => currentStep++}>次のステップ</button>
+			<button class="btn btn-outline" onclick={moveToPrevStep}>前のステップ</button>
+			<button class="btn btn-primary" onclick={moveToNextStep}>次のステップ</button>
 		</div>
 	{/if}
 
@@ -287,10 +509,137 @@
 		</div>
 
 		<div class="mb-4 flex justify-between">
-			<button class="btn btn-outline" onclick={() => currentStep--}>前のステップ</button>
-			<div class="flex gap-2">
-				<a href={resolve('/tutorial')} class="btn btn-primary">チュートリアルを始める</a>
+			<button class="btn btn-outline" onclick={moveToPrevStep}>前のステップ</button>
+			<button class="btn btn-primary" onclick={moveToNextStep}>次のステップ</button>
+		</div>
+	{/if}
+
+	<!-- ステップ5: ドキュメント検索機能の紹介 -->
+	{#if currentStep === 4}
+		<div class="card mb-8 bg-base-100 shadow-xl">
+			<div class="card-body gap-6">
+				<h2 class="card-title text-2xl">
+					<span class="mr-2 badge badge-lg badge-primary">STEP 5</span>
+					ドキュメント検索機能の紹介
+				</h2>
+
+				<div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+					{#each searchTutorialSteps as tutorialStep, index (tutorialStep.title + '-' + index)}
+						<div
+							class={`rounded-lg border px-3 py-2.5 transition-all ${
+								searchTutorialCompleted || index < searchTutorialStep
+									? 'border-success/40 bg-success/5'
+									: index === searchTutorialStep && !searchTutorialCompleted
+										? 'border-primary/50 bg-primary/10 shadow-sm'
+										: 'border-base-300 bg-base-200/70'
+							}`}
+						>
+							<div class="flex items-start justify-between gap-2">
+								<div class="min-w-0">
+									<p class="text-[10px] font-semibold tracking-[0.12em] text-base-content/55">MISSION {index + 1}</p>
+									<h3 class="mt-0.5 truncate text-sm font-bold">{tutorialStep.title}</h3>
+								</div>
+								{#if searchTutorialCompleted || index < searchTutorialStep}
+									<span class="badge badge-success badge-sm">完了</span>
+								{:else if index === searchTutorialStep && !searchTutorialCompleted}
+									<span class="badge badge-primary badge-sm">進行中</span>
+								{:else}
+									<span class="badge badge-outline badge-sm">待機中</span>
+								{/if}
+							</div>
+							<p class="mt-1 text-xs text-base-content/70">{tutorialStep.actionLabel}</p>
+						</div>
+					{/each}
+				</div>
+
+				<CodeBlock
+					title="練習エリア"
+					description="このコード内から用語を選択して検索を試してみましょう。選択・右クリック・ショートカットをここで練習できます。"
+					language="swift"
+					dataAttribute="practice-text"
+					code={'import SwiftUI\nimport SwiftData\n\n@Model\nfinal class Item {\n    var title: String\n    var isDone: Bool = false\n}\n\nstruct ContentView: View {\n    var items: [Item] = []\n    \n    var body: some View {\n        NavigationStack {\n            List(items) { item in\n                Text(item.title)\n            }\n        }\n    }\n}'}
+					showLineNumbers={true}
+				/>
+
+				<div class="divider"></div>
+
+				<div class="space-y-4">
+					<h3 class="text-xl font-semibold">検索フィルタの違い</h3>
+					<p class="text-base-content/75">
+						ドキュメント検索には3つのフィルタがあります。目的に応じて使い分けることで、効率的に情報を見つけられます。
+					</p>
+					<div class="grid gap-4 md:grid-cols-3">
+						<div class="rounded-lg border border-primary/20 bg-primary/5 p-4">
+							<h4 class="mb-2 font-bold text-primary">タイトル一致</h4>
+							<p class="text-sm text-base-content/75">
+								ドキュメントのタイトルが検索キーワードと完全に一致するもののみを表示します。
+							</p>
+							<div class="mt-3 rounded bg-base-100 p-2 font-mono text-xs">
+								例: "NavigationStack" → 「NavigationStack」というタイトルのドキュメントのみ
+							</div>
+						</div>
+						<div class="rounded-lg border border-success/20 bg-success/5 p-4">
+							<h4 class="mb-2 font-bold text-success">コード</h4>
+							<p class="text-sm text-base-content/75">
+								コード例が含まれるドキュメントから検索します。実装例や使用法を知りたい時に便利です。
+							</p>
+							<div class="mt-3 rounded bg-base-100 p-2 font-mono text-xs">
+								例: "List" → ListUIを使用しているコード例が見つかる
+							</div>
+						</div>
+						<div class="rounded-lg border border-info/20 bg-info/5 p-4">
+							<h4 class="mb-2 font-bold text-info">キーワード</h4>
+							<p class="text-sm text-base-content/75">
+								ドキュメント全体（タイトル、説明、コード）から関連キーワードで広く検索します。探しているものが不確かな時に最適です。
+							</p>
+							<div class="mt-3 rounded bg-base-100 p-2 font-mono text-xs">
+								例: "表示" → タイトル、説明、コード内の「表示」に関連するすべてのドキュメント
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="flex flex-wrap gap-2">
+					<button class="btn btn-outline" onclick={moveToPrevStep}>前のステップ</button>
+					<button
+						class="btn btn-outline"
+						onclick={prevSearchTutorialStep}
+						disabled={searchTutorialStep === 0 || searchTutorialCompleted}>ミッションを戻す</button
+					>
+					<button
+						class="btn btn-outline"
+						onclick={nextSearchTutorialStep}
+						disabled={searchTutorialCompleted}>次へ（手動）</button
+					>
+					<button
+						class="btn btn-ghost"
+						onclick={skipSearchTutorial}
+						disabled={searchTutorialCompleted}>スキップ</button
+					>
+					<button class="btn btn-ghost" onclick={resetSearchTutorial}>最初からやり直す</button>
+					<a href={resolve('/tutorial')} class="btn btn-primary">チュートリアルを始める</a>
+				</div>
 			</div>
+		</div>
+	{/if}
+
+	{#if isSearchTutorialActive() && highlightRect}
+		<div class="pointer-events-none fixed inset-0 z-[9998] bg-black/35"></div>
+		<div
+			class="pointer-events-none fixed z-[9999] rounded-2xl border-2 border-warning shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]"
+			style="top: {highlightRect.top}px; left: {highlightRect.left}px; width: {highlightRect.width}px; height: {highlightRect.height}px;"
+		></div>
+	{/if}
+
+	{#if isSearchTutorialActive() && highlightRect && !searchTutorialCompleted}
+		<div
+			class="pointer-events-none fixed z-[10000] rounded-xl border border-warning/40 bg-base-100/95 p-4 shadow-2xl backdrop-blur"
+			style={missionTooltipStyle}
+		>
+			<div class="mb-1 text-xs font-bold text-warning">現在のミッション</div>
+			<h3 class="text-base leading-tight font-bold">{getActiveSearchTutorial().title}</h3>
+			<p class="mt-1 text-sm leading-snug">{getActiveSearchTutorial().description}</p>
+			<p class="mt-2 text-xs text-base-content/70">ヒント: {getActiveSearchTutorial().tip}</p>
 		</div>
 	{/if}
 	<a href={resolve('/help')} class="btn btn-outline">ヘルプ</a>
