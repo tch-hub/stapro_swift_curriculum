@@ -154,3 +154,60 @@ struct HomeView: View {
     }
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p18.png)
+
+このステップで学んだ **Serviceクラスのメソッド呼び出し / クロージャのキャプチャ / `loadTasks()` による再描画** を使って、ピン留め機能を実装してみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し（SwiftData対応・`Note` と `NoteService` が定義済みの状態を想定）、以下の条件を満たすコードを `ContentView.swift` に実装してください。
+
+1. **`togglePin(_:)` メソッドの追加**  
+   `@Environment(\.modelContext)` で取得した `modelContext` を使い、`NoteService.togglePin(note, modelContext: modelContext)` を呼び出してください。  
+   呼び出し後に `loadNotes()` で画面を更新してください。
+
+2. **リスト行でのクロージャ活用**  
+   `ForEach` の各行に `Button` を配置し、タップ時に `togglePin(note)` を呼び出すクロージャを渡してください。
+
+3. **ピン留め状態の表示**  
+   各行に `note.isPinned` が `true` のとき `pin.fill` アイコン、`false` のとき `pin` アイコンを表示してください。
+
+### 解答例
+
+```swift title="ContentView.swift (抜粋)"
+import SwiftUI
+import SwiftData
+
+struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    @State private var notes: [Note] = []
+
+    var body: some View {
+        List(notes) { note in
+            HStack {
+                Text(note.content)
+                Spacer()
+                Button {
+                    togglePin(note)
+                } label: {
+                    Image(systemName: note.isPinned ? "pin.fill" : "pin")
+                        .foregroundStyle(note.isPinned ? Color.accentColor : Color.secondary)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .onAppear { loadNotes() }
+    }
+
+    private func loadNotes() {
+        let descriptor = FetchDescriptor<Note>()
+        notes = (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    private func togglePin(_ note: Note) {
+        NoteService.togglePin(note, modelContext: modelContext)
+        loadNotes()
+    }
+}
+```

@@ -274,3 +274,67 @@ struct HomeView: View {
     }
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p17.png)
+
+このステップで学んだ **`FetchDescriptor` / `#Predicate` / `loadTasks()` / `.onChange`** を使って、カテゴリー別にメモを絞り込んで表示してみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し（SwiftData対応・`Note` に `categoryId: UUID` プロパティを追加した状態を想定）、以下の条件を満たす関数を `ContentView.swift` に実装してください。
+
+1. **変数の定義**  
+   以下の `@State` 変数を定義してください。  
+   - `notes: [Note] = []`（絞り込まれたメモ一覧）  
+   - `selectedCategoryId: UUID?`（選択中のカテゴリーID）
+
+2. **`loadNotes()` の実装**  
+   `selectedCategoryId` が `nil` の場合は `notes = []` にして処理を終了してください。  
+   `nil` でない場合は `FetchDescriptor<Note>` に `#Predicate { $0.categoryId == categoryId }` で条件を設定し、データベースから取得して `notes` に入れてください。
+
+3. **`.onChange` の設定**  
+   `selectedCategoryId` が変わったときに `loadNotes()` を呼び出すよう `.onChange(of: selectedCategoryId)` を設定してください。
+
+4. **リストの表示**  
+   `notes` が空でない場合は `List` でメモを表示し、空の場合は `ContentUnavailableView("メモがありません", systemImage: "note")` を表示してください。
+
+### 解答例
+
+```swift title="ContentView.swift (抜粋)"
+import SwiftUI
+import SwiftData
+
+struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+
+    @State private var notes: [Note] = []
+    @State private var selectedCategoryId: UUID?
+
+    var body: some View {
+        VStack {
+            if !notes.isEmpty {
+                List(notes) { note in
+                    Text(note.content)
+                }
+            } else {
+                ContentUnavailableView("メモがありません", systemImage: "note")
+            }
+        }
+        .onChange(of: selectedCategoryId) { _, _ in
+            loadNotes()
+        }
+    }
+
+    private func loadNotes() {
+        guard let categoryId = selectedCategoryId else {
+            notes = []
+            return
+        }
+
+        let descriptor = FetchDescriptor<Note>(
+            predicate: #Predicate { $0.categoryId == categoryId }
+        )
+        notes = (try? modelContext.fetch(descriptor)) ?? []
+    }
+}
+```

@@ -38,7 +38,7 @@
 
 			<div class="flex w-full flex-col gap-6 md:w-2/3">
 				{#if practiceContent}
-					<div class="prose max-w-none">
+					<div class="prose prose-base max-w-none">
 						{@render practiceContent()}
 					</div>
 				{/if}
@@ -46,13 +46,17 @@
 				{#if answerContent}
 					<div class="collapse-arrow collapse border border-base-300 bg-base-100">
 						<input type="checkbox" />
-						<div class="collapse-title flex items-center gap-2 text-base font-bold text-primary">
-							<span class="material-symbols-outlined text-xl">lightbulb</span>
+						<div class="collapse-title text-base font-bold text-primary">
+							<span class="material-symbols-outlined mr-2 inline-block align-middle text-xl"
+								>lightbulb</span
+							>
 							解答例を見る
 						</div>
-						<div class="collapse-content prose max-w-none pt-0">
+						<div class="collapse-content overflow-x-hidden pt-0">
 							<div class="divider mt-0 mb-4"></div>
-							{@render answerContent()}
+							<div class="overflow-x-auto">
+								{@render answerContent()}
+							</div>
 						</div>
 					</div>
 				{/if}

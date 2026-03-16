@@ -118,3 +118,72 @@ struct EmptyStateView: View {
     EmptyStateView(hasSelectedTab: true)
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p4.png)
+
+このステップで学んだ **`if / else` による条件分岐** と **`VStack` / `Image(systemName:)` / `.frame(maxWidth: .infinity, maxHeight: .infinity)`** を使って、ネットワーク接続状態に応じた表示を切り替えてみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
+
+1. **プロパティの定義**  
+   `NetworkStatusView` という構造体に `let isConnected: Bool` プロパティを定義してください。
+
+2. **接続中の表示**  
+   `isConnected` が `true` の場合、`wifi` アイコンとテキスト「接続中」を `VStack` で縦に並べて表示してください。  
+   アイコンは `.font(.system(size: 48))`、テキストは `.padding(.top, 8)` を適用してください。
+
+3. **未接続の表示**  
+   `isConnected` が `false` の場合、`wifi.slash` アイコンとテキスト「オフラインです」を表示してください。  
+   アイコンの色は `.foregroundColor(.red)` にしてください。
+
+4. **画面いっぱいに広げる**  
+   両方の `VStack` に `.frame(maxWidth: .infinity, maxHeight: .infinity)` を適用して、中央に表示されるようにしてください。
+
+5. **プレビューで確認**  
+   `#Preview` で `isConnected: false` の状態を確認できるようにしてください。
+
+### 解答例
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+    @State var isConnected: Bool = false
+
+    var body: some View {
+        VStack {
+            if isConnected {
+                VStack {
+                    Image(systemName: "wifi")
+                        .font(.system(size: 48))
+                        .foregroundColor(.green)
+                    Text("接続中")
+                        .foregroundColor(.green)
+                        .padding(.top, 8)
+                }
+            } else {
+                VStack {
+                    Image(systemName: "wifi.slash")
+                        .font(.system(size: 48))
+                        .foregroundColor(.red)
+                    Text("オフラインです")
+                        .foregroundColor(.gray)
+                        .padding(.top, 8)
+                }
+            }
+            
+            Button("切り替えテスト") {
+                isConnected.toggle()
+            }
+            .padding(.top, 32)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```

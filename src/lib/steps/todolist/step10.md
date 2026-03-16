@@ -177,3 +177,51 @@ class ToDoTaskService {
 ---
 
 このステップでは「裏側の処理（ビジネスロジック）」を作りました。画面には何も変化が現れませんが、次のステップ以降でこのサービスを使ってデータを操作していきます。
+
+## 練習問題
+
+このステップで学んだ **`static func` / `@MainActor` / `ModelContext` を使ったCRUD処理** を使って、メモを管理するサービスクラスを作ってみましょう。
+
+新規プロジェクト（App）を作成し（SwiftData対応）、`NoteService.swift` というファイルを追加してください。
+
+1. **クラスの作成**  
+   `NoteService` というクラスを作成してください。
+
+2. **メモを追加するメソッド**  
+   `@MainActor static func addNote(_ note: Note, to modelContext: ModelContext)` を実装してください。  
+   `modelContext.insert(note)` でデータを追加し、`try? modelContext.save()` で保存してください。
+
+3. **メモを削除するメソッド**  
+   `@MainActor static func deleteNote(_ note: Note, from modelContext: ModelContext)` を実装してください。  
+   `modelContext.delete(note)` で削除し、`try? modelContext.save()` で保存してください。
+
+4. **ピン留め状態を切り替えるメソッド**  
+   `@MainActor static func togglePin(_ note: Note, modelContext: ModelContext)` を実装してください。  
+   `note.isPinned.toggle()` で状態を反転し、`try? modelContext.save()` で保存してください。
+
+### 解答例
+
+```swift title="NoteService.swift"
+import Foundation
+import SwiftData
+
+class NoteService {
+    @MainActor
+    static func addNote(_ note: Note, to modelContext: ModelContext) {
+        modelContext.insert(note)
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func deleteNote(_ note: Note, from modelContext: ModelContext) {
+        modelContext.delete(note)
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func togglePin(_ note: Note, modelContext: ModelContext) {
+        note.isPinned.toggle()
+        try? modelContext.save()
+    }
+}
+```

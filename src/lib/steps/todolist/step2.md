@@ -247,3 +247,90 @@ struct ToDoListItem: View {
     return PreviewWrapper()
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p2.png)
+
+このステップで学んだ `HStack` / `ZStack` / プロパティを活用して、**通知カード風のリスト行** を作ってみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し、`ContentView.swift` に以下の条件を満たすUIを実装してください。
+
+1. **プロパティの定義**  
+   `NotificationItem` という構造体に、次の3つのプロパティを定義してください。
+   - `title: String`（通知のタイトル）
+   - `message: String`（通知の本文）
+   - `isRead: Bool`（既読かどうか）
+
+2. **横並びのレイアウト（HStack）**  
+   `HStack` を使い、左側に「未読インジケーター」、右側にタイトルと本文を縦に並べて配置してください。
+
+3. **未読インジケーター（ZStack + Circle）**  
+   左端に `Circle` を使った丸いインジケーターを配置してください。
+   - `isRead` が `false`（未読）のとき：青い塗りつぶし円（`Color.blue`）を表示
+   - `isRead` が `true`（既読）のとき：グレーの枠線のみの円（`.stroke(Color.gray)`）を表示
+
+4. **テキストのスタイル**
+   - タイトルは太字（`.bold()`）で表示してください。
+   - 本文は `.font(.caption)` と `.foregroundStyle(.secondary)` で小さめに表示してください。
+   - `isRead` が `true` のとき、タイトルに取り消し線（`.strikethrough()`）を引いてください。
+
+5. **プレビューの確認**  
+   `#Preview` を使って、未読・既読それぞれの `NotificationItem` をリスト表示で確認できるようにしてください。
+
+### 解答例
+
+`ContentView.swift` を以下のように変更します。
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+    // 練習問題用に直接値を指定するか、プロパティとして定義します
+    var title: String = "新しいメッセージ"
+    var message: String = "田中さんからメッセージが届きました"
+    var isRead: Bool = false
+
+    var body: some View {
+        HStack(spacing: 12) {
+            // 未読インジケーター
+            ZStack {
+                if isRead {
+                    Circle()
+                        .stroke(Color.gray, lineWidth: 2)
+                        .frame(width: 12, height: 12)
+                } else {
+                    Circle()
+                        .fill(Color.blue)
+                        .frame(width: 12, height: 12)
+                }
+            }
+
+            // テキスト部分
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.body)
+                    .bold()
+                    .strikethrough(isRead, color: .secondary)
+                    .foregroundStyle(isRead ? .secondary : .primary)
+
+                Text(message)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+        }
+        .padding(.vertical, 8)
+    }
+}
+
+#Preview {
+    List {
+        ContentView(title: "新しいメッセージ", message: "田中さんからメッセージが届きました", isRead: false)
+        ContentView(title: "タスク完了", message: "買い物リストがすべて完了しました", isRead: true)
+        ContentView(title: "リマインダー", message: "明日の予定を確認してください", isRead: false)
+    }
+    .listStyle(.plain)
+}
+```

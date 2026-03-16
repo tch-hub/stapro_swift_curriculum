@@ -161,3 +161,51 @@ class ToDoTabService {
 ---
 
 このステップでは「裏側の処理(ビジネスロジック)」を作りました。画面には何も変化が現れませんが、次のステップ以降でこのサービスを使ってデータを操作していきます。
+
+## 練習問題
+
+このステップで学んだ **`static func` / 他のServiceクラスとの連携 / `FetchDescriptor` を使ったデータ取得** を使って、プロジェクト管理サービスクラスを作ってみましょう。
+
+新規プロジェクト（App）を作成し、`ProjectService.swift` というファイルを追加してください。  
+（`Project` モデルは step8 の練習問題で定義したものを使います。`Note` モデルにも `projectId: UUID` プロパティがあると想定してください）
+
+1. **プロジェクトを追加するメソッド**  
+   `@MainActor static func addProject(_ project: Project, to modelContext: ModelContext)` を実装してください。
+
+2. **プロジェクトを削除するメソッド**  
+   `@MainActor static func deleteProject(_ project: Project, from modelContext: ModelContext)` を実装してください。  
+   削除前に `NoteService.deleteAllNotes(for: project.id, from: modelContext)` を呼んで関連メモを先に削除してください。
+
+3. **全プロジェクトを取得するメソッド**  
+   `@MainActor static func getAllProjects(from modelContext: ModelContext) -> [Project]` を実装してください。  
+   `FetchDescriptor<Project>()` を使って全件取得し、失敗時は `[]` を返してください（`?? []`）。
+
+### 解答例
+
+```swift title="ProjectService.swift"
+import Foundation
+import SwiftData
+
+class ProjectService {
+    @MainActor
+    static func addProject(_ project: Project, to modelContext: ModelContext) {
+        modelContext.insert(project)
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func deleteProject(_ project: Project, from modelContext: ModelContext) {
+        // 先に関連メモをすべて削除
+        NoteService.deleteAllNotes(for: project.id, from: modelContext)
+        // プロジェクト自体を削除
+        modelContext.delete(project)
+        try? modelContext.save()
+    }
+
+    @MainActor
+    static func getAllProjects(from modelContext: ModelContext) -> [Project] {
+        let descriptor = FetchDescriptor<Project>()
+        return (try? modelContext.fetch(descriptor)) ?? []
+    }
+}
+```

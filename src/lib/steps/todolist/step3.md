@@ -183,3 +183,67 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
     return PreviewWrapper()
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p3.png)
+
+このステップで学んだ**ジェネリクス（`<T: Identifiable>`）**と **`@ViewBuilder`** を活用して、どんなデータでも表示できる汎用カードリストを作ってみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
+
+1. **汎用リストコンポーネントの作成**  
+   `CardList<T: Identifiable, RowContent: View>` という構造体を作成してください。  
+   プロパティとして `items: [T]` と `@ViewBuilder let rowContent: (T) -> RowContent` を定義してください。
+
+2. **リストの表示**  
+   `body` の中で `List` と `ForEach(items)` を使い、各アイテムの行を `rowContent(item)` で表示してください。  
+   区切り線は `.listRowSeparator(.hidden)` で非表示にしてください。
+
+3. **データ型の定義**  
+   `Fruit` という構造体（`id: UUID`、`name: String`、`emoji: String` を持つ）を `Identifiable` に準拠させて定義してください。
+
+4. **プレビューで確認**  
+   `#Preview` の中で `CardList` に `Fruit` の配列を渡し、各行に絵文字と名前を `HStack` で並べて表示してください。
+
+### 解答例
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+// 汎用カードリストコンポーネント
+struct ContentView: View {
+    // 便宜上、同じファイル内にデータ型を定義します
+    struct Fruit: Identifiable {
+        let id = UUID()
+        let name: String
+        let emoji: String
+    }
+
+    let fruits = [
+        Fruit(name: "りんご", emoji: "🍎"),
+        Fruit(name: "バナナ", emoji: "🍌"),
+        Fruit(name: "ぶどう", emoji: "🍇")
+    ]
+
+    var body: some View {
+        List {
+            ForEach(fruits) { fruit in
+                HStack(spacing: 12) {
+                    Text(fruit.emoji)
+                        .font(.title)
+                    Text(fruit.name)
+                        .font(.body)
+                }
+                .padding(.vertical, 4)
+                .listRowSeparator(.hidden)
+            }
+        }
+        .listStyle(.plain)
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```

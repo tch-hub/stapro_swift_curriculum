@@ -100,3 +100,45 @@ final class ToDoTask: Identifiable {
 ---
 
 このステップでは「裏側の処理(データモデルの定義)」を作りました。画面には何も変化が現れませんが、次のステップ以降でこのモデルを使ってデータを保存・管理していきます。
+
+## 練習問題
+
+このステップで学んだ **`@Model` / `final class` / `init` / SwiftDataのプロパティ定義** を使って、新しいデータモデルを定義してみましょう。
+
+新規プロジェクト（App）を作成し、`Note.swift` というファイルを追加して以下の条件を満たすモデルを実装してください。
+
+1. **`@Model` の付与**  
+   `Note` という `final class` に `@Model` を付けて、SwiftDataで管理できるようにしてください。  
+   また `Identifiable` プロトコルに準拠させてください。
+
+2. **プロパティの定義**  
+   以下のプロパティを定義してください。  
+   - `id: UUID`（デフォルト値 `UUID()`）  
+   - `content: String`（メモの本文）  
+   - `isPinned: Bool`（ピン留めされているかどうか）  
+   - `createdAt: Date`（作成日時、デフォルト値 `Date()`）
+
+3. **`init` の実装**  
+   `content: String` と `isPinned: Bool = false` を引数に取るイニシャライザを実装してください。  
+   `createdAt` は現在時刻で自動設定してください。
+
+### 解答例
+
+```swift title="Note.swift"
+import Foundation
+import SwiftData
+
+@Model
+final class Note: Identifiable {
+    var id: UUID = UUID()
+    var content: String = ""
+    var isPinned: Bool = false
+    var createdAt: Date = Date()
+
+    init(content: String, isPinned: Bool = false) {
+        self.content = content
+        self.isPinned = isPinned
+        self.createdAt = Date()
+    }
+}
+```

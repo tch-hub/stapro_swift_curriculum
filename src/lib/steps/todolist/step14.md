@@ -129,3 +129,51 @@ struct ToDoListApp: App {
 ---
 
 画面の見た目はまだ変わりませんが、アプリの裏側でデータを保存するための準備をしました。
+
+## 練習問題
+
+このステップで学んだ **`Schema` / `ModelConfiguration` / `ModelContainer` / `do-catch` / `.modelContainer()`** を使って、メモアプリのデータベース設定を書いてみましょう。
+
+新規プロジェクト（App）を作成し、`MemoApp.swift`（`@main`を持つEntyファイル）を以下の条件を満たすように書き換えてください。
+
+1. **`import SwiftData` の追加**  
+   ファイルの先頭に `import SwiftData` を追加してください。
+
+2. **`ModelContainer` の初期化**  
+   `init()` の中で以下を行ってください。  
+   - `Schema([Note.self])` でスキーマを作成  
+   - `ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)` で設定を作成  
+   - `try ModelContainer(for: schema, configurations: [modelConfiguration])` でコンテナを作成  
+   - 失敗時は `fatalError(...)` で強制終了
+
+3. **`.modelContainer(modelContainer)` の設定**  
+   `WindowGroup` に `.modelContainer(modelContainer)` を付けて、全画面からデータを使えるようにしてください。
+
+### 解答例
+
+```swift title="MemoApp.swift"
+import SwiftUI
+import SwiftData
+
+@main
+struct MemoApp: App {
+    let modelContainer: ModelContainer
+
+    init() {
+        let schema = Schema([Note.self])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        do {
+            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("ModelContainerが作れませんでした: \(error)")
+        }
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+        .modelContainer(modelContainer)
+    }
+}
+```

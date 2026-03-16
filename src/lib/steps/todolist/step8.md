@@ -75,3 +75,41 @@ final class ToDoTab: Identifiable {
 ---
 
 このステップでは「裏側の処理(データモデルの定義)」を作りました。画面には何も変化が現れませんが、次のステップ以降でこのモデルを使ってデータを保存・管理していきます。
+
+## 練習問題
+
+このステップで学んだ **`@Model` / `final class` / `init` / シンプルなプロパティ定義** を使って、プロジェクト（フォルダ）のデータモデルを作ってみましょう。
+
+新規プロジェクト（App）を作成し、`Project.swift` というファイルを追加してください。
+
+1. **`Project` モデルの定義**  
+   `@Model` を付けた `final class Project` を `Identifiable` に準拠させて定義してください。
+
+2. **プロパティの定義**  
+   以下の3つのプロパティをすべてデフォルト値つきで定義してください。  
+   - `id: UUID`（デフォルト `UUID()`）  
+   - `name: String`（プロジェクト名、デフォルト `""`）  
+   - `createdAt: Date`（作成日時、デフォルト `Date()`）
+
+3. **`init` の実装**  
+   `name: String` だけを引数に取るイニシャライザを実装してください。  
+   `createdAt` は自動で現在時刻を設定してください。
+
+### 解答例
+
+```swift title="Project.swift"
+import Foundation
+import SwiftData
+
+@Model
+final class Project: Identifiable {
+    var id: UUID = UUID()
+    var name: String = ""
+    var createdAt: Date = Date()
+
+    init(name: String) {
+        self.name = name
+        self.createdAt = Date()
+    }
+}
+```

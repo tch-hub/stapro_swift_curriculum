@@ -186,17 +186,16 @@
 		<p class="text-lg opacity-90">{data.summary}</p>
 	</header>
 
-	<section class="prose prose-base max-w-none">
+	<section>
 		{#each renderedBlocks as block, index (block.type + '-' + index)}
 			{#if block.type === 'code'}
-				<div class="mb-6">
+				<div class="mb-6 overflow-x-auto">
 					{#key block.code}
 						<CodeBlock code={block.code} language={block.language} fileName={block.fileName} />
 					{/key}
 				</div>
 			{:else}
-				<div class="mb-4">
-					<!-- eslint-disable-next-line svelte/no-at-html-tags -- マークダウンを表示するため -->
+				<div class="prose prose-base mb-4 max-w-none">
 					{@html block.html}
 				</div>
 			{/if}
@@ -206,14 +205,13 @@
 			{#snippet practiceContent()}
 				{#each displayPracticeBlocks as block, index (block.type + '-' + index)}
 					{#if block.type === 'code'}
-						<div class="mb-6">
+						<div class="mb-6 overflow-x-auto">
 							{#key block.code}
 								<CodeBlock code={block.code} language={block.language} fileName={block.fileName} />
 							{/key}
 						</div>
 					{:else}
-						<div class="mb-4">
-							<!-- eslint-disable-next-line svelte/no-at-html-tags -- マークダウンを表示するため -->
+						<div class="prose prose-base mb-4 max-w-none">
 							{@html block.html}
 						</div>
 					{/if}
@@ -223,14 +221,13 @@
 			{#snippet answerContent()}
 				{#each answerBlocks as block, index (block.type + '-' + index)}
 					{#if block.type === 'code'}
-						<div class="mb-6">
+						<div class="mb-6 overflow-x-auto">
 							{#key block.code}
 								<CodeBlock code={block.code} language={block.language} fileName={block.fileName} />
 							{/key}
 						</div>
 					{:else}
-						<div class="mb-4">
-							<!-- eslint-disable-next-line svelte/no-at-html-tags -- マークダウンを表示するため -->
+						<div class="prose prose-base mb-4 max-w-none">
 							{@html block.html}
 						</div>
 					{/if}

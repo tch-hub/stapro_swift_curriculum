@@ -205,3 +205,57 @@ struct ContentView: View {
     ContentView(isInitialized: false, autoInitialize: false)
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p16.png)
+
+このステップで学んだ **`@State` / `ProgressView` / `.onAppear` / `DispatchQueue.main.asyncAfter`** を使って、ローディング画面付きのスプラッシュ画面を作ってみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し、`SplashView.swift` を作成して以下の条件を満たすコードを実装してください。
+
+1. **状態変数の定義**  
+   `@State private var isReady: Bool` と `private let autoStart: Bool` を定義し、`init()` で初期値を受け取れるようにしてください。
+
+2. **表示の切り替え**  
+   `body` の中で `isReady` が `true` の場合はメイン画面（例：`Text("メイン画面")`）を、`false` の場合はスプラッシュ（会社名などのテキストと `ProgressView()`）を表示してください。
+
+3. **自動遷移**  
+   `.onAppear` の中で `DispatchQueue.main.asyncAfter(deadline: .now() + 2)` を使い、2秒後に `isReady = true` にしてください。  
+   `autoStart` が `false` の場合は実行しないようにしてください。
+
+4. **プレビュー**  
+   `SplashView(isReady: false, autoStart: false)` でスプラッシュの見た目を確認できるようにしてください。
+
+### 解答例
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+    @State private var isReady: Bool = false
+
+    var body: some View {
+        if isReady {
+            Text("メイン画面")
+                .font(.largeTitle)
+        } else {
+            VStack(spacing: 16) {
+                Text("MyApp")
+                    .font(.largeTitle)
+                    .bold()
+                ProgressView()
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    isReady = true
+                }
+            }
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```

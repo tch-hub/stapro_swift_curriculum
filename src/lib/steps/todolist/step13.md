@@ -70,3 +70,44 @@ struct HomeView: View {
     }
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p13.png)
+
+このステップで学んだ **`NavigationStack` / `.navigationTitle` / `VStack`** を使って、プロフィール画面の枠を作ってみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し、`ProfileView.swift` を作成して以下の条件を満たすコードを実装してください。
+
+1. **`ProfileView` の作成**  
+   `var body: some View` の中に `VStack` を配置し、以下のテキストを表示してください。  
+   - `Text("ここにプロフィールを表示します")` を `.foregroundColor(.gray)` で表示
+
+2. **ナビゲーションタイトル**  
+   `.navigationTitle("プロフィール")` を適用してください。
+
+3. **プレビュー**  
+   `#Preview` の中で `NavigationStack` でラップした `ProfileView` を表示してください。
+
+### 解答例
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 12) {
+                Text("ここにプロフィールを表示します")
+                    .foregroundColor(.gray)
+            }
+            .padding()
+            .navigationTitle("プロフィール")
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```

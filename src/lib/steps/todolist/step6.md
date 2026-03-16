@@ -282,3 +282,90 @@ struct TabHeaderView: View {
     return PreviewWrapper()
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p6.png)
+
+このステップで学んだ **`Menu` / `Picker` / Computed Property / `@Binding`** を使って、カテゴリー選択ヘッダーを作ってみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
+
+1. **データ型の定義**  
+   `Category` という構造体を `Identifiable` と `Hashable` に準拠させて定義し、`id: UUID` と `name: String` を持たせてください。
+
+2. **Computed Propertyの実装**  
+   現在選択されているカテゴリー名を返す `selectedCategoryName: String` を Computed Property で実装してください。  
+   選択なしの場合は `"カテゴリーを選択"` を返してください（`?? "カテゴリーを選択"`）。
+
+3. **`Menu` + `Picker` の実装**  
+   タップするとカテゴリーが選べるドロップダウンメニューを `Menu` と `Picker` で作ってください。  
+   ラベルには選択中のカテゴリー名と `chevron.down` アイコンを横に並べてください。
+
+4. **`@Binding` の使用**  
+   `@Binding var selectedId: UUID?` を親と連携させ、カテゴリーが変わると親の変数も更新されるようにしてください。
+
+5. **プレビューで確認**  
+   `#Preview` の中でダミーデータを用意し、選択状態が変わると表示が変わることを確認してください。
+
+### 解答例
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+    struct Category: Identifiable, Hashable {
+        let id: UUID
+        let name: String
+    }
+
+    let categories = [
+        Category(id: UUID(), name: "仕事"),
+        Category(id: UUID(), name: "プライベート"),
+        Category(id: UUID(), name: "勉強")
+    ]
+    
+    @State var selectedId: UUID?
+
+    private var selectedCategoryName: String {
+        categories.first(where: { $0.id == selectedId })?.name ?? "カテゴリーを選択"
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // ヘッダー部分
+            HStack {
+                Menu {
+                    Picker("カテゴリー", selection: $selectedId) {
+                        ForEach(categories) { category in
+                            Text(category.name)
+                                .tag(Optional(category.id))
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Text(selectedCategoryName)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.primary)
+                        Image(systemName: "chevron.down")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                Spacer()
+            }
+            .padding()
+            .background(Color(.systemBackground))
+            .overlay(alignment: .bottom) { Divider() }
+
+            // コンテンツ部分
+            Color(.secondarySystemBackground)
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```

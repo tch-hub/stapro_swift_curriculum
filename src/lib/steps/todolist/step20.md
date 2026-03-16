@@ -178,3 +178,39 @@ struct HomeView: View {
     }
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p20.png)
+
+このステップで学んだ **`IndexSet` / `for index in offsets` / `onDelete` へのメソッド参照渡し** を使って、メモのスワイプ削除機能を実装してみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し（SwiftData対応・`Note`・`NoteService` が定義済みの状態を想定）、以下の条件を満たすコードを `ContentView.swift` に追加してください。
+
+1. **`handleDeleteNote(_:)` メソッドの実装**  
+   引数として `_ offsets: IndexSet` を受け取ってください。  
+   `for index in offsets` で各インデックスに対して `notes[index]` を取得し、`NoteService.deleteNote(note, from: modelContext)` で削除してください。  
+   ループ後に `loadNotes()` を呼んでください。
+
+2. **スワイプ削除の有効化**  
+   `ForEach` に `.onDelete(perform: handleDeleteNote)` を付けて、スワイプで削除できるようにしてください。  
+   **注意**: `handleDeleteNote()` と書くとその場で実行されてしまうため、カッコなしで `handleDeleteNote` と書いてください。
+
+### 解答例
+
+```swift title="ContentView.swift (抜粋)"
+// body 内の ForEach
+ForEach(notes) { note in
+    Text(note.content)
+}
+.onDelete(perform: handleDeleteNote)
+
+// メソッド
+private func handleDeleteNote(_ offsets: IndexSet) {
+    for index in offsets {
+        let noteToDelete = notes[index]
+        NoteService.deleteNote(noteToDelete, from: modelContext)
+    }
+    loadNotes()
+}
+```

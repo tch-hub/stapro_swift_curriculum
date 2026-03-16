@@ -188,3 +188,52 @@ struct HomeView: View {
     }
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p19.png)
+
+このステップで学んだ **`.safeAreaInset` / `@State var newText` / `guard` による入力チェック / Serviceクラスへの保存** を使って、メモ追加機能を実装してみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し（SwiftData対応・`Note`・`NoteService` が定義済みの状態を想定）、以下の条件を満たすコードを `ContentView.swift` に追加してください。
+
+1. **`@State private var newContent = ""`** を定義してください。
+
+2. **`.safeAreaInset(edge: .bottom)` の配置**  
+   `VStack` の末尾（または `navigationTitle` の後）に、`if selectedCategoryId != nil` の条件で下部入力エリアを表示してください。  
+   入力エリアは `HStack` で `TextField` と「追加」`Button` を横並びにしてください。
+
+3. **`addNote()` の実装**  
+   以下の条件を `guard` で確認してください。  
+   - `newContent` が空でないこと  
+   - `selectedCategoryId` が `nil` でないこと（オプショナルバインディング）  
+   クリアした後 `loadNotes()` を呼んでください。
+
+### 解答例
+
+```swift title="ContentView.swift (抜粋)"
+// body 内の続き
+.safeAreaInset(edge: .bottom) {
+    if selectedCategoryId != nil {
+        HStack {
+            TextField("新しいメモ", text: $newContent)
+                .textFieldStyle(.roundedBorder)
+            Button("追加") { addNote() }
+                .disabled(newContent.isEmpty)
+        }
+        .padding()
+        .background(.ultraThinMaterial)
+    }
+}
+
+// メソッド
+private func addNote() {
+    guard !newContent.isEmpty, let categoryId = selectedCategoryId else { return }
+
+    let note = Note(content: newContent, categoryId: categoryId)
+    NoteService.addNote(note, to: modelContext)
+
+    newContent = ""
+    loadNotes()
+}
+```

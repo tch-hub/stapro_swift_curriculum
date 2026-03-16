@@ -265,3 +265,90 @@ struct InputView: View {
     return PreviewWrapper()
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p5.png)
+
+このステップで学んだ **`@Binding`・`@FocusState`・入力バリデーション** を使って、メモ入力欄コンポーネントを作ってみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
+
+1. **`MemoInputView` の作成**  
+   以下のプロパティを持つ構造体を定義してください。  
+   - `@Binding var text: String`（入力テキストを親と共有）  
+   - `var placeholder: String = "メモを入力..."`（デフォルト値あり）  
+   - `let onSave: () -> Void`（保存ボタン押下時の処理）
+
+2. **入力チェック**  
+   空白のみの入力を無効とし、`private var isValid: Bool` を使って判定してください。  
+   （`trimmingCharacters(in: .whitespacesAndNewlines)` を使用）
+
+3. **UIの実装**  
+   `HStack` を使って以下を横並びに配置してください。  
+   - `TextField`（`axis: .vertical` で複数行対応、`Capsule` 背景）  
+   - 保存ボタン（`checkmark.circle.fill` アイコン、`isValid` で色を切り替え）
+
+4. **ボタンの無効化**  
+   入力が無効のとき、ボタンを `.disabled(!isValid)` で操作できないようにしてください。
+
+5. **プレビューで確認**  
+   `#Preview` で `PreviewWrapper` を作成し、保存されたメモをリスト表示してください。
+
+### 解答例
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+    @State var text = ""
+    @State var memos: [String] = ["買い物リストを確認する", "会議の資料を準備する"]
+    @FocusState private var isFocused: Bool
+
+    private var isValid: Bool {
+        !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            // メモ一覧
+            List(memos, id: \.self) { memo in
+                Text(memo)
+            }
+            .listStyle(.plain)
+
+            // 入力エリア
+            HStack(alignment: .bottom, spacing: 12) {
+                TextField("メモを入力...", text: $text, axis: .vertical)
+                    .focused($isFocused)
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 16)
+                    .background(
+                        Capsule()
+                            .fill(Color(.secondarySystemBackground))
+                    )
+
+                Button(action: {
+                    guard isValid else { return }
+                    memos.append(text)
+                    text = ""
+                    isFocused = false
+                }) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                        .foregroundStyle(isValid ? Color.green : Color(.systemGray4))
+                }
+                .disabled(!isValid)
+                .padding(.bottom, 4)
+            }
+            .padding(16)
+            .background(.ultraThinMaterial)
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```

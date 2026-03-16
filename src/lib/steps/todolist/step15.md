@@ -188,3 +188,84 @@ struct HomeView: View {
     }
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p15.png)
+
+このステップで学んだ **`enum` / `NavigationStack(path:)` / `.navigationDestination` / `@Binding var navigationPath`** を使って、2画面間の遷移を実装してみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し、以下の条件を満たすコードを実装してください。
+
+1. **画面IDのenum定義**  
+   `enum ScreenID` を定義し、`home` と `settings` の2つのケースを持たせてください。
+
+2. **NavigationItemの定義**  
+   `struct NavigationItem: Hashable` を定義し、`let id: ScreenID` を持たせてください。
+
+3. **RootViewの作成**  
+   `@State private var navigationPath: [NavigationItem] = []` を持つ `RootView` を作成し、  
+   `NavigationStack(path: $navigationPath)` の中に最初の画面（`HomeView(navigationPath: $navigationPath)`）を配置してください。  
+   `.navigationDestination(for: NavigationItem.self)` で `settings` の場合に `SettingsView()` を表示してください。
+
+4. **HomeViewとSettingsView**  
+   - `HomeView` は `@Binding var navigationPath: [NavigationItem]` を受け取り、ボタン押下で `navigationPath.append(NavigationItem(id: .settings))` を実行してください。  
+   - `SettingsView` はシンプルなテキスト表示だけで構いません。
+
+### 解答例
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+enum ScreenID: String {
+    case home
+    case settings
+}
+
+struct NavigationItem: Hashable {
+    let id: ScreenID
+}
+
+struct ContentView: View {
+    @State private var navigationPath: [NavigationItem] = []
+
+    var body: some View {
+        NavigationStack(path: $navigationPath) {
+            HomeView(navigationPath: $navigationPath)
+                .navigationDestination(for: NavigationItem.self) { item in
+                    switch item.id {
+                    case .settings:
+                        SettingsView()
+                    default:
+                        EmptyView()
+                    }
+                }
+        }
+    }
+}
+
+struct HomeView: View {
+    @Binding var navigationPath: [NavigationItem]
+
+    var body: some View {
+        VStack {
+            Text("ホーム画面")
+            Button("設定へ") {
+                navigationPath.append(NavigationItem(id: .settings))
+            }
+        }
+        .navigationTitle("ホーム")
+    }
+}
+
+struct SettingsView: View {
+    var body: some View {
+        Text("設定画面")
+            .navigationTitle("設定")
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```

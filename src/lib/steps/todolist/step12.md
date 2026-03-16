@@ -283,3 +283,111 @@ struct TabManageView: View {
     }
 }
 ```
+
+## 練習問題
+
+![完成イメージ](/images/todolist/p12.png)
+
+このステップで学んだ **`@Environment` / `@State` / `.alert` / `.safeAreaInset` / `.onAppear`** を使って、メモ管理画面を作ってみましょう。
+
+Xcodeで新規プロジェクト（App）を作成し（SwiftData対応）、`NoteManagerView.swift` を作成して以下の条件を満たすコードを実装してください。
+
+1. **状態変数の定義**  
+   以下の `@State` 変数を定義してください。  
+   - `notes: [Note]`（一覧表示用）  
+   - `newNoteContent: String`（入力欄のテキスト）  
+   - `showDeleteAlert: Bool`（削除確認アラートの表示フラグ）  
+   - `noteToDelete: Note?`（削除対象のメモを一時保存）
+
+2. **メモ一覧の表示**  
+   `CustomList`（またはシンプルな `List` + `ForEach`）でメモ一覧を表示し、スワイプ削除で `handleDelete(offsets:)` を呼び出してください。
+
+3. **削除確認アラート**  
+   スワイプ削除時には即座に削除せず、アラートで「削除」「キャンセル」を表示してから `confirmDelete()` を実行してください。
+
+4. **下部入力エリア**  
+   `.safeAreaInset(edge: .bottom)` で `TextField` と追加ボタンを配置してください。
+
+5. **`.onAppear`**  
+   画面表示時に `loadNotes()` を呼び出してメモを読み込んでください。
+
+### 解答例
+
+```swift title="ContentView.swift"
+import SwiftUI
+import SwiftData
+
+struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+
+    @State private var notes: [Note] = []
+    @State private var newNoteContent = ""
+    @State private var showDeleteAlert = false
+    @State private var noteToDelete: Note?
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                List {
+                    ForEach(notes) { note in
+                        Text(note.content)
+                    }
+                    .onDelete(perform: handleDelete)
+                }
+                .navigationTitle("メモ管理")
+                .onAppear { loadNotes() }
+                .alert("メモの削除", isPresented: $showDeleteAlert) {
+                    Button("削除", role: .destructive) { confirmDelete() }
+                    Button("キャンセル", role: .cancel) {}
+                } message: {
+                    Text("このメモを削除しますか？")
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                HStack {
+                    TextField("新しいメモ", text: $newNoteContent)
+                        .textFieldStyle(.roundedBorder)
+                    Button("追加") { addNote() }
+                        .disabled(newNoteContent.isEmpty)
+                }
+                .padding()
+                .background(.ultraThinMaterial)
+            }
+        }
+    }
+
+    private func loadNotes() {
+        let descriptor = FetchDescriptor<Note>()
+        notes = (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    private func addNote() {
+        guard !newNoteContent.isEmpty else { return }
+        let note = Note(content: newNoteContent)
+        modelContext.insert(note)
+        try? modelContext.save()
+        newNoteContent = ""
+        loadNotes()
+    }
+
+    private func handleDelete(offsets: IndexSet) {
+        if let index = offsets.first {
+            noteToDelete = notes[index]
+            showDeleteAlert = true
+        }
+    }
+
+    private func confirmDelete() {
+        if let note = noteToDelete {
+            modelContext.delete(note)
+            try? modelContext.save()
+            loadNotes()
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+        .modelContainer(for: Note.self, inMemory: true)
+}
+```

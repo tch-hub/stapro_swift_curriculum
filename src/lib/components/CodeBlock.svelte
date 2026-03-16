@@ -99,7 +99,7 @@
 	});
 </script>
 
-<div class="code-block overflow-hidden rounded-lg bg-base-100 shadow-lg">
+<div class="code-block rounded-lg bg-base-100 shadow-lg">
 	{#if showHeader}
 		<!-- ヘッダー部分 -->
 		<div class="code-header flex items-center justify-between bg-base-200 px-4 py-2">
@@ -254,7 +254,8 @@
 
 	/* Prism.jsのデフォルトmarginを削除 */
 	.code-content pre {
-		margin: 0 !important;
+		margin: 0;
+		overflow-x: auto;
 	}
 
 	/* 実行結果のスタイル */
