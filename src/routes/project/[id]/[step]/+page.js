@@ -13,6 +13,43 @@ const markdownMaps = {
 	})
 };
 
+function parseFrontmatter(rawContent) {
+	const frontmatterMatch = rawContent.match(/^---\n([\s\S]*?)\n---\n*/);
+	if (!frontmatterMatch) {
+		return {};
+	}
+
+	const frontmatter = {};
+	const lines = frontmatterMatch[1].split('\n');
+
+	for (const line of lines) {
+		const match = line.match(/^([A-Za-z][\w-]*):\s*(.+)$/);
+		if (!match) continue;
+
+		const key = match[1];
+		let value = match[2].trim();
+
+		if (
+			(value.startsWith('"') && value.endsWith('"')) ||
+			(value.startsWith("'") && value.endsWith("'"))
+		) {
+			value = value.slice(1, -1);
+		}
+
+		frontmatter[key] = value;
+	}
+
+	return frontmatter;
+}
+
+function stripFrontmatter(rawContent) {
+	return rawContent.replace(/^---\n[\s\S]*?\n---\n*/, '');
+}
+
+function createShowcaseImageAlt(stepId) {
+	return stepId ? `${stepId}の完成イメージ` : '完成イメージ';
+}
+
 export async function load({ params }) {
 	const { id, step } = params;
 	const steps = stepsByProject[id];
@@ -35,7 +72,8 @@ export async function load({ params }) {
 	}
 
 	const rawContent = await loader();
-	const content = rawContent.replace(/^---\n[\s\S]*?\n---\n*/, '');
+	const frontmatter = parseFrontmatter(rawContent);
+	const content = stripFrontmatter(rawContent);
 
 	return {
 		projectId: id,
@@ -43,6 +81,8 @@ export async function load({ params }) {
 		title: steps[stepIndex].title,
 		summary: steps[stepIndex].summary,
 		content,
+		showcaseImage: frontmatter.showcaseImage || null,
+		showcaseImageAlt: createShowcaseImageAlt(step),
 		prevStep: stepIndex > 0 ? steps[stepIndex - 1] : null,
 		nextStep: stepIndex < steps.length - 1 ? steps[stepIndex + 1] : null,
 		allSteps: steps

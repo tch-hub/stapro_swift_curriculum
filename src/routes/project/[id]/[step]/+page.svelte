@@ -7,6 +7,17 @@
 	let { data } = $props();
 
 	const parserOptions = { headerIds: false };
+	const showcaseKeyword = '完成イメージ';
+	const showcaseClassName = 'lesson-showcase-image';
+
+	function normalizeUrlWithBase(url) {
+		if (!url) return url;
+		if (base && url.startsWith('/')) {
+			const normalizedBase = (base || '').replace(/\/$/, '');
+			return `${normalizedBase}${url}`;
+		}
+		return url;
+	}
 
 	let parsedTokens = $derived(data.content ? marked.lexer(data.content, parserOptions) : []);
 	let tokensWithoutTitle = $derived.by(() => {
@@ -112,28 +123,24 @@
 	let practiceBlocks = $derived(processTokens(practiceTokens));
 	let answerBlocks = $derived(processTokens(answerTokens));
 
-	// 練習問題ブロックの中から最初の画像URLを抽出する
-	let practiceImage = $derived.by(() => {
+	// 練習問題ブロックの中から最初の画像URLとaltを抽出する
+	let practiceImageInfo = $derived.by(() => {
 		// tokenから直接探す
 		for (const token of practiceTokens) {
 			if (token.type === 'image') {
-				let url = token.href;
-				if (base && url.startsWith('/')) {
-					const normalizedBase = (base || '').replace(/\/$/, '');
-					url = `${normalizedBase}${url}`;
-				}
-				return url;
+				return {
+					url: normalizeUrlWithBase(token.href),
+					alt: token.text || ''
+				};
 			}
 			// 段落内などのインライン画像
 			if (token.tokens) {
 				const imgToken = token.tokens.find((t) => t.type === 'image');
 				if (imgToken) {
-					let url = imgToken.href;
-					if (base && url.startsWith('/')) {
-						const normalizedBase = (base || '').replace(/\/$/, '');
-						url = `${normalizedBase}${url}`;
-					}
-					return url;
+					return {
+						url: normalizeUrlWithBase(imgToken.href),
+						alt: imgToken.text || ''
+					};
 				}
 			}
 		}
@@ -141,13 +148,34 @@
 		// HTMLパース後のブロックから探す (imgタグが含まれている場合)
 		for (const block of practiceBlocks) {
 			if (block.type === 'html' && block.html.includes('<img')) {
-				const match = block.html.match(/src=['"]([^'"]+)['"]/);
-				if (match) return match[1];
+				const srcMatch = block.html.match(/src=['"]([^'"]+)['"]/i);
+				if (srcMatch) {
+					const altMatch = block.html.match(/alt=['"]([^'"]*)['"]/i);
+					return {
+						url: srcMatch[1],
+						alt: altMatch ? altMatch[1] : ''
+					};
+				}
 			}
 		}
 
 		return null;
 	});
+
+	let practiceImage = $derived(practiceImageInfo?.url ?? null);
+	let practiceImageAlt = $derived(practiceImageInfo?.alt || '練習問題の完成イメージ');
+	let practiceImageClass = $derived(
+		practiceImageAlt.includes(showcaseKeyword) ? showcaseClassName : ''
+	);
+
+	// ドロワーUI用の状態
+	let isShowcaseDrawerOpen = $state(false);
+
+	// メタデータから完成イメージを取得（altは自動生成）
+	let showcaseImage = $derived.by(() => ({
+		image: data.showcaseImage ? normalizeUrlWithBase(data.showcaseImage) : null,
+		alt: data.showcaseImageAlt || '完成イメージ'
+	}));
 
 	// 表示用からは画像を削除する（StepPracticeの左側で表示するため）
 	let displayPracticeBlocks = $derived.by(() => {
@@ -236,13 +264,65 @@
 
 			<StepPractice
 				{practiceImage}
+				{practiceImageAlt}
+				{practiceImageClass}
 				{practiceContent}
 				answerContent={answerBlocks.length > 0 ? answerContent : undefined}
 			/>
 		{/if}
 	</section>
 
-	<!-- 固定ナビゲーションフッター -->
+	<!-- 完成イメージドロワー -->
+	{#if showcaseImage.image}
+		<aside class:open={isShowcaseDrawerOpen} class="lesson-showcase-drawer">
+			<button
+				class="lesson-showcase-drawer-close btn btn-circle btn-ghost btn-sm"
+				onclick={() => (isShowcaseDrawerOpen = false)}
+				aria-label="ドロワーを閉じる"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path d="M18 6l-12 12M6 6l12 12" />
+				</svg>
+			</button>
+			<div class="lesson-showcase-drawer-content">
+				<img src={showcaseImage.image} alt={showcaseImage.alt} class="lesson-showcase-image" />
+				<p class="text-center text-sm font-medium">{showcaseImage.alt}</p>
+			</div>
+		</aside>
+
+		<!-- 完成イメージを表示ボタン -->
+		<button
+			class="lesson-showcase-drawer-button btn btn-circle btn-primary"
+			onclick={() => (isShowcaseDrawerOpen = !isShowcaseDrawerOpen)}
+			aria-label="完成イメージを表示"
+		>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<rect x="3" y="3" width="18" height="18" rx="2" />
+				<circle cx="8.5" cy="8.5" r="1.5" />
+				<path d="m21 15-5-5L5 21" />
+			</svg>
+		</button>
+	{/if}
 	<div
 		class="fixed right-0 bottom-0 left-0 z-50 border-t border-base-300 bg-base-100/90 p-4 backdrop-blur"
 	>

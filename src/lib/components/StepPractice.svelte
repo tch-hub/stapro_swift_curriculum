@@ -1,5 +1,12 @@
 <script>
-	let { title = '練習問題', practiceImage = null, practiceContent, answerContent } = $props();
+	let {
+		title = '練習問題',
+		practiceImage = null,
+		practiceImageAlt = '練習問題の完成イメージ',
+		practiceImageClass = '',
+		practiceContent,
+		answerContent
+	} = $props();
 </script>
 
 <div class="card mt-12 mb-8 border-l-4 border-l-primary bg-base-200 shadow-sm">
@@ -15,8 +22,8 @@
 				{#if practiceImage}
 					<img
 						src={practiceImage}
-						alt="練習問題の完成イメージ"
-						class="mobile-screenshot !float-none !m-0"
+						alt={practiceImageAlt}
+						class={`mobile-screenshot !float-none !m-0 ${practiceImageClass}`}
 						onerror={(e) => {
 							e.currentTarget.style.display = 'none';
 							e.currentTarget.nextElementSibling.style.display = 'flex';

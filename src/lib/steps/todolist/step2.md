@@ -1,11 +1,8 @@
 ---
 title: ステップ2: タスクコンポーネントを作る(ToDoListItem.swift)
 summary: タスク行の表示と完了切り替えの基本を作ります。
+showcaseImage: /images/todolist/ToDoListItem.png
 ---
-
-### ステップ2終了時の完成イメージ
-
-<img src="/images/todolist/ToDoListItem.png" alt="ToDoListItemの完成イメージ" class="mobile-screenshot-top" />
 
 ## 1. 土台の作成
 
