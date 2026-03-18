@@ -100,6 +100,44 @@
 					};
 				}
 
+				// GitHubスタイルアラート (Callouts) の処理
+				if (token.type === 'blockquote') {
+					// 引用符(>)を取り除いた中身のテキストを取得
+					const rawText = token.raw.replace(/^>\s?/gm, '').trim();
+					// [!NOTE] などのパターンをチェック
+					const alertMatch = rawText.match(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/i);
+
+					if (alertMatch) {
+						const type = alertMatch[1].toUpperCase();
+						// アラートの見出し部分を取り除いたコンテンツを取得
+						const alertContentRaw = rawText.replace(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*\n?/i, '');
+						// コンテンツをMarkdownとしてパース
+						const alertHtml = marked.parse(alertContentRaw, parserOptions);
+
+						// タイプに応じたアイコンとクラスの設定
+						const config = {
+							NOTE: { icon: 'info', class: 'note' },
+							TIP: { icon: 'lightbulb', class: 'tip' },
+							IMPORTANT: { icon: 'priority_high', class: 'important' },
+							WARNING: { icon: 'warning', class: 'warning' },
+							CAUTION: { icon: 'report', class: 'caution' }
+						};
+						const { icon, class: typeClass } = config[type] || config.NOTE;
+
+						const html = `
+<div class="alert-callout alert-callout-${typeClass}">
+	<div class="alert-callout-header">
+		<span class="material-symbols-outlined">${icon}</span>
+		<span>${type}</span>
+	</div>
+	<div class="prose prose-sm max-w-none">
+		${alertHtml}
+	</div>
+</div>`;
+						return { type: 'html', html };
+					}
+				}
+
 				let html = marked.parse(token.raw, parserOptions);
 
 				if (base) {

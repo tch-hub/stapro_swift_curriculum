@@ -128,3 +128,48 @@ pre,
 	white-space: pre;
 	overflow-wrap: normal;
 }
+
+/* GitHub スタイルアラート (Callouts) */
+.alert-callout {
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+	padding: 1rem;
+	border-left-width: 4px;
+	border-radius: 0.5rem;
+	background-color: color-mix(in srgb, var(--color-base-content) 5%, transparent);
+}
+
+.alert-callout-header {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-weight: 700;
+	margin-bottom: 0.5rem;
+	font-size: 0.875rem;
+	letter-spacing: 0.025em;
+}
+
+.alert-callout-header .material-symbols-outlined {
+	font-size: 1.25rem;
+}
+
+/* 各カラーバリエーション */
+.alert-callout-note { border-left-color: #0969da; }
+.alert-callout-note .alert-callout-header { color: #0969da; }
+
+.alert-callout-tip { border-left-color: #1a7f37; }
+.alert-callout-tip .alert-callout-header { color: #1a7f37; }
+
+.alert-callout-important { border-left-color: #8250df; }
+.alert-callout-important .alert-callout-header { color: #8250df; }
+
+.alert-callout-warning { border-left-color: #9a6700; }
+.alert-callout-warning .alert-callout-header { color: #9a6700; }
+
+.alert-callout-caution { border-left-color: #d1242f; }
+.alert-callout-caution .alert-callout-header { color: #d1242f; }
+
+/* ダークモード時の微調整 (必要に応じて) */
+[data-theme='dark'] .alert-callout {
+	background-color: color-mix(in srgb, var(--color-base-content) 10%, transparent);
+}

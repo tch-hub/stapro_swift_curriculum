@@ -13,19 +13,16 @@ summary: タブ選択とタスク一覧の表示を実装します。
 
 ```swift
 import SwiftUI
-import SwiftData
+import SwiftData // この行を追加
 
 struct HomeView: View {
-    @Environment(\.modelContext) private var modelContext // データベースを操作するための道具
-
+    @Environment(\.modelContext) private var modelContext // この行を追加
     // 画面に表示するデータを覚えておくための箱
-    @State private var tabs: [ToDoTab] = []         // すべてのタブのリスト
-    @State private var tasks: [ToDoTask] = []       // 選ばれているタブのタスクリスト
-    @State private var selectedTabId: UUID?         // 今どのタブが選ばれているか
+    @State private var tabs: [ToDoTab] = []         // この行を追加
+    @State private var tasks: [ToDoTask] = []       // この行を追加
+    @State private var selectedTabId: UUID?         // この行を追加
 
-    @Binding var navigationPath: [NavigationItem]   // 画面の移動（遷移）を管理する仕組み
-
-    // ... この下の「body」の中に画面の見た目を作っていきます
+    @Binding var navigationPath: [NavigationItem]
 }
 ```
 
@@ -41,6 +38,7 @@ struct HomeView: View {
 
 `body` の中身を作っていきましょう。
 まずは全体の枠組みと、アプリを開いたばかりで「タブが1つもない時」の表示を作ります。
+`body` の中身を一度消してから書いてください。
 
 ```swift
     var body: some View {
@@ -186,6 +184,10 @@ struct HomeView: View {
 ### 🔄 タブの選択トラブルを防ぐ工夫
 
 アプリを使っていると、「選んでいたタブがいつのまにか消されている（削除機能など）」ということが起こるかもしれません。そのままだとエラーになってしまうので、**「もし選んでいるタブが見つからなかったら、一番最初のタブを選び直す」** または **「初めて開いたら、自動で一番最初のタブを選ぶ」** という賢い仕組み（`selectedTabId = tabs.first?.id`）を入れています。
+
+> [!NOTE]
+> **ビルドして確認してみよう**  
+> コードが書けたら、`Command + R` でアプリを実行して、タブを切り替えてタスクが正しく表示されるかを確認してみましょう！
 
 ---
 

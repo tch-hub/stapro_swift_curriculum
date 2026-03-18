@@ -98,10 +98,7 @@ struct MainStack: View {
 
 ```swift
 struct HomeView: View {
-    @Binding var navigationPath: [NavigationItem]
-
-    var body: some View {
-        // ...
+    @Binding var navigationPath: [NavigationItem] //この行を追加
 ```
 
 ### ② プレビューエラーを直す
@@ -111,8 +108,7 @@ struct HomeView: View {
 ```swift
 #Preview {
     NavigationStack {
-        // 👇 引数にダミーのデータ（.constant([])）を渡してエラーを消します
-        HomeView(navigationPath: .constant([]))
+        HomeView(navigationPath: .constant([])) // 引数にダミーのデータ（.constant([])）を渡してエラーを消します
     }
 }
 ```
@@ -208,8 +204,8 @@ Xcodeで新規プロジェクト（App）を作成し、以下の条件を満た
    `NavigationStack(path: $navigationPath)` の中に最初の画面（`HomeView(navigationPath: $navigationPath)`）を配置してください。  
    `.navigationDestination(for: NavigationItem.self)` で `settings` の場合に `SettingsView()` を表示してください。
 
-4. **HomeViewとSettingsView**  
-   - `HomeView` は `@Binding var navigationPath: [NavigationItem]` を受け取り、ボタン押下で `navigationPath.append(NavigationItem(id: .settings))` を実行してください。  
+4. **HomeViewとSettingsView**
+   - `HomeView` は `@Binding var navigationPath: [NavigationItem]` を受け取り、ボタン押下で `navigationPath.append(NavigationItem(id: .settings))` を実行してください。
    - `SettingsView` はシンプルなテキスト表示だけで構いません。
 
 ### 解答例

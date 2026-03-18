@@ -1,6 +1,8 @@
 <script>
 	import { onMount, tick } from 'svelte';
 	import Prism from 'prismjs';
+
+	// Prism setup
 	import 'prismjs/themes/prism-tomorrow.css';
 	import 'prismjs/components/prism-swift.min.js';
 	import 'prismjs/plugins/line-numbers/prism-line-numbers.min.js';
@@ -10,103 +12,101 @@
 	import 'prismjs/plugins/match-braces/prism-match-braces.min.js';
 	import 'prismjs/plugins/match-braces/prism-match-braces.css';
 
-	// SwiftのString Interpolation \() が match-braces を壊す問題への対策
-	// interpolation-punctuation から 'punctuation' クラスを取り除くことで、
-	// match-braces が () をペアとして誤認識するのを防ぐ
-	Prism.hooks.add('wrap', function (env) {
+	/**
+	 * SwiftのString Interpolation \() が match-braces を壊す問題への対策
+	 * interpolation-punctuation から 'punctuation' クラスを取り除くことで、
+	 * match-braces が () をペアとして誤認識するのを防ぐ
+	 */
+	Prism.hooks.add('wrap', (env) => {
 		if (env.language === 'swift' && env.type === 'interpolation-punctuation') {
 			env.classes = env.classes.filter((c) => c !== 'punctuation');
 			env.classes.push('swift-interpolation-punc');
 		}
 	});
 
-	// プロパティの定義
+	// Props
 	let {
-		code = '', // 表示するコード
-		language = 'swift', // プログラミング言語（現在はswiftのみ）
-		title = '', // コードブロックのタイトル
-		description = '', // コードブロックの解説文
-		fileName = '', // 編集するファイル名
-		executable = false, // 実行可能コードかどうか
-		showLineNumbers = true, // 行番号を表示するかどうか
-		output = '', // 実行結果
-		showHeader = true, // ヘッダーを表示するかどうか
-		dataAttribute = '' // data-* 属性用（例：data-search-tutorial の値）
+		code = '',
+		language = 'swift',
+		title = '',
+		description = '',
+		fileName = '',
+		executable = false,
+		showLineNumbers = true,
+		output = '',
+		showHeader = true,
+		dataAttribute = ''
 	} = $props();
 
-	// コピー機能の状態管理
+	// Component State
 	let copied = $state(false);
-	// 実行機能の状態管理
+	let runSuccess = $state(false);
 	let runMessage = $state('');
-	// マウント状態（hydration後にのみtrueになる）
 	let mounted = $state(false);
-
-	// 表示用のコードを整形（タブを2スペースに変換）
-	let displayCode = $derived(code.replace(/\t/g, '  '));
-
-	// クリップボードにコードをコピーする関数
-	async function copyToClipboard() {
-		try {
-			await navigator.clipboard.writeText(code);
-			copied = true;
-			setTimeout(() => {
-				copied = false;
-			}, 2000); // 2秒後にコピー状態をリセット
-		} catch (err) {
-			console.error('コピーに失敗しました:', err);
-		}
-	}
-
-	// Swiftコードを実行（SwiftFiddleで開く）
-	async function runCode() {
-		try {
-			// 実行時も整形済みのコードをコピーする
-			await navigator.clipboard.writeText(displayCode);
-			const confirmed = confirm(
-				'コードをクリップボードにコピーしました。\n\nSwiftFiddleで実行するには：\n1. 開いたページでコードを貼り付ける\n2. 「Run」ボタンをクリック\n\nSwiftFiddleを開きますか？'
-			);
-			if (confirmed) {
-				window.open('https://swiftfiddle.com/', '_blank');
-			}
-		} catch (err) {
-			console.error('コピーに失敗しました:', err);
-			runMessage = 'コピーに失敗しました。手動でコードをコピーしてください。';
-			setTimeout(() => {
-				runMessage = '';
-			}, 3000);
-		}
-	}
-
 	let codeElement = $state();
 
-	// マウント後にPrismを適用
+	// Computed
+	let displayCode = $derived(code.replace(/\t/g, '  '));
+
+	/**
+	 * クリップボードへのコピー処理
+	 */
+	async function performCopy(text, type = 'copy') {
+		try {
+			await navigator.clipboard.writeText(text);
+			if (type === 'copy') {
+				copied = true;
+				setTimeout(() => (copied = false), 2000);
+			} else {
+				runSuccess = true;
+				setTimeout(() => (runSuccess = false), 3000);
+			}
+			return true;
+		} catch (err) {
+			console.error('コピーに失敗しました:', err);
+			if (type === 'run') {
+				runMessage = 'コピーに失敗しました。手動でコピーしてください。';
+				setTimeout(() => (runMessage = ''), 3000);
+			}
+			return false;
+		}
+	}
+
+	function copyToClipboard() {
+		performCopy(code, 'copy');
+	}
+
+	async function runCode() {
+		const success = await performCopy(displayCode, 'run');
+		if (success) {
+			window.open('https://swiftfiddle.com/', '_blank');
+		}
+	}
+
+	// Lifecycle & Effects
 	onMount(() => {
 		mounted = true;
 	});
 
-	// 行番号付きでコードを表示するための処理
-	// code / language が変化したときにも Prism ハイライトを再適用する
+	/**
+	 * 依存関係の変化に合わせてハイライトを再適用
+	 */
 	$effect(() => {
-		// 依存として displayCode / language / showLineNumbers / mounted を参照
-		void displayCode;
-		void language;
-		void showLineNumbers;
+		// 依存関係の追跡
+		const triggers = [displayCode, language, showLineNumbers, mounted];
 		if (mounted && codeElement) {
-			// Prismプラグイン（行番号など）を正しく再適用するために、一旦DOM更新を待つ
-			tick().then(() => {
-				Prism.highlightElement(codeElement);
-			});
+			tick().then(() => Prism.highlightElement(codeElement));
 		}
 	});
 </script>
 
 <div
-	class="code-block rounded-lg bg-base-100 shadow-lg"
+	class="code-block overflow-hidden rounded-lg bg-base-100 shadow-lg"
 	data-search-tutorial={dataAttribute || undefined}
 >
 	{#if showHeader}
 		<!-- ヘッダー部分 -->
-		<div class="code-header flex items-center justify-between bg-base-200 px-4 py-2">
+		<div class="code-header sticky top-0 z-10 flex items-center justify-between border-b border-base-300 bg-base-200 px-4 py-2 backdrop-blur-sm">
 			<div class="flex items-center space-x-2">
 				{#if title}
 					<h3 class="m-0 text-sm font-semibold text-base-content">{title}</h3>
@@ -117,46 +117,70 @@
 					<span class="badge badge-sm badge-success">実行可能</span>
 				{/if}
 			</div>
-			<div class="flex items-center space-x-2">
+
+			<div class="flex items-center space-x-1">
 				{#if title && fileName}
-					<span class="font-mono text-xs text-base-content opacity-70">{fileName}</span>
+					<span class="mr-2 font-mono text-xs text-base-content opacity-70">{fileName}</span>
 				{/if}
-				<span class="badge badge-outline badge-sm">Swift</span>
+				<span class="badge badge-outline badge-sm mr-1">Swift</span>
+
+				<!-- 実行ボタン -->
 				{#if executable}
-					<button
-						class="btn btn-ghost btn-xs"
-						onclick={runCode}
-						title="SwiftFiddleで実行"
-						aria-label="SwiftFiddleで実行"
+					<div
+						class="tooltip tooltip-left {runSuccess ? 'tooltip-open tooltip-success' : ''}"
+						data-tip={runSuccess ? 'Copied & Opening!' : 'SwiftFiddleで実行'}
 					>
-						<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-							<path
-								fill-rule="evenodd"
-								d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-								clip-rule="evenodd"
-							></path>
-						</svg>
-					</button>
+						<button
+							class="btn btn-ghost btn-xs {runSuccess ? 'text-success' : ''}"
+							onclick={runCode}
+							aria-label="SwiftFiddleで実行"
+						>
+							<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+								<path
+									fill-rule="evenodd"
+									d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+									clip-rule="evenodd"
+								></path>
+							</svg>
+						</button>
+					</div>
 				{/if}
-				<button class="btn btn-ghost btn-xs" onclick={copyToClipboard} title="コードをコピー">
-					{#if copied}
-						<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-							<path
-								fill-rule="evenodd"
-								d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-								clip-rule="evenodd"
-							></path>
-						</svg>
-					{:else}
-						<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-							<path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path>
-							<path
-								d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"
-							></path>
-						</svg>
-					{/if}
-				</button>
+
+				<!-- コピーボタン -->
+				<div
+					class="tooltip tooltip-left {copied ? 'tooltip-open tooltip-success' : ''}"
+					data-tip={copied ? 'Copied!' : 'コードをコピー'}
+				>
+					<button
+						class="btn btn-ghost btn-xs {copied ? 'text-success' : ''}"
+						onclick={copyToClipboard}
+						aria-label="コードをコピー"
+					>
+						{#if copied}
+							<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+								<path
+									fill-rule="evenodd"
+									d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+									clip-rule="evenodd"
+								></path>
+							</svg>
+						{:else}
+							<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+								<path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path>
+								<path
+									d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"
+								></path>
+							</svg>
+						{/if}
+					</button>
+				</div>
 			</div>
+		</div>
+
+		<!-- アクセシビリティ用の非表示ステータス領域 -->
+		<div class="sr-only" aria-live="polite">
+			{#if copied}コードをコピーしました{/if}
+			{#if runSuccess}コードをコピーしてSwiftFiddleを開きました{/if}
 		</div>
 	{/if}
 
@@ -254,6 +278,19 @@
 
 	.code-content pre::-webkit-scrollbar-thumb:hover {
 		background: hsl(var(--bc) / 0.5);
+	}
+
+	/* ボタンのホバーアニメーション */
+	.btn-ghost {
+		transition: all 0.2s ease;
+	}
+
+	.btn-ghost:hover {
+		transform: translateY(-1px);
+	}
+
+	.btn-ghost:active {
+		transform: translateY(0);
 	}
 
 	/* Prism.jsのデフォルトmarginを削除 */
