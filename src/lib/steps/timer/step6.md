@@ -158,55 +158,53 @@ Xcodeで新規プロジェクト（App）を作成し、このステップで学
 import SwiftUI
 import Combine
 
-// 1. ViewModelの定義
+// 1. ロジック部分
 class CounterViewModel: ObservableObject {
     @Published var count = 0
+    @Published var step = 1
+    @Published var cost = 10
 
     func increment() {
-        count += 1
+        count += step
     }
 
-    func reset() {
-        count = 0
+    func upgrade() {
+        if count >= cost {
+            count -= cost
+            step += 1
+            cost += 10
+        }
     }
 }
 
-// 2. 画面の定義
+// 2. UI部分
 struct ContentView: View {
-    @StateObject var viewModel = CounterViewModel()
+    @StateObject private var viewModel = CounterViewModel()
 
     var body: some View {
-        VStack(spacing: 32) {
-            Text("カウンター")
-                .font(.title)
-
-            Text("\(viewModel.count)")
-                .font(.system(size: 80))
-                .bold()
-
-            HStack(spacing: 24) {
-                Button("＋１") {
-                    viewModel.increment()
-                }
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-
-                Button("リセット") {
-                    viewModel.reset()
-                }
-                .padding()
-                .background(Color.red)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+        VStack(spacing: 30) {
+            VStack {
+                Text("現在の値: \(viewModel.count)")
+                    .font(.title)
             }
+
+            Button("＋\(viewModel.step) 増やす ") {
+                viewModel.increment()
+            }
+            .buttonStyle(.borderedProminent)
+
+            Button("アップグレード (コスト: \(viewModel.cost))") {
+                viewModel.upgrade()
+            }
+            .buttonStyle(.bordered)
+            // コストが足りない場合は無効化
+            .disabled(viewModel.count < viewModel.cost)
         }
-        .padding()
     }
 }
 
 #Preview {
     ContentView()
 }
+
 ```

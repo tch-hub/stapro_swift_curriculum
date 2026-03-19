@@ -199,73 +199,73 @@ class TimerViewModel: ObservableObject {
 
 ![完成イメージ](/images/timer/p5.png)
 
-Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ `ObservableObject`（ViewModel）と `Timer.scheduledTimer` を利用して、「1秒に1ずつ数字が増える」シンプルな自動カウンターを作成しましょう。
-
-1. **ViewModelの作成**
-   `CounterViewModel` というクラスを作成し、`ObservableObject` に準拠させてください。
-2. **状態の定義**
-   カウント数（0からスタート）を保持する `@Published` 変数、**タイマーが動いているかを確認するフラグ（`isRunning`）**、および `Timer` を保持する変数を定義してください。
-3. **タイマーの開始・停止処理**
-   `isRunning` の状態を見ながら、1つのボタンでカウントを開始・停止できるように実装してください。
+学んだカウントダウンタイマーのロジック（ObservableObjectとTimer）を応用して、1秒ずつカウントアップする「ストップウォッチ」のクラスを作成する。
+さらに、同じファイル内の ContentView からそのクラスを呼び出し、ボタンで操作できるようにする。
 
 ### 解答例
-
-`ContentView.swift` を以下のように作成します。
 
 ```swift title="ContentView.swift"
 import SwiftUI
 import Combine
 
-class CounterViewModel: ObservableObject {
-    @Published var count = 0
-    @Published var isRunning = false  // 実行中かどうか
+// 1. ロジック部分（ViewModel）
+class StopwatchViewModel: ObservableObject {
+    @Published var elapsedTime = 0
+    @Published var isRunning = false
+
     var timer: Timer?
 
-    func startCounting() {
+    func start() {
+        // すでに動いている場合は何もしない（二重起動防止）
+        guard !isRunning else { return }
+
         isRunning = true
-        timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-            self.count += 1
+            self.elapsedTime += 1
         }
     }
 
-    func stopCounting() {
+    func stop() {
         isRunning = false
         timer?.invalidate()
+        timer = nil
+    }
+
+    func reset() {
+        stop()
+        elapsedTime = 0
     }
 }
 
+// 2. UI部分（View）
 struct ContentView: View {
-    @StateObject var viewModel = CounterViewModel()
+    // さきほど作ったクラスをインスタンス化して状態を監視する
+    @StateObject private var viewModel = StopwatchViewModel()
 
     var body: some View {
-        VStack(spacing: 30) {
-            Text("自動カウンター")
-                .font(.headline)
-            
-            Text("\(viewModel.count)")
-                .font(.system(size: 80))
-                .bold()
+        VStack(spacing: 40) {
+            // 値が変わると自動的に画面が更新される
+            Text("\(viewModel.elapsedTime) 秒")
+                .font(.system(size: 50, weight: .bold))
 
-            // 1つのボタンで「開始」と「停止」を切り替える
-            Button(action: {
-                if viewModel.isRunning {
-                    viewModel.stopCounting()
-                } else {
-                    viewModel.startCounting()
+            HStack(spacing: 20) {
+                Button("スタート") {
+                    viewModel.start()
                 }
-            }) {
-                Text(viewModel.isRunning ? "ストップ" : "スタート")
-                    .font(.title2)
-                    .bold()
-                    .frame(width: 150, height: 60)
-                    .background(viewModel.isRunning ? Color.red : Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(30)
+                .disabled(viewModel.isRunning) // 動いている時は押せないようにする
+
+                Button("ストップ") {
+                    viewModel.stop()
+                }
+                .disabled(!viewModel.isRunning) // 止まっている時は押せないようにする
+
+                Button("リセット") {
+                    viewModel.reset()
+                }
             }
+            .buttonStyle(.borderedProminent)
         }
-        .padding()
     }
 }
 

@@ -132,51 +132,40 @@ struct TimerDisplayView: View {
 ## 練習問題
 ![完成イメージ](/images/timer/p4.png)
 
-Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ `ZStack` を使って、プロフィールアイコンの右上に未読件数を示す赤い通知バッジを重ねて配置するレイアウトを作りましょう。
 
-1. **ベースとなるアイコンの配置**
-   `Image(systemName: "person.crop.circle.fill")` や `Circle()` を使い、ベースとなる大きめのアイコンを配置してください。サイズや色はお好みで設定します。
-2. **通知バッジの配置**
-   `ZStack` を使い、アイコンの上に赤い円（`Circle().fill(Color.red)`）と数字（`Text("3")` など）を重ねた通知バッジを配置してください。
-3. **位置の調整**
-   通知バッジの `ZStack` に対して `.offset(x: ..., y: ...)` モディファイアなどを使用して、アイコンの右上に配置されるように調整してください。（`alignment: .topTrailing` などでも構いません）
 
 ### 解答例
 
-`ContentView.swift` を以下のように変更します。（設定する値は一例です）
 
 ```swift title="ContentView.swift"
 import SwiftUI
 
 struct ContentView: View {
+    @State private var remainingTime: Int = 10
+    let totalTime: Int = 10
+    
+    var completionPercentage: Double {
+        return (totalTime > 0) ? (Double(remainingTime) / Double(totalTime)) : 1
+    }
+
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            // ベースのアイコン
-            Image(systemName: "envelope.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 80, height: 80)
-                .foregroundColor(.blue)
-
-            // 通知バッジ
-            ZStack {
-                Circle()
-                    .fill(Color.red)
-                    .frame(width: 30, height: 30)
-
-                Text("3")
-                    .foregroundColor(.white)
-                    .font(.caption)
-                    .bold()
-            }
-            // 位置の微調整（ZStackのalignmentだけで綺麗に配置できない場合）
-            .offset(x: 10, y: -10)
+        ZStack(alignment: .leading) {
+            Capsule()
+                .frame(width: 300, height: 20)
+                .foregroundColor(Color.gray.opacity(0.3))
+            Capsule()
+                .frame(width: 300 * CGFloat(completionPercentage), height: 20)
+                .foregroundColor(.orange)
+                .animation(.linear(duration: Double(totalTime)), value: completionPercentage)
         }
-        .padding()
+        .onAppear {
+            remainingTime = 0
+        }
     }
 }
 
 #Preview {
     ContentView()
 }
+
 ```

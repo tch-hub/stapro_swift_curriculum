@@ -141,50 +141,24 @@ struct ContentView: View {
 
 ![完成イメージ](/images/timer/p2.png)
 
-Xcodeで新規プロジェクト（App）を作成し、このステップで学んだレイアウト（`VStack`・`HStack`）や修飾子（モディファイア）を使って、以下のようなプロフィール画面風のUIを作成してみましょう。
-
-1. **縦のレイアウト（VStack）**
-   `VStack` を使い、一番上に `Text("プロフィール")` を配置してください。フォントを大きく（`.font(.largeTitle)`）設定してみましょう。
-
-2. **横のレイアウト（HStack）**
-   `Text` の下に `HStack` を使い、2つのボタン（例：「フォローする」「メッセージ」）を横に並べて配置してください。
-
-3. **デザインの調整**
-   それぞれのボタンに余白（`.padding()`）、背景色（`.background()`）、文字色（`.foregroundColor()`）、角丸（`.cornerRadius()`）を設定して、見た目を整えてください。背景色は好きな色（`Color.blue`や`Color.pink`など）で構いません。
-
+ `@State` と `Button` を使って、クリックで表示が変わるボタンを作ってみましょう。
 ### 解答例
-
-`ContentView.swift` を以下のように変更します。（設定する色やテキストは自由です）
 
 ```swift title="ContentView.swift"
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack(spacing: 24) {
-            Text("プロフィール")
-                .font(.largeTitle)
-                .padding()
-            
-            HStack(spacing: 16) {
-                Button("フォローする") {
-                    // ボタンが押されたときの処理
-                }
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+    @State var isFavorite = false
 
-                Button("メッセージ") {
-                    // ボタンが押されたときの処理
-                }
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-            }
+    var body: some View {
+        Button(isFavorite ? "★" : "☆") {
+            isFavorite.toggle()
         }
-        .padding()
+        .font(.system(size: 120))
+        .frame(width: 240, height: 240)
+        .foregroundColor(.white)
+        .background(isFavorite ? Color.red : Color.gray)
+        .clipShape(Circle())
     }
 }
 
