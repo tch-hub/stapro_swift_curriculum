@@ -50,6 +50,11 @@ const originalAppModules = import.meta.glob('../../steps/original-app/*.md', {
 	import: 'default',
 	eager: true
 });
+const swiftuiBasicsModules = import.meta.glob('../../steps/swiftui-basics/*.md', {
+	query: '?raw',
+	import: 'default',
+	eager: true
+});
 
 function parseFrontmatter(markdown: string) {
 	const match = markdown.match(/^---\n([\s\S]*?)\n---/);
@@ -90,9 +95,11 @@ function processModules(modules: Record<string, string>): ProjectStep[] {
 export const timerSteps = processModules(timerModules as Record<string, string>);
 export const todolistSteps = processModules(todolistModules as Record<string, string>);
 export const originalAppSteps = processModules(originalAppModules as Record<string, string>);
+export const swiftuiBasicsSteps = processModules(swiftuiBasicsModules as Record<string, string>);
 
 export const stepsByProject: Record<string, ProjectStep[]> = {
 	timer: timerSteps,
 	todolist: todolistSteps,
-	'original-app': originalAppSteps
+	'original-app': originalAppSteps,
+	'swiftui-basics': swiftuiBasicsSteps
 };

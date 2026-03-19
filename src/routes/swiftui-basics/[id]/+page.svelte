@@ -1,142 +1,77 @@
 <script>
 	import { base, resolve } from '$app/paths';
-	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
-	import CodeBlock from '$lib/components/CodeBlock.svelte';
-	import PhoneMockup from '$lib/components/PhoneMockup.svelte';
-	import basicsData from '$lib/data/swiftui-basics.json';
-	import { marked } from 'marked';
+	import MarkdownRenderer from '$lib/components/MarkdownRenderer.svelte';
+	import { useMarkdownRenderer } from '$lib/composables/useMarkdownRenderer.svelte.js';
 
-	let id = $derived($page.params.id);
-	let section = $derived(basicsData.sections.find((s) => s.id === id));
+	let { data } = $props();
 
-	// Markdownをパースしてテキストとコードブロックを分ける関数
-	function parseMarkdown(source) {
-		const tokens = marked.lexer(source);
-		const parts = [];
-		let currentText = '';
-
-		function processTokens(tokens) {
-			for (const token of tokens) {
-				if (token.type === 'code') {
-					// 前のテキストがあれば追加
-					if (currentText) {
-						parts.push({
-							type: 'text',
-							content: marked(currentText)
-						});
-						currentText = '';
-					}
-					// コードブロックを追加
-					parts.push({
-						type: 'code',
-						code: token.text,
-						lang: token.lang || 'swift',
-						meta: token.meta || ''
-					});
-				} else if (
-					token.type === 'text' ||
-					token.type === 'paragraph' ||
-					token.type === 'heading' ||
-					token.type === 'list' ||
-					token.type === 'blockquote'
-				) {
-					// テキストトークンを蓄積
-					currentText += token.raw;
-				} else {
-					// 他のトークンもテキストとして扱う
-					currentText += token.raw;
-				}
-			}
-		}
-
-		processTokens(tokens);
-
-		// 最後のテキストがあれば追加
-		if (currentText) {
-			parts.push({
-				type: 'text',
-				content: marked(currentText)
-			});
-		}
-
-		return parts;
-	}
-
-	let prevPage = async () => {
-		await goto(resolve('/swiftui-basics?prev=' + (parseInt(id) - 1)));
-	};
-
-	let nextPage = async () => {
-		await goto(resolve('/swiftui-basics?next=' + (parseInt(id) + 1)));
-	};
+	// マークダウンレンダリングロジックをcomposableから取得
+	const markdown = $derived(useMarkdownRenderer(data.content, base));
 </script>
 
-{#if section}
-	<div class="container mx-auto pb-24" data-base={base}>
-		{#each section.codeBlocks as codeBlock (codeBlock.title)}
-			<div class="card mb-4 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<div class="flex flex-col gap-6 lg:flex-row">
-						<div class="flex-1">
-							{#if codeBlock.intro}
-								<div class=" mb-4">
-									<span>{codeBlock.intro}</span>
-								</div>
-							{/if}
-							<CodeBlock
-								title={codeBlock.title}
-								code={codeBlock.code}
-								fileName={codeBlock.fileName}
-							/>
-							{#if codeBlock.description}
-								<div class="prose prose-sm mt-4 max-w-none text-sm text-base-content opacity-80">
-									{#each parseMarkdown(codeBlock.description.replace(/\n/g, '  \n')) as part, index (part.type + '-' + index)}
-										{#if part.type === 'text'}
-											<!-- eslint-disable-next-line svelte/no-at-html-tags -- マークダウンを表示するため -->
-											{@html part.content}
-										{:else if part.type === 'code'}
-											<CodeBlock
-												code={part.code}
-												language={part.lang}
-												title={part.meta}
-												showHeader={false}
-											/>
-										{/if}
-									{/each}
-								</div>
-							{/if}
-						</div>
-						{#if codeBlock.previewImage}
-							<PhoneMockup
-								previewImage={codeBlock.previewImage}
-								title={codeBlock.title}
-								scale={codeBlock.scale || 1.0}
-							/>
-						{/if}
-					</div>
-				</div>
-			</div>
-		{/each}
+<div class="container mx-auto px-4 py-8 pb-32">
+	<header class="mb-8 text-center">
+		<h1 class="mb-4 text-4xl font-bold">{data.title}</h1>
+		<p class="text-lg opacity-90">{data.summary}</p>
+	</header>
 
-		<!-- ナビゲーション -->
-		<div class="fixed right-0 bottom-0 left-0 z-10 flex justify-between bg-base-100 p-4 shadow-lg">
-			{#if parseInt(id) > 0}
-				<button onclick={prevPage} class="btn btn-primary">前の項目</button>
-			{:else}
-				<div></div>
-			{/if}
-			{#if parseInt(id) < basicsData.sections.length - 1}
-				<button onclick={nextPage} class="btn btn-primary">次の項目</button>
-			{:else}
-				<div></div>
-			{/if}
+	<section>
+		<MarkdownRenderer blocks={markdown.renderedBlocks} />
+	</section>
+
+	<!-- ナビゲーション -->
+	<div class="fixed right-0 bottom-0 left-0 z-50 border-t border-base-300 bg-base-100/90 p-4 shadow-lg backdrop-blur">
+		<div class="container mx-auto flex max-w-4xl items-center justify-between">
+			<div class="w-32">
+				{#if data.prevStep}
+					<a
+						href={resolve('/swiftui-basics/' + data.prevStep.id)}
+						class="btn btn-ghost btn-sm gap-2 whitespace-nowrap"
+					>
+						<span class="material-symbols-outlined">chevron_left</span>
+						前の項目
+					</a>
+				{/if}
+			</div>
+
+			<div class="hidden sm:block">
+				<span class="text-sm opacity-70">
+					{data.allSteps.findIndex(s => s.id === data.id) + 1} / {data.allSteps.length}
+				</span>
+			</div>
+
+			<div class="flex w-32 justify-end">
+				{#if data.nextStep}
+					<a
+						href={resolve('/swiftui-basics/' + data.nextStep.id)}
+						class="btn btn-primary btn-sm gap-2 whitespace-nowrap"
+					>
+						次の項目
+						<span class="material-symbols-outlined">chevron_right</span>
+					</a>
+				{:else}
+					<a href={resolve('/swiftui-basics')} class="btn btn-outline btn-sm whitespace-nowrap">
+						一覧に戻る
+					</a>
+				{/if}
+			</div>
 		</div>
 	</div>
-{:else}
-	<div class="container mx-auto px-4 py-8">
-		<h1 class="text-3xl font-bold">ページが見つかりません</h1>
-		<p>指定されたSwiftUI入門項目は存在しません。</p>
-		<a href={resolve('/swiftui-basics')} class="btn btn-primary">SwiftUI入門一覧に戻る</a>
-	</div>
-{/if}
+</div>
+
+<style>
+	:global(.prose h2) {
+		clear: both;
+		margin-top: 3rem !important;
+		padding-bottom: 0.5rem;
+		border-bottom: 2px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+		color: var(--color-primary);
+	}
+
+
+
+	/* コードブロックが画像と横並びになれるようにする */
+	:global(.overflow-x-auto) {
+		display: flow-root;
+	}
+</style>
