@@ -1,5 +1,6 @@
 <script>
 	import { dev } from '$app/environment';
+	import tutorialData from '$lib/data/swiftui-basics.json';
 	import { enhance } from '$app/forms';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 
@@ -164,7 +165,7 @@
 				<!-- サイドバー -->
 				<div class="w-80 overflow-y-auto border-r border-base-300 bg-base-200">
 					<div class="p-4">
-						<h3 class="mb-3 text-lg font-semibold">チュートリアルセクション</h3>
+						<h3 class="mb-3 text-lg font-semibold">SwiftUI入門セクション</h3>
 						<div class="space-y-2">
 							{#each sections as section (section.id)}
 								<button

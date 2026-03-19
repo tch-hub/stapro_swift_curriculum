@@ -49,7 +49,7 @@
 		{ href: '/setup', label: '開発環境の準備' },
 		{ href: '/reference', label: 'リファレンス' },
 		{ href: '/quiz', label: '練習問題' },
-		{ href: '/tutorial', label: 'チュートリアル' },
+		{ href: '/swiftui-basics', label: 'SwiftUI入門' },
 		{ href: '/project', label: 'プロジェクト' },
 		{ href: '/timer', label: 'タイマーアプリ', inMenu: false },
 		{ href: '/editor', label: 'JSONエディタ', devOnly: true }

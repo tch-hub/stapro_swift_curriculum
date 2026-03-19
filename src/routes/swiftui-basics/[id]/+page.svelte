@@ -4,11 +4,11 @@
 	import { goto } from '$app/navigation';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import PhoneMockup from '$lib/components/PhoneMockup.svelte';
-	import tutorialData from '$lib/data/tutorial.json';
+	import basicsData from '$lib/data/swiftui-basics.json';
 	import { marked } from 'marked';
 
 	let id = $derived($page.params.id);
-	let section = $derived(tutorialData.sections.find((s) => s.id === id));
+	let section = $derived(basicsData.sections.find((s) => s.id === id));
 
 	// Markdownをパースしてテキストとコードブロックを分ける関数
 	function parseMarkdown(source) {
@@ -64,11 +64,11 @@
 	}
 
 	let prevPage = async () => {
-		await goto(resolve('/tutorial?prev=' + (parseInt(id) - 1)));
+		await goto(resolve('/swiftui-basics?prev=' + (parseInt(id) - 1)));
 	};
 
 	let nextPage = async () => {
-		await goto(resolve('/tutorial?next=' + (parseInt(id) + 1)));
+		await goto(resolve('/swiftui-basics?next=' + (parseInt(id) + 1)));
 	};
 </script>
 
@@ -126,7 +126,7 @@
 			{:else}
 				<div></div>
 			{/if}
-			{#if parseInt(id) < tutorialData.sections.length - 1}
+			{#if parseInt(id) < basicsData.sections.length - 1}
 				<button onclick={nextPage} class="btn btn-primary">次の項目</button>
 			{:else}
 				<div></div>
@@ -136,7 +136,7 @@
 {:else}
 	<div class="container mx-auto px-4 py-8">
 		<h1 class="text-3xl font-bold">ページが見つかりません</h1>
-		<p>指定されたチュートリアル項目は存在しません。</p>
-		<a href={resolve('/tutorial')} class="btn btn-primary">チュートリアル一覧に戻る</a>
+		<p>指定されたSwiftUI入門項目は存在しません。</p>
+		<a href={resolve('/swiftui-basics')} class="btn btn-primary">SwiftUI入門一覧に戻る</a>
 	</div>
 {/if}

@@ -38,7 +38,7 @@
 			description:
 				'SwiftUIの基本を学びます。デフォルトコードの解説・テキスト表示・ボタン操作・レイアウト（VStack / HStack / ZStack）を学習します。',
 			checked: false,
-			tutorialSections: ['/tutorial/0', '/tutorial/1', '/tutorial/2', '/tutorial/3']
+			tutorialSections: ['/swiftui-basics/0', '/swiftui-basics/1', '/swiftui-basics/2', '/swiftui-basics/3']
 		},
 		{
 			id: 4,
@@ -46,7 +46,7 @@
 			description:
 				'SwiftUIのインタラクティブな要素を学びます。状態管理（@State）・図形・テキスト入力・Toggle・Slider・カウンターアプリの作成まで行います。',
 			checked: false,
-			tutorialSections: ['/tutorial/4', '/tutorial/5', '/tutorial/6', '/tutorial/7']
+			tutorialSections: ['/swiftui-basics/4', '/swiftui-basics/5', '/swiftui-basics/6', '/swiftui-basics/7']
 		},
 		{
 			id: 5,
@@ -302,11 +302,11 @@
 	<div class="mb-8 text-center">
 		<h2 class="mb-4 text-3xl font-bold">学習の流れ</h2>
 		<p class="mb-6 text-lg">
-			以下の順序で学習を進めてください。チュートリアルと練習問題は同時並行で進められます。リファレンスは補助教材として随時参照できます。
+			以下の順序で学習を進めてください。SwiftUI入門と練習問題は同時並行で進められます。リファレンスは補助教材として随時参照できます。
 		</p>
 		<ul class="steps steps-vertical lg:steps-horizontal">
 			<li class="step">開発環境の準備</li>
-			<li class="step">チュートリアル & 練習問題</li>
+			<li class="step">SwiftUI入門 & 練習問題</li>
 			<li class="step">アプリ制作</li>
 		</ul>
 	</div>
@@ -341,13 +341,13 @@
 						<div class="card-actions justify-end">
 							{#if lesson.tutorialUrl}
 								<a href={resolve(lesson.tutorialUrl)} class="btn btn-primary">
-									{lesson.id === 0 ? '開発環境の準備' : 'チュートリアル'}
+									{lesson.id === 0 ? '開発環境の準備' : 'SwiftUI入門'}
 								</a>
 							{/if}
 							{#if lesson.tutorialSections}
 								{#each lesson.tutorialSections as section (section)}
 									<a href={resolve(section)} class="btn btn-primary">
-										チュートリアル {parseInt(section.split('/').pop() || '0', 10) + 1}
+										SwiftUI入門 {parseInt(section.split('/').pop() || '0', 10) + 1}
 									</a>
 								{/each}
 							{/if}

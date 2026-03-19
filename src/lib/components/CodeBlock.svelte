@@ -102,7 +102,7 @@
 
 <div
 	class="code-block overflow-hidden rounded-lg bg-base-100 shadow-lg"
-	data-search-tutorial={dataAttribute || undefined}
+	data-search-basics={dataAttribute || undefined}
 >
 	{#if showHeader}
 		<!-- ヘッダー部分 -->

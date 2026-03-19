@@ -10,7 +10,7 @@
 	// OSの検出結果を管理
 	let isMac = $state(true); // デフォルトはtrueにしてサーバーサイドでエラーにならないように
 
-	// 検索チュートリアル管理
+	// 検索入門管理
 	const searchTutorialStorageKey = 'setup-search-tutorial-step';
 	const searchTutorialCompletedStorageKey = 'setup-search-tutorial-completed';
 	let searchTutorialStep = $state(0);
@@ -23,7 +23,7 @@
 			title: 'テキスト選択で検索',
 			description:
 				'テキストを選択してみましょう。選択すると画面上に「検索」ボタンが出ます。',
-			targetSelector: '[data-search-tutorial="practice-text"]',
+			targetSelector: '[data-search-basics="practice-text"]',
 			actionLabel: 'テキストを選択する',
 			tip: 'サイト内のどのテキストでも使えます'
 		},
@@ -37,7 +37,7 @@
 		{
 			title: '右クリックから検索',
 			description: 'ページ内の任意の場所で右クリックして、メニューから検索を選びましょう。',
-			targetSelector: '[data-search-tutorial="practice-text"]',
+			targetSelector: '[data-search-basics="practice-text"]',
 			actionLabel: 'ページ内で右クリックする',
 			tip: '選択中の文字列をそのまま検索できます。右クリックメニューにキーボードショートカットも表示されます。'
 		}
@@ -57,7 +57,7 @@
 		{ title: 'Xcodeインストール', completed: true },
 		{ title: '初期設定', completed: true },
 		{ title: '動作確認', completed: false },
-		{ title: 'ドキュメント検索チュートリアル', completed: false }
+		{ title: 'ドキュメント検索入門', completed: false }
 	];
 
 	function updateHighlightRect() {
@@ -520,7 +520,7 @@
 			<div class="card-body gap-6">
 				<h2 class="card-title text-2xl">
 					<span class="mr-2 badge badge-lg badge-primary">STEP 5</span>
-					ドキュメント検索機能の紹介
+					ドキュメント検索入門
 				</h2>
 
 				<div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -617,7 +617,7 @@
 						disabled={searchTutorialCompleted}>スキップ</button
 					>
 					<button class="btn btn-ghost" onclick={resetSearchTutorial}>最初からやり直す</button>
-					<a href={resolve('/tutorial')} class="btn btn-primary">チュートリアルを始める</a>
+					<a href={resolve('/swiftui-basics')} class="btn btn-primary">SwiftUI入門を始める</a>
 				</div>
 			</div>
 		</div>

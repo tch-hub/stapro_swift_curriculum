@@ -4,13 +4,13 @@
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import Header from '$lib/components/Header.svelte';
-	import tutorialData from '$lib/data/tutorial.json';
+	import basicsData from '$lib/data/swiftui-basics.json';
 	import GlobalSearch from '$lib/components/GlobalSearch.svelte';
 
 	let { children } = $props();
 
 	let id = $derived($page.params.id);
-	let tutorialSection = $derived(tutorialData.sections.find((s) => s.id === id));
+	let basicsSection = $derived(basicsData.sections.find((s) => s.id === id));
 
 	const quizSections = [
 		{
@@ -27,8 +27,8 @@
 	let quizSection = $derived(quizSections.find((s) => s.id === id));
 
 	let breadcrumbTitle = $derived(
-		$page.route.id === '/tutorial/[id]'
-			? tutorialSection?.title
+		$page.route.id === '/swiftui-basics/[id]'
+			? basicsSection?.title
 			: $page.route.id === '/quiz/[id]'
 				? quizSection?.title
 				: null

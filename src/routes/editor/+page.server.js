@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { fail } from '@sveltejs/kit';
 
-const TUTORIAL_JSON_PATH = join(process.cwd(), 'src/lib/data/tutorial.json');
+const TUTORIAL_JSON_PATH = join(process.cwd(), 'src/lib/data/swiftui-basics.json');
 
 export async function load() {
 	try {
