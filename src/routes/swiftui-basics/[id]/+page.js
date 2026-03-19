@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { swiftuiBasicsSteps } from '$lib/data/projects/index';
 
-const markdownFiles = import.meta.glob('../../../lib/steps/swiftui-basics/*.md', {
+const markdownFiles = import.meta.glob('../../../lib/markdown/swiftui-basics/*.md', {
 	query: '?raw',
 	import: 'default'
 });
@@ -19,7 +19,7 @@ export async function load({ params }) {
 		throw error(404, '項目が見つかりません。');
 	}
 
-	const loaderKey = `../../../lib/steps/swiftui-basics/${id}.md`;
+	const loaderKey = `../../../lib/markdown/swiftui-basics/${id}.md`;
 	const loader = markdownFiles[loaderKey];
 
 	if (!loader) {

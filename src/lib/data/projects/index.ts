@@ -35,22 +35,22 @@ export type ProjectStep = {
 	summary: string;
 };
 
-const timerModules = import.meta.glob('../../steps/timer/*.md', {
+const timerModules = import.meta.glob('../../markdown/timer/*.md', {
 	query: '?raw',
 	import: 'default',
 	eager: true
 });
-const todolistModules = import.meta.glob('../../steps/todolist/*.md', {
+const todolistModules = import.meta.glob('../../markdown/todolist/*.md', {
 	query: '?raw',
 	import: 'default',
 	eager: true
 });
-const originalAppModules = import.meta.glob('../../steps/original-app/*.md', {
+const originalAppModules = import.meta.glob('../../markdown/original-app/*.md', {
 	query: '?raw',
 	import: 'default',
 	eager: true
 });
-const swiftuiBasicsModules = import.meta.glob('../../steps/swiftui-basics/*.md', {
+const swiftuiBasicsModules = import.meta.glob('../../markdown/swiftui-basics/*.md', {
 	query: '?raw',
 	import: 'default',
 	eager: true

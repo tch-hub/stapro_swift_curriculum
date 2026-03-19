@@ -4,13 +4,13 @@
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import Header from '$lib/components/Header.svelte';
-	import basicsData from '$lib/data/swiftui-basics.json';
+	import { swiftuiBasicsSteps } from '$lib/data/projects/index';
 	import GlobalSearch from '$lib/components/GlobalSearch.svelte';
 
 	let { children } = $props();
 
 	let id = $derived($page.params.id);
-	let basicsSection = $derived(basicsData.sections.find((s) => s.id === id));
+	let basicsSection = $derived(swiftuiBasicsSteps.find((s) => s.id === id));
 
 	const quizSections = [
 		{

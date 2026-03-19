@@ -2,12 +2,12 @@ import { error } from '@sveltejs/kit';
 import { stepsByProject } from '$lib/data/projects/index';
 
 const markdownMaps = {
-	timer: import.meta.glob('../../../../lib/steps/timer/*.md', { query: '?raw', import: 'default' }),
-	todolist: import.meta.glob('../../../../lib/steps/todolist/*.md', {
+	timer: import.meta.glob('../../../../lib/markdown/timer/*.md', { query: '?raw', import: 'default' }),
+	todolist: import.meta.glob('../../../../lib/markdown/todolist/*.md', {
 		query: '?raw',
 		import: 'default'
 	}),
-	'original-app': import.meta.glob('../../../../lib/steps/original-app/*.md', {
+	'original-app': import.meta.glob('../../../../lib/markdown/original-app/*.md', {
 		query: '?raw',
 		import: 'default'
 	})
@@ -64,7 +64,7 @@ export async function load({ params }) {
 	}
 
 	const markdownFiles = markdownMaps[id];
-	const loaderKey = `../../../../lib/steps/${id}/${step}.md`;
+	const loaderKey = `../../../../lib/markdown/${id}/${step}.md`;
 	const loader = markdownFiles ? markdownFiles[loaderKey] : null;
 
 	if (!loader) {
