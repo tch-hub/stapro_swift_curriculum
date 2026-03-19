@@ -7,7 +7,7 @@
 	let { data } = $props();
 
 	// マークダウンレンダリングロジックをcomposableから取得
-	const markdown = useMarkdownRenderer(data.content, base);
+	const markdown = $derived(useMarkdownRenderer(data.content, base));
 
 	// ドロワーUI用の状態
 	let isShowcaseDrawerOpen = $state(false);
@@ -60,19 +60,7 @@
 				onclick={() => (isShowcaseDrawerOpen = false)}
 				aria-label="ドロワーを閉じる"
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="20"
-					height="20"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<path d="M18 6l-12 12M6 6l12 12" />
-				</svg>
+				<span class="material-symbols-outlined">close</span>
 			</button>
 			<div class="lesson-showcase-drawer-content">
 				<img src={showcaseImage.image} alt={showcaseImage.alt} class="lesson-showcase-image" />
@@ -86,21 +74,7 @@
 			onclick={() => (isShowcaseDrawerOpen = !isShowcaseDrawerOpen)}
 			aria-label="完成イメージを表示"
 		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-			>
-				<rect x="3" y="3" width="18" height="18" rx="2" />
-				<circle cx="8.5" cy="8.5" r="1.5" />
-				<path d="m21 15-5-5L5 21" />
-			</svg>
+			<span class="material-symbols-outlined">image</span>
 		</button>
 	{/if}
 	<div
@@ -114,17 +88,7 @@
 						href={resolve('/project/' + data.projectId + '/' + data.prevStep.id)}
 						class="btn gap-2 btn-ghost btn-sm"
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg
-						>
+						<span class="material-symbols-outlined">chevron_left</span>
 						<span class="hidden sm:inline">前へ</span>
 					</a>
 				{/if}
@@ -138,17 +102,7 @@
 							.length}</span
 					>
 					<span class="ml-1 max-w-[150px] truncate font-bold sm:max-w-xs">{data.title}</span>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="16"
-						height="16"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"><path d="m18 15-6-6-6 6" /></svg
-					>
+					<span class="material-symbols-outlined !text-base">expand_less</span>
 				</div>
 				<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 				<ul
@@ -178,17 +132,7 @@
 						class="btn gap-2 btn-sm btn-primary"
 					>
 						<span class="hidden sm:inline">次へ</span>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg
-						>
+						<span class="material-symbols-outlined">chevron_right</span>
 					</a>
 				{:else}
 					<a href={resolve('/project/' + data.projectId)} class="btn btn-outline btn-sm"> 完了 </a>
