@@ -43,17 +43,26 @@
 		}
 	}
 
-	// ルートラベルのマッピング
-	const routeLabels = {
-		'': 'ホーム',
-		setup: '環境構築',
-		tutorial: 'チュートリアル',
-		quiz: '練習問題',
-		project: 'プロジェクト',
-		timer: 'タイマーアプリ',
-		reference: 'リファレンス',
-		editor: 'JSONエディタ'
-	};
+	// 全てのルート情報
+	const allRoutes = [
+		{ href: '/', label: 'ホーム', mobileOnly: true },
+		{ href: '/setup', label: '開発環境の準備' },
+		{ href: '/reference', label: 'リファレンス' },
+		{ href: '/quiz', label: '練習問題' },
+		{ href: '/tutorial', label: 'チュートリアル' },
+		{ href: '/project', label: 'プロジェクト' },
+		{ href: '/timer', label: 'タイマーアプリ', inMenu: false },
+		{ href: '/editor', label: 'JSONエディタ', devOnly: true }
+	];
+
+	// routeLabels を allRoutes から動的に生成
+	// キーはスラッシュを除いたパス（ホームは空文字）
+	const routeLabels = Object.fromEntries(
+		allRoutes.map((r) => [r.href === '/' ? '' : r.href.replace(/^\//, ''), r.label])
+	);
+
+	// ナビゲーションメニュー用の項目
+	const navLinks = allRoutes.filter((r) => r.inMenu !== false);
 
 	// Breadcrumbを生成する関数
 	function generateBreadcrumb(pathname) {
@@ -109,15 +118,11 @@
 				</svg>
 			</div>
 			<ul class="dropdown-content menu z-[1] mt-3 w-52 menu-sm rounded-box bg-base-100 p-2 shadow">
-				<li><a href={resolve('/')}>ホーム</a></li>
-				<li><a href={resolve('/setup')}>環境構築</a></li>
-				<li><a href={resolve('/reference')}>リファレンス</a></li>
-				<li><a href={resolve('/quiz')}>練習問題</a></li>
-				<li><a href={resolve('/tutorial')}>チュートリアル</a></li>
-				<li><a href={resolve('/project')}>プロジェクト</a></li>
-				{#if dev}
-					<li><a href={resolve('/editor')}>JSONエディタ</a></li>
-				{/if}
+				{#each navLinks as link (link.href)}
+					{#if !link.devOnly || dev}
+						<li><a href={resolve(link.href)}>{link.label}</a></li>
+					{/if}
+				{/each}
 			</ul>
 		</div>
 		<!-- Breadcrumb -->
@@ -136,14 +141,11 @@
 	<div class="navbar-end">
 		<!-- ナビゲーションメニュー -->
 		<ul class="menu menu-horizontal hidden px-1 lg:flex">
-			<li><a href={resolve('/setup')}>環境構築</a></li>
-			<li><a href={resolve('/reference')}>リファレンス</a></li>
-			<li><a href={resolve('/quiz')}>練習問題</a></li>
-			<li><a href={resolve('/tutorial')}>チュートリアル</a></li>
-			<li><a href={resolve('/project')}>プロジェクト</a></li>
-			{#if dev}
-				<li><a href={resolve('/editor')}>JSONエディタ</a></li>
-			{/if}
+			{#each navLinks.filter((l) => !l.mobileOnly) as link (link.href)}
+				{#if !link.devOnly || dev}
+					<li><a href={resolve(link.href)}>{link.label}</a></li>
+				{/if}
+			{/each}
 		</ul>
 		<!-- テーマ切り替えドロップダウン -->
 		<div class="dropdown dropdown-end">

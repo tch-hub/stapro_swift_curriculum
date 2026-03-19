@@ -1,249 +1,27 @@
 <script>
 	import { base, resolve } from '$app/paths';
-	import CodeBlock from '$lib/components/CodeBlock.svelte';
+	import MarkdownRenderer from '$lib/components/MarkdownRenderer.svelte';
 	import StepPractice from '$lib/components/StepPractice.svelte';
-	import { marked } from 'marked';
+	import { useMarkdownRenderer } from '$lib/composables/useMarkdownRenderer.svelte.js';
 
 	let { data } = $props();
 
-	const parserOptions = { headerIds: false };
-	const showcaseKeyword = '完成イメージ';
-	const showcaseClassName = 'lesson-showcase-image';
-
-	function normalizeUrlWithBase(url) {
-		if (!url) return url;
-		if (base && url.startsWith('/')) {
-			const normalizedBase = (base || '').replace(/\/$/, '');
-			return `${normalizedBase}${url}`;
-		}
-		return url;
-	}
-
-	let parsedTokens = $derived(data.content ? marked.lexer(data.content, parserOptions) : []);
-	let tokensWithoutTitle = $derived.by(() => {
-		if (!parsedTokens.length) return parsedTokens;
-		const [firstToken, ...restTokens] = parsedTokens;
-		if (
-			firstToken.type === 'heading' &&
-			firstToken.depth === 1 &&
-			firstToken.text.trim() === data.title?.trim()
-		) {
-			return restTokens;
-		}
-		return parsedTokens;
-	});
-
-	// 「## 練習問題」でトークンをメインコンテンツと練習問題コンテンツに分割する
-	let mainTokens = $derived.by(() => {
-		const practiceIndex = tokensWithoutTitle.findIndex(
-			(t) => t.type === 'heading' && t.depth === 2 && t.text.trim() === '練習問題'
-		);
-		return practiceIndex !== -1 ? tokensWithoutTitle.slice(0, practiceIndex) : tokensWithoutTitle;
-	});
-
-	let practiceTokens = $derived.by(() => {
-		const practiceIndex = tokensWithoutTitle.findIndex(
-			(t) => t.type === 'heading' && t.depth === 2 && t.text.trim() === '練習問題'
-		);
-		if (practiceIndex === -1) return [];
-
-		const restTokens = tokensWithoutTitle.slice(practiceIndex + 1);
-		const answerIndex = restTokens.findIndex(
-			(t) => t.type === 'heading' && t.depth === 3 && t.text.trim() === '解答例'
-		);
-
-		return answerIndex !== -1 ? restTokens.slice(0, answerIndex) : restTokens;
-	});
-
-	let answerTokens = $derived.by(() => {
-		const practiceIndex = tokensWithoutTitle.findIndex(
-			(t) => t.type === 'heading' && t.depth === 2 && t.text.trim() === '練習問題'
-		);
-		if (practiceIndex === -1) return [];
-
-		const restTokens = tokensWithoutTitle.slice(practiceIndex + 1);
-		const answerIndex = restTokens.findIndex(
-			(t) => t.type === 'heading' && t.depth === 3 && t.text.trim() === '解答例'
-		);
-
-		return answerIndex !== -1 ? restTokens.slice(answerIndex + 1) : [];
-	});
-
-	function processTokens(tokens) {
-		return tokens
-			.filter((token) => token.type !== 'space')
-			.map((token) => {
-				if (token.type === 'code') {
-					let fileName = '';
-					let lang = token.lang || 'swift';
-					let meta = token.meta || '';
-
-					// langに空白が含まれている場合、メタデータとして扱う
-					const spaceIndex = lang.indexOf(' ');
-					if (spaceIndex !== -1) {
-						meta = lang.slice(spaceIndex + 1) + (meta ? ' ' + meta : '');
-						lang = lang.slice(0, spaceIndex);
-					}
-
-					if (meta) {
-						const titleMatch = meta.match(/title="([^"]+)"/);
-						if (titleMatch) {
-							fileName = titleMatch[1];
-						}
-					}
-
-					return {
-						type: 'code',
-						code: token.text,
-						language: lang,
-						fileName
-					};
-				}
-
-				// GitHubスタイルアラート (Callouts) の処理
-				if (token.type === 'blockquote') {
-					// 引用符(>)を取り除いた中身のテキストを取得
-					const rawText = token.raw.replace(/^>\s?/gm, '').trim();
-					// [!NOTE] などのパターンをチェック
-					const alertMatch = rawText.match(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/i);
-
-					if (alertMatch) {
-						const type = alertMatch[1].toUpperCase();
-						// アラートの見出し部分を取り除いたコンテンツを取得
-						const alertContentRaw = rawText.replace(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*\n?/i, '');
-						// コンテンツをMarkdownとしてパース
-						const alertHtml = marked.parse(alertContentRaw, parserOptions);
-
-						// タイプに応じたアイコンとクラスの設定
-						const config = {
-							NOTE: { icon: 'info', class: 'note' },
-							TIP: { icon: 'lightbulb', class: 'tip' },
-							IMPORTANT: { icon: 'priority_high', class: 'important' },
-							WARNING: { icon: 'warning', class: 'warning' },
-							CAUTION: { icon: 'report', class: 'caution' }
-						};
-						const { icon, class: typeClass } = config[type] || config.NOTE;
-
-						const html = `
-<div class="alert-callout alert-callout-${typeClass}">
-	<div class="alert-callout-header">
-		<span class="material-symbols-outlined">${icon}</span>
-		<span>${type}</span>
-	</div>
-	<div class="prose prose-sm max-w-none">
-		${alertHtml}
-	</div>
-</div>`;
-						return { type: 'html', html };
-					}
-				}
-
-				let html = marked.parse(token.raw, parserOptions);
-
-				if (base) {
-					const normalizedBase = (base || '').replace(/\/$/, '');
-					html = html.replace(/(src|href)=(['"])\/(?!\/)([^'"]*)/g, (m, attr, q, rest) => {
-						return `${attr}=${q}${normalizedBase}/${rest}`;
-					});
-					html = html.replace(/url\((['"]?)\/(?!\/)([^)'"]*)\)/g, (m, q, rest) => {
-						return `url(${q}${normalizedBase}/${rest})`;
-					});
-				}
-
-				return {
-					type: 'html',
-					html
-				};
-			});
-	}
-
-	let renderedBlocks = $derived(processTokens(mainTokens));
-	let practiceBlocks = $derived(processTokens(practiceTokens));
-	let answerBlocks = $derived(processTokens(answerTokens));
-
-	// 練習問題ブロックの中から最初の画像URLとaltを抽出する
-	let practiceImageInfo = $derived.by(() => {
-		// tokenから直接探す
-		for (const token of practiceTokens) {
-			if (token.type === 'image') {
-				return {
-					url: normalizeUrlWithBase(token.href),
-					alt: token.text || ''
-				};
-			}
-			// 段落内などのインライン画像
-			if (token.tokens) {
-				const imgToken = token.tokens.find((t) => t.type === 'image');
-				if (imgToken) {
-					return {
-						url: normalizeUrlWithBase(imgToken.href),
-						alt: imgToken.text || ''
-					};
-				}
-			}
-		}
-
-		// HTMLパース後のブロックから探す (imgタグが含まれている場合)
-		for (const block of practiceBlocks) {
-			if (block.type === 'html' && block.html.includes('<img')) {
-				const srcMatch = block.html.match(/src=['"]([^'"]+)['"]/i);
-				if (srcMatch) {
-					const altMatch = block.html.match(/alt=['"]([^'"]*)['"]/i);
-					return {
-						url: srcMatch[1],
-						alt: altMatch ? altMatch[1] : ''
-					};
-				}
-			}
-		}
-
-		return null;
-	});
-
-	let practiceImage = $derived(practiceImageInfo?.url ?? null);
-	let practiceImageAlt = $derived(practiceImageInfo?.alt || '練習問題の完成イメージ');
-	let practiceImageClass = $derived(
-		practiceImageAlt.includes(showcaseKeyword) ? showcaseClassName : ''
-	);
+	// マークダウンレンダリングロジックをcomposableから取得
+	const markdown = useMarkdownRenderer(data.content, base);
 
 	// ドロワーUI用の状態
 	let isShowcaseDrawerOpen = $state(false);
 
-	// メタデータから完成イメージを取得（altは自動生成）
+	// メタデータから完成イメージを取得
 	let showcaseImage = $derived.by(() => ({
-		image: data.showcaseImage ? normalizeUrlWithBase(data.showcaseImage) : null,
+		image: data.showcaseImage ? markdown.normalizeUrlWithBase(data.showcaseImage) : null,
 		alt: data.showcaseImageAlt || '完成イメージ'
 	}));
 
-	// 表示用からは画像を削除する（StepPracticeの左側で表示するため）
-	let displayPracticeBlocks = $derived.by(() => {
-		return practiceBlocks
-			.filter((block) => {
-				if (block.type === 'html') {
-					// 単独の段落にある画像のみのHTMLの場合は除外
-					const textOnly = block.html
-						.replace(/<img[^>]*>/gi, '') // imgタグを削除
-						.replace(/<[^>]*>/g, '') // 他のすべてのHTMLタグを削除
-						.trim();
-
-					// imgタグが存在し、プレーンテキストが空・または改行文字等の場合は除外
-					if (block.html.toLowerCase().includes('<img') && textOnly === '') {
-						return false;
-					}
-				}
-				return true;
-			})
-			.map((block) => {
-				// imgタグが存在するが、他にテキストもある場合は、imgタグだけを削除したhtmlを返す
-				if (block.type === 'html' && block.html.toLowerCase().includes('<img')) {
-					return {
-						...block,
-						html: block.html.replace(/<img[^>]*>/gi, '')
-					};
-				}
-				return block;
-			});
-	});
+	// 表示用からは画像を削除する
+	let displayPracticeBlocks = $derived(
+		markdown.createDisplayPracticeBlocks(markdown.practiceBlocks)
+	);
 </script>
 
 <div class="container mx-auto px-4 py-8 pb-32">
@@ -253,59 +31,23 @@
 	</header>
 
 	<section>
-		{#each renderedBlocks as block, index (block.type + '-' + index)}
-			{#if block.type === 'code'}
-				<div class="mb-6 overflow-x-auto">
-					{#key block.code}
-						<CodeBlock code={block.code} language={block.language} fileName={block.fileName} />
-					{/key}
-				</div>
-			{:else}
-				<div class="prose prose-base mb-4 max-w-none">
-					{@html block.html}
-				</div>
-			{/if}
-		{/each}
+		<MarkdownRenderer blocks={markdown.renderedBlocks} />
 
-		{#if practiceBlocks.length > 0}
+		{#if markdown.hasPractice}
 			{#snippet practiceContent()}
-				{#each displayPracticeBlocks as block, index (block.type + '-' + index)}
-					{#if block.type === 'code'}
-						<div class="mb-6 overflow-x-auto">
-							{#key block.code}
-								<CodeBlock code={block.code} language={block.language} fileName={block.fileName} />
-							{/key}
-						</div>
-					{:else}
-						<div class="prose prose-base mb-4 max-w-none">
-							{@html block.html}
-						</div>
-					{/if}
-				{/each}
+				<MarkdownRenderer blocks={displayPracticeBlocks} />
 			{/snippet}
 
 			{#snippet answerContent()}
-				{#each answerBlocks as block, index (block.type + '-' + index)}
-					{#if block.type === 'code'}
-						<div class="mb-6 overflow-x-auto">
-							{#key block.code}
-								<CodeBlock code={block.code} language={block.language} fileName={block.fileName} />
-							{/key}
-						</div>
-					{:else}
-						<div class="prose prose-base mb-4 max-w-none">
-							{@html block.html}
-						</div>
-					{/if}
-				{/each}
+				<MarkdownRenderer blocks={markdown.answerBlocks} />
 			{/snippet}
 
 			<StepPractice
-				{practiceImage}
-				{practiceImageAlt}
-				{practiceImageClass}
+				practiceImage={markdown.practiceImage}
+				practiceImageAlt={markdown.practiceImageAlt}
+				practiceImageClass={markdown.practiceImageClass}
 				{practiceContent}
-				answerContent={answerBlocks.length > 0 ? answerContent : undefined}
+				answerContent={markdown.hasAnswer ? answerContent : undefined}
 			/>
 		{/if}
 	</section>

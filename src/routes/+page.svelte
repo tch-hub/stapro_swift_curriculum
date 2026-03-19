@@ -7,7 +7,7 @@
 	let lessons = $state([
 		{
 			id: 0,
-			title: '第0回授業: 環境構築',
+			title: '第0回授業: 開発環境の準備',
 			description:
 				'Swift開発環境の構築方法を学びます。Xcodeのインストールと基本設定を行います。時間がかかるので事前にダウンロードしておきましょう。ダウンロードできていなかった場合は練習問題に挑戦してください。',
 			checked: false,
@@ -305,7 +305,7 @@
 			以下の順序で学習を進めてください。チュートリアルと練習問題は同時並行で進められます。リファレンスは補助教材として随時参照できます。
 		</p>
 		<ul class="steps steps-vertical lg:steps-horizontal">
-			<li class="step">環境構築</li>
+			<li class="step">開発環境の準備</li>
 			<li class="step">チュートリアル & 練習問題</li>
 			<li class="step">アプリ制作</li>
 		</ul>
@@ -341,7 +341,7 @@
 						<div class="card-actions justify-end">
 							{#if lesson.tutorialUrl}
 								<a href={resolve(lesson.tutorialUrl)} class="btn btn-primary">
-									{lesson.id === 0 ? '環境構築' : 'チュートリアル'}
+									{lesson.id === 0 ? '開発環境の準備' : 'チュートリアル'}
 								</a>
 							{/if}
 							{#if lesson.tutorialSections}
