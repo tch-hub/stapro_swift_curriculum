@@ -9,28 +9,28 @@
 			id: 0,
 			title: '第0回授業: 開発環境の準備',
 			description:
-				'Swift開発環境の構築方法を学びます。Xcodeのインストールと基本設定を行います。時間がかかるので事前にダウンロードしておきましょう。ダウンロードできていなかった場合は練習問題に挑戦してください。',
+				'Swift開発環境の構築方法を学びます。Xcodeのインストールと基本設定を行います。時間がかかるので事前にダウンロードしておきましょう。ダウンロードできていなかった場合はSwift基礎問題に挑戦してください。',
 			checked: false,
 			tutorialUrl: '/setup',
 			quizUrl: null
 		},
 		{
 			id: 1,
-			title: '第1回授業: Swift基本構文の解説',
+			title: '第1回授業: Swift基礎',
 			description:
-				'練習問題で出てくるSwiftプログラミングの基本的なルールと構文（変数・定数・型推論・条件分岐・配列・関数など）について学習します。',
+				'Swift基礎問題で出てくるSwiftプログラミングの基本的なルールと構文（変数・定数・型推論・条件分岐・配列・関数など）について学習します。',
 			checked: false,
-			tutorialUrl: '/basic-syntax',
+			tutorialUrl: '/swift-basics',
 			quizUrl: null
 		},
 		{
 			id: 2,
-			title: '第2回授業: Swiftの基本構文(練習問題)',
+			title: '第2回授業: Swiftの基本構文(Swift基礎問題)',
 			description:
-				'Swiftの基本構文を学びます。変数、定数、型推論、条件分岐、関数などについて理解します。<br>まずはSwift基本構文を学習し、その後練習問題に取り組んでみましょう。',
+				'Swiftの基本構文を学びます。変数、定数、型推論、条件分岐、関数などについて理解します。<br>まずはSwift基本構文を学習し、その後Swift基礎問題に取り組んでみましょう。',
 			checked: false,
 			tutorialUrl: null,
-			quizUrl: '/quiz'
+			quizUrl: '/swift-exercises'
 		},
 		{
 			id: 3,
@@ -302,11 +302,11 @@
 	<div class="mb-8 text-center">
 		<h2 class="mb-4 text-3xl font-bold">学習の流れ</h2>
 		<p class="mb-6 text-lg">
-			以下の順序で学習を進めてください。SwiftUI入門と練習問題は同時並行で進められます。リファレンスは補助教材として随時参照できます。
+			以下の順序で学習を進めてください。SwiftUI入門とSwift基礎問題は同時並行で進められます。リファレンスは補助教材として随時参照できます。
 		</p>
 		<ul class="steps steps-vertical lg:steps-horizontal">
 			<li class="step">開発環境の準備</li>
-			<li class="step">SwiftUI入門 & 練習問題</li>
+			<li class="step">SwiftUI入門 & Swift基礎問題</li>
 			<li class="step">アプリ制作</li>
 		</ul>
 	</div>
@@ -341,7 +341,7 @@
 						<div class="card-actions justify-end">
 							{#if lesson.tutorialUrl}
 								<a href={resolve(lesson.tutorialUrl)} class="btn btn-primary">
-									{lesson.id === 0 ? '開発環境の準備' : 'SwiftUI入門'}
+									{lesson.id === 0 ? '開発環境の準備' : lesson.id === 1 ? 'Swift基礎' : 'SwiftUI入門'}
 								</a>
 							{/if}
 							{#if lesson.tutorialSections}
@@ -355,7 +355,7 @@
 								<a href={resolve(lesson.referenceUrl)} class="btn btn-primary">リファレンス</a>
 							{/if}
 							{#if lesson.quizUrl}
-								<a href={resolve(lesson.quizUrl)} class="btn btn-secondary">練習問題</a>
+								<a href={resolve(lesson.quizUrl)} class="btn btn-secondary">Swift基礎問題</a>
 							{/if}
 							{#if lesson.projectSteps}
 								{#each lesson.projectSteps as step (step)}

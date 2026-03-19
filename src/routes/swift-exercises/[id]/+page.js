@@ -7,9 +7,9 @@ export async function load({ params }) {
 
 	try {
 		// 動的にJSONファイルをインポート
-		quizData = await import(`$lib/data/quiz/quiz${id}.json`);
+		quizData = await import(`$lib/data/swift-exercises/quiz${id}.json`);
 	} catch {
-		throw error(404, '練習問題が見つかりません');
+		throw error(404, 'Swift基礎問題が見つかりません');
 	}
 
 	return {

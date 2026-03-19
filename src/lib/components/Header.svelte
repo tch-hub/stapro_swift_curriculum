@@ -47,8 +47,9 @@
 	const allRoutes = [
 		{ href: '/', label: 'ホーム', mobileOnly: true },
 		{ href: '/setup', label: '開発環境の準備' },
+		{ href: '/swift-basics', label: 'Swift基礎' },
 		{ href: '/reference', label: 'リファレンス' },
-		{ href: '/quiz', label: '練習問題' },
+		{ href: '/swift-exercises', label: 'Swift基礎問題' },
 		{ href: '/swiftui-basics', label: 'SwiftUI入門' },
 		{ href: '/project', label: 'プロジェクト' },
 		{ href: '/timer', label: 'タイマーアプリ', inMenu: false },

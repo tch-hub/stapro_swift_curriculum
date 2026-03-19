@@ -216,7 +216,7 @@
 		showResults = true;
 	}
 
-	// 練習問題をリセットする
+	// Swift基礎問題をリセットする
 	function restartQuiz() {
 		orderedQuiz = shuffleArray([...data.quizData]);
 		currentQuestionIndex = 0;
@@ -278,7 +278,7 @@
 						</svg>
 						<span>不正な操作が検知されました。スコアは記録されません。</span>
 					</div>
-					<h2 class="card-title">練習問題の結果</h2>
+					<h2 class="card-title">Swift基礎問題の結果</h2>
 					<p class="mb-2 text-lg text-error">スコア: 無効（不正検知）</p>
 					<p class="mb-2 text-lg text-error">スコア: 無効（不正検知）</p>
 					<div class="text-sm text-base-content/70">
@@ -294,7 +294,7 @@
 						{/if}
 					</div>
 				{:else}
-					<h2 class="card-title">練習問題の結果</h2>
+					<h2 class="card-title">Swift基礎問題の結果</h2>
 					<p class="mb-2 text-lg">スコア: {score} / {orderedQuiz.length}</p>
 					<p class="text-sm text-base-content/70">ハイスコア: {finalResults?.highScore ?? score}</p>
 					<p class="text-sm text-base-content/70">
@@ -303,8 +303,8 @@
 				{/if}
 				<div class="card-actions justify-end gap-2">
 					<button class="btn btn-primary" onclick={restartQuiz}>もう一度挑戦</button>
-					<a href={resolve('/basic-syntax')} class="btn btn-outline">テキストに戻る</a>
-					<a href={resolve('/quiz')} class="btn btn-secondary">一覧へ戻る</a>
+					<a href={resolve('/swift-basics')} class="btn btn-outline">テキストに戻る</a>
+					<a href={resolve('/swift-exercises')} class="btn btn-secondary">一覧へ戻る</a>
 				</div>
 			</div>
 		</div>
@@ -392,8 +392,8 @@
 			<p>スコア: {score} / {orderedQuiz.length}</p>
 		</div>
 		<div class="mt-4 flex gap-2">
-			<a href={resolve('/basic-syntax')} class="btn btn-outline">テキストに戻る</a>
-			<a href={resolve('/quiz')} class="btn btn-secondary">一覧へ戻る</a>
+			<a href={resolve('/swift-basics')} class="btn btn-outline">テキストに戻る</a>
+			<a href={resolve('/swift-exercises')} class="btn btn-secondary">一覧へ戻る</a>
 		</div>
 	{/if}
 </div>

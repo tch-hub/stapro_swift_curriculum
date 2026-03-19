@@ -8,9 +8,9 @@
 
 <main class="container mx-auto px-4 py-8" data-base={base}>
 	<header class="mb-8 text-center">
-		<h2 class="mb-4 text-3xl font-bold">Swift 基本構文の解説</h2>
+		<h2 class="mb-4 text-3xl font-bold">Swift基礎</h2>
 		<p class="text-lg">
-			練習問題に出てくるSwiftプログラミングの基本的なルールと書き方を学びましょう。
+			Swift基礎問題に出てくるSwiftプログラミングの基本的なルールと書き方を学びましょう。
 		</p>
 	</header>
 
@@ -83,9 +83,9 @@
 			</div>
 
 			<div class="mt-6 card-actions justify-end pr-4">
-				<a href={resolve('/quiz/1')} class="btn btn-primary">
+				<a href={resolve('/swift-exercises/1')} class="btn btn-primary">
 					<span class="material-symbols-outlined mr-1">quiz</span>
-					このセクションの練習問題に挑戦
+					このセクションのSwift基礎問題に挑戦
 				</a>
 			</div>
 		</div>
@@ -138,9 +138,9 @@
 			</div>
 
 			<div class="mt-6 card-actions justify-end pr-4">
-				<a href={resolve('/quiz/2')} class="btn btn-primary">
+				<a href={resolve('/swift-exercises/2')} class="btn btn-primary">
 					<span class="material-symbols-outlined mr-1">quiz</span>
-					このセクションの練習問題に挑戦
+					このセクションのSwift基礎問題に挑戦
 				</a>
 			</div>
 		</div>
@@ -249,9 +249,9 @@
 			</div>
 
 			<div class="mt-6 card-actions justify-end pr-4">
-				<a href={resolve('/quiz/3')} class="btn btn-primary">
+				<a href={resolve('/swift-exercises/3')} class="btn btn-primary">
 					<span class="material-symbols-outlined mr-1">quiz</span>
-					このセクションの練習問題に挑戦
+					このセクションのSwift基礎問題に挑戦
 				</a>
 			</div>
 		</div>
@@ -309,9 +309,9 @@
 			</div>
 
 			<div class="mt-6 card-actions justify-end pr-4">
-				<a href={resolve('/quiz/4')} class="btn btn-primary">
+				<a href={resolve('/swift-exercises/4')} class="btn btn-primary">
 					<span class="material-symbols-outlined mr-1">quiz</span>
-					このセクションの練習問題に挑戦
+					このセクションのSwift基礎問題に挑戦
 				</a>
 			</div>
 		</div>
@@ -346,9 +346,9 @@
 			</div>
 
 			<div class="mt-6 card-actions justify-end pr-4">
-				<a href={resolve('/quiz/5')} class="btn btn-primary">
+				<a href={resolve('/swift-exercises/5')} class="btn btn-primary">
 					<span class="material-symbols-outlined mr-1">quiz</span>
-					このセクションの練習問題に挑戦
+					このセクションのSwift基礎問題に挑戦
 				</a>
 			</div>
 		</div>
@@ -377,9 +377,9 @@
 			</div>
 
 			<div class="mt-6 card-actions justify-end pr-4">
-				<a href={resolve('/quiz/6')} class="btn btn-primary">
+				<a href={resolve('/swift-exercises/6')} class="btn btn-primary">
 					<span class="material-symbols-outlined mr-1">quiz</span>
-					このセクションの練習問題に挑戦
+					このセクションのSwift基礎問題に挑戦
 				</a>
 			</div>
 		</div>
@@ -387,6 +387,6 @@
 
 	<nav class="mt-8 flex justify-center">
 		<a href={resolve('/')} class="btn mr-4 btn-outline">トップに戻る</a>
-		<a href={resolve('/quiz')} class="btn btn-primary">練習問題に挑戦する！</a>
+		<a href={resolve('/swift-exercises')} class="btn btn-primary">Swift基礎問題に挑戦する！</a>
 	</nav>
 </main>

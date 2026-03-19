@@ -29,7 +29,7 @@
 	let breadcrumbTitle = $derived(
 		$page.route.id === '/swiftui-basics/[id]'
 			? basicsSection?.title
-			: $page.route.id === '/quiz/[id]'
+			: $page.route.id === '/swift-exercises/[id]'
 				? quizSection?.title
 				: null
 	);

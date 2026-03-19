@@ -41,6 +41,7 @@
 </script>
 
 <div class="container mx-auto p-4" data-base={base}>
+	<h1 class="mb-8 text-center text-3xl font-bold text-primary">Swift基礎問題</h1>
 	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 		{#each quizSections as section (section.id)}
 			<div class="card bg-base-100 shadow-xl">
@@ -70,7 +71,7 @@
 						<p>前回のスコア: {storedScores[section.id]?.lastScore ?? '記録なし'}</p>
 					</div>
 					<div class="card-actions justify-end">
-						<a href={resolve('/quiz/' + section.id)} class="btn btn-primary">問題を解く</a>
+						<a href={resolve('/swift-exercises/' + section.id)} class="btn btn-primary">問題を解く</a>
 					</div>
 				</div>
 			</div>
