@@ -91,5 +91,3 @@ export async function load({ params }) {
 		allSteps: steps
 	};
 }
-
-export const prerender = true;
