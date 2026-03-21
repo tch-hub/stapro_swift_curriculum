@@ -1,6 +1,5 @@
 <script>
 	import { dev } from '$app/environment';
-	import tutorialData from '$lib/data/swiftui-basics.json';
 	import { enhance } from '$app/forms';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 
