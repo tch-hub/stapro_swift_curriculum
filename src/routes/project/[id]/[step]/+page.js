@@ -2,7 +2,10 @@ import { error } from '@sveltejs/kit';
 import { stepsByProject } from '$lib/data/projects/index';
 
 const markdownMaps = {
-	timer: import.meta.glob('../../../../lib/markdown/timer/*.md', { query: '?raw', import: 'default' }),
+	timer: import.meta.glob('../../../../lib/markdown/timer/*.md', {
+		query: '?raw',
+		import: 'default'
+	}),
 	todolist: import.meta.glob('../../../../lib/markdown/todolist/*.md', {
 		query: '?raw',
 		import: 'default'
@@ -88,3 +91,5 @@ export async function load({ params }) {
 		allSteps: steps
 	};
 }
+
+export const prerender = true;

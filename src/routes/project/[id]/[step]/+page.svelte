@@ -6,8 +6,11 @@
 
 	let { data } = $props();
 
-	// マークダウンレンダリングロジックをcomposableから取得
-	const markdown = $derived(useMarkdownRenderer(data.content, base));
+	// 明確にデータの変更を追跡してマークダウンを再生成
+	const markdown = $derived.by(() => {
+		// データの各プロパティにアクセスして、依存性を明確にする
+		return useMarkdownRenderer(data.content, base);
+	});
 
 	// ドロワーUI用の状態
 	let isShowcaseDrawerOpen = $state(false);
@@ -30,27 +33,29 @@
 		<p class="text-lg opacity-90">{data.summary}</p>
 	</header>
 
-	<section>
-		<MarkdownRenderer blocks={markdown.renderedBlocks} />
+	{#key data.stepId}
+		<section>
+			<MarkdownRenderer blocks={markdown.renderedBlocks} />
 
-		{#if markdown.hasPractice}
-			{#snippet practiceContent()}
-				<MarkdownRenderer blocks={displayPracticeBlocks} />
-			{/snippet}
+			{#if markdown.hasPractice}
+				{#snippet practiceContent()}
+					<MarkdownRenderer blocks={displayPracticeBlocks} />
+				{/snippet}
 
-			{#snippet answerContent()}
-				<MarkdownRenderer blocks={markdown.answerBlocks} />
-			{/snippet}
+				{#snippet answerContent()}
+					<MarkdownRenderer blocks={markdown.answerBlocks} />
+				{/snippet}
 
-			<StepPractice
-				practiceImage={markdown.practiceImage}
-				practiceImageAlt={markdown.practiceImageAlt}
-				practiceImageClass={markdown.practiceImageClass}
-				{practiceContent}
-				answerContent={markdown.hasAnswer ? answerContent : undefined}
-			/>
-		{/if}
-	</section>
+				<StepPractice
+					practiceImage={markdown.practiceImage}
+					practiceImageAlt={markdown.practiceImageAlt}
+					practiceImageClass={markdown.practiceImageClass}
+					{practiceContent}
+					answerContent={markdown.hasAnswer ? answerContent : undefined}
+				/>
+			{/if}
+		</section>
+	{/key}
 
 	<!-- 完成イメージドロワー -->
 	{#if showcaseImage.image}
