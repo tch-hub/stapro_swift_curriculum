@@ -87,7 +87,7 @@ private func handleSubmit() {
 
 ```swift
     var body: some View {
-        HStack(alignment: .bottom, spacing: 12) {
+        HStack(alignment: .center, spacing: 12) {
 
             // ①ここにテキスト入力欄を追加します
 
@@ -105,20 +105,23 @@ private func handleSubmit() {
 
 ```swift
             // テキスト入力エリア
-            TextField(placeholder, text: $text, axis: .vertical)
+            TextField(placeholder, text: $text)
                 .focused($isFocused)
+                .keyboardType(.default)                    // キーボードタイプを明示
+                .textInputAutocapitalization(.never)       // 自動大文字化を無効
+                .disableAutocorrection(true)               // 自動修正を無効（IME対応）
+                .onSubmit { handleSubmit() }               // エンターキーで送信
                 .padding(.vertical, 10)
                 .padding(.horizontal, 16)
                 .background(
                     Capsule() // 丸みを帯びた背景
                         .fill(Color(.secondarySystemBackground))
                 )
-                .onSubmit { handleSubmit() } // キーボードのEnterキーで送信
 ```
 
-- `TextField(axis: .vertical)`テキストが長くなって複数行になった場合に入力欄の高さを自動で調整します。
+- `TextField`: 単一行入力欄で、ToDoタスク名を入力するのに適しています。
 - `Capsule()`: メッセージアプリのように、入力欄の背景を丸くしています。
-- `.onSubmit`: ソフトウェアキーボードの「確定」ボタンが押された時の動作を指定します。
+- `keyboardType(.default)` / `textInputAutocapitalization(.never)` / `disableAutocorrection(true)`: これらの修飾子は、**日本語IMEなどでの変換確定を正常に機能させる**ためのものです。
 
 ## 5. UIの実装: 送信ボタン
 
@@ -134,7 +137,6 @@ private func handleSubmit() {
                     .foregroundStyle(isValid ? Color.accentColor : Color(.systemGray4))
             }
             .disabled(!isValid) // 入力が空の時は押せないようにする
-            .padding(.bottom, 4) // 入力欄と高さを合わせるための微調整
 ```
 
 送信ボタンの実装について解説します。
@@ -152,9 +154,6 @@ private func handleSubmit() {
   見た目だけでなく、機能としてもボタンを押せないようにします。
   - `!isValid` は「有効ではない（＝無効）」という意味です。
   - これにより、グレーの状態でボタンを連打されても、空のタスクが登録されることはありません。
-
-- **`.padding(.bottom, 4)`**
-  隣にあるテキスト入力欄と高さを揃えるための微調整です。`HStack(alignment: .bottom)` を使っているため、アイコンの位置を少し持ち上げることでバランスを取っています。
 
 ## 6. プレビューの作成
 
@@ -212,16 +211,19 @@ struct InputView: View {
     }
 
     var body: some View {
-        HStack(alignment: .bottom, spacing: 12) {
-            TextField(placeholder, text: $text, axis: .vertical)
+        HStack(alignment: .center, spacing: 12) {
+            TextField(placeholder, text: $text)
                 .focused($isFocused)
+                .keyboardType(.default)
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+                .onSubmit { handleSubmit() }
                 .padding(.vertical, 10)
                 .padding(.horizontal, 16)
                 .background(
                     Capsule()
                         .fill(Color(.secondarySystemBackground))
                 )
-                .onSubmit { handleSubmit() }
 
             Button(action: handleSubmit) {
                 Image(systemName: buttonIcon)
@@ -232,7 +234,6 @@ struct InputView: View {
                     .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isValid)
             }
             .disabled(!isValid)
-            .padding(.bottom, 4)
         }
         .padding(16)
         .background(.ultraThinMaterial)
