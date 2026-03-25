@@ -196,11 +196,28 @@ class TimerViewModel: ObservableObject {
 このステップでは「裏側の処理(ビジネスロジック)」を作りました。画面には何も変化が現れませんが、次のステップ以降でこのViewModelを使ってタイマーの動作を実装していきます。
 
 ## 練習問題
-
 ![完成イメージ](/images/timer/p5.png)
 
-学んだカウントダウンタイマーのロジック（ObservableObjectとTimer）を応用して、1秒ずつカウントアップする「ストップウォッチ」のクラスを作成する。
-さらに、同じファイル内の ContentView からそのクラスを呼び出し、ボタンで操作できるようにする。
+### ストップウォッチを実装しよう
+
+学んだカウントダウンタイマーのロジック（`ObservableObject` と `Timer`）を応用して、1秒ずつカウントアップする「ストップウォッチ」を作成してみましょう。
+
+#### 1. ロジック部分（StopwatchViewModel）の作成
+- `ObservableObject` プロトコルに準拠した `StopwatchViewModel` クラスを作成します。
+- 以下の変数を定義しましょう。
+  - `elapsedTime`: 経過時間（秒）。`@Published` を付けます。
+  - `isRunning`: 実行中かどうか。`@Published` を付けます。
+- 以下のメソッドを実装します。
+  - `start()`: 1秒ごとに `elapsedTime` を `+1` するタイマーを開始します（二重起動に注意しましょう）。
+  - `stop()`: タイマーを停止し、`isRunning` を `false` にします。
+  - `reset()`: タイマーを停止し、`elapsedTime` を `0` に戻します。
+
+#### 2. UI部分（ContentView）の実装
+- `@StateObject` を使用して `StopwatchViewModel` をインスタンス化し、状態を監視できるようにします。
+- `Text` を配置し、`viewModel.elapsedTime` を秒単位で表示します。
+- `HStack` を使い、「スタート」「ストップ」「リセット」の3つのボタンを配置しましょう。
+- `.disabled()` モディファイアを使用して、実行中は「スタート」ボタンを、停止中は「ストップ」ボタンを押せないように制御してみましょう。
+
 
 ### 解答例
 

@@ -190,118 +190,115 @@ struct ContentView: View {
 ```
 
 ## 練習問題
-
 ![完成イメージ](/images/timer/p8.png)
 
-Xcodeで新規プロジェクト（App）を作成し、これまでに学んだ `enum` による状態管理と、アイコン（SF Symbols）を表示できるカスタムビューを組み合わせて、3つの挨拶（朝・昼・晩）を切り替えるUIを作成しましょう。
+### 図形テーマ切り替えアプリを作成しよう
 
-1. **状態の定義**
-   `GreetingMode` という `enum` を定義し、`morning`, `afternoon`, `evening` の3つのケースを用意してください。
-2. **カスタムビューの作成**
-   `CustomButton` ビューを作成し、プロパティとして `title: String` 、 `systemName: String`（アイコン名）、 `color: Color`、 `action: () -> Void` を持つようにしてください。
-3. **ContentViewでの実装**
-   `ContentView` で現在のモードを `@State` で保持し、選択されたモードに応じて中央の**テキスト、アイコン、背景色**が切り替わるようにしてください。
+カリキュラムでは「カスタムボタン」を作りましたが、ここではもう一歩進んで、**「表示エリア（図形とタイトル）」**をカスタムビューとして切り出してみましょう。引数を受け取って見た目を変更できる柔軟なUIを作成します。
+
+#### 1. 状態の定義
+- `ContentView` に、画面の表示内容を保持するための `@State` 変数を3つ用意しましょう。
+  - `titleText` (文字列): 初期のタイトル（例: `"スター"`）
+  - `shapeText` (文字列): 初期の図形（例: `"★"`）
+  - `themeColor` (Color): 初期のテーマカラー（例: `.orange`）
+
+#### 2. 表示エリア（ShapeView）のカスタムビューを作成
+- 画面中央の図形とタイトルテキストを表示する部分を、別の構造体 `ShapeView` として切り出します。
+- 以下のプロパティを外部から受け取れるようにしましょう。
+  - `shape` (文字列): 表示する図形（文字）
+  - `title` (文字列): タイトルテキスト
+- `VStack` で縦に並べ、白色（`.white`）で表示するように設定します。
+
+#### 3. レイアウトの構築
+- `ContentView` の `ZStack` を使用して、指定したテーマカラー（`themeColor`）が画面全体に広がるようにします（`.ignoresSafeArea()` ）。
+- 中央に作成した `ShapeView` を呼び出し、引数に `@State` 変数を渡して表示します。
+
+#### 4. ボタンの処理（アクション）
+- `ShapeView` の下に `HStack` で3つのボタン（星、丸、四角）を並べましょう。
+- ボタンが押されたときに、`titleText`、`shapeText`、`themeColor` の値をそれぞれ対応する文字と色に変更する処理（クロージャ）を実装します。
+- ボタン自体の見た目は `.padding()` と `.background(Color.white)` 等を使ってシンプルに装飾しましょう。
 
 ### 解答例
-
-`ContentView.swift` を以下のように作成します。
-
 ```swift title="ContentView.swift"
 import SwiftUI
 
-// 1. 挨拶の状態を定義
-enum GreetingMode {
-    case morning
-    case afternoon
-    case evening
-}
-
 struct ContentView: View {
-    // 現在のモードを保持
-    @State private var mode: GreetingMode = .morning
+    // 1. 状態を保持する変数
+    @State private var titleText = "スター"
+    @State private var shapeText = "★"
+    @State private var themeColor: Color = .orange
 
     var body: some View {
         ZStack {
-            // モードに応じて背景色を変える
-            backgroundColor.ignoresSafeArea()
+            // テーマカラーを画面全体に適用
+            themeColor.ignoresSafeArea()
 
             VStack(spacing: 50) {
-                // 中央の表示エリア
-                VStack(spacing: 20) {
-                    Image(systemName: iconName)
-                        .font(.system(size: 80))
-                        .frame(width: 100, height: 100) // サイズを固定してガタつきを防ぐ
-                    Text(greetingText)
-                        .font(.largeTitle)
-                        .bold()
-                }
-                .foregroundColor(.white)
+                // 2 & 3. カスタムビュー（ShapeView）の呼び出し
+                ShapeView(shape: shapeText, title: titleText)
 
-                // 切り替えボタン
+                // 4. 標準のButtonを並べて状態を更新する
                 HStack(spacing: 20) {
-                    CustomButton(title: "朝", systemName: "sun.max.fill", color: .orange) {
-                        mode = .morning
+                    Button(action: {
+                        titleText = "スター"
+                        shapeText = "★"
+                        themeColor = .orange
+                    }) {
+                        Text("星")
+                            .font(.title3).bold()
+                            .frame(width: 80, height: 80)
+                            .background(Color.white)
+                            .foregroundColor(.orange)
+                            .cornerRadius(15)
                     }
-                    CustomButton(title: "昼", systemName: "sun.horizon.fill", color: .blue) {
-                        mode = .afternoon
+
+                    Button(action: {
+                        titleText = "サークル"
+                        shapeText = "●"
+                        themeColor = .pink
+                    }) {
+                        Text("丸")
+                            .font(.title3).bold()
+                            .frame(width: 80, height: 80)
+                            .background(Color.white)
+                            .foregroundColor(.pink)
+                            .cornerRadius(15)
                     }
-                    CustomButton(title: "晩", systemName: "moon.stars.fill", color: .indigo) {
-                        mode = .evening
+
+                    Button(action: {
+                        titleText = "スクエア"
+                        shapeText = "■"
+                        themeColor = .blue
+                    }) {
+                        Text("四角")
+                            .font(.title3).bold()
+                            .frame(width: 80, height: 80)
+                            .background(Color.white)
+                            .foregroundColor(.blue)
+                            .cornerRadius(15)
                     }
                 }
             }
             .padding()
         }
     }
-
-    // --- 計算プロパティで表示内容を切り替える ---
-    var greetingText: String {
-        switch mode {
-        case .morning: return "おはよう"
-        case .afternoon: return "こんにちは"
-        case .evening: return "こんばんは"
-        }
-    }
-
-    var iconName: String {
-        switch mode {
-        case .morning: return "sun.max.fill"
-        case .afternoon: return "sun.horizon.fill"
-        case .evening: return "moon.stars.fill"
-        }
-    }
-
-    var backgroundColor: Color {
-        switch mode {
-        case .morning: return .orange
-        case .afternoon: return .blue
-        case .evening: return .indigo
-        }
-    }
 }
 
-// 2. アイコン付きのカスタムボタン
-struct CustomButton: View {
+// 表示エリアのカスタムビュー
+struct ShapeView: View {
+    // 外部から受け取るデータの定義
+    let shape: String
     let title: String
-    let systemName: String
-    let color: Color
-    let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            VStack {
-                Image(systemName: systemName)
-                    .frame(width: 30, height: 30) // アイコンのサイズを固定
-                Text(title)
-                    .font(.caption)
-                    .bold()
-            }
-            .frame(width: 80, height: 80)
-            .background(Color.white)
-            .foregroundColor(color)
-            .cornerRadius(15)
-            .shadow(radius: 5)
+        VStack(spacing: 20) {
+            Text(shape)
+                .font(.system(size: 80))
+            Text(title)
+                .font(.largeTitle)
+                .bold()
         }
+        .foregroundColor(.white)
     }
 }
 

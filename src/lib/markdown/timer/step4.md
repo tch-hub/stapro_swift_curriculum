@@ -132,11 +132,31 @@ struct TimerDisplayView: View {
 ## 練習問題
 ![完成イメージ](/images/timer/p4.png)
 
+### 横型のプログレスバーを実装しよう
+
+これまでは円形のプログレスバーを作成してきましたが、今度は横に伸びるバー（カプセル型）のプログレスバーを作成してみましょう。
+
+#### 1. 前準備
+- `remainingTime`（残り時間：10秒）と `totalTime`（合計時間：10秒）を定義します。
+- `remainingTime` は `@State` 変数として定義しましょう。
+
+#### 2. 進捗率の計算
+- `totalTime` に対する `remainingTime` の割合を `completionPercentage`（Double型）として計算するコードを作成してください。
+
+#### 3. UIの実装
+- `ZStack` を使用して、背景となるグレーのバーと、その上に重ねるオレンジ色のバーを作成します。
+- 今回は `Circle` ではなく `Capsule` を使用してください。
+- バーが左端から伸びるように、`ZStack(alignment: .leading)` を設定しましょう。
+- 全体の幅は `300` とし、オレンジ色のバーの幅は `300 * completionPercentage` となるように計算します。
+
+#### 4. アニメーションの実装
+- `.onAppear` モディファイアを使用して、画面が表示された瞬間に `remainingTime` を `0` に変更します。
+- オレンジ色のバーに `.animation` を適用し、合計時間（`totalTime`）をかけてゆっくりとバーが減っていく様子をアニメーションさせましょう。
+
+
 
 
 ### 解答例
-
-
 ```swift title="ContentView.swift"
 import SwiftUI
 

@@ -138,21 +138,32 @@ struct ContentView: View {
 ```
 
 ## 練習問題
-
 ![完成イメージ](/images/timer/p6.png)
 
-Xcodeで新規プロジェクト（App）を作成し、このステップで学んだ `@StateObject` を使って、ViewModelが持つデータを画面（UI）に紐づけ、「＋１」「リセット」ボタンで数字を更新できるシンプルなカウンター画面を作成しましょう。
+### 強化できるカウンターを実装しよう
 
-1. **ViewModelの作成**
-   数値を保持する `@Published` 変数、数値を+1するメソッド、数値を0にする（リセット）メソッドを持つ `CounterViewModel` クラス（`ObservableObject`）を作成してください。
-2. **UIとの紐づけ**
-   `ContentView` に `@StateObject var viewModel = CounterViewModel()` を定義して紐づけてください。
-3. **画面の作成**
-   画面中央に現在の数値を表示し、その下に「＋１」ボタンと「リセット」ボタンを横並び（`HStack`）に配置して、先ほどのメソッドを呼び出すようにしてください。
+このステップで学んだ `@StateObject` を使って、ViewModelが持つデータを画面（UI）に紐づけ、値を増やしたり、増える量を強化（アップグレード）したりできるカウンター画面を作成しましょう。
+
+#### 1. ViewModel（CounterViewModel）の作成
+- `ObservableObject` に準拠した `CounterViewModel` クラスを作成します。
+- 以下の変数を `@Published` で定義してください。
+  - `count`: 現在の数値（初期値 0）
+  - `step`: 1回で増える量（初期値 1）
+  - `cost`: アップグレードに必要なコスト（初期値 10）
+- 以下のメソッドを実装します。
+  - `increment()`: `count` を `step` の分だけ増やします。
+  - `upgrade()`: `count` が `cost` 以上あれば、`count` から `cost` を引き、`step` を増やし、次の `cost` を上げます。
+
+#### 2. UI（ContentView）の実装
+- `@StateObject` を使用して `CounterViewModel` をインスタンス化し、画面と紐づけます。
+- 現在の数値（`count`）を表示するテキストを配置します。
+- 以下の2つのボタンを作成しましょう。
+  1. 「増やす」ボタン：現在の `step` の値を表示し、`increment()` を呼び出します。
+  2. 「アップグレード」ボタン：現在の `cost` を表示し、`upgrade()` を呼び出します。
+- アップグレードボタンは、`count` が `cost` 未満のときには押せないよう、`.disabled()` モディファイアで制御してみましょう。
+
 
 ### 解答例
-
-`ContentView.swift` を以下のように変更します。
 
 ```swift title="ContentView.swift"
 import SwiftUI

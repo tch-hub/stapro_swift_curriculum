@@ -9,7 +9,7 @@ summary: AVFoundationを用いてタイマー終了時に音を鳴らし、Alert
 <a href="/source/Alarm.mp3" download="Alarm.mp3" class="text-blue-500 hover:underline">
 音声ファイル (Alarm.mp3)
 </a>
-をダウンロードして、Xcodeのプロジェクトナビゲータ内にある `Timer` フォルダに配置してください。。
+をダウンロードして、Xcodeのプロジェクトナビゲータ内にある `Timer` フォルダに配置してください。
 
 ### 2. 必要な「道具」の準備(TimerViewModel.swift)
 
@@ -249,21 +249,32 @@ struct ContentView: View {
 ```
 
 ## 練習問題
-
 ![完成イメージ](/images/timer/p7.png)
 
-Xcodeで新規プロジェクト（App）を作成し、このステップで学んだアラート（`.alert`）機能を使って、カウントをリセットする前に「本当にリセットしますか？」という確認ダイアログを表示するUIを作成しましょう。
+### 確認アラートを実装しよう
 
-1. **ViewModelの作成**
-   `CounterViewModel` クラスに、カウント用の数値、タイマー、および**アラートを表示するかどうかを管理する `@Published` 変数（`isShowingAlert`）**を定義してください。
-2. **ボタンの配置**
-   画面に「リセット」ボタンを配置し、タップされた時に `isShowingAlert` を `true` に変更するようにしてください。
-3. **アラートの実装**
-   `.alert` モディファイアを追加し、タイトルを「本当にリセットしますか？」とし、「キャンセル」ボタンと、カウントを0に戻す「リセット」ボタン（`role: .destructive` を指定）を配置してください。
+このステップで学んだ「アラート（`.alert`）」機能を使って、カウンターの数値をリセットする前に「本当にリセットしますか？」という確認ダイアログを表示するUIを作成してみましょう。
+
+#### 1. ViewModel（CounterViewModel）の作成
+- `ObservableObject` に準拠した `CounterViewModel` クラスを作成します。
+- 以下の変数を定義してください。
+  - `count`: 数値（初期値 10など）
+  - `isShowingAlert`: アラートを表示するかどうかを管理するスイッチ（`@Published`）
+- `count` を `0` に戻す `resetCount()` メソッドを実装します。
+
+#### 2. UI（ContentView）の構築
+- `VStack` を使い、現在の数値（`count`）と「リセット」ボタンを配置します。
+- リセットボタンがタップされたとき、`isShowingAlert` を `true` に変更するようにしましょう。
+
+#### 3. アラートの実装
+- `.alert` モディファイアを使用して、`isShowingAlert` が `true` になったときにポップアップを表示します。
+- アラートのタイトルを「本当にリセットしますか？」とし、以下の2つのボタンを配置してください。
+  - 「キャンセル」ボタン： `role: .cancel` を指定します。
+  - 「リセット」ボタン： `role: .destructive` を指定し、押されたときに `resetCount()` を実行します。
+- `message` 部分に「これまでのカウントは消去されます。」という説明も追加してみましょう。
+
 
 ### 解答例
-
-`ContentView.swift` を以下のように変更します。
 
 ```swift title="ContentView.swift"
 import SwiftUI
