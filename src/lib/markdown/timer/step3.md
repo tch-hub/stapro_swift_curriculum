@@ -263,6 +263,7 @@ struct ContentView: View {
 ```
 
 ## 練習問題
+
 ![完成イメージ](/images/timer/p3.png)
 
 ### 年と月を選択できるUIを作成しよう
@@ -270,14 +271,17 @@ struct ContentView: View {
 このステップで学んだ「コンポーネントの再利用」と「複数のPickerの組み合わせ」を活用して、西暦（年）と月をドラムロールで選べるUIを作成してみましょう。
 
 #### 1. 再利用可能な部品 `YearMonthPicker` の作成
+
 - 数値の範囲（`range`）と単位（`title`: "年" や "月"）、そして選択状態を同期する `@Binding` 変数を持つViewを作成してください。
 - `Picker` のスタイルは `.pickerStyle(.wheel)` としましょう。
 
 #### 2. ContentView での状態定義
+
 - 現在の年（`selectedYear`）と月（`selectedMonth`）を保持するための `@State` 変数を定義します。
 - 初期値は現在の年（例: 2024）や月（例: 1）にしておきましょう。
 
 #### 3. レイアウトの構築
+
 - `VStack` の中に、説明テキスト（「日付を選択してください」）を配置します。
 - `HStack` を使い、2つの `YearMonthPicker` を横に並べて配置してください。
   - 西暦用：2000年〜2030年の範囲、単位は「年」
@@ -285,9 +289,13 @@ struct ContentView: View {
 - ドラムロールの高さが見やすくなるよう、`.frame(height: 200)` などで調整しましょう。
 
 #### 4. 選択結果の表示
+
 - 画面の下部に、現在選択されている値を表示するテキストを配置します。
 - 「選択中: 2024年 3月」のように、西暦と月の変数の値を反映させて表示してください。
 
+> [!TIP]
+>
+> - **高さの指定**: `HStack` 全体に対して `.frame(height: 200)` を設定すると、ドラムロール（Picker）の表示エリアを広げて見やすくできます。
 
 ### 解答例
 
@@ -302,11 +310,11 @@ struct ContentView: View {
         VStack(spacing: 40) {
             Text("日付を選択してください")
                 .font(.headline)
-            
+
             HStack {
                 // 西暦のPicker
                 YearMonthPicker(title: "年", range: 2000...2030, selection: $selectedYear)
-                
+
                 // 月のPicker
                 YearMonthPicker(title: "月", range: 1...12, selection: $selectedMonth)
             }

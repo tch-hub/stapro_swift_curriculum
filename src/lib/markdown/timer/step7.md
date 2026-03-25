@@ -249,6 +249,7 @@ struct ContentView: View {
 ```
 
 ## 練習問題
+
 ![完成イメージ](/images/timer/p7.png)
 
 ### 確認アラートを実装しよう
@@ -256,6 +257,7 @@ struct ContentView: View {
 このステップで学んだ「アラート（`.alert`）」機能を使って、カウンターの数値をリセットする前に「本当にリセットしますか？」という確認ダイアログを表示するUIを作成してみましょう。
 
 #### 1. ViewModel（CounterViewModel）の作成
+
 - `ObservableObject` に準拠した `CounterViewModel` クラスを作成します。
 - 以下の変数を定義してください。
   - `count`: 数値（初期値 10など）
@@ -263,16 +265,24 @@ struct ContentView: View {
 - `count` を `0` に戻す `resetCount()` メソッドを実装します。
 
 #### 2. UI（ContentView）の構築
+
 - `VStack` を使い、現在の数値（`count`）と「リセット」ボタンを配置します。
 - リセットボタンがタップされたとき、`isShowingAlert` を `true` に変更するようにしましょう。
 
 #### 3. アラートの実装
+
 - `.alert` モディファイアを使用して、`isShowingAlert` が `true` になったときにポップアップを表示します。
 - アラートのタイトルを「本当にリセットしますか？」とし、以下の2つのボタンを配置してください。
   - 「キャンセル」ボタン： `role: .cancel` を指定します。
   - 「リセット」ボタン： `role: .destructive` を指定し、押されたときに `resetCount()` を実行します。
 - `message` 部分に「これまでのカウントは消去されます。」という説明も追加してみましょう。
 
+> [!TIP]
+>
+> - **ボタンの役割（Role）**: アラート内のボタンには、引数に `role:` を指定できます。
+>   - `role: .destructive`: 「削除」や「リセット」など、取り返しのつかない危険な操作のボタンを赤色で強調表示します。
+>   - `role: .cancel`: 「キャンセル」のアクションを明示的に示します。
+> - **アラートの詳細メッセージ**: `.alert("タイトル", isPresented: ...)` に続けて、`message: { Text("詳細文") }` と記述することで、メインタイトルの下に少し小さめの文字で補足説明を追加できます。
 
 ### 解答例
 
@@ -284,7 +294,7 @@ import Combine
 class CounterViewModel: ObservableObject {
     @Published var count = 10
     @Published var isShowingAlert = false
-    
+
     func resetCount() {
         count = 0
     }

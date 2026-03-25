@@ -138,6 +138,7 @@ struct ContentView: View {
 ```
 
 ## 練習問題
+
 ![完成イメージ](/images/timer/p6.png)
 
 ### 強化できるカウンターを実装しよう
@@ -145,6 +146,7 @@ struct ContentView: View {
 このステップで学んだ `@StateObject` を使って、ViewModelが持つデータを画面（UI）に紐づけ、値を増やしたり、増える量を強化（アップグレード）したりできるカウンター画面を作成しましょう。
 
 #### 1. ViewModel（CounterViewModel）の作成
+
 - `ObservableObject` に準拠した `CounterViewModel` クラスを作成します。
 - 以下の変数を `@Published` で定義してください。
   - `count`: 現在の数値（初期値 0）
@@ -155,6 +157,7 @@ struct ContentView: View {
   - `upgrade()`: `count` が `cost` 以上あれば、`count` から `cost` を引き、`step` を増やし、次の `cost` を上げます。
 
 #### 2. UI（ContentView）の実装
+
 - `@StateObject` を使用して `CounterViewModel` をインスタンス化し、画面と紐づけます。
 - 現在の数値（`count`）を表示するテキストを配置します。
 - 以下の2つのボタンを作成しましょう。
@@ -162,6 +165,11 @@ struct ContentView: View {
   2. 「アップグレード」ボタン：現在の `cost` を表示し、`upgrade()` を呼び出します。
 - アップグレードボタンは、`count` が `cost` 未満のときには押せないよう、`.disabled()` モディファイアで制御してみましょう。
 
+> [!TIP]
+>
+> - **標準的なボタンスタイル**:
+>   - `.buttonStyle(.borderedProminent)`: 背景色が塗りつぶされた目立つボタンになります。
+>   - `.buttonStyle(.bordered)`: うっすらとした背景色が付き、少し控えめなボタンになります。これを使い分けることで、ボタンの重要度を視覚的に表現できます。
 
 ### 解答例
 
