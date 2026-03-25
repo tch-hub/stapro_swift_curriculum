@@ -7,15 +7,18 @@ summary: 画面下部にタスク追加欄を実装します。
 
 <img src="/images/todolist/19.png" alt="HomeViewの完成イメージ" class="mobile-screenshot-top" />
 
-## 1. 入力された文字を覚えておく箱（変数）を作る
+## 1. 入力された文字を覚えておく変数を作る
 
 `Views/HomeView.swift` を開き、新しく入力されたタスクの名前を覚えておくための変数を追加します。
 
 ```swift
 struct HomeView: View {
-    // ... （既存の変数）
+    @Environment(\.modelContext) private var modelContext
+    @State private var tabs: [ToDoTab] = []
+    @State private var tasks: [ToDoTask] = []
+    @State private var selectedTabId: UUID?
 
-    @State private var newTaskTitle = ""
+    @State private var newTaskTitle = "" // この行を追加
 ```
 
 | コード                                 | 役割                                                                                                                                                                                                   |
@@ -26,7 +29,7 @@ struct HomeView: View {
 
 `body` の中身を修正し、画面の一番下にタスクを入力する枠（`InputView`）を配置します。
 リストなどの他の部分と重ならないように、`.safeAreaInset` という仕組みを使います。
-
+`.onAppear { loadTabs() }` の直下に追加します。
 ```swift
     var body: some View {
         VStack(spacing: 0) {
@@ -35,7 +38,7 @@ struct HomeView: View {
         .navigationTitle("ToDoリスト")
         .onAppear { loadTabs() }
 
-        // 画面の下部に入力エリアを固定表示する
+        // ここから下を追加
         .safeAreaInset(edge: .bottom) {
             // タブが選択されている時だけ入力エリアを表示
             if selectedTabId != nil {
@@ -56,6 +59,7 @@ struct HomeView: View {
 ## 3. タスクを追加する仕組み（ロジック）を作る
 
 送信ボタンが押された時に実行される `addTask` メソッドを作成します。入力された名前でタスクを作成し、データベースに保存します。
+`private func toggleTaskCompletion(_ task: ToDoTask) {...}` の下に追加します。
 
 ```swift
     // 新しいタスクを追加する処理
@@ -79,9 +83,8 @@ struct HomeView: View {
 | `ToDoTaskService.addTask(...)`                                                   | ステップ10で作成した処理を使って、新しく作成したタスクをデータベースへ保存します。                                                                                                                                                                                                                               |
 | `newTaskTitle = ""`                                                              | 入力欄を空にして、次のタスクをすぐに入力できるように準備します。                                                                                                                                                                                                                                                 |
 
-### 📱 ビルドして確認してみよう
-
-コードが書けたら、`Command + R` でアプリを実行して、新しいタスクを入力して追加できるかを確認してみましょう！
+> [!NOTE] 
+> コードが書けたら、`Command + R` でアプリを実行して、新しいタスクを入力して追加できるかを確認してみましょう！
 
 ---
 

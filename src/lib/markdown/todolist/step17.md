@@ -96,24 +96,26 @@ struct HomeView: View {
 
 ## 4. タスクのリストを作る
 
-ヘッダーの下に、メインのタスクリストを表示するコードを追加します。
+`// 次に、この下にタスクのリストを追加します` の下の行に追加してください。
 
 ```swift
-                // 2. タスクが並ぶリストの部分
-                if selectedTabId != nil && !tasks.isEmpty {
-                    // タブが選ばれていて、タスクも1つ以上あるならリストを表示
-                    CustomList(items: tasks, onDelete: nil) { task in
-                        ToDoListItem(
-                            title: task.title,           // タスクの名前
-                            isCompleted: task.isCompleted // 終わっているかどうか
-                        ) {
-                            // タップした時の処理（次のステップで作ります）
-                        }
-                    }
-                } else {
-                    // タスクが1つもない時は、空っぽの画面を表示
-                    EmptyStateView(hasSelectedTab: selectedTabId != nil)
-                }
+// 次に、この下にタスクのリストを追加します
+
+// 2. タスクが並ぶリストの部分
+if selectedTabId != nil && !tasks.isEmpty {
+    // タブが選ばれていて、タスクも1つ以上あるならリストを表示
+    CustomList(items: tasks, onDelete: nil) { task in
+        ToDoListItem(
+            title: task.title,           // タスクの名前
+            isCompleted: task.isCompleted // 終わっているかどうか
+        ) {
+            // タップした時の処理（次のステップで作ります）
+        }
+    }
+} else {
+    // タスクが1つもない時は、空の画面を表示
+    EmptyStateView(hasSelectedTab: selectedTabId != nil)
+}
 ```
 
 - **`if selectedTabId != nil && !tasks.isEmpty`**
@@ -186,7 +188,6 @@ struct HomeView: View {
 アプリを使っていると、「選んでいたタブがいつのまにか消されている（削除機能など）」ということが起こるかもしれません。そのままだとエラーになってしまうので、**「もし選んでいるタブが見つからなかったら、一番最初のタブを選び直す」** または **「初めて開いたら、自動で一番最初のタブを選ぶ」** という賢い仕組み（`selectedTabId = tabs.first?.id`）を入れています。
 
 > [!NOTE]
-> **ビルドして確認してみよう**  
 > コードが書けたら、`Command + R` でアプリを実行して、タブを切り替えてタスクが正しく表示されるかを確認してみましょう！
 
 ---

@@ -57,7 +57,7 @@ const swiftuiBasicsModules = import.meta.glob('../../markdown/swiftui-basics/*.m
 });
 
 function parseFrontmatter(markdown: string) {
-	const match = markdown.match(/^---\n([\s\S]*?)\n---/);
+	const match = markdown.match(/^\s*---\r?\n([\s\S]*?)\r?\n---/);
 	if (!match) return { title: '', summary: '' };
 	const lines = match[1].split('\n');
 	const metadata: Record<string, string> = {};

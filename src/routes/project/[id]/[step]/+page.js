@@ -17,7 +17,7 @@ const markdownMaps = {
 };
 
 function parseFrontmatter(rawContent) {
-	const frontmatterMatch = rawContent.match(/^---\n([\s\S]*?)\n---\n*/);
+	const frontmatterMatch = rawContent.match(/^\s*---\r?\n([\s\S]*?)\r?\n---\r?\n*/);
 	if (!frontmatterMatch) {
 		return {};
 	}
@@ -46,7 +46,7 @@ function parseFrontmatter(rawContent) {
 }
 
 function stripFrontmatter(rawContent) {
-	return rawContent.replace(/^---\n[\s\S]*?\n---\n*/, '');
+	return rawContent.replace(/^\s*---\r?\n[\s\S]*?\r?\n---\r?\n*/, '');
 }
 
 function createShowcaseImageAlt(stepId) {
