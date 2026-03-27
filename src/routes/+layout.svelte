@@ -4,7 +4,7 @@
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import Header from '$lib/components/Header.svelte';
-	import { swiftuiBasicsSteps } from '$lib/data/projects/index';
+	import { swiftuiBasicsSteps } from '$lib/data/app-creation/index';
 	import GlobalSearch from '$lib/components/GlobalSearch.svelte';
 
 	let { children } = $props();

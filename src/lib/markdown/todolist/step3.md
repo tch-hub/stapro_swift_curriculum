@@ -190,7 +190,7 @@ struct CustomList<T: Identifiable, RowContent: View>: View {
 
 このステップで学んだ**ジェネリクス（`<T: Identifiable>`）**と **`@ViewBuilder`** を活用して、どんなデータでも表示できる汎用カードリストを作ってみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
+Xcodeで新規アプリ制作（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
 
 1. **汎用リストコンポーネントの作成**  
    `CardList<T: Identifiable, RowContent: View>` という構造体を作成してください。  

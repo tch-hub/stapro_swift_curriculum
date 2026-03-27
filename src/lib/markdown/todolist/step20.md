@@ -187,7 +187,7 @@ struct HomeView: View {
 
 このステップで学んだ **`IndexSet` / `for index in offsets` / `.onDelete` でのメソッド参照渡し** を使って、タグ管理の削除機能を実装してみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し、以下の条件を満たすコードを `ContentView.swift` に実装してください。
+Xcodeで新規アプリ制作（App）を作成し、以下の条件を満たすコードを `ContentView.swift` に実装してください。
 
 1. **`Tag` モデルの作成**（@Model）
    - `id: UUID`

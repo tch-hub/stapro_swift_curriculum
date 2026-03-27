@@ -125,7 +125,7 @@ struct EmptyStateView: View {
 
 このステップで学んだ **`if / else` による条件分岐** と **`VStack` / `Image(systemName:)` / `.frame(maxWidth: .infinity, maxHeight: .infinity)`** を使って、ネットワーク接続状態に応じた表示を切り替えてみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
+Xcodeで新規アプリ制作（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
 
 1. **プロパティの定義**  
    `NetworkStatusView` という構造体に `let isConnected: Bool` プロパティを定義してください。

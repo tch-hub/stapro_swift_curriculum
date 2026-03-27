@@ -90,7 +90,7 @@
 			<div class="w-24">
 				{#if data.prevStep}
 					<a
-						href={resolve('/project/' + data.projectId + '/' + data.prevStep.id)}
+						href={resolve('/app-creation/' + data.projectId + '/' + data.prevStep.id)}
 						class="btn gap-2 btn-ghost btn-sm"
 					>
 						<span class="material-symbols-outlined">chevron_left</span>
@@ -117,7 +117,7 @@
 					{#each data.allSteps as step, i (step.id)}
 						<li>
 							<a
-								href={resolve('/project/' + data.projectId + '/' + step.id)}
+								href={resolve('/app-creation/' + data.projectId + '/' + step.id)}
 								class:active={step.id === data.stepId}
 								class="flex flex-col items-start gap-1 py-3"
 							>
@@ -133,14 +133,14 @@
 			<div class="flex w-24 justify-end">
 				{#if data.nextStep}
 					<a
-						href={resolve('/project/' + data.projectId + '/' + data.nextStep.id)}
+						href={resolve('/app-creation/' + data.projectId + '/' + data.nextStep.id)}
 						class="btn gap-2 btn-sm btn-primary"
 					>
 						<span class="hidden sm:inline">次へ</span>
 						<span class="material-symbols-outlined">chevron_right</span>
 					</a>
 				{:else}
-					<a href={resolve('/project/' + data.projectId)} class="btn btn-outline btn-sm"> 完了 </a>
+					<a href={resolve('/app-creation/' + data.projectId)} class="btn btn-outline btn-sm"> 完了 </a>
 				{/if}
 			</div>
 		</div>

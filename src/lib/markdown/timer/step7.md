@@ -9,7 +9,7 @@ summary: AVFoundationを用いてタイマー終了時に音を鳴らし、Alert
 <a href="/source/Alarm.mp3" download="Alarm.mp3" class="text-blue-500 hover:underline">
 音声ファイル (Alarm.mp3)
 </a>
-をダウンロードして、Xcodeのプロジェクトナビゲータ内にある `Timer` フォルダに配置してください。
+をダウンロードして、Xcodeのアプリ制作ナビゲータ内にある `Timer` フォルダに配置してください。
 
 ### 2. 必要な「道具」の準備(TimerViewModel.swift)
 

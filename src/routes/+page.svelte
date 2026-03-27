@@ -52,10 +52,10 @@
 			id: 5,
 			title: '第5回授業',
 			description:
-				'タイマーアプリ制作を開始します。プロジェクト作成・基本UIの構築・時間選択コンポーネント（TimePicker / TimeSelectionView）を実装します。',
+				'タイマーアプリ制作を開始します。アプリ制作作成・基本UIの構築・時間選択コンポーネント（TimePicker / TimeSelectionView）を実装します。',
 			checked: false,
 			projectName: 'タイマーアプリ',
-			projectSteps: ['/project/timer/step1', '/project/timer/step2', '/project/timer/step3']
+			projectSteps: ['/app-creation/timer/step1', '/app-creation/timer/step2', '/app-creation/timer/step3']
 		},
 		{
 			id: 6,
@@ -64,7 +64,7 @@
 				'タイマーの表示とロジックを実装します。円形プログレスバー（TimerDisplayView）・ViewModel（カウントダウン・開始・停止・一時停止）・ContentViewへの接続を行います。',
 			checked: false,
 			projectName: 'タイマーアプリ',
-			projectSteps: ['/project/timer/step4', '/project/timer/step5', '/project/timer/step6']
+			projectSteps: ['/app-creation/timer/step4', '/app-creation/timer/step5', '/app-creation/timer/step6']
 		},
 		{
 			id: 7,
@@ -73,19 +73,19 @@
 				'タイマーアプリを完成させます。アラーム音（AVFoundation）・アラート表示・カスタムボタン（ColorButton）・状態に応じたUI切り替えを実装します。',
 			checked: false,
 			projectName: 'タイマーアプリ',
-			projectSteps: ['/project/timer/step7', '/project/timer/step8']
+			projectSteps: ['/app-creation/timer/step7', '/app-creation/timer/step8']
 		},
 		{
 			id: 8,
 			title: '第8回授業',
 			description:
-				'ToDoリストアプリの制作を開始します。プロジェクト作成・タスクコンポーネント・リストコンポーネントを作成します。',
+				'ToDoリストアプリの制作を開始します。アプリ制作作成・タスクコンポーネント・リストコンポーネントを作成します。',
 			checked: false,
 			projectName: 'ToDoリストアプリ',
 			projectSteps: [
-				'/project/todolist/step1',
-				'/project/todolist/step2',
-				'/project/todolist/step3'
+				'/app-creation/todolist/step1',
+				'/app-creation/todolist/step2',
+				'/app-creation/todolist/step3'
 			]
 		},
 		{
@@ -96,9 +96,9 @@
 			checked: false,
 			projectName: 'ToDoリストアプリ',
 			projectSteps: [
-				'/project/todolist/step4',
-				'/project/todolist/step5',
-				'/project/todolist/step6'
+				'/app-creation/todolist/step4',
+				'/app-creation/todolist/step5',
+				'/app-creation/todolist/step6'
 			]
 		},
 		{
@@ -109,11 +109,11 @@
 			checked: false,
 			projectName: 'ToDoリストアプリ',
 			projectSteps: [
-				'/project/todolist/step7',
-				'/project/todolist/step8',
-				'/project/todolist/step9',
-				'/project/todolist/step10',
-				'/project/todolist/step11'
+				'/app-creation/todolist/step7',
+				'/app-creation/todolist/step8',
+				'/app-creation/todolist/step9',
+				'/app-creation/todolist/step10',
+				'/app-creation/todolist/step11'
 			]
 		},
 		{
@@ -124,9 +124,9 @@
 			checked: false,
 			projectName: 'ToDoリストアプリ',
 			projectSteps: [
-				'/project/todolist/step12',
-				'/project/todolist/step13',
-				'/project/todolist/step14'
+				'/app-creation/todolist/step12',
+				'/app-creation/todolist/step13',
+				'/app-creation/todolist/step14'
 			]
 		},
 		{
@@ -137,9 +137,9 @@
 			checked: false,
 			projectName: 'ToDoリストアプリ',
 			projectSteps: [
-				'/project/todolist/step15',
-				'/project/todolist/step16',
-				'/project/todolist/step17'
+				'/app-creation/todolist/step15',
+				'/app-creation/todolist/step16',
+				'/app-creation/todolist/step17'
 			]
 		},
 		{
@@ -150,9 +150,9 @@
 			checked: false,
 			projectName: 'ToDoリストアプリ',
 			projectSteps: [
-				'/project/todolist/step18',
-				'/project/todolist/step19',
-				'/project/todolist/step20'
+				'/app-creation/todolist/step18',
+				'/app-creation/todolist/step19',
+				'/app-creation/todolist/step20'
 			]
 		},
 		{
@@ -162,7 +162,7 @@
 				'ToDoリストアプリの発展課題に取り組みます。完了タスクの並び替え・タスク検索・削除確認アラートなど、自分でアイデアを考えて機能を追加します。',
 			checked: false,
 			projectName: 'ToDoリストアプリ',
-			projectSteps: ['/project/todolist/step21']
+			projectSteps: ['/app-creation/todolist/step21']
 		},
 		{
 			id: 15,
@@ -171,16 +171,16 @@
 				'オリジナルアプリの企画・設計を行います。何を作るかを決め、必要な画面・データ・機能のリストを整理します。',
 			checked: false,
 			projectName: 'オリジナルアプリ',
-			projectSteps: ['/project/original-app/step1']
+			projectSteps: ['/app-creation/original-app/step1']
 		},
 		{
 			id: 16,
 			title: '第16回授業',
 			description:
-				'Xcodeでオリジナルアプリのプロジェクトを作成します。フォルダ・ファイル構成を整え、エントリーポイントと仮の画面を実装します。',
+				'Xcodeでオリジナルアプリのアプリ制作を作成します。フォルダ・ファイル構成を整え、エントリーポイントと仮の画面を実装します。',
 			checked: false,
 			projectName: 'オリジナルアプリ',
-			projectSteps: ['/project/original-app/step2']
+			projectSteps: ['/app-creation/original-app/step2']
 		},
 		{
 			id: 17,
@@ -189,7 +189,7 @@
 				'メイン画面の骨格を作ります。ダミーデータを使って画面のレイアウト・画面遷移の構造を確認します。',
 			checked: false,
 			projectName: 'オリジナルアプリ',
-			projectSteps: ['/project/original-app/step3']
+			projectSteps: ['/app-creation/original-app/step3']
 		},
 		{
 			id: 18,
@@ -198,7 +198,7 @@
 				'データモデルとサービスクラスを実装します。SwiftDataを使ってアプリのデータを端末に永続保存できるようにします。',
 			checked: false,
 			projectName: 'オリジナルアプリ',
-			projectSteps: ['/project/original-app/step4']
+			projectSteps: ['/app-creation/original-app/step4']
 		},
 		{
 			id: 19,
@@ -207,7 +207,7 @@
 				'データの表示機能（Read）を実装します。データベースからデータを取得してリスト表示し、空の状態の表示も作ります。',
 			checked: false,
 			projectName: 'オリジナルアプリ',
-			projectSteps: ['/project/original-app/step5']
+			projectSteps: ['/app-creation/original-app/step5']
 		},
 		{
 			id: 20,
@@ -216,7 +216,7 @@
 				'データの追加機能（Create）を実装します。入力フォームを作り、新しいデータを保存できるようにします。',
 			checked: false,
 			projectName: 'オリジナルアプリ',
-			projectSteps: ['/project/original-app/step6']
+			projectSteps: ['/app-creation/original-app/step6']
 		},
 		{
 			id: 21,
@@ -225,7 +225,7 @@
 				'データの更新・削除機能（Update / Delete）を実装します。これでCRUD（基本的なデータ操作）がすべて揃います。',
 			checked: false,
 			projectName: 'オリジナルアプリ',
-			projectSteps: ['/project/original-app/step7']
+			projectSteps: ['/app-creation/original-app/step7']
 		},
 		{
 			id: 22,
@@ -234,7 +234,7 @@
 				'UI部品を整え、アプリに合った機能を追加します。検索・並び替え・アニメーションなど、使いやすさを高めます。',
 			checked: false,
 			projectName: 'オリジナルアプリ',
-			projectSteps: ['/project/original-app/step8']
+			projectSteps: ['/app-creation/original-app/step8']
 		},
 		{
 			id: 23,
@@ -243,7 +243,7 @@
 				'デバッグとバグ修正を行います。全機能の動作確認・クラッシュの原因特定・データ保存の検証を行います。',
 			checked: false,
 			projectName: 'オリジナルアプリ',
-			projectSteps: ['/project/original-app/step9']
+			projectSteps: ['/app-creation/original-app/step9']
 		},
 		{
 			id: 24,
@@ -252,7 +252,7 @@
 				'UIの仕上げ・磨き込みを行います。色・フォント・余白を整えて、見た目をきれいに仕上げます。',
 			checked: false,
 			projectName: 'オリジナルアプリ',
-			projectSteps: ['/project/original-app/step10']
+			projectSteps: ['/app-creation/original-app/step10']
 		}
 	]);
 

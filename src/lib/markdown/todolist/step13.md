@@ -77,7 +77,7 @@ struct HomeView: View {
 
 このステップで学んだ **`NavigationStack` / `.navigationTitle` / `VStack`** を使って、プロフィール画面の枠を作ってみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し、`ProfileView.swift` を作成して以下の条件を満たすコードを実装してください。
+Xcodeで新規アプリ制作（App）を作成し、`ProfileView.swift` を作成して以下の条件を満たすコードを実装してください。
 
 1. **`ProfileView` の作成**  
    `var body: some View` の中に `VStack` を配置し、以下のテキストを表示してください。  

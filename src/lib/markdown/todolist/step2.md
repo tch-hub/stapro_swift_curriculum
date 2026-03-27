@@ -251,7 +251,7 @@ struct ToDoListItem: View {
 
 このステップで学んだ `HStack` / `ZStack` / プロパティを活用して、**通知カード風のリスト行** を作ってみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し、`ContentView.swift` に以下の条件を満たすUIを実装してください。
+Xcodeで新規アプリ制作（App）を作成し、`ContentView.swift` に以下の条件を満たすUIを実装してください。
 
 1. **プロパティの定義**  
    `ContentView` に、次の3つのプロパティを定義してください。

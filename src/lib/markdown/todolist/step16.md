@@ -227,7 +227,7 @@ struct ContentView: View {
 
 このステップで学んだ **`@State` / `ProgressView` / `.onAppear` / `DispatchQueue.main.asyncAfter`** を使って、ローディング画面付きのスプラッシュ画面を作ってみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し、`SplashView.swift` を作成して以下の条件を満たすコードを実装してください。
+Xcodeで新規アプリ制作（App）を作成し、`SplashView.swift` を作成して以下の条件を満たすコードを実装してください。
 
 1. **状態変数の定義**  
    `@State private var isReady: Bool` と `private let autoStart: Bool` を定義し、`init()` で初期値を受け取れるようにしてください。

@@ -1,11 +1,11 @@
-export type Project = {
+export type AppCreation = {
 	id: string;
 	title: string;
 	summary: string;
 	downloadUrl: string | null;
 };
 
-export const projects: Project[] = [
+export const appCreations: AppCreation[] = [
 	{
 		id: 'timer',
 		title: 'タイマーアプリ',
@@ -27,9 +27,9 @@ export const projects: Project[] = [
 	}
 ];
 
-export const projectIdList = projects.map((project) => project.id);
+export const appCreationIdList = appCreations.map((appCreation) => appCreation.id);
 
-export type ProjectStep = {
+export type AppCreationStep = {
 	id: string;
 	title: string;
 	summary: string;
@@ -73,7 +73,7 @@ function parseFrontmatter(markdown: string) {
 	return metadata;
 }
 
-function processModules(modules: Record<string, string>): ProjectStep[] {
+function processModules(modules: Record<string, string>): AppCreationStep[] {
 	return Object.entries(modules)
 		.map(([path, content]) => {
 			const idMatch = path.match(/([^\/]+)\.md$/);
@@ -97,7 +97,7 @@ export const todolistSteps = processModules(todolistModules as Record<string, st
 export const originalAppSteps = processModules(originalAppModules as Record<string, string>);
 export const swiftuiBasicsSteps = processModules(swiftuiBasicsModules as Record<string, string>);
 
-export const stepsByProject: Record<string, ProjectStep[]> = {
+export const stepsByAppCreation: Record<string, AppCreationStep[]> = {
 	timer: timerSteps,
 	todolist: todolistSteps,
 	'original-app': originalAppSteps,

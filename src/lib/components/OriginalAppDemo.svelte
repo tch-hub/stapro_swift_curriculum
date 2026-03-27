@@ -113,7 +113,7 @@
 		<h2 class="mb-4 card-title text-2xl">デモアプリ: 勉強時間トラッカー</h2>
 		<p class="mb-6">
 			以下は、勉強時間トラッカーのデモです。教科ごとにタイマーを動かして時間を記録できます。
-			TimerプロジェクトとTodoListプロジェクトで学んだ知識を応用しています。
+			Timerアプリ制作とTodoListアプリ制作で学んだ知識を応用しています。
 		</p>
 
 		<div class="flex justify-center">

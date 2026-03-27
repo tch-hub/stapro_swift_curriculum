@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { stepsByProject } from '$lib/data/projects/index';
+import { stepsByAppCreation } from '$lib/data/app-creation/index';
 
 const markdownMaps = {
 	timer: import.meta.glob('../../../../lib/markdown/timer/*.md', {
@@ -55,7 +55,7 @@ function createShowcaseImageAlt(stepId) {
 
 export async function load({ params }) {
 	const { id, step } = params;
-	const steps = stepsByProject[id];
+	const steps = stepsByAppCreation[id];
 
 	if (!steps) {
 		throw error(404, 'ステップが見つかりません。');

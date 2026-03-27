@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { swiftuiBasicsSteps } from '$lib/data/projects/index';
+import { swiftuiBasicsSteps } from '$lib/data/app-creation/index';
 
 const markdownFiles = import.meta.glob('../../../lib/markdown/swiftui-basics/*.md', {
 	query: '?raw',

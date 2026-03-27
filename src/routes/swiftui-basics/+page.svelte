@@ -1,6 +1,6 @@
 <script>
 	import { base, resolve } from '$app/paths';
-	import { swiftuiBasicsSteps } from '$lib/data/projects/index';
+	import { swiftuiBasicsSteps } from '$lib/data/app-creation/index';
 </script>
 
 <div class="container mx-auto px-4 py-8" data-base={base}>

@@ -284,7 +284,7 @@ struct HomeView: View {
 
 このステップで学んだ **`FetchDescriptor` / `#Predicate` / `.onChange` / `guard let`** を使って、優先度別タスク表示アプリを作ってみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し（SwiftData対応・`Task` モデルに `priority: Int`（1～3）プロパティがある状態を想定）、`ContentView.swift` に以下を実装してください。
+Xcodeで新規アプリ制作（App）を作成し（SwiftData対応・`Task` モデルに `priority: Int`（1～3）プロパティがある状態を想定）、`ContentView.swift` に以下を実装してください。
 
 **要件:**
 

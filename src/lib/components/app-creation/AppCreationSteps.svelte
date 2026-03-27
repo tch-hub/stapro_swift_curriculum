@@ -8,7 +8,7 @@
 <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 	{#each steps as step (step.id)}
 		<a
-			href={resolve('/project/' + projectId + '/' + step.id)}
+			href={resolve('/app-creation/' + projectId + '/' + step.id)}
 			class="card h-full bg-base-100 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl focus:ring-2 focus:ring-primary focus:outline-none"
 			aria-label={step.title + 'へ移動'}
 		>

@@ -273,7 +273,7 @@ struct InputView: View {
 
 このステップで学んだ **`@Binding`・`@FocusState`・入力バリデーション** を使って、検索・フィルター機能を持つコンポーネントを作ってみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
+Xcodeで新規アプリ制作（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
 
 1. **データ型の定義**  
    `Product` という構造体（`id: UUID`、`name: String`、`category: String` を持つ）を `Identifiable` に準拠させて定義してください。  

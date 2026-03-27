@@ -191,7 +191,7 @@ struct HomeView: View {
 
 このステップで学んだ **`enum` / `NavigationStack(path:)` / `.navigationDestination` / `@Binding var navigationPath`** を使って、2画面間の遷移を実装してみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し、以下の条件を満たすコードを実装してください。
+Xcodeで新規アプリ制作（App）を作成し、以下の条件を満たすコードを実装してください。
 
 1. **画面IDのenum定義**  
    `enum ScreenID` を定義し、`home` と `settings` の2つのケースを持たせてください。

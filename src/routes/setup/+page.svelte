@@ -437,14 +437,14 @@
 				</p>
 
 				<div class="space-y-4">
-					<h3 class="text-xl font-semibold">プロジェクト作成手順</h3>
+					<h3 class="text-xl font-semibold">アプリ制作作成手順</h3>
 					<ol class="ml-4 list-inside list-decimal space-y-2">
 						<li>Xcodeを起動</li>
-						<li>「Create a new Xcode project」をクリック</li>
+						<li>「Create a new Xcode appCreation」をクリック</li>
 						<li>「iOS」タブを選択</li>
 						<li>「App」を選択して「Next」をクリック</li>
 						<li>
-							プロジェクト情報を入力：
+							アプリ制作情報を入力：
 							<div class="mt-2 overflow-x-auto">
 								<table class="table table-zebra">
 									<thead>
@@ -458,7 +458,7 @@
 										<tr>
 											<td>Product Name</td>
 											<td>Playground</td>
-											<td>プロジェクトの名前を設定</td>
+											<td>アプリ制作の名前を設定</td>
 										</tr>
 										<tr>
 											<td>Team</td>
@@ -500,7 +500,7 @@
 
 					<h3 class="text-xl font-semibold">動作確認</h3>
 					<ol class="ml-4 list-inside list-decimal space-y-2">
-						<li>プロジェクトが開いたら、画面上部の再生ボタン（▶️）をクリック</li>
+						<li>アプリ制作が開いたら、画面上部の再生ボタン（▶️）をクリック</li>
 						<li>シミュレーターが起動する（初回は時間がかかります）</li>
 						<li>「Hello, world!」と表示されれば成功！</li>
 					</ol>

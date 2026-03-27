@@ -146,7 +146,7 @@ Button(action: onManageTabs) {
         let tabs = [
             TabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
             TabHeaderView.ToDoTab(id: UUID(), name: "買い物"),
-            TabHeaderView.ToDoTab(id: UUID(), name: "プロジェクトA")
+            TabHeaderView.ToDoTab(id: UUID(), name: "アプリ制作A")
         ]
         @State var selectedId: UUID?
 
@@ -256,7 +256,7 @@ struct TabHeaderView: View {
         let tabs = [
             TabHeaderView.ToDoTab(id: UUID(), name: "勉強"),
             TabHeaderView.ToDoTab(id: UUID(), name: "買い物"),
-            TabHeaderView.ToDoTab(id: UUID(), name: "プロジェクトA")
+            TabHeaderView.ToDoTab(id: UUID(), name: "アプリ制作A")
         ]
         @State var selectedId: UUID?
 
@@ -289,7 +289,7 @@ struct TabHeaderView: View {
 
 このステップで学んだ **`Menu` / `Picker` / Computed Property / `@Binding`** を使って、タスク表示フィルター選択パネルを作ってみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
+Xcodeで新規アプリ制作（App）を作成し、`ContentView.swift` に以下の条件を満たすコードを実装してください。
 
 1. **フィルター型の定義**  
    `FilterMode` というenum を定義してください。`Identifiable` と `Hashable` に準拠させ、以下の3つケースを持たせてください。

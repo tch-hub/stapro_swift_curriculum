@@ -202,7 +202,7 @@ struct HomeView: View {
 
 このステップで学んだ **`.safeAreaInset` / `@State var newText` / `guard` による入力チェック / `.onChange` での自動更新** を使って、買い物リスト機能を実装してみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し、以下の条件を満たすコードを `ContentView.swift` に実装してください。
+Xcodeで新規アプリ制作（App）を作成し、以下の条件を満たすコードを `ContentView.swift` に実装してください。
 
 1. **`ShoppingItem` モデルの作成**（@Model）
    - `id: UUID`（主キー）

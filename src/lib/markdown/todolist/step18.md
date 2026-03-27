@@ -164,7 +164,7 @@ struct HomeView: View {
 
 このステップで学んだ **クロージャのキャプチャ / Serviceメソッド呼び出し / `loadItems()` による再描画** を使って、購入チェックリストアプリを作ってみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し（SwiftData対応）、`ContentView.swift` に以下を実装してください。
+Xcodeで新規アプリ制作（App）を作成し（SwiftData対応）、`ContentView.swift` に以下を実装してください。
 
 **要件:**
 

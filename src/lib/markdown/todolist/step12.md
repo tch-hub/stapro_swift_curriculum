@@ -290,7 +290,7 @@ struct TabManageView: View {
 
 このステップで学んだ **`@Environment` / `@State` / `.alert` / `.safeAreaInset` / `.onAppear`** を使って、タグ管理アプリを作ってみましょう。
 
-Xcodeで新規プロジェクト（App）を作成し（SwiftData対応）、`ContentView.swift` に以下を実装してください。
+Xcodeで新規アプリ制作（App）を作成し（SwiftData対応）、`ContentView.swift` に以下を実装してください。
 
 **要件:**
 

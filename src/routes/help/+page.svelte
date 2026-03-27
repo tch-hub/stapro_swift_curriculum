@@ -39,9 +39,9 @@
 				<div class="collapse-content">
 					<ul class="list-inside list-disc space-y-1">
 						<li>Product → Clean Build Folder を実行</li>
-						<li>プロジェクト名に日本語や特殊文字が含まれていないか確認</li>
+						<li>アプリ制作名に日本語や特殊文字が含まれていないか確認</li>
 						<li>Xcodeを最新版にアップデート</li>
-						<li>新しいプロジェクトを作成し直す</li>
+						<li>新しいアプリ制作を作成し直す</li>
 					</ul>
 				</div>
 			</div>

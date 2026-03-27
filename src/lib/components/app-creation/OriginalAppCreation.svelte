@@ -1,33 +1,33 @@
 <script>
 	import OriginalAppDemo from '$lib/components/OriginalAppDemo.svelte';
-	import ProjectSteps from './ProjectSteps.svelte';
+	import AppCreationSteps from './AppCreationSteps.svelte';
 	import Game2048 from './original-app/Game2048.svelte';
 	import Game15Puzzle from './original-app/Game15Puzzle.svelte';
 	import GameConcentration from './original-app/GameConcentration.svelte';
 	import GameLightsOut from './original-app/GameLightsOut.svelte';
 	import GameSample from './original-app/GameSample.svelte';
-	import { originalAppSteps } from '$lib/data/projects/index';
+	import { originalAppSteps } from '$lib/data/app-creation/index';
 </script>
 
 <div class="container mx-auto max-w-5xl px-4 py-8">
 	<div class="mb-12 text-center">
 		<h1 class="mb-6 text-4xl font-extrabold tracking-tight sm:text-5xl">
-			オリジナルアプリプロジェクト
+			オリジナルアプリアプリ制作
 		</h1>
 		<p class="mx-auto max-w-2xl text-lg text-base-content/80">
 			これまで学んだことを活かして、自分だけのオリジナルアプリ開発に挑戦しましょう！
 		</p>
 	</div>
 
-	<!-- プロジェクト概要 -->
+	<!-- アプリ制作概要 -->
 	<section class="mb-16">
 		<div class="card overflow-hidden bg-base-100 shadow-xl">
 			<div class="card-body p-8 sm:p-10">
 				<div class="flex flex-col gap-8 lg:flex-row lg:items-start">
 					<div class="flex-1">
-						<h2 class="mb-4 text-2xl font-bold">プロジェクト概要</h2>
+						<h2 class="mb-4 text-2xl font-bold">アプリ制作概要</h2>
 						<p class="mb-6 leading-relaxed">
-							このプロジェクトでは、企画から設計、実装までのアプリ開発の一連の流れを体験します。作るアプリの種類・テーマはあなた自身が決めます。ターゲットは
+							このアプリ制作では、企画から設計、実装までのアプリ開発の一連の流れを体験します。作るアプリの種類・テーマはあなた自身が決めます。ターゲットは
 							<strong>macOSアプリ</strong> です（iPhoneと同じSwiftUI・SwiftDataが使えます）。
 						</p>
 						<div class="mb-6 rounded-lg border border-info/30 bg-info/10 p-4">
@@ -67,9 +67,9 @@
 					<div class="mt-4 rounded-lg bg-white/10 p-4">
 						<p class="mb-2 text-sm font-bold tracking-wide uppercase opacity-80">応用できる知識</p>
 						<ul class="list-inside list-disc space-y-1 text-sm">
-							<li>タイマー機能 (Timerプロジェクト)</li>
-							<li>リスト表示 (TodoListプロジェクト)</li>
-							<li>データ保存 (TodoListプロジェクト)</li>
+							<li>タイマー機能 (Timerアプリ制作)</li>
+							<li>リスト表示 (TodoListアプリ制作)</li>
+							<li>データ保存 (TodoListアプリ制作)</li>
 						</ul>
 					</div>
 				</div>
@@ -84,7 +84,7 @@
 					<div class="mt-4 rounded-lg bg-white/10 p-4">
 						<p class="mb-2 text-sm font-bold tracking-wide uppercase opacity-80">応用できる知識</p>
 						<ul class="list-inside list-disc space-y-1 text-sm">
-							<li>タスク管理 (TodoListプロジェクト)</li>
+							<li>タスク管理 (TodoListアプリ制作)</li>
 							<li>達成度の可視化（プログレスバーなど）</li>
 							<li>通知機能</li>
 						</ul>
@@ -152,6 +152,6 @@
 		<p class="mb-8 text-lg text-base-content/80">
 			macOSアプリの開発を11のステップで段階的に進めましょう。各ステップにはチェックリストと詰まったときの検索キーワードが載っています。
 		</p>
-		<ProjectSteps steps={originalAppSteps} projectId="original-app" />
+		<AppCreationSteps steps={originalAppSteps} projectId="original-app" />
 	</section>
 </div>
