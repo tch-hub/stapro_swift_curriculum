@@ -44,9 +44,9 @@
 			id: 4,
 			title: '第4回授業: SwiftUI学習',
 			description:
-				'SwiftUIのインタラクティブな要素を学びます。状態管理（@State）・図形・テキスト入力・Toggle・Slider・カウンターアプリの作成まで行います。',
+				'SwiftUIのインタラクティブな要素を学びます。状態管理（@State）・図形・テキスト入力・Toggle・Slider・カウンターアプリの作成・ライフサイクルと状態監視まで行います。',
 			checked: false,
-			tutorialSections: ['/swiftui-basics/4', '/swiftui-basics/5', '/swiftui-basics/6', '/swiftui-basics/7']
+			tutorialSections: ['/swiftui-basics/4', '/swiftui-basics/5', '/swiftui-basics/6', '/swiftui-basics/7', '/swiftui-basics/8']
 		},
 		{
 			id: 5,
