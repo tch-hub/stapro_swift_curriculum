@@ -50,7 +50,7 @@ ZStack {
         .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round))
         .foregroundColor(.orange)
         .rotationEffect(Angle(degrees: 270))
-        .animation(.linear, value: completionPercentage)
+        .animation(.linear(duration: 1.0), value: completionPercentage)
         .padding(10)
 
     Text(formatTime(seconds: remainingTime))
@@ -65,7 +65,7 @@ ZStack {
   - `.trim(...)`: 円の一部だけを描画します。`completionPercentage` に応じて円の長さが変わります。
   - `.stroke(...)`: 塗りつぶしではなく、線として描画します。
   - `.rotationEffect(...)`: デフォルトでは右（0度）から始まるため、上（270度）から始まるように回転させます。
-  - `.animation(...)`: 値が変化したときに滑らかにアニメーションさせます。
+  - `.animation(...)`: 値が変化したときに滑らかにアニメーションさせます。ここでは1.0秒間、一定の速度（linear）でアニメーションするように指定しています。
 
 ### 3. 時刻文字列の整形
 
@@ -108,7 +108,7 @@ struct TimerDisplayView: View {
                 .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round))
                 .foregroundColor(.orange)
                 .rotationEffect(Angle(degrees: 270))
-                .animation(.linear, value: completionPercentage)
+                .animation(.linear(duration: 1.0), value: completionPercentage)
                 .padding(10)
 
             Text(formatTime(seconds: remainingTime))
@@ -162,7 +162,7 @@ struct TimerDisplayView: View {
 >
 > - **カプセル型を描画する**: `Circle()`（円）の代わりに `Capsule()` と書くことで、横長の角丸バーを描画できます。
 > - **ZStackの左寄せ**: `ZStack(alignment: .leading)` と指定すると、重なっている要素がすべて「左端揃え」になります。これでバーが左端から自然に伸びるようになります。
-> - **画面表示時の処理**: `ZStack` などに対して `.onAppear { ... }` を追加すると、その画面が表示された瞬間に中の処理が自動で実行されます。
+> - **画面表示時の処理 (`.onAppear`)**: 今回は「親の画面から秒数を受け取る」仕組みではなく、1つの画面（`ContentView`）だけで完結してアニメーションの動きを自動テストするために、画面が表示された瞬間に実行される `.onAppear` を使って変数を変更しています。
 > - **アニメーションの速度**: `.animation(.linear(duration: Double(totalTime)), value: completionPercentage)` のように `duration` を指定すると、アニメーションにかかる時間（秒）を細かくコントロールできます。
 
 ### 解答例
@@ -197,5 +197,45 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
+```
 
+### おまけ：別のアニメーション実装方法
+
+今回の練習問題の解答例では `暗黙的アニメーション（.animation モディファイア）` と `.onAppear` を組み合わせて実装しましたが、動きや見た目は全く同じまま、別の書き方で実装することもできます。
+
+#### パターン1: `.task` を使う（`onAppear` の代替）
+
+`.onAppear` の代わりに、iOS 15 から導入された **`.task`** モディファイアを使用する方法です。
+画面の要素が構築された直後に、非同期で処理を実行します。アニメーションを確実に発動させるために、開始前にごくわずかな時間（タスクのスリープ）を挟むのがコツです。
+
+```swift
+        // ZStack の閉じかっこの後を .onAppear から .task に変更
+        .task {
+            // 画面描画の完了を少しだけ（0.05秒）待つ
+            try? await Task.sleep(nanoseconds: 50_000_000)
+            remainingTime = 0
+        }
+```
+
+#### パターン2: `withAnimation` を使う（明示的アニメーション）
+
+カプセル（Capsule）側に `.animation` モディファイアをつけるのではなく、**「変数の値が変わる瞬間」にアニメーションを指定**する方法です。
+どちらを用いても動作は同じですが、実務ではアニメーションを適用する対象をコントロールしやすいこの `withAnimation` の書き方もよく使われます。
+
+```swift
+        ZStack(alignment: .leading) {
+            Capsule()
+                .frame(width: 300, height: 20)
+                .foregroundColor(Color.gray.opacity(0.3))
+            Capsule()
+                .frame(width: 300 * CGFloat(completionPercentage), height: 20)
+                .foregroundColor(.orange)
+                // ※ ここにあった .animation(...) は削除する
+        }
+        .onAppear {
+            // 値を変更する処理自体を withAnimation で囲む
+            withAnimation(.linear(duration: Double(totalTime))) {
+                remainingTime = 0
+            }
+        }
 ```
