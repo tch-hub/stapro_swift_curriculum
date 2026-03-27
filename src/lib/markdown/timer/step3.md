@@ -63,10 +63,9 @@ Text("\(value) \(title)").tag(value)
 
 ## コード全体
 
-<img src="/images/timer/picker.png" alt="Xcode の設定画面" class="mobile-screenshot" />
+<img src="/images/timer/picker.png" alt="TimePicker" class="mobile-screenshot" />
 
-```swift
-// TimePicker.swift
+```swift title="TimePicker.swift"
 import SwiftUI
 
 struct TimePicker: View {
