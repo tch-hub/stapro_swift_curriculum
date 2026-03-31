@@ -24,6 +24,7 @@ html {
 
 .mobile-screenshot {
 	float: right;
+	clear: both;
 	margin-left: 1rem;
 	margin-bottom: 1rem;
 	max-width: 100%;
@@ -224,4 +225,9 @@ img::after {
 	padding: 1rem;
 	box-sizing: border-box;
 	z-index: 2;
+}
+
+/* markdownの区切り線 (hr) の手前にフロート要素がある場合、飛び出さないように解除する */
+.prose hr {
+	clear: both;
 }

@@ -20,8 +20,7 @@ struct ColorButton: View {
 - `struct ColorButton: View` で `ColorButton` コンポーネント（ビュー）を定義します。
 - `var body: some View` はビューの見た目を返す場所です。ここに UI の構成を記述します。
 
-struct ColorButton: View {}内に追加
-
+`struct ColorButton: View {...}`内に追加
 ```swift
 let text: String
 let color: Color
@@ -32,9 +31,8 @@ let action: () -> Void
 - `let color: Color` はボタンやテキストに使う色を受け取るプロパティです。呼び出し側で色を切り替えることで見た目を変えられます。
 - `let action: () -> Void` はボタンが押されたときに実行するクロージャ（処理）を受け取ります。
 
-var body: some View {}内に追加
-
-```
+`var body: some View {...}`内に追加
+```swift
 Button(action: action) {
 }
 .frame(width: 90, height: 90)
@@ -47,9 +45,8 @@ Button(action: action) {
 - `.background(color.opacity(0.2))` はボタンの背景色を設定します。`opacity(0.2)` で淡い背景にしています。
 - `.clipShape(Circle())` で背景を円形に切り抜き、丸いボタンに見せています。
 
-Button(action: action) {}内に追加
-
-```
+`Button(action: action) {...}`内に追加
+```swift
 Text(text)
     .foregroundStyle(color)
     .font(.subheadline)
@@ -60,7 +57,7 @@ Text(text)
 - `.font(.subheadline)` は表示フォントサイズをサブ見出し程度に調整し、ボタン内テキストのバランスを整えます。
 
 ColorButton使用イメージ
-<img src="/images/timer/download.jpg" alt="ColorButtonの使用イメージ" class="mobile-screenshot" />
+<img src="/images/timer/t81.png" alt="ColorButtonの使用イメージ" class="mobile-screenshot" />
 
 ---
 
@@ -70,9 +67,8 @@ ColorButton使用イメージ
 
 ### 1. タイトルの削除
 
-VStack(spacing: 24) {}を編集
+`VStack(spacing: 24) {}`を編集
 以下を削除します
-
 ```swift
 Text("タイマーアプリ")
     .font(.largeTitle)
@@ -83,7 +79,7 @@ Text("タイマーアプリ")
 
 ### 2. 操作ボタンエリア
 
-HStack() {}を編集
+`HStack() {...}`を編集
 
 ```swift
 HStack(spacing: 130) {
@@ -111,7 +107,7 @@ HStack(spacing: 130) {
 
 ## コード全体
 
-<img src="/images/timer/download.jpg" alt="Xcode の設定画面" class="mobile-screenshot" />
+<img src="/images/timer/t81.png" alt="ColorButtonの使用イメージ" class="mobile-screenshot" />
 
 ```swift title="ColorButton.swift"
 // ColorButton.swift
