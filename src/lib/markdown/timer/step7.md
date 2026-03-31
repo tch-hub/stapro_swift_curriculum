@@ -277,12 +277,64 @@ struct ContentView: View {
   - 「リセット」ボタン： `role: .destructive` を指定し、押されたときに `resetCount()` を実行します。
 - `message` 部分に「これまでのカウントは消去されます。」という説明も追加してみましょう。
 
-> [!TIP]
->
-> - **ボタンの役割（Role）**: アラート内のボタンには、引数に `role:` を指定できます。
->   - `role: .destructive`: 「削除」や「リセット」など、取り返しのつかない危険な操作のボタンを赤色で強調表示します。
->   - `role: .cancel`: 「キャンセル」のアクションを明示的に示します。
-> - **アラートの詳細メッセージ**: `.alert("タイトル", isPresented: ...)` に続けて、`message: { Text("詳細文") }` と記述することで、メインタイトルの下に少し小さめの文字で補足説明を追加できます。
+### ヒント
+```swift title="ContentView.swift"
+import SwiftUI
+import Combine
+
+// 1. ViewModelでアラート状態を管理する
+class CounterViewModel: ObservableObject {
+    // ヒント: 画面を更新するためのキーワード（@...）をつけよう
+    /* ここにキーワードを書く */ var count = 10
+    // ヒント: アラートを表示するかどうかを判定する「スイッチ」の役割をする変数
+    /* ここにキーワードを書く */ var isShowingAlert = false
+
+    func resetCount() {
+        // ヒント: カウントの値を「0」に戻そう
+        /* ここに処理を書く */
+    }
+}
+
+struct ContentView: View {
+    // ヒント: ViewModelを監視するためのキーワード（@...）を使おう
+    /* ここにキーワードを書く */ var viewModel = CounterViewModel()
+
+    var body: some View {
+        VStack(spacing: 40) {
+            // ヒント: viewModelの持っている「count」を表示しよう
+            Text("カウンター: \( /* ここに変数を書く */ )")
+                .font(.largeTitle)
+
+            Button("数値をリセットする") {
+                // ヒント: ボタンが押されたら、viewModelの「アラートを表示するスイッチ（isShowingAlert）」をON（true）にしよう
+                /* ここに処理を書く */
+            }
+            .padding()
+            .background(Color.orange)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+        }
+        .padding()
+        // 2. ViewModelのフラグに連動してアラートを表示
+        // ヒント: isPresentedには、viewModelのisShowingAlertを渡すが、
+        // 単なる値ではなく「状態の参照」を渡すため、先頭に「$」をつける必要がある
+        .alert("本当にリセットしますか？", isPresented: /* ここに「$」から始まる変数を書く */ ) {
+            Button("キャンセル", role: .cancel) { }
+            Button("リセット", role: .destructive) {
+                // ヒント: 本当にリセットして良いと確認できたので、viewModelの「リセットするメソッド」を呼び出そう
+                /* ここに処理を書く */
+            }
+        } message: {
+            Text("これまでのカウントは消去されます。")
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
+
+```
 
 ### 解答例
 

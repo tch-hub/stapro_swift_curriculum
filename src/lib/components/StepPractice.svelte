@@ -5,6 +5,7 @@
 		practiceImageAlt = '練習問題の完成イメージ',
 		practiceImageClass = '',
 		practiceContent,
+		hintContent,
 		answerContent
 	} = $props();
 </script>
@@ -47,6 +48,24 @@
 				{#if practiceContent}
 					<div class="prose prose-base max-w-none">
 						{@render practiceContent()}
+					</div>
+				{/if}
+
+				{#if hintContent}
+					<div class="collapse-arrow collapse border border-base-300 bg-base-100">
+						<input type="checkbox" />
+						<div class="collapse-title text-base font-bold text-secondary">
+							<span class="material-symbols-outlined mr-2 inline-block align-middle text-xl"
+								>help</span
+							>
+							ヒントを見る
+						</div>
+						<div class="collapse-content overflow-x-hidden pt-0">
+							<div class="divider mt-0 mb-4"></div>
+							<div class="overflow-x-auto">
+								{@render hintContent()}
+							</div>
+						</div>
 					</div>
 				{/if}
 

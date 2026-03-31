@@ -221,11 +221,66 @@ class TimerViewModel: ObservableObject {
 - `HStack` を使い、「スタート」「ストップ」「リセット」の3つのボタンを配置しましょう。
 - `.disabled()` モディファイアを使用して、実行中は「スタート」ボタンを、停止中は「ストップ」ボタンを押せないように制御してみましょう。
 
-> [!TIP]
->
-> - **ViewModelを画面で使う**: `ObservableObject` として作ったクラスを画面（`ContentView`）で使うには、`@State` の代わりに `@StateObject private var viewModel = StopwatchViewModel()` のように宣言します（詳しくは次のステップでも学びます）。
-> - **ボタンを無効化する**: ボタンに対して `.disabled(条件)` を追加すると、条件が `true` の場合にボタンが押せなくなります。
-> - **ボタンのスタイル**: ボタン（またはHStack全体）に `.buttonStyle(.borderedProminent)` を追加すると、背景色が自動で付いた目立つボタンになります。
+### ヒント
+
+```swift title="ContentView.swift"
+import SwiftUI
+import Combine
+
+// 1. ロジック部分（ViewModel）
+class StopwatchViewModel: ObservableObject {
+    @Published var elapsedTime:Int?
+    @Published var isRunning:Bool?
+
+    var timer: Timer?
+
+    func start() {
+    }
+
+    func stop() {
+    }
+
+    func reset() {
+    }
+}
+
+// 2. UI部分（View）
+struct ContentView: View {
+    // さきほど作ったクラスをインスタンス化して状態を監視する
+    @StateObject private var viewModel = StopwatchViewModel()
+
+    var body: some View {
+        VStack(spacing: 40) {
+            // 値が変わると自動的に画面が更新される
+            Text("\(String(describing: viewModel.elapsedTime)) 秒")
+                .font(.system(size: 50, weight: .bold))
+
+            HStack(spacing: 20) {
+                Button("スタート") {
+                    viewModel.start()
+                }
+                .disabled(viewModel.isRunning ?? true)
+
+                Button("ストップ") {
+                    viewModel.stop()
+                }
+                .disabled(viewModel.isRunning != true)
+
+                Button("リセット") {
+                    viewModel.reset()
+                }
+            }
+            .buttonStyle(.borderedProminent)
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
+
+```
+
 
 ### 解答例
 

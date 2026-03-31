@@ -165,11 +165,69 @@ struct ContentView: View {
   2. 「アップグレード」ボタン：現在の `cost` を表示し、`upgrade()` を呼び出します。
 - アップグレードボタンは、`count` が `cost` 未満のときには押せないよう、`.disabled()` モディファイアで制御してみましょう。
 
-> [!TIP]
->
-> - **標準的なボタンスタイル**:
->   - `.buttonStyle(.borderedProminent)`: 背景色が塗りつぶされた目立つボタンになります。
->   - `.buttonStyle(.bordered)`: うっすらとした背景色が付き、少し控えめなボタンになります。これを使い分けることで、ボタンの重要度を視覚的に表現できます。
+### ヒント
+```swift title="ContentView.swift"
+import SwiftUI
+import Combine
+
+// 1. ロジック部分
+class CounterViewModel: ObservableObject {
+    // ヒント: 画面の表示を自動更新させるために必要なキーワード（@...）をつけて変数を定義しよう
+    /* ここにキーワードを書く */ var count = 0
+    /* ここにキーワードを書く */ var step = 0
+    /* ここにキーワードを書く */ var cost = 0
+
+    func increment() {
+        // ヒント: ボタンが押されたら、現在の「count」に「step」の値を足し合わせる
+        /* ここにロジックを書く */
+    }
+
+    func upgrade() {
+        // ヒント: もし「count」が「cost」以上だったら、以下の3つを実行する
+        // 1. countからcostを引く（支払う）
+        // 2. stepを1増やす（強化）
+        // 3. costを10増やす（次回の値上がり）
+        /* ここに if文 を使ったロジックを書く */
+    }
+}
+
+// 2. UI部分
+struct ContentView: View {
+    // ヒント: ViewModelをインスタンス化して監視するためのキーワード（@...）を使おう
+    /* ここにキーワードを書く */ private var viewModel = CounterViewModel()
+
+    var body: some View {
+        VStack(spacing: 30) {
+            VStack {
+                // ヒント: viewModelが持っている「count」の値を表示しよう
+                Text("現在の値: \( /* ここに変数を書く */ )")
+                    .font(.title)
+            }
+
+            // ヒント: viewModelが持っている「step」の値を表示しよう
+            Button("＋\( /* ここに変数を書く */ ) 増やす ") {
+                // ヒント: viewModelの「増やす」メソッドを呼び出そう
+                /* ここに処理を書く */
+            }
+            .buttonStyle(.borderedProminent)
+
+            // ヒント: viewModelが持っている「cost」の値を表示しよう
+            Button("アップグレード (コスト: \( /* ここに変数を書く */ ))") {
+                // ヒント: viewModelの「アップグレード」メソッドを呼び出そう
+                /* ここに処理を書く */
+            }
+            .buttonStyle(.bordered)
+            // ヒント: もし「count」が「cost」より少なかったら、ボタンを押せないようにしよう
+            .disabled( /* ここに条件式を書く */ )
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
+
+```
 
 ### 解答例
 

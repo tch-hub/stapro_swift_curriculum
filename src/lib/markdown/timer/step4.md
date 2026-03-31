@@ -158,12 +158,31 @@ struct TimerDisplayView: View {
 - `.onAppear` モディファイアを使用して、画面が表示された瞬間に `remainingTime` を `0` に変更します。
 - オレンジ色のバーに `.animation` を適用し、合計時間（`totalTime`）をかけてゆっくりとバーが減っていく様子をアニメーションさせましょう。
 
-> [!TIP]
->
-> - **カプセル型を描画する**: `Circle()`（円）の代わりに `Capsule()` と書くことで、横長の角丸バーを描画できます。
-> - **ZStackの左寄せ**: `ZStack(alignment: .leading)` と指定すると、重なっている要素がすべて「左端揃え」になります。これでバーが左端から自然に伸びるようになります。
-> - **画面表示時の処理 (`.onAppear`)**: 今回は「親の画面から秒数を受け取る」仕組みではなく、1つの画面（`ContentView`）だけで完結してアニメーションの動きを自動テストするために、画面が表示された瞬間に実行される `.onAppear` を使って変数を変更しています。
-> - **アニメーションの速度**: `.animation(.linear(duration: Double(totalTime)), value: completionPercentage)` のように `duration` を指定すると、アニメーションにかかる時間（秒）を細かくコントロールできます。
+### ヒント
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+    @State private var remainingTime: Int?
+
+    var body: some View {
+        ZStack(alignment: .leading) {
+            Capsule()
+                .frame(width: 300, height: 20)
+                .foregroundColor(Color.gray.opacity(0.3))
+        }
+        .onAppear {
+            remainingTime = 0
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```
+
 
 ### 解答例
 

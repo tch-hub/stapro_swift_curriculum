@@ -42,6 +42,10 @@
 					<MarkdownRenderer blocks={displayPracticeBlocks} />
 				{/snippet}
 
+				{#snippet hintContent()}
+					<MarkdownRenderer blocks={markdown.hintBlocks} />
+				{/snippet}
+
 				{#snippet answerContent()}
 					<MarkdownRenderer blocks={markdown.answerBlocks} />
 				{/snippet}
@@ -51,6 +55,7 @@
 					practiceImageAlt={markdown.practiceImageAlt}
 					practiceImageClass={markdown.practiceImageClass}
 					{practiceContent}
+					hintContent={markdown.hasHint ? hintContent : undefined}
 					answerContent={markdown.hasAnswer ? answerContent : undefined}
 				/>
 			{/if}
@@ -68,8 +73,23 @@
 				<span class="material-symbols-outlined">close</span>
 			</button>
 			<div class="lesson-showcase-drawer-content">
-				<img src={showcaseImage.image} alt={showcaseImage.alt} class="lesson-showcase-image" />
-				<p class="text-center text-sm font-medium">{showcaseImage.alt}</p>
+				<img
+					src={showcaseImage.image}
+					alt={showcaseImage.alt}
+					class="lesson-showcase-image"
+					onerror={(e) => {
+						e.currentTarget.style.display = 'none';
+						e.currentTarget.nextElementSibling.style.display = 'flex';
+					}}
+				/>
+				<div
+					class="lesson-showcase-image hidden aspect-[1/2.16] flex-col items-center justify-center bg-base-300 text-base-content/50"
+					style="min-height: 400px; width: auto;"
+				>
+					<span class="material-symbols-outlined mb-2 text-4xl opacity-50">broken_image</span>
+					<span class="text-sm font-medium">No Image</span>
+				</div>
+				<p class="mt-4 text-center text-sm font-medium">{showcaseImage.alt}</p>
 			</div>
 		</aside>
 

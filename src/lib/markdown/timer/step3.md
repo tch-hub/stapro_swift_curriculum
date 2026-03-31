@@ -269,7 +269,7 @@ struct ContentView: View {
 
 このステップで学んだ「コンポーネントの再利用」と「複数のPickerの組み合わせ」を活用して、西暦（年）と月をドラムロールで選べるUIを作成してみましょう。
 
-#### 1. 再利用可能な部品 `YearMonthPicker` の作成
+#### 1. 再利用可能な部品 `CustomPicker` の作成
 
 - 数値の範囲（`range`）と単位（`title`: "年" や "月"）、そして選択状態を同期する `@Binding` 変数を持つViewを作成してください。
 - `Picker` のスタイルは `.pickerStyle(.wheel)` としましょう。
@@ -282,7 +282,7 @@ struct ContentView: View {
 #### 3. レイアウトの構築
 
 - `VStack` の中に、説明テキスト（「日付を選択してください」）を配置します。
-- `HStack` を使い、2つの `YearMonthPicker` を横に並べて配置してください。
+- `HStack` を使い、2つの `CustomPicker` を横に並べて配置してください。
   - 西暦用：2000年〜2030年の範囲、単位は「年」
   - 月用：1月〜12月の範囲、単位は「月」
 - ドラムロールの高さが見やすくなるよう、`.frame(height: 200)` などで調整しましょう。
@@ -292,9 +292,42 @@ struct ContentView: View {
 - 画面の下部に、現在選択されている値を表示するテキストを配置します。
 - 「選択中: 2024年 3月」のように、西暦と月の変数の値を反映させて表示してください。
 
-> [!TIP]
->
-> - **高さの指定**: `HStack` 全体に対して `.frame(height: 200)` を設定すると、ドラムロール（Picker）の表示エリアを広げて見やすくできます。
+### ヒント
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+
+    var body: some View {
+        VStack(spacing: 40) {
+            HStack {
+                CustomPicker(title: "月", range: 1...12)
+            }
+            .frame(height: 200)
+        }
+        .padding()
+    }
+}
+
+struct CustomPicker: View {
+    var title: String
+    var range: ClosedRange<Int>
+
+    var body: some View {
+        Picker(selection: .constant(1), label: Text(title)) {
+            ForEach(Array(range), id: \.self) { value in
+                Text("\(value) \(title)").tag(value)
+            }
+        }
+        .pickerStyle(.wheel)
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```
 
 ### 解答例
 
@@ -312,10 +345,10 @@ struct ContentView: View {
 
             HStack {
                 // 西暦のPicker
-                YearMonthPicker(title: "年", range: 2000...2030, selection: $selectedYear)
+                CustomPicker(title: "年", range: 2000...2030, selection: $selectedYear)
 
                 // 月のPicker
-                YearMonthPicker(title: "月", range: 1...12, selection: $selectedMonth)
+                CustomPicker(title: "月", range: 1...12, selection: $selectedMonth)
             }
             .frame(height: 200)
 
@@ -329,7 +362,7 @@ struct ContentView: View {
 }
 
 // 再利用可能なPicker部品
-struct YearMonthPicker: View {
+struct CustomPicker: View {
     var title: String
     var range: ClosedRange<Int>
     @Binding var selection: Int

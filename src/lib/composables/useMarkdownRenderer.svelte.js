@@ -129,6 +129,15 @@ export function useMarkdownRenderer(content, baseUrl = '') {
 	}
 
 	/**
+	 * 「### ヒント」セクションを見つけるヘルパー関数
+	 */
+	function findHintIndex(tokens) {
+		return tokens.findIndex(
+			(t) => t.type === 'heading' && t.depth === 3 && t.text.trim() === 'ヒント'
+		);
+	}
+
+	/**
 	 * 「### 解答例」セクションを見つけるヘルパー関数
 	 */
 	function findAnswerIndex(tokens) {
@@ -155,10 +164,25 @@ export function useMarkdownRenderer(content, baseUrl = '') {
 	const mainTokens =
 		practiceIndex !== -1 ? tokensWithoutTitle.slice(0, practiceIndex) : tokensWithoutTitle;
 
-	// 練習問題コンテンツ（「## 練習問題」から「### 解答例」前まで）
+	// 練習問題コンテンツ（「## 練習問題」から「### 解答例」または「### ヒント」前まで）
 	const restTokens = practiceIndex !== -1 ? tokensWithoutTitle.slice(practiceIndex + 1) : [];
+	const hintIndex = findHintIndex(restTokens);
 	const answerIndex = findAnswerIndex(restTokens);
-	const practiceTokens = answerIndex !== -1 ? restTokens.slice(0, answerIndex) : restTokens;
+
+	let practiceEndIndex = restTokens.length;
+	if (hintIndex !== -1 && (answerIndex === -1 || hintIndex < answerIndex)) {
+		practiceEndIndex = hintIndex;
+	} else if (answerIndex !== -1) {
+		practiceEndIndex = answerIndex;
+	}
+	const practiceTokens = restTokens.slice(0, practiceEndIndex);
+
+	// ヒントコンテンツ（「### ヒント」から「### 解答例」前まで）
+	let hintTokens = [];
+	if (hintIndex !== -1) {
+		let hintEndIndex = answerIndex !== -1 && answerIndex > hintIndex ? answerIndex : restTokens.length;
+		hintTokens = restTokens.slice(hintIndex + 1, hintEndIndex);
+	}
 
 	// 解答例コンテンツ（「### 解答例」以降）
 	const answerTokens = answerIndex !== -1 ? restTokens.slice(answerIndex + 1) : [];
@@ -166,6 +190,7 @@ export function useMarkdownRenderer(content, baseUrl = '') {
 	// レンダリング済みブロック
 	const renderedBlocks = processTokens(mainTokens);
 	const practiceBlocks = processTokens(practiceTokens);
+	const hintBlocks = processTokens(hintTokens);
 	const answerBlocks = processTokens(answerTokens);
 
 	/**
@@ -246,9 +271,11 @@ export function useMarkdownRenderer(content, baseUrl = '') {
 		tokensWithoutTitle,
 		mainTokens,
 		practiceTokens,
+		hintTokens,
 		answerTokens,
 		renderedBlocks,
 		practiceBlocks,
+		hintBlocks,
 		answerBlocks,
 
 		// ヘルパー関数
@@ -262,6 +289,7 @@ export function useMarkdownRenderer(content, baseUrl = '') {
 		practiceImageAlt: practiceImageInfo?.alt || '練習問題の完成イメージ',
 		practiceImageClass: practiceImageInfo?.alt.includes(showcaseKeyword) ? showcaseClassName : '',
 		hasPractice: practiceTokens.length > 0,
+		hasHint: hintTokens.length > 0,
 		hasAnswer: answerTokens.length > 0
 	};
 }

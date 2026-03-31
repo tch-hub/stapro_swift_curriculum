@@ -218,64 +218,125 @@ struct ContentView: View {
 - ボタンが押されたときに、`titleText`、`shapeText`、`themeColor` の値をそれぞれ対応する文字と色に変更する処理（クロージャ）を実装します。
 - ボタン自体の見た目は `.padding()` と `.background(Color.white)` 等を使ってシンプルに装飾しましょう。
 
+### ヒント
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+// ヒント: 文字列(String)の生値(rawValue)を持たせ、さらにForEachで全ケースをループできるように
+// 2つのプロトコル（String と CaseIterable）を適用しよう
+enum ShapeOption: /* ここにプロトコルを2つカンマ区切りで書く */ {
+    case star = "星"
+    case circle = "丸"
+    case square = "四角"
+    
+    var symbol: String {
+        // ヒント: 自分自身（現在選択されているcase）によって条件分岐させるキーワードを書こう
+        switch /* ここにキーワードを書く */ {
+        case .star: return "★"
+        case .circle: return "●"
+        case .square: return "■"
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .star: return .orange
+        case .circle: return .pink
+        case .square: return .blue
+        }
+    }
+}
+
+struct ContentView: View {
+    // ヒント: 今回はViewModelを使わず、この画面(View)の中だけで状態を管理する。
+    // 単純な値の変化を監視して画面を更新するためのプロパティラッパー（@...）を使おう
+    /* ここにキーワードを書く */ private var selectedShape: ShapeOption = .star
+
+    var body: some View {
+        VStack {
+            // ヒント: 選択された図形(selectedShape)の「記号(symbol)」と「文字列の生値(rawValue)」を渡そう
+            ShapeView(shape: selectedShape./* ここに変数を書く */, title: selectedShape./* ここに変数を書く */)
+
+            HStack {
+                // ヒント: ShapeOptionに定義されたすべてのcaseを配列として取得するためのプロパティを書こう
+                ForEach(ShapeOption./* ここにプロパティを書く */, id: \.self) { option in
+                    // ヒント: ボタンのテキストには、ループで回ってきたoptionの「文字列の生値(rawValue)」を表示させよう
+                    Button(option./* ここに変数を書く */) {
+                        // ヒント: ボタンが押されたら、現在の選択状態(selectedShape)を、この「option」で上書きしよう
+                        /* ここに処理を書く */
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct ShapeView: View {
+    let shape: String
+    let title: String
+
+    var body: some View {
+        VStack {
+            Text(shape)
+            Text(title)
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```
+
 ### 解答例
 ```swift title="ContentView.swift"
 import SwiftUI
 
+enum ShapeOption: String, CaseIterable {
+    case star = "星"
+    case circle = "丸"
+    case square = "四角"
+    
+    var symbol: String {
+        switch self {
+        case .star: return "★"
+        case .circle: return "●"
+        case .square: return "■"
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .star: return .orange
+        case .circle: return .pink
+        case .square: return .blue
+        }
+    }
+}
+
 struct ContentView: View {
-    // 1. 状態を保持する変数
-    @State private var titleText = "スター"
-    @State private var shapeText = "★"
-    @State private var themeColor: Color = .orange
+    @State private var selectedShape: ShapeOption = .star
 
     var body: some View {
         ZStack {
-            // テーマカラーを画面全体に適用
-            themeColor.ignoresSafeArea()
+            selectedShape.color.ignoresSafeArea()
 
             VStack(spacing: 50) {
-                // 2 & 3. カスタムビュー（ShapeView）の呼び出し
-                ShapeView(shape: shapeText, title: titleText)
+                ShapeView(shape: selectedShape.symbol, title: selectedShape.rawValue)
 
-                // 4. 標準のButtonを並べて状態を更新する
                 HStack(spacing: 20) {
-                    Button(action: {
-                        titleText = "スター"
-                        shapeText = "★"
-                        themeColor = .orange
-                    }) {
-                        Text("星")
-                            .font(.title3).bold()
-                            .frame(width: 80, height: 80)
-                            .background(Color.white)
-                            .foregroundColor(.orange)
-                            .cornerRadius(15)
-                    }
-
-                    Button(action: {
-                        titleText = "サークル"
-                        shapeText = "●"
-                        themeColor = .pink
-                    }) {
-                        Text("丸")
-                            .font(.title3).bold()
-                            .frame(width: 80, height: 80)
-                            .background(Color.white)
-                            .foregroundColor(.pink)
-                            .cornerRadius(15)
-                    }
-
-                    Button(action: {
-                        titleText = "スクエア"
-                        shapeText = "■"
-                        themeColor = .blue
-                    }) {
-                        Text("四角")
-                            .font(.title3).bold()
-                            .frame(width: 80, height: 80)
-                            .background(Color.white)
-                            .foregroundColor(.blue)
-                            .cornerRadius(15)
+                    ForEach(ShapeOption.allCases, id: \.self) { option in
+                        Button(action: {
+                                selectedShape = option
+                        }) {
+                            Text(option.rawValue)
+                                .font(.title3).bold()
+                                .frame(width: 80, height: 80)
+                                .background(Color.white)
+                                .foregroundColor(option.color)
+                                .cornerRadius(15)
+                        }
                     }
                 }
             }
@@ -284,9 +345,7 @@ struct ContentView: View {
     }
 }
 
-// 表示エリアのカスタムビュー
 struct ShapeView: View {
-    // 外部から受け取るデータの定義
     let shape: String
     let title: String
 

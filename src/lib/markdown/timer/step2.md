@@ -164,12 +164,28 @@ struct ContentView: View {
   - `false` の場合： グレー（`.gray`）
 - ボタンの形を円形（`.clipShape(Circle())`）に切り抜き、幅と高さを `240` に設定してみましょう。
 
-> [!TIP]
->
-> - **図形の切り抜き**: ボタンを丸くするには、ボタンに対して `.clipShape(Circle())` というモディファイアを追加します。
-> - **サイズの指定**: `.frame(width: 240, height: 240)` を使うと、オブジェクトの幅と高さを自由に設定できます。
-> - **フォントサイズの詳細設定**: `.font(.system(size: 120))` のように書くと、好みのサイズ（数値）で文字を大きくできます。
-> - **真偽値の反転**: `isFavorite.toggle()` と書くと、値の `true` と `false` を簡単に入れ替えることができます（`isFavorite = !isFavorite` と同じ意味です）。
+### ヒント
+
+```swift title="ContentView.swift"
+import SwiftUI
+
+struct ContentView: View {
+
+    var body: some View {
+        Button("☆") {
+        }
+        .font(.system(size: 120))
+        .frame(width: 240, height: 240)
+        .foregroundColor(.white)
+        .background(Color.gray)
+        .clipShape(Circle())
+    }
+}
+
+#Preview {
+    ContentView()
+}
+```
 
 ### 解答例
 
