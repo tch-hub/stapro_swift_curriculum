@@ -23,15 +23,15 @@ import AVFoundation
 
 - `AVFoundation`: iPhoneで音を鳴らすための「専門ツールセット」のようなものです。これをインポートすることで、音楽再生の機能が使えるようになります。
 
-@Published var timerState: TimerState = .idle の下に記述
+`var timerState` などの変数を定義している場所の下に追加
 
 ```swift
-@Published var isShowingAlert = false
+var isShowingAlert = false
 var audioPlayer: AVAudioPlayer?
 ```
 
-- `@Published var isShowingAlert = false`: アラートを表示するかどうかを決める「スイッチ」です。最初は `false` (オフ) ですが、タイマーが終了したら `true` (オン) にします。
-- `var audioPlayer: AVAudioPlayer?`: 音楽を再生するための「プレイヤー」です。最初はまだ何もセットされていないので `?` (空っぽかもしれない) がついています。
+- `isShowingAlert`: アラートを表示するかどうかを決める「スイッチ」です。最初は `false` (オフ) ですが、タイマーが終了したら `true` (オン) にします。
+- `audioPlayer`: 音楽を再生するための「プレイヤー」です。最初はまだ何もセットされていないので `?` (空っぽかもしれない) がついています。
 
 ### 3. 音を鳴らす機能 (メソッド) を作る(TimerViewModel.swift)
 
@@ -63,26 +63,29 @@ func playSound() {
 
 タイマーが0になったとき、先ほど作った「スイッチ」と「音」を作動させるように書き換えます。
 
-func countDown() {}を編集
+func countDown() {} の中身を編集
 
 ```swift
 func countDown() {
     timer?.invalidate()
-    timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
-        guard let self = self else { return }
-        DispatchQueue.main.async {
-            if self.remainingTime > 0 {
-                // まだ時間が残っているなら、1秒減らす
-                self.remainingTime -= 1
-            } else {
-                // 時間切れ！ (0になったとき)
-                timer.invalidate()          // タイマーを止める
-                self.timerState = .idle     // 状態を「待機中」に戻す
-                self.isShowingAlert = true  // アラート表示スイッチをON！
-                self.playSound()            // 音を鳴らす！
-            }
+    
+    let newTimer = Timer(timeInterval: 1, repeats: true) { [weak self] timer in
+        guard let self else { return }
+
+        if self.remainingTime > 0 {
+            // まだ時間が残っているなら、1秒減らす
+            self.remainingTime -= 1
+        } else {
+            // 時間切れ！ (0になったとき)
+            timer.invalidate()          // タイマーを止める
+            self.timerState = .idle     // 状態を「待機中」に戻す
+            self.isShowingAlert = true  // アラート表示スイッチをON！
+            self.playSound()            // 音を鳴らす！
         }
     }
+    
+    RunLoop.main.add(newTimer, forMode: .common)
+    self.timer = newTimer
 }
 ```
 
@@ -90,7 +93,7 @@ func countDown() {
 
 最後に、`ContentView`（画面側）でスイッチがONになったときにアラートを表示する設定を追加します。
 
-.padding() の下に記述
+`.animation(.default, value: viewModel.timerState)` の下（`VStack`の最後）に記述
 
 ```swift
 .alert("時間です", isPresented: $viewModel.isShowingAlert) {
@@ -109,39 +112,38 @@ func countDown() {
 ## コード全体
 
 ```swift title="TimerViewModel.swift"
-// TimerViewModel.swift
-import SwiftUI
-import Combine
+import Foundation
 import AVFoundation
 
-class TimerViewModel: ObservableObject {
-    @Published var remainingTime = 0
-    @Published var timerState: TimerState = .idle
-    @Published var isShowingAlert = false
+@Observable
+class TimerViewModel {
+    var remainingTime = 0
+    var timerState: TimerState = .idle
+    var isShowingAlert = false
 
-    var timer: Timer?
-    var totalTime: Int = 0
+    private var timer: Timer?
+    private(set) var totalTime: Int = 0
     var audioPlayer: AVAudioPlayer?
-
 
     func countDown() {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                if self.remainingTime > 0 {
-                    self.remainingTime -= 1
-                } else {
-                    timer.invalidate()
-                    self.timerState = .idle
-                    self.isShowingAlert = true
-                    self.playSound()
-                }
+        
+        let newTimer = Timer(timeInterval: 1, repeats: true) { [weak self] timer in
+            guard let self else { return }
+
+            if self.remainingTime > 0 {
+                self.remainingTime -= 1
+            } else {
+                timer.invalidate()
+                self.timerState = .idle
+                self.isShowingAlert = true
+                self.playSound()
             }
         }
+        
+        RunLoop.main.add(newTimer, forMode: .common)
+        self.timer = newTimer
     }
-
-
 
     func startTimer(hours: Int, minutes: Int, seconds: Int) {
         remainingTime = hours * 3600 + minutes * 60 + seconds
@@ -180,8 +182,7 @@ class TimerViewModel: ObservableObject {
 
 <img src="/images/timer/t71.png" alt="Xcode の設定画面" class="mobile-screenshot" />
 
-```swift
-// ContentView.swift
+```swift title="ContentView.swift"
 import SwiftUI
 
 enum TimerState {
@@ -191,10 +192,22 @@ enum TimerState {
 }
 
 struct ContentView: View {
-    @StateObject var viewModel = TimerViewModel()
-    @State var hours = 0
-    @State var minutes = 0
-    @State var seconds = 0
+    @State private var viewModel = TimerViewModel()
+    @State private var hours = 0
+    @State private var minutes = 0
+    @State private var seconds = 0
+
+    private var isTimerUnset: Bool {
+        viewModel.timerState == .idle && hours == 0 && minutes == 0 && seconds == 0
+    }
+
+    private var primaryButtonLabel: String {
+        switch viewModel.timerState {
+        case .running: return "一時停止"
+        case .paused:  return "再開"
+        case .idle:    return "開始"
+        }
+    }
 
     var body: some View {
         VStack(spacing: 24) {
@@ -202,7 +215,6 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .padding()
 
-            // 時間選択は待機時のみ表示
             if viewModel.timerState == .idle {
                 TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
             } else {
@@ -210,33 +222,35 @@ struct ContentView: View {
             }
 
             HStack(spacing: 16) {
-                Button("開始") {
-                    viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+                Button(primaryButtonLabel) {
+                    withAnimation {
+                        switch viewModel.timerState {
+                        case .idle:
+                            viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+                        case .running:
+                            viewModel.pauseTimer()
+                        case .paused:
+                            viewModel.restartTimer()
+                        }
+                    }
                 }
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+                .tint(viewModel.timerState == .running ? .yellow : .green)
+                .disabled(isTimerUnset)
 
                 Button("キャンセル") {
-                    viewModel.stopTimer()
-                    hours = 0; minutes = 0; seconds = 0
+                    withAnimation {
+                        viewModel.stopTimer()
+                        (hours, minutes, seconds) = (0, 0, 0)
+                    }
                 }
-                .padding()
-                .background(Color.gray)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-
-                Button("一時停止") {
-                    viewModel.pauseTimer()
-                }
-                .padding()
-                .background(Color.orange)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+                .tint(.gray)
+                .disabled(isTimerUnset)
             }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
         }
         .padding()
+        .animation(.default, value: viewModel.timerState)
         .alert("時間です", isPresented: $viewModel.isShowingAlert) {
             Button("完了") {
                 viewModel.isShowingAlert = false
@@ -246,6 +260,9 @@ struct ContentView: View {
     }
 }
 
+#Preview {
+    ContentView()
+}
 ```
 
 ## 練習問題
@@ -258,10 +275,10 @@ struct ContentView: View {
 
 #### 1. ViewModel（CounterViewModel）の作成
 
-- `ObservableObject` に準拠した `CounterViewModel` クラスを作成します。
+- `@Observable` マクロを付けた `CounterViewModel` クラスを作成します。
 - 以下の変数を定義してください。
   - `count`: 数値（初期値 10など）
-  - `isShowingAlert`: アラートを表示するかどうかを管理するスイッチ（`@Published`）
+  - `isShowingAlert`: アラートを表示するかどうかを管理するスイッチ
 - `count` を `0` に戻す `resetCount()` メソッドを実装します。
 
 #### 2. UI（ContentView）の構築
@@ -283,11 +300,12 @@ import SwiftUI
 import Combine
 
 // 1. ViewModelでアラート状態を管理する
-class CounterViewModel: ObservableObject {
-    // ヒント: 画面を更新するためのキーワード（@...）をつけよう
-    /* ここにキーワードを書く */ var count = 10
+@Observable
+class CounterViewModel {
+    // ヒント: iOS 17以降は、特別なマークをつけなくても変数は自動で監視されます
+    var count = 10
     // ヒント: アラートを表示するかどうかを判定する「スイッチ」の役割をする変数
-    /* ここにキーワードを書く */ var isShowingAlert = false
+    var isShowingAlert = false
 
     func resetCount() {
         // ヒント: カウントの値を「0」に戻そう
@@ -296,8 +314,8 @@ class CounterViewModel: ObservableObject {
 }
 
 struct ContentView: View {
-    // ヒント: ViewModelを監視するためのキーワード（@...）を使おう
-    /* ここにキーワードを書く */ var viewModel = CounterViewModel()
+    // ヒント: ViewModelをインスタンス化して保持するためのキーワード（@...）を使おう
+    /* ここにキーワードを書く */ private var viewModel = CounterViewModel()
 
     var body: some View {
         VStack(spacing: 40) {
@@ -309,10 +327,9 @@ struct ContentView: View {
                 // ヒント: ボタンが押されたら、viewModelの「アラートを表示するスイッチ（isShowingAlert）」をON（true）にしよう
                 /* ここに処理を書く */
             }
-            .padding()
-            .background(Color.orange)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            .buttonStyle(.borderedProminent)
+            .tint(.orange)
+            .controlSize(.large)
         }
         .padding()
         // 2. ViewModelのフラグに連動してアラートを表示
@@ -343,9 +360,10 @@ import SwiftUI
 import Combine
 
 // 1. ViewModelでアラート状態を管理する
-class CounterViewModel: ObservableObject {
-    @Published var count = 10
-    @Published var isShowingAlert = false
+@Observable
+class CounterViewModel {
+    var count = 10
+    var isShowingAlert = false
 
     func resetCount() {
         count = 0
@@ -353,7 +371,7 @@ class CounterViewModel: ObservableObject {
 }
 
 struct ContentView: View {
-    @StateObject var viewModel = CounterViewModel()
+    @State private var viewModel = CounterViewModel()
 
     var body: some View {
         VStack(spacing: 40) {
@@ -364,10 +382,9 @@ struct ContentView: View {
                 // アラートを表示するスイッチをON
                 viewModel.isShowingAlert = true
             }
-            .padding()
-            .background(Color.orange)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            .buttonStyle(.borderedProminent)
+            .tint(.orange)
+            .controlSize(.large)
         }
         .padding()
         // 2. ViewModelのフラグに連動してアラートを表示

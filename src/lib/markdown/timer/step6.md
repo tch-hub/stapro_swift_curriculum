@@ -3,67 +3,88 @@ title: ステップ6: ViewModelのUIへの反映(ContentView)
 summary: ContentViewにViewModel(@StateObject)を組み込み、各ボタンのアクションをViewModelのメソッドに接続します。
 ---
 
-### 1. ContentViewの更新
+### 1. ViewModelと計算プロパティの導入
 
-まずは、`ContentView` が `TimerViewModel` を使うように変更します。
-
-@State var timerState... を削除し、代わりに以下を追加
+まずは、`ContentView` が `TimerViewModel` を持てるようにし、UIの状態をわかりやすくする計算プロパティを追加します。
 
 ```swift
-@StateObject var viewModel = TimerViewModel()
+@State private var viewModel = TimerViewModel()
 ```
 
-- アプリの状態管理を `TimerViewModel` に任せるため、`@StateObject` を定義します。
-- ローカルで管理していた `timerState` は不要になるので削除します。
+- アプリの状態管理を `TimerViewModel` に任せるため、`@State` を使ってインスタンス化します（iOS 17の `@Observable` を使う際は `@StateObject` ではなく `@State` と書きます）。
+- `ContentView` が持っていた古い `timerState` は不要なので削除し、今後の状態はすべて `viewModel.timerState` を参照します。
 
-if timerState == .idle { を書き換え
+続けて、以下のように計算プロパティを追加します。
+
+```swift
+private var isTimerUnset: Bool {
+    viewModel.timerState == .idle && hours == 0 && minutes == 0 && seconds == 0
+}
+
+private var primaryButtonLabel: String {
+    switch viewModel.timerState {
+    case .running: return "一時停止"
+    case .paused:  return "再開"
+    case .idle:    return "開始"
+    }
+}
+```
+
+- `isTimerUnset`: タイマーが未設定かどうかを判定し、ボタンを無効化（`.disabled`）するために使います。
+- `primaryButtonLabel`: `viewModel.timerState` の状態に応じて、メインボタンのテキストを動的に切り替えます。
+
+### 2. 画面の表示切り替え
+
+時間選択画面とタイマー表示画面の切り替え判定も `viewModel` の状態を見るように変更します。
 
 ```swift
 if viewModel.timerState == .idle {
-```
-
-- 画面の切り替え判定も `viewModel` の状態を見るように変更します。
-
-else { ... } ブロックの中身を書き換え
-
-```swift
+    TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
 } else {
     TimerDisplayView(remainingTime: viewModel.remainingTime, totalTime: viewModel.totalTime)
 }
 ```
 
-- ステップ4で作成した `TimerDisplayView` を使用して、残り時間を表示するようにします。
+- 待機中（`.idle`）の場合は時間選択画面を、それ以外（実行中・一時停止中）の場合はステップ4で作成した `TimerDisplayView` を表示します。
 
-Button("開始") { ... } を書き換え
+### 3. ボタンアクションの実装
+
+メインボタン１つで「開始・一時停止・再開」の役割を持たせるため、`switch` 文を使って処理を分けます。
 
 ```swift
-Button("開始") {
-    viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+Button(primaryButtonLabel) {
+    withAnimation {
+        switch viewModel.timerState {
+        case .idle:
+            viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+        case .running:
+            viewModel.pauseTimer()
+        case .paused:
+            viewModel.restartTimer()
+        }
+    }
 }
+.tint(viewModel.timerState == .running ? .yellow : .green)
+.disabled(isTimerUnset)
 ```
 
-- "開始"ボタンで `viewModel.startTimer` を呼び出します。
+- `switch viewModel.timerState` を使い、状態に応じて適切な機能（開始、一時停止、再開）を呼び出しています。
+- `withAnimation` をつけることで、状態の切り替わり時にスムーズなアニメーションが適用されます。
 
-Button("キャンセル") { ... } を書き換え
+キャンセルボタンの処理も `ViewModel` に合わせます。
 
 ```swift
 Button("キャンセル") {
-    viewModel.stopTimer()
-    hours = 0; minutes = 0; seconds = 0
+    withAnimation {
+        viewModel.stopTimer()
+        (hours, minutes, seconds) = (0, 0, 0)
+    }
 }
+.tint(.gray)
+.disabled(isTimerUnset)
 ```
 
-- "キャンセル"ボタンで `viewModel.stopTimer` を呼び出します。
-
-Button("キャンセル") { ... } の下に追加
-
-```swift
-Button("一時停止") {
-    viewModel.pauseTimer()
-}
-```
-
-- 新しく"一時停止"ボタンを追加し、`viewModel.pauseTimer` を呼び出します。
+- "キャンセル"ボタンが押されたら `viewModel.stopTimer()` を呼び出し、設定時間もすべて `0` にリセットします。
 
 ---
 
@@ -71,8 +92,7 @@ Button("一時停止") {
 
 <img src="/images/timer/t61.png" alt="Xcode の設定画面" class="mobile-screenshot" />
 
-```swift
-// ContentView.swift
+```swift title="ContentView.swift"
 import SwiftUI
 
 enum TimerState {
@@ -82,10 +102,22 @@ enum TimerState {
 }
 
 struct ContentView: View {
-    @StateObject var viewModel = TimerViewModel()
-    @State var hours = 0
-    @State var minutes = 0
-    @State var seconds = 0
+    @State private var viewModel = TimerViewModel()
+    @State private var hours = 0
+    @State private var minutes = 0
+    @State private var seconds = 0
+
+    private var isTimerUnset: Bool {
+        viewModel.timerState == .idle && hours == 0 && minutes == 0 && seconds == 0
+    }
+
+    private var primaryButtonLabel: String {
+        switch viewModel.timerState {
+        case .running: return "一時停止"
+        case .paused:  return "再開"
+        case .idle:    return "開始"
+        }
+    }
 
     var body: some View {
         VStack(spacing: 24) {
@@ -93,7 +125,6 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .padding()
 
-            // 時間選択は待機時のみ表示
             if viewModel.timerState == .idle {
                 TimeSelectionView(hours: $hours, minutes: $minutes, seconds: $seconds)
             } else {
@@ -101,39 +132,42 @@ struct ContentView: View {
             }
 
             HStack(spacing: 16) {
-                Button("開始") {
-                    viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+                Button(primaryButtonLabel) {
+                    withAnimation {
+                        switch viewModel.timerState {
+                        case .idle:
+                            viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+                        case .running:
+                            viewModel.pauseTimer()
+                        case .paused:
+                            viewModel.restartTimer()
+                        }
+                    }
                 }
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+                .tint(viewModel.timerState == .running ? .yellow : .green)
+                .disabled(isTimerUnset)
 
                 Button("キャンセル") {
-                    viewModel.stopTimer()
-                    hours = 0; minutes = 0; seconds = 0
+                    withAnimation {
+                        viewModel.stopTimer()
+                        (hours, minutes, seconds) = (0, 0, 0)
+                    }
                 }
-                .padding()
-                .background(Color.gray)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-
-                Button("一時停止") {
-                    viewModel.pauseTimer()
-                }
-                .padding()
-                .background(Color.orange)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+                .tint(.gray)
+                .disabled(isTimerUnset)
             }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
         }
         .padding()
+        .animation(.default, value: viewModel.timerState)
     }
 }
 
 #Preview {
     ContentView()
 }
+
 
 ```
 
@@ -143,12 +177,12 @@ struct ContentView: View {
 
 ### 強化できるカウンターを実装しよう
 
-このステップで学んだ `@StateObject` を使って、ViewModelが持つデータを画面（UI）に紐づけ、値を増やしたり、増える量を強化（アップグレード）したりできるカウンター画面を作成しましょう。
+このステップで学んだ `@Observable` を使って、ViewModelが持つデータを画面（UI）に紐づけ、値を増やしたり、増える量を強化（アップグレード）したりできるカウンター画面を作成しましょう。
 
 #### 1. ViewModel（CounterViewModel）の作成
 
-- `ObservableObject` に準拠した `CounterViewModel` クラスを作成します。
-- 以下の変数を `@Published` で定義してください。
+- `@Observable` マクロを付けた `CounterViewModel` クラスを作成します。
+- 以下の変数を定義してください（それぞれ初期値を設定します）。
   - `count`: 現在の数値（初期値 0）
   - `step`: 1回で増える量（初期値 1）
   - `cost`: アップグレードに必要なコスト（初期値 10）
@@ -158,7 +192,7 @@ struct ContentView: View {
 
 #### 2. UI（ContentView）の実装
 
-- `@StateObject` を使用して `CounterViewModel` をインスタンス化し、画面と紐づけます。
+- `@State` を使用して `CounterViewModel` をインスタンス化し、画面と紐づけます。
 - 現在の数値（`count`）を表示するテキストを配置します。
 - 以下の2つのボタンを作成しましょう。
   1. 「増やす」ボタン：現在の `step` の値を表示し、`increment()` を呼び出します。
@@ -171,11 +205,12 @@ import SwiftUI
 import Combine
 
 // 1. ロジック部分
-class CounterViewModel: ObservableObject {
-    // ヒント: 画面の表示を自動更新させるために必要なキーワード（@...）をつけて変数を定義しよう
-    /* ここにキーワードを書く */ var count = 0
-    /* ここにキーワードを書く */ var step = 0
-    /* ここにキーワードを書く */ var cost = 0
+@Observable
+class CounterViewModel {
+    // ヒント: iOS 17以降の書き方では、変数に特別なマークをつけなくても監視対象になります
+    var count = 0
+    var step = 1
+    var cost = 10
 
     func increment() {
         // ヒント: ボタンが押されたら、現在の「count」に「step」の値を足し合わせる
@@ -193,7 +228,7 @@ class CounterViewModel: ObservableObject {
 
 // 2. UI部分
 struct ContentView: View {
-    // ヒント: ViewModelをインスタンス化して監視するためのキーワード（@...）を使おう
+    // ヒント: ViewModelをインスタンス化して保持するためのキーワード（@...）を使おう
     /* ここにキーワードを書く */ private var viewModel = CounterViewModel()
 
     var body: some View {
@@ -236,10 +271,11 @@ import SwiftUI
 import Combine
 
 // 1. ロジック部分
-class CounterViewModel: ObservableObject {
-    @Published var count = 0
-    @Published var step = 1
-    @Published var cost = 10
+@Observable
+class CounterViewModel {
+    var count = 0
+    var step = 1
+    var cost = 10
 
     func increment() {
         count += step
@@ -256,7 +292,7 @@ class CounterViewModel: ObservableObject {
 
 // 2. UI部分
 struct ContentView: View {
-    @StateObject private var viewModel = CounterViewModel()
+    @State private var viewModel = CounterViewModel()
 
     var body: some View {
         VStack(spacing: 30) {

@@ -5,11 +5,13 @@ summary: ContentViewでVStack/HStackを使ったレイアウトを作成し、Ti
 
 ## swiftUIの基本構造
 
-```
+```swift title="ContentView.swift"
 import SwiftUI
 
 struct ContentView: View {
+    /* ここに変数を書く */
     var body: some View {
+        /* ここにUIを書く */
     }
 }
 
@@ -24,9 +26,9 @@ struct ContentView: View {
 
 ### 1. TimerState enum
 
-import SwiftUIの次の行に追加
+`import SwiftUI`の次の行に追加
 
-```swift
+```swift title="ContentView.swift"
 enum TimerState {
     case idle
     case running
@@ -36,19 +38,21 @@ enum TimerState {
 
 まず、タイマーの状態を管理する変数を定義します。
 
-- `idle`: 待機中
-- `running`: 実行中
-- `paused`: 一時停止
+| ステータス | 詳細 |
+| :--- | :--- |
+| `idle` | 待機中 |
+| `running` | 実行中 |
+| `paused` | 一時停止 |
 
 ### 2. @State
 
-struct ContentView: View {}内に追加
+`struct ContentView: View {}`内に追加
 
-```swift
-@State var timerState: TimerState = .idle
-@State var hours = 0
-@State var minutes = 0
-@State var seconds = 0
+```swift title="ContentView.swift"
+@State private var timerState: TimerState = .idle
+@State private var hours = 0
+@State private var minutes = 0
+@State private var seconds = 0
 ```
 
 - `@State` は View が保持する状態を表し、値が変わると自動で再描画されます。
@@ -56,9 +60,9 @@ struct ContentView: View {}内に追加
 
 ### 3. 基本レイアウト — VStack と HStack
 
-var body: some View {}内に追加
+`var body: some View {}`内に追加
 
-```swift
+```swift title="ContentView.swift"
 VStack(spacing: 24) {
     Text("タイマーアプリ")
         .font(.largeTitle)
@@ -66,23 +70,22 @@ VStack(spacing: 24) {
 
     HStack(spacing: 16) {
         Button("開始") { }
-            .padding()
-            .background(Color.green)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            .tint(.green)
 
         Button("キャンセル") { }
-            .padding()
-            .background(Color.gray)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            .tint(.gray)
     }
+    .buttonStyle(.borderedProminent)
+    .controlSize(.large)
 }
 ```
 
 - `VStack` は縦方向にビューを並べます。
 - `HStack` は横方向にビューを並べます。
-- `spacing` や `alignment` を調整して見た目を整えます。
+- `spacing` を調整して見た目を整えます。
+- `.buttonStyle(.borderedProminent)` や `.tint()` を使って、モダンなボタンの見た目を設定します。
+
+---
 
 ### コード全体 — ContentView
 
@@ -100,33 +103,30 @@ enum TimerState {
 }
 
 struct ContentView: View {
-    @State var timerState: TimerState = .idle
-    @State var hours = 0
-    @State var minutes = 0
-    @State var seconds = 0
+    @State private var timerState: TimerState = .idle
+    @State private var hours = 0
+    @State private var minutes = 0
+    @State private var seconds = 0
 
     var body: some View {
         VStack(spacing: 24) {
             Text("タイマーアプリ")
                 .font(.largeTitle)
                 .padding()
-            HStack {
+            
+            HStack(spacing: 16) {
                 Button("開始") {
-                    // タイマーを開始する処理（後で実装）
+                    // タイマーを開始する処理
                 }
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+                .tint(.green)
 
                 Button("キャンセル") {
                     // キャンセル処理
                 }
-                .padding()
-                .background(Color.gray)
-                .foregroundColor(.white)
-                .cornerRadius(10)
+                .tint(.gray)
             }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
         }
         .padding()
     }

@@ -79,29 +79,44 @@ Text("タイマーアプリ")
 
 ### 2. 操作ボタンエリア
 
-`HStack() {...}`を編集
+`HStack(spacing: 16) {...}`を編集
 
 ```swift
 HStack(spacing: 130) {
-    ColorButton(text: "キャンセル", color: .black, action: viewModel.stopTimer)
-        .opacity(viewModel.timerState == .idle ? 0.3 : 1)
-        .disabled(viewModel.timerState == .idle)
+    ColorButton(text: "キャンセル", color: .gray, action: {
+        withAnimation {
+            viewModel.stopTimer()
+            (hours, minutes, seconds) = (0, 0, 0)
+        }
+    })
+    .opacity(isTimerUnset ? 0.3 : 1)
+    .disabled(isTimerUnset)
 
     switch viewModel.timerState {
     case .idle:
         ColorButton(text: "開始", color: .green, action: {
-            viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+            withAnimation {
+                viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+            }
         })
     case .running:
-        ColorButton(text: "一時停止", color: .orange, action: viewModel.pauseTimer)
+        ColorButton(text: "一時停止", color: .orange, action: {
+            withAnimation {
+                viewModel.pauseTimer()
+            }
+        })
     case .paused:
-        ColorButton(text: "再開", color: .green, action: viewModel.restartTimer)
+        ColorButton(text: "再開", color: .green, action: {
+            withAnimation {
+                viewModel.restartTimer()
+            }
+        })
     }
 }
 ```
 
-- キャンセルボタンは待機状態で無効化します（`.disabled()`）。
-- `switch` で状態に応じてボタンを切り替えます。
+- 時間選択中のキャンセルボタンは少し薄く（`.opacity(0.3)`）して無効化（`.disabled`）します。
+- メインボタンは `switch` を使って、状態ごとに色・テキスト・機能が設定された `ColorButton` に切り替えます。
 
 ---
 
@@ -144,10 +159,14 @@ enum TimerState {
 }
 
 struct ContentView: View {
-    @StateObject var viewModel = TimerViewModel()
-    @State var hours = 0
-    @State var minutes = 0
-    @State var seconds = 0
+    @State private var viewModel = TimerViewModel()
+    @State private var hours = 0
+    @State private var minutes = 0
+    @State private var seconds = 0
+
+    private var isTimerUnset: Bool {
+        viewModel.timerState == .idle && hours == 0 && minutes == 0 && seconds == 0
+    }
 
     var body: some View {
         VStack {
@@ -158,22 +177,39 @@ struct ContentView: View {
             }
 
             HStack(spacing: 130) {
-                ColorButton(text: "キャンセル", color: .black, action: viewModel.stopTimer)
-                    .opacity(viewModel.timerState == .idle ? 0.3 : 1)
-                    .disabled(viewModel.timerState == .idle)
+                ColorButton(text: "キャンセル", color: .gray, action: {
+                    withAnimation {
+                        viewModel.stopTimer()
+                        (hours, minutes, seconds) = (0, 0, 0)
+                    }
+                })
+                .opacity(isTimerUnset ? 0.3 : 1)
+                .disabled(isTimerUnset)
 
                 switch viewModel.timerState {
                 case .idle:
                     ColorButton(text: "開始", color: .green, action: {
-                        viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+                        withAnimation {
+                            viewModel.startTimer(hours: hours, minutes: minutes, seconds: seconds)
+                        }
                     })
                 case .running:
-                    ColorButton(text: "一時停止", color: .orange, action: viewModel.pauseTimer)
+                    ColorButton(text: "一時停止", color: .orange, action: {
+                        withAnimation {
+                            viewModel.pauseTimer()
+                        }
+                    })
                 case .paused:
-                    ColorButton(text: "再開", color: .green, action: viewModel.restartTimer)
+                    ColorButton(text: "再開", color: .green, action: {
+                        withAnimation {
+                            viewModel.restartTimer()
+                        }
+                    })
                 }
             }
         }
+        .padding()
+        .animation(.default, value: viewModel.timerState)
         .alert("時間です", isPresented: $viewModel.isShowingAlert) {
             Button("完了") {
                 viewModel.isShowingAlert = false
@@ -182,7 +218,6 @@ struct ContentView: View {
         }
     }
 }
-
 ```
 
 ## 練習問題
@@ -212,7 +247,7 @@ struct ContentView: View {
 #### 4. ボタンの処理（アクション）
 - `ShapeView` の下に `HStack` で3つのボタン（星、丸、四角）を並べましょう。
 - ボタンが押されたときに、`titleText`、`shapeText`、`themeColor` の値をそれぞれ対応する文字と色に変更する処理（クロージャ）を実装します。
-- ボタン自体の見た目は `.padding()` と `.background(Color.white)` 等を使ってシンプルに装飾しましょう。
+- ボタン自体の見た目は `.buttonStyle(.borderedProminent)` 等を使って使いやすく整えてみましょう。
 
 ### ヒント
 
@@ -250,17 +285,22 @@ struct ContentView: View {
     /* ここにキーワードを書く */ private var selectedShape: ShapeOption = .star
 
     var body: some View {
-        VStack {
-            // ヒント: 選択された図形(selectedShape)の「記号(symbol)」と「文字列の生値(rawValue)」を渡そう
-            ShapeView(shape: selectedShape./* ここに変数を書く */, title: selectedShape./* ここに変数を書く */)
+        ZStack {
+            selectedShape.color.ignoresSafeArea()
+            VStack(spacing: 50) {
+                // ヒント: 選択された図形(selectedShape)の「記号(symbol)」と「文字列の生値(rawValue)」を渡そう
+                ShapeView(shape: selectedShape./* ここに変数を書く */, title: selectedShape./* ここに変数を書く */)
 
-            HStack {
-                // ヒント: ShapeOptionに定義されたすべてのcaseを配列として取得するためのプロパティを書こう
-                ForEach(ShapeOption./* ここにプロパティを書く */, id: \.self) { option in
-                    // ヒント: ボタンのテキストには、ループで回ってきたoptionの「文字列の生値(rawValue)」を表示させよう
-                    Button(option./* ここに変数を書く */) {
-                        // ヒント: ボタンが押されたら、現在の選択状態(selectedShape)を、この「option」で上書きしよう
-                        /* ここに処理を書く */
+                HStack {
+                    // ヒント: ShapeOptionに定義されたすべてのcaseを配列として取得するためのプロパティを書こう
+                    ForEach(ShapeOption./* ここにプロパティを書く */, id: \.self) { option in
+                        // ヒント: ボタンのテキストには、ループで回ってきたoptionの「文字列の生値(rawValue)」を表示させよう
+                        Button(option./* ここに変数を書く */) {
+                            // ヒント: ボタンが押されたら、現在の選択状態(selectedShape)を、この「option」で上書きしよう
+                            /* ここに処理を書く */
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(option.color.opacity(0.8))
                     }
                 }
             }
@@ -324,20 +364,24 @@ struct ContentView: View {
                 HStack(spacing: 20) {
                     ForEach(ShapeOption.allCases, id: \.self) { option in
                         Button(action: {
+                            withAnimation {
                                 selectedShape = option
+                            }
                         }) {
                             Text(option.rawValue)
                                 .font(.title3).bold()
                                 .frame(width: 80, height: 80)
-                                .background(Color.white)
-                                .foregroundColor(option.color)
-                                .cornerRadius(15)
                         }
+                        .buttonStyle(.borderedProminent)
+                        .tint(option.color.opacity(0.8))
+                        .clipShape(Circle())
+                        .shadow(radius: 5)
                     }
                 }
             }
             .padding()
         }
+        .animation(.default, value: selectedShape)
     }
 }
 

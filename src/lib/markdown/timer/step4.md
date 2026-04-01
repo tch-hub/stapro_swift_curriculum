@@ -26,10 +26,10 @@ struct TimerDisplayView: View {
 struct TimerDisplayView: View {}内に追加
 
 ```swift
-var remainingTime: Int
-var totalTime: Int
+let remainingTime: Int
+let totalTime: Int
 var completionPercentage: Double {
-    return (totalTime > 0) ? (Double(remainingTime) / Double(totalTime)) : 1
+    totalTime > 0 ? Double(remainingTime) / Double(totalTime) : 1
 }
 ```
 
@@ -45,44 +45,60 @@ var body: some View {}内に追加
 
 ```swift
 ZStack {
+    // 1. 背景の円
+    Circle()
+        .stroke(lineWidth: 10)
+        .foregroundStyle(.orange.opacity(0.3))
+        .padding(10)
+
+    // 2. 進捗を表示する円
     Circle()
         .trim(from: 0.0, to: CGFloat(completionPercentage))
         .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round))
-        .foregroundColor(.orange)
-        .rotationEffect(Angle(degrees: 270))
+        .foregroundStyle(.orange)
+        .rotationEffect(.degrees(-90))
         .animation(.linear(duration: 1.0), value: completionPercentage)
         .padding(10)
 
-    Text(formatTime(seconds: remainingTime))
+    // 3. 中央のテキスト
+    Text(Duration.seconds(remainingTime).formatted(.time(pattern: .hourMinuteSecond(padHourToLength: 2))))
         .font(.system(size: 70))
+        .monospacedDigit()
+        .contentTransition(.numericText(countsDown: true))
 }
 ```
 
 円形のプログレスバーと時間を重ねて表示します。
 
-- `ZStack`: 奥行き方向に View を重ねます。ここでは `Circle`（円）の上に `Text`（時間）を乗せています。
+- `ZStack`: 奥行き方向に View を重ねます。背景の円、進捗用の円、中央のテキストを順に重ねています。
 - `Circle()`: 円を描画します。
+  - `.foregroundStyle(.orange.opacity(0.3))`: 背景には少し透けた（opacity）色を指定し、進捗が見えやすいようにします。
   - `.trim(...)`: 円の一部だけを描画します。`completionPercentage` に応じて円の長さが変わります。
   - `.stroke(...)`: 塗りつぶしではなく、線として描画します。
-  - `.rotationEffect(...)`: デフォルトでは右（0度）から始まるため、上（270度）から始まるように回転させます。
-  - `.animation(...)`: 値が変化したときに滑らかにアニメーションさせます。ここでは1.0秒間、一定の速度（linear）でアニメーションするように指定しています。
+  - `.rotationEffect(.degrees(-90))`: デフォルトでは右（0度）から始まるため、上（-90度）から始まるように回転させます。
+  - `.animation(...)`: 値が変化したときに滑らかにアニメーションさせます。
 
-### 3. 時刻文字列の整形
+### 3. 表示のカスタマイズ（Duration とフォント）
 
-var body: some View {}の下に追加
+#### 時間の表示形式（Duration）
+
+iOS 16 以降では、秒（Int）を "時:分:秒" の形式に変換する際に、Apple が用意した仕組み（`Duration`）を簡単に利用できます。
 
 ```swift
-func formatTime(seconds: Int) -> String {
-    let hours = seconds / 3600
-    let minutes = (seconds % 3600) / 60
-    let seconds = seconds % 60
-    return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-}
+Text(Duration.seconds(remainingTime).formatted(.time(pattern: .hourMinuteSecond(padHourToLength: 2))))
 ```
 
-秒数（Int）を "時:分:秒" の形式（String）に変換する関数です。
+- `.padHourToLength: 2` を指定することで、時が1桁の時でも `00:00:00` のように `0` で埋めて表示してくれます。
 
-- `%02d` は「2桁の整数で、足りない場合は0埋めする」という意味です（例: 5 → "05"）。
+#### 文字の最適化（等幅フォントとアニメーション）
+
+```swift
+.monospacedDigit()
+.contentTransition(.numericText(countsDown: true))
+```
+
+- `.monospacedDigit()`: 数字を「等幅（同じ幅）」のフォントにします。これがないと、`1` から `2` に変わった際に文字の幅が変わり、画面上の文字が横にガタガタ動いてしまいます。
+- `.contentTransition(.numericText(countsDown: true))`: 数字が切り替わる際、文字がクルクルと回転して入れ替わるようなアニメーションを追加します。
 
 ---
 
@@ -94,33 +110,32 @@ func formatTime(seconds: Int) -> String {
 import SwiftUI
 
 struct TimerDisplayView: View {
-    var remainingTime: Int
-    var totalTime: Int
+    let remainingTime: Int
+    let totalTime: Int
 
     var completionPercentage: Double {
-        return (totalTime > 0) ? (Double(remainingTime) / Double(totalTime)) : 1
+        totalTime > 0 ? Double(remainingTime) / Double(totalTime) : 1
     }
 
     var body: some View {
         ZStack {
             Circle()
-                .trim(from: 0.0, to: CGFloat(completionPercentage))
-                .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round))
-                .foregroundColor(.orange)
-                .rotationEffect(Angle(degrees: 270))
-                .animation(.linear(duration: 1.0), value: completionPercentage)
+                .stroke(lineWidth: 10)
+                .foregroundStyle(.orange.opacity(0.3))
                 .padding(10)
 
-            Text(formatTime(seconds: remainingTime))
+            Circle()
+                .trim(from: 0.0, to: CGFloat(completionPercentage))
+                .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                .foregroundStyle(.orange)
+                .rotationEffect(.degrees(-90))
+                .animation(.linear(duration: 1.0), value: completionPercentage)
+                .padding(10)
+            Text(Duration.seconds(remainingTime).formatted(.time(pattern: .hourMinuteSecond(padHourToLength: 2))))
                 .font(.system(size: 70))
+                .monospacedDigit()
+                .contentTransition(.numericText(countsDown: true))
         }
-    }
-
-    func formatTime(seconds: Int) -> String {
-        let hours = seconds / 3600
-        let minutes = (seconds % 3600) / 60
-        let seconds = seconds % 60
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
 }
 

@@ -128,8 +128,9 @@ if selectedTabId != nil && !tasks.isEmpty {
 
 `body` のブロックの外側に、データベースからタスクを取ってくる処理を追加します。
 まずは、**「今選ばれているタブ」に入っているタスクだけ**を取ってくる関数です。
+`var body: some View {...}`の下に追加してください。
 
-```swift
+```swift title="HomeView.swift"
     // 選ばれているタブのタスクだけを取り出す処理
     private func loadTasks() {
         guard let tabId = selectedTabId else {
@@ -157,26 +158,21 @@ if selectedTabId != nil && !tasks.isEmpty {
 
 すべてのタブを読み込む関数を追加します。
 読み込んだ後に「一番最初のタブを自動で選ぶ」という機能も入れます。
+`loadTasks()`の下に追加してください。
 
-```swift
+```swift title="HomeView.swift"
     // すべてのタブを読み込んで、どれを選ぶかセットする処理
     private func loadTabs() {
 
         tabs = ToDoTabService.getAllTabs(from: modelContext) // ステップ11で作った仕組みを使って、全部のタブを取ってくる
-
         // 自動的にどれかのタブを選ぶための処理
         if let currentId = selectedTabId {
-
             if !tabs.contains(where: { $0.id == currentId }) { // もし今選ばれているタブが、なくなっていたら（消されたりして）
-
                 selectedTabId = tabs.first?.id // 先頭のタブを選び直す
             }
         } else {
-
             selectedTabId = tabs.first?.id // アプリを開いたばかりで何も選ばれていないなら、先頭のタブを選ぶ
         }
-
-
         loadTasks() // タブが準備できたので、そのタブのタスクを読み込む
     }
 ```
@@ -185,7 +181,22 @@ if selectedTabId != nil && !tasks.isEmpty {
 
 ### 🔄 タブの選択トラブルを防ぐ工夫
 
-アプリを使っていると、「選んでいたタブがいつのまにか消されている（削除機能など）」ということが起こるかもしれません。そのままだとエラーになってしまうので、**「もし選んでいるタブが見つからなかったら、一番最初のタブを選び直す」** または **「初めて開いたら、自動で一番最初のタブを選ぶ」** という賢い仕組み（`selectedTabId = tabs.first?.id`）を入れています。
+アプリを使っていると、「選んでいたタブがいつのまにか消されている（削除機能など）」ということが起こるかもしれません。そのままだとエラーになってしまうので、**「もし選んでいるタブが見つからなかったら、一番最初のタブを選び直す」** または **「初めて開いたら、自動で一番最初のタブを選ぶ」** という仕組み（`selectedTabId = tabs.first?.id`）を入れています。
+
+## 7. プレビューの修正
+
+`HomeView.swift`の`#Preview`ブロックを、以下のように修正してください。
+
+```swift title="HomeView.swift"
+#Preview {
+    NavigationStack {
+        HomeView(navigationPath: .constant([]))
+            .modelContainer(for: [ToDoTab.self, ToDoTask.self], inMemory: true)
+    }
+}
+```
+
+
 
 > [!NOTE]
 > コードが書けたら、`Command + R` でアプリを実行して、タブを切り替えてタスクが正しく表示されるかを確認してみましょう！
