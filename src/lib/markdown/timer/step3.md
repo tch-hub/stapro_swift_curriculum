@@ -339,32 +339,25 @@ struct ContentView: View {
 
 ![完成イメージ](/images/timer/p3.png)
 
-### 年と月を選択できるUIを作成しよう
+### 年を選択できるUIを作成しよう
 
-このステップで学んだ「コンポーネントの再利用」と「複数のPickerの組み合わせ」を活用して、西暦（年）と月をドラムロールで選べるUIを作成してみましょう。
+このステップで学んだ「Picker」を活用して、西暦（年）をドラムロールで選べるUIを作成してみましょう。
 
-#### 1. 再利用可能な部品 `CustomPicker` の作成
+#### 1. ContentView での状態定義
 
-- 数値の範囲（`range`）と単位（`title`: "年" や "月"）、そして選択状態を同期する `@Binding` 変数を持つViewを作成してください。
-- `Picker` のスタイルは `.pickerStyle(.wheel)` としましょう。
+- 現在の年（`selectedYear`）を保持するための `@State` 変数を定義します。
+- 初期値は 2000 などにしておきましょう。
 
-#### 2. ContentView での状態定義
+#### 2. レイアウトの構築
 
-- 現在の年（`selectedYear`）と月（`selectedMonth`）を保持するための `@State` 変数を定義します。
-- 初期値は現在の年（例: 2024）や月（例: 1）にしておきましょう。
+- `VStack` の中に、`Picker` を配置します。
+- 範囲は 1980年〜2030年 とし、`.pickerStyle(.wheel)` を指定してください。
+- ドラムロールの高さが見やすくなるよう、`.frame(height: 200)` で調整しましょう。
 
-#### 3. レイアウトの構築
-
-- `VStack` の中に、説明テキスト（「日付を選択してください」）を配置します。
-- `HStack` を使い、2つの `CustomPicker` を横に並べて配置してください。
-  - 西暦用：2000年〜2030年の範囲、単位は「年」
-  - 月用：1月〜12月の範囲、単位は「月」
-- ドラムロールの高さが見やすくなるよう、`.frame(height: 200)` などで調整しましょう。
-
-#### 4. 選択結果の表示
+#### 3. 選択結果の表示
 
 - 画面の下部に、現在選択されている値を表示するテキストを配置します。
-- 「選択中: 2024年 3月」のように、西暦と月の変数の値を反映させて表示してください。
+- 「選択中: 2024年」のように、変数の値を反映させて表示してください。
 
 ### ヒント
 
@@ -372,35 +365,21 @@ struct ContentView: View {
 import SwiftUI
 
 struct ContentView: View {
+    @State private var selectedYear = 2000
 
     var body: some View {
         VStack(spacing: 40) {
-            HStack {
-                CustomPicker(title: "月", range: 1...12)
-            }
-            .frame(height: 200)
+
+            Text("選択中: \(selectedYear)年")
         }
         .padding()
-    }
-}
-
-struct CustomPicker: View {
-    var title: String
-    var range: ClosedRange<Int>
-
-    var body: some View {
-        Picker(selection: .constant(1), label: Text(title)) {
-            ForEach(Array(range), id: \.self) { value in
-                Text("\(value) \(title)").tag(value)
-            }
-        }
-        .pickerStyle(.wheel)
     }
 }
 
 #Preview {
     ContentView()
 }
+
 ```
 
 ### 解答例
@@ -409,45 +388,19 @@ struct CustomPicker: View {
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selectedYear = 2024
-    @State private var selectedMonth = 1
+    @State private var selectedYear = 2000
 
     var body: some View {
         VStack(spacing: 40) {
-            Text("日付を選択してください")
-                .font(.headline)
-
-            HStack {
-                // 西暦のPicker
-                CustomPicker(title: "年", range: 2000...2030, selection: $selectedYear)
-
-                // 月のPicker
-                CustomPicker(title: "月", range: 1...12, selection: $selectedMonth)
+            Picker("年", selection: $selectedYear) {
+                ForEach(1980...2030, id: \.self) { Text("\($0)年") }
             }
+            .pickerStyle(.wheel)
             .frame(height: 200)
 
-            Text("選択中: \(selectedYear)年 \(selectedMonth)月")
-                .font(.title2)
-                .bold()
-                .foregroundColor(.blue)
+            Text("選択中: \(selectedYear)年")
         }
         .padding()
-    }
-}
-
-// 再利用可能なPicker部品
-struct CustomPicker: View {
-    var title: String
-    var range: ClosedRange<Int>
-    @Binding var selection: Int
-
-    var body: some View {
-        Picker(selection: $selection, label: Text(title)) {
-            ForEach(Array(range), id: \.self) { value in
-                Text("\(value) \(title)").tag(value)
-            }
-        }
-        .pickerStyle(.wheel)
     }
 }
 

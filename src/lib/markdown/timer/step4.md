@@ -166,11 +166,12 @@ struct TimerDisplayView: View {
 - `ZStack` を使用して、背景となるグレーのバーと、その上に重ねるオレンジ色のバーを作成します。
 - 今回は `Circle` ではなく `Capsule` を使用してください。
 - バーが左端から伸びるように、`ZStack(alignment: .leading)` を設定しましょう。
-- 全体の幅は `300` とし、オレンジ色のバーの幅は `300 * completionPercentage` となるように計算します。
+- 全体の幅は 300 とし、オレンジ色のバーの幅は 300 * completionPercentage となるように計算します。
+高さは20としてください。
 
 #### 4. アニメーションの実装
 
-- `.onAppear` モディファイアを使用して、画面が表示された瞬間に `remainingTime` を `0` に変更します。
+- `.onAppear` モディファイアを使用して、画面が表示された瞬間に `remainingTime` を `0` に変更します。 remainingTime = 0 とすることで、値を「10 → 0」に変更し、その変化をアニメーションでゆっくり見せています。
 - オレンジ色のバーに `.animation` を適用し、合計時間（`totalTime`）をかけてゆっくりとバーが減っていく様子をアニメーションさせましょう。
 
 ### ヒント
@@ -179,7 +180,7 @@ struct TimerDisplayView: View {
 import SwiftUI
 
 struct ContentView: View {
-    @State private var remainingTime: Int?
+    @State private var remainingTime: Int = 10
 
     var body: some View {
         ZStack(alignment: .leading) {
