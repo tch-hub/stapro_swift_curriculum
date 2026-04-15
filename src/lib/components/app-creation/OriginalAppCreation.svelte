@@ -1,5 +1,4 @@
 <script>
-	import OriginalAppDemo from '$lib/components/OriginalAppDemo.svelte';
 	import AppCreationSteps from './AppCreationSteps.svelte';
 	import Game2048 from './original-app/Game2048.svelte';
 	import Game15Puzzle from './original-app/Game15Puzzle.svelte';
@@ -41,9 +40,6 @@
 							<li>アイデアを形にするプロセス（企画・設計・実装・発表）を体験する</li>
 							<li>問題解決能力と創造性を養う</li>
 						</ul>
-					</div>
-					<div class="flex w-full justify-center lg:w-1/3">
-						<OriginalAppDemo />
 					</div>
 				</div>
 			</div>
