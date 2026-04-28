@@ -4,7 +4,6 @@
 	import Game15Puzzle from './original-app/Game15Puzzle.svelte';
 	import GameConcentration from './original-app/GameConcentration.svelte';
 	import GameLightsOut from './original-app/GameLightsOut.svelte';
-	import GameSample from './original-app/GameSample.svelte';
 	import { originalAppSteps } from '$lib/data/app-creation/index';
 </script>
 
@@ -53,6 +52,17 @@
 			どんなアプリを作れば良いか分からない人のために、いくつかアイデアの例を紹介します。これらの例を参考にしたり、組み合わせたり、まったく新しいものを考えたりしてみましょう。
 		</p>
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+			<!-- 2048ゲーム -->
+			<Game2048 />
+			
+			<!-- 15パズル -->
+			<Game15Puzzle />
+			
+			<!-- 神経衰弱 -->
+			<GameConcentration />
+			
+			<!-- ライツアウト -->
+			<GameLightsOut />
 			<!-- 勉強時間トラッカー -->
 			<div
 				class="card bg-primary text-primary-content shadow-lg transition-transform hover:-translate-y-1"
@@ -125,20 +135,6 @@
 					</div>
 				</div>
 			</div>
-			<!-- 2048ゲーム -->
-			<Game2048 />
-
-			<!-- 15パズル -->
-			<Game15Puzzle />
-
-			<!-- 神経衰弱 -->
-			<GameConcentration />
-
-			<!-- ライツアウト -->
-			<GameLightsOut />
-
-			<!-- サンプルゲーム -->
-			<GameSample />
 		</div>
 	</section>
 
