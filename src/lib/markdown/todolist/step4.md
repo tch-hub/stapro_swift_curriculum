@@ -173,7 +173,7 @@ struct ContentView: View {
                         .padding(.top, 8)
                 }
             }
-            
+
             Button("切り替えテスト") {
                 isConnected.toggle()
             }
@@ -187,3 +187,13 @@ struct ContentView: View {
     ContentView()
 }
 ```
+
+### 補足: `.toggle()` について
+
+解答例の `isConnected.toggle()` は、`Bool`型の値を反転させるメソッドです。`isConnected` が `false` なら `true` に、`true` なら `false` に切り替わります。
+
+```swift
+isConnected = !isConnected
+```
+
+と同じ意味ですが、`.toggle()` と書くと「ON/OFFを切り替える」という意図がわかりやすくなります。表示/非表示、完了/未完了、接続中/オフラインのような2択の状態を変えるときによく使います。

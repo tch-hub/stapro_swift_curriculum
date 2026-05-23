@@ -132,6 +132,23 @@
 					"keywords": ["Bool", "論理型", "boolean", "true", "false", "真偽値", "フラグ"]
 				},
 				{
+					"title": "toggle() - Bool値の反転",
+					"description": "toggle()は、Bool型の値をtrueとfalseで切り替えるメソッドです。isOn = !isOn と同じ意味ですが、状態を反転する意図が読み取りやすくなります。@StateのBool値をボタンでON/OFFする場面や、完了/未完了、表示/非表示の切り替えでよく使います。",
+					"code": "var isConnected = false\nprint(isConnected)  // false\n\nisConnected.toggle()\nprint(isConnected)  // true\n\nisConnected.toggle()\nprint(isConnected)  // false\n\n// SwiftUIでの使用例\n@State private var isShowingDetail = false\n\nButton(\"表示を切り替え\") {\n    isShowingDetail.toggle()\n}",
+					"keywords": [
+						"toggle()",
+						"toggle",
+						"Bool",
+						"反転",
+						"切り替え",
+						"トグル",
+						"true",
+						"false",
+						"ON",
+						"OFF"
+					]
+				},
+				{
 					"title": "Double - 浮動小数点型",
 					"description": "小数点を含む数値を表す型です。身長、体重、価格計算など、精度が必要な数値に使用します。Floatより精度が高く、Swiftでは小数はデフォルトでDouble型になります。",
 					"code": "let height: Double = 165.5\nlet pi = 3.14159  // 型推論でDoubleになる\nlet price: Double = 1980.0\n\nlet tax = price * 0.1\nprint(\"税込: \\(price + tax)円\")  // 税込: 2178.0円",
