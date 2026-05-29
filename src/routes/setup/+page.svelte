@@ -354,6 +354,19 @@
 						<li>対応の目安: 「MacBook Air」「MacBook Pro」「Mac mini」「iMac」「Mac Studio」シリーズのAppleシリコンモデル</li>
 						<li>Intel搭載機種は、まずOSをSequoia 15.6へ更新できるかを確認してください</li>
 					</ul>
+					<div class="mt-4 rounded-lg border border-base-300 bg-base-200 p-4">
+						<h4 class="mb-2 font-semibold">Apple Silicon搭載MacでOSをアップデートする場合</h4>
+						<ol class="ml-4 list-inside list-decimal space-y-1">
+							<li>左上の <strong>Appleメニュー（）</strong> → <strong>「システム設定…」</strong> を開く</li>
+							<li>左側メニューから <strong>「一般」</strong> → <strong>「ソフトウェア・アップデート」</strong> を開く</li>
+							<li>「アップデートが利用可能です」が表示されたら <strong>「今すぐアップデート」</strong> を選択</li>
+							<li>表示に従って再起動・インストールを実行</li>
+							<li>完了後、再度 <strong>「このMacについて」</strong> で macOS 15.6 以降になっているか確認</li>
+						</ol>
+						<p class="mt-2 text-sm">
+							ポイント: 機種が古くて対応していない場合はこの画面でアップデート候補が出ません。出ない場合は Apple サポートの「インストールの前提条件」を確認してください。
+						</p>
+					</div>
 					<p class="mt-3">
 						つまり、OSを上げたあとに <strong>このMacがmacOS Sequoia 15.6を動かせるか</strong> が、
 						機種的に対応できるかどうかの分かれ目です。
