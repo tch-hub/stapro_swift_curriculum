@@ -225,7 +225,7 @@
 							<CodeBlock
 								description="if文は、「条件を満たす場合に、中の処理をする」時に使います。一方、guard文は、「条件を満たさないなら、ここで処理を終了（return）する」という用途で使います。コードの入れ子（ネスト）が深くならないため、見やすいコードになります。"
 								executable={true}
-								code={`func checkAge(age: Int) {\n    guard age >= 18 else {\n        print("18歳未満は利用できません")\n        return\\n    }\n    print("ようこそ！受付完了です")\n}\n\ncheckAge(age: 15) // 18歳未満は利用できません\ncheckAge(age: 20) // ようこそ！受付完了です`}
+								code={`func checkAge(age: Int) {\n    guard age >= 18 else {\n        print("18歳未満は利用できません")\n        return\n    }\n    print("ようこそ！受付完了です")\n}\n\ncheckAge(age: 15) // 18歳未満は利用できません\ncheckAge(age: 20) // ようこそ！受付完了です`}
 							/>
 						</div>
 					</div>
