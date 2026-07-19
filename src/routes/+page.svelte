@@ -55,6 +55,7 @@
 				'タイマーアプリ制作を開始します。アプリ制作作成・基本UIの構築・時間選択コンポーネント（TimePicker / TimeSelectionView）を実装します。',
 			checked: false,
 			projectName: 'タイマーアプリ',
+			projectUrl: '/timer',
 			projectSteps: ['/app-creation/timer/step1', '/app-creation/timer/step2', '/app-creation/timer/step3']
 		},
 		{
@@ -358,6 +359,11 @@
 								<a href={resolve(lesson.quizUrl)} class="btn btn-secondary">Swift基礎問題</a>
 							{/if}
 							{#if lesson.projectSteps}
+								{#if lesson.projectUrl}
+									<a href={resolve(lesson.projectUrl)} class="btn btn-secondary">
+										{lesson.projectName}のホームを開く
+									</a>
+								{/if}
 								{#each lesson.projectSteps as step (step)}
 									<a href={resolve(step)} class="btn btn-primary"
 										>{lesson.projectName} ステップ{step.split('/').pop().replace('step', '')}</a

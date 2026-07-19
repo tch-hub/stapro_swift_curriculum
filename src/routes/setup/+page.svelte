@@ -632,7 +632,7 @@
 						disabled={searchTutorialCompleted}>スキップ</button
 					>
 					<button class="btn btn-ghost" onclick={resetSearchTutorial}>最初からやり直す</button>
-					<a href={resolve('/swiftui-basics')} class="btn btn-primary">SwiftUI入門を始める</a>
+					<a href={resolve('/swift-basics')} class="btn btn-primary">Swift基礎を始める</a>
 				</div>
 			</div>
 		</div>

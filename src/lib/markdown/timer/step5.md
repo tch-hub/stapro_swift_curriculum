@@ -10,6 +10,7 @@ SwiftUIでは、この頭脳部分を `ViewModel` (ビューモデル) と呼び
 
 ```swift
 import Foundation
+import Observation
 
 @Observable
 class TimerViewModel {
@@ -56,7 +57,9 @@ func countDown() {
 
         if self.remainingTime > 0 {
             self.remainingTime -= 1
-        } else {
+        }
+
+        if self.remainingTime == 0 {
             timer.invalidate()
             self.timerState = .idle
         }
@@ -133,6 +136,7 @@ func restartTimer() {
 
 ```swift title="TimerViewModel.swift"
 import Foundation
+import Observation
 
 @Observable
 class TimerViewModel {
@@ -150,7 +154,9 @@ class TimerViewModel {
 
             if self.remainingTime > 0 {
                 self.remainingTime -= 1
-            } else {
+            }
+
+            if self.remainingTime == 0 {
                 timer.invalidate()
                 self.timerState = .idle
             }
@@ -220,6 +226,7 @@ class TimerViewModel {
 ```swift title="ContentView.swift"
 import SwiftUI
 import Foundation
+import Observation
 
 // 1. ロジック部分（ViewModel）
 @Observable
@@ -282,6 +289,7 @@ struct ContentView: View {
 ```swift title="ContentView.swift"
 import SwiftUI
 import Foundation
+import Observation
 
 // 1. ロジック部分（ViewModel）
 @Observable

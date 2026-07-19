@@ -15,7 +15,7 @@ summary: AVFoundationを用いてタイマー終了時に音を鳴らし、Alert
 
 音を扱ったり、アラートを表示したりするための変数を追加します。
 
-import Combineの下に追加
+`import Observation` の下に追加
 
 ```swift
 import AVFoundation
@@ -75,7 +75,9 @@ func countDown() {
         if self.remainingTime > 0 {
             // まだ時間が残っているなら、1秒減らす
             self.remainingTime -= 1
-        } else {
+        }
+
+        if self.remainingTime == 0 {
             // 時間切れ！ (0になったとき)
             timer.invalidate()          // タイマーを止める
             self.timerState = .idle     // 状態を「待機中」に戻す
@@ -113,6 +115,7 @@ func countDown() {
 
 ```swift title="TimerViewModel.swift"
 import Foundation
+import Observation
 import AVFoundation
 
 @Observable
@@ -133,7 +136,9 @@ class TimerViewModel {
 
             if self.remainingTime > 0 {
                 self.remainingTime -= 1
-            } else {
+            }
+
+            if self.remainingTime == 0 {
                 timer.invalidate()
                 self.timerState = .idle
                 self.isShowingAlert = true
@@ -297,7 +302,7 @@ struct ContentView: View {
 ### ヒント
 ```swift title="ContentView.swift"
 import SwiftUI
-import Combine
+import Observation
 
 // 1. ViewModelでアラート状態を管理する
 @Observable
@@ -357,7 +362,7 @@ struct ContentView: View {
 
 ```swift title="ContentView.swift"
 import SwiftUI
-import Combine
+import Observation
 
 // 1. ViewModelでアラート状態を管理する
 @Observable

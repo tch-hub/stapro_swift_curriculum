@@ -228,7 +228,10 @@ if timerState == .idle {
 
 ### 3. 開始・一時停止ボタン
 
+上の `if timerState == .idle { ... } else { ... }` の閉じ括弧の**直後**、かつ `VStack` を閉じる括弧の**前**に、次の `HStack` を追加してください。開始・一時停止ボタンとキャンセルボタンは、同じ `HStack` の中に横並びで入れます。
+
 ```swift
+HStack(spacing: 16) {
 Button(primaryButtonLabel) {
     withAnimation {
         timerState = timerState == .running ? .paused : .running
@@ -236,6 +239,11 @@ Button(primaryButtonLabel) {
 }
 .tint(timerState == .running ? .yellow : .green)
 .disabled(isTimerUnset)
+
+    // キャンセルボタンをここに追加します
+}
+.buttonStyle(.borderedProminent)
+.controlSize(.large)
 ```
 
 - `primaryButtonLabel` (計算プロパティ) を使って、ボタンのテキストを「開始」「一時停止」「再開」と切り替えています。
@@ -244,6 +252,8 @@ Button(primaryButtonLabel) {
 - `.disabled(isTimerUnset)` を指定することで、時間が `0` のときはボタンを押せないように制御（バリデーション）しています。
 
 ### 4. キャンセルボタン
+
+前項で追加した `HStack(spacing: 16) {` の中で、開始・一時停止ボタンの**直後**に追加してください。
 
 ```swift
 Button("キャンセル") {
@@ -264,7 +274,8 @@ Button("キャンセル") {
 
 ## コード全体
 
-<img src="/images/timer/t31.png" alt="Xcode の設定画面" class="mobile-screenshot" />
+> [!NOTE]
+> ここではコード全体を確認するため、単体の `TimePicker` を示す画像は掲載しません。完成形は「時間・分・秒」の3つのPickerと、2つのボタンが表示される状態です。
 
 ```swift title="ContentView.swift"
 import SwiftUI

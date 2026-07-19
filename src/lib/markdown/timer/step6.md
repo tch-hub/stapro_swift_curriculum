@@ -1,6 +1,6 @@
 ---
 title: ステップ6: ViewModelのUIへの反映(ContentView)
-summary: ContentViewにViewModel(@StateObject)を組み込み、各ボタンのアクションをViewModelのメソッドに接続します。
+summary: ContentViewにViewModel（@Observable + @State）を組み込み、各ボタンのアクションをViewModelのメソッドに接続します。
 ---
 
 ### 1. ViewModelと計算プロパティの導入
@@ -202,7 +202,7 @@ struct ContentView: View {
 ### ヒント
 ```swift title="ContentView.swift"
 import SwiftUI
-import Combine
+import Observation
 
 // 1. ロジック部分
 @Observable
@@ -268,7 +268,7 @@ struct ContentView: View {
 
 ```swift title="ContentView.swift"
 import SwiftUI
-import Combine
+import Observation
 
 // 1. ロジック部分
 @Observable
