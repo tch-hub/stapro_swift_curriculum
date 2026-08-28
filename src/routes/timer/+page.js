@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
+import { base } from '$app/paths';
 
 export function load() {
-	redirect(307, '/app-creation/timer');
+	redirect(307, `${base}/app-creation/timer`);
 }
